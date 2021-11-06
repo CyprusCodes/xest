@@ -1,0 +1,345 @@
+{
+  "version-4.2.9/docs": [
+    {
+      "collapsed": false,
+      "type": "category",
+      "label": "AWE framework",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-4.2.9/intro"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/purpose"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/architecture"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/security"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Getting Started",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-4.2.9/installation"
+        },
+        {
+          "collapsed": true,
+          "type": "category",
+          "label": "Configuration",
+          "items": [
+            {
+              "type": "doc",
+              "id": "version-4.2.9/maven"
+            },
+            {
+              "collapsed": true,
+              "type": "category",
+              "label": "Modules",
+              "items": [
+                {
+                  "type": "doc",
+                  "id": "version-4.2.9/annotations"
+                },
+                {
+                  "type": "doc",
+                  "id": "version-4.2.9/developer-tools"
+                },
+                {
+                  "type": "doc",
+                  "id": "version-4.2.9/builder"
+                },
+                {
+                  "type": "doc",
+                  "id": "version-4.2.9/rest"
+                },
+                {
+                  "type": "doc",
+                  "id": "version-4.2.9/scheduler"
+                },
+                {
+                  "type": "doc",
+                  "id": "version-4.2.9/notifier"
+                },
+                {
+                  "type": "doc",
+                  "id": "version-4.2.9/database-migration"
+                }
+              ]
+            },
+            {
+              "type": "doc",
+              "id": "version-4.2.9/properties"
+            },
+            {
+              "type": "doc",
+              "id": "version-4.2.9/application-options"
+            },
+            {
+              "type": "doc",
+              "id": "version-4.2.9/session"
+            }
+          ]
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/deployment"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "Guides",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-4.2.9/guides/project-structure"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/guides/scheduler"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/guides/notifier"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/guides/selenium-testing"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/guides/print-engine"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/guides/debugging"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/guides/validation"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/guides/v4-migration"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/guides/default-screens"
+        }
+      ]
+    },
+    {
+      "collapsed": true,
+      "type": "category",
+      "label": "API Reference",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/screens"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/menu"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/enumerate"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/query"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/maintain"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/service"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/queues"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/email"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/i18n-internationalization"
+        }
+      ]
+    }
+  ],
+  "version-4.2.9/screens": [
+    {
+      "type": "ref",
+      "id": "version-4.2.9/api/screens"
+    },
+    {
+      "collapsed": false,
+      "type": "category",
+      "label": "API Reference",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/screen"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/template"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/layout"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/tags"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/window"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/resizable"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/button"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/criteria"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/tab-and-tabcontainer"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/wizard-and-wizard-panel"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/accordion"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/grids"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/pivot-table"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/context-menu"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/messages"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/info"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/include"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/dialog"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/chart"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/actions"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/api/dependencies"
+        }
+      ]
+    }
+  ],
+  "version-4.2.9/schedule": [
+    {
+      "type": "ref",
+      "id": "version-4.2.9/guides/scheduler"
+    },
+    {
+      "collapsed": false,
+      "type": "category",
+      "label": "Schedule Task",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-4.2.9/guides/schedule-configuration"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/guides/dependency-task"
+        }
+      ]
+    }
+  ],
+  "version-4.2.9/training": [
+    {
+      "collapsed": false,
+      "type": "category",
+      "label": "Basic tutorials",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-4.2.9/training/awe-101"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/training/awe-102"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/training/awe-103"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/training/awe-104"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/training/awe-105"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/training/awe-106"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/training/awe-107"
+        },
+        {
+          "type": "doc",
+          "id": "version-4.2.9/training/awe-108"
+        }
+      ]
+    }
+  ]
+}

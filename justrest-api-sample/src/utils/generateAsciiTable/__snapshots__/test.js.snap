@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should generate an ASCII table 1`] = `
+".--------------------------------------------------------.
+|                      Hello Table                       |
+|--------------------------------------------------------|
+|         Col 1         |  Column 2  | Some Other Column |
+|-----------------------|------------|-------------------|
+| 162374                | ahskhdfkj  | asdasdf           |
+| askjdhf               | asdfasdfsa | asdfasdf          |
+| what a beatiful table | cell       | celll             |
+'--------------------------------------------------------'"
+`;
