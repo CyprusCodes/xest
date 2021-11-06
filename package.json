@@ -1,11 +1,18 @@
 {
   "name": "justrest",
   "version": "0.0.1",
-  "description": "justrest cli for managing API projects",
+  "description": "justrest CLI for managing API projects",
   "main": "index.js",
   "dependencies": {
+    "commander": "^8.3.0",
+    "fdir": "^5.1.0",
+    "find-package-json": "^1.2.0",
+    "inquirer": "^8.2.0",
+    "lodash": "^4.17.21",
+    "mkdirp": "^1.0.4",
+    "picomatch": "^2.3.0",
     "prompts": "^2.4.2",
-    "yargs": "^17.2.1"
+    "replace-in-file": "^6.3.2"
   },
   "devDependencies": {},
   "scripts": {

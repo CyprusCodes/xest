@@ -1,5 +1,5 @@
 {
-  "name": "learning-platform-api",
+  "name": "{{PROJECT_NAME_KEBAPCASE}}",
   "version": "1.0.0",
   "description": "API",
   "main": "index.js",

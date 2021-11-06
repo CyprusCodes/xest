@@ -16,9 +16,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 
 SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '';
 
-CREATE DATABASE `{{PROJECT_NAME_LOWERCASE}}_db` DEFAULT CHARSET = utf8mb4 DEFAULT COLLATE = utf8mb4_unicode_ci;
-
-USE `{{PROJECT_NAME_LOWERCASE}}_db`;
+USE `{{PROJECT_NAME_SNAKECASE}}_db`;
 
 DROP TABLE IF EXISTS user_types;
 CREATE TABLE user_types(
@@ -35,5 +33,5 @@ CREATE TABLE users(
   password VARCHAR(500) NOT NULL,
   user_type_id int NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_type_id) REFERENCES user_types(user_type_id),
+  FOREIGN KEY (user_type_id) REFERENCES user_types(user_type_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;

@@ -1,0 +1,13 @@
+{
+  "dev": {
+    "driver": "mysql",
+    "host": "localhost",
+    "port": "3306",
+    "user": "root",
+    "password": "password",
+    "database": "{{PROJECT_NAME_SNAKECASE}}_db",
+    "multipleStatements": true
+  },
+  "sql-file": true,
+  "defaultEnv": "dev"
+}

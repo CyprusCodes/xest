@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 const request = require("supertest");
-const app = require("~root/app");
+const app = require("~root/app/index");
 const getStudentJWTToken = require("~test/utils/getStudentJWTToken");
 const safeDescribe = require("~test/utils/safeDescribe");
 const deleteBlogCommentById = require("./queries/deleteBlogCommentById");

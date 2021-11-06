@@ -6,7 +6,7 @@ services:
     restart: always
     command: --sql_mode="NO_ENGINE_SUBSTITUTION"
     environment:
-      MYSQL_DATABASE: "{{PROJECT_NAME_LOWERCASE}}_db"
+      MYSQL_DATABASE: "{{PROJECT_NAME_SNAKECASE}}_db"
       MYSQL_USER: "user"
       MYSQL_PASSWORD: "password"
       MYSQL_ROOT_PASSWORD: "password"
