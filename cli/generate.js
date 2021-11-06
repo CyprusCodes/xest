@@ -67,14 +67,14 @@ const generate = (program) => async (appName) => {
     }
   });
 
-  console.log(chalk.blue`${filesWritten.length} modules created.`);
+  console.log(chalk.green`${filesWritten.length} modules created.`);
   await replace({
     files: filesWritten,
     from: [/{{PROJECT_NAME_SNAKECASE}}/g, /{{PROJECT_NAME_KEBAPCASE}}/g],
     to: [appNameSnakeCase, appNameKebapCase],
   });
 
-  console.log(chalk.blue`Installing packages...`);
+  console.log(chalk.green`Installing packages...`);
   execSync("npm install", {
     cwd: projectDirectoryToCreate,
     stdio: "inherit",
