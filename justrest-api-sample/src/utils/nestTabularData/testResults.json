@@ -1,0 +1,192 @@
+[
+  {
+    "integration_id": 6,
+    "name": "Amazon Europe",
+    "client_integration_name": "Amazon Europe",
+    "client_id": 1,
+    "status": "CONNECTED",
+    "sales_channel_ref": "Amazon Europe - Amazon DE",
+    "client_sales_channel_id": 577,
+    "sales_channel_id": 1
+  },
+  {
+    "integration_id": 6,
+    "name": "Amazon Europe",
+    "client_integration_name": "Amazon Europe",
+    "client_id": 1,
+    "status": "CONNECTED",
+    "sales_channel_ref": "Amazon Europe - Amazon ES",
+    "client_sales_channel_id": 578,
+    "sales_channel_id": 2
+  },
+  {
+    "integration_id": 6,
+    "name": "Amazon Europe",
+    "client_integration_name": "Amazon Europe",
+    "client_id": 1,
+    "status": "CONNECTED",
+    "sales_channel_ref": "Amazon Europe - Amazon FR",
+    "client_sales_channel_id": 579,
+    "sales_channel_id": 3
+  },
+  {
+    "integration_id": 6,
+    "name": "Amazon Europe",
+    "client_integration_name": "Amazon Europe",
+    "client_id": 1,
+    "status": "CONNECTED",
+    "sales_channel_ref": "Amazon Europe - Amazon UK",
+    "client_sales_channel_id": 580,
+    "sales_channel_id": 6
+  },
+  {
+    "integration_id": 6,
+    "name": "Amazon Europe",
+    "client_integration_name": "My Amazon Europe Store",
+    "client_id": 5,
+    "status": "DISCONNECTED",
+    "sales_channel_ref": "My Amazon Europe Store - Amazon DE",
+    "client_sales_channel_id": 886,
+    "sales_channel_id": 1
+  },
+  {
+    "integration_id": 6,
+    "name": "Amazon Europe",
+    "client_integration_name": "My Amazon Europe Store",
+    "client_id": 5,
+    "status": "DISCONNECTED",
+    "sales_channel_ref": "My Amazon Europe Store - Amazon ES",
+    "client_sales_channel_id": 887,
+    "sales_channel_id": 2
+  },
+  {
+    "integration_id": 6,
+    "name": "Amazon Europe",
+    "client_integration_name": "My Amazon Europe Store",
+    "client_id": 5,
+    "status": "DISCONNECTED",
+    "sales_channel_ref": "My Amazon Europe Store - Amazon FR",
+    "client_sales_channel_id": 888,
+    "sales_channel_id": 3
+  },
+  {
+    "integration_id": 6,
+    "name": "Amazon Europe",
+    "client_integration_name": "My Amazon Europe Store",
+    "client_id": 5,
+    "status": "DISCONNECTED",
+    "sales_channel_ref": "My Amazon Europe Store - Amazon UK",
+    "client_sales_channel_id": 889,
+    "sales_channel_id": 6
+  },
+  {
+    "integration_id": 6,
+    "name": "Amazon Europe",
+    "client_integration_name": "My Amazon Europe Store",
+    "client_id": 17,
+    "status": "DISCONNECTED",
+    "sales_channel_ref": "My Amazon Europe Store - Amazon DE",
+    "client_sales_channel_id": 895,
+    "sales_channel_id": 1
+  },
+  {
+    "integration_id": 6,
+    "name": "Amazon Europe",
+    "client_integration_name": "My Amazon Europe Store",
+    "client_id": 17,
+    "status": "DISCONNECTED",
+    "sales_channel_ref": "My Amazon Europe Store - Amazon ES",
+    "client_sales_channel_id": 896,
+    "sales_channel_id": 2
+  },
+  {
+    "integration_id": 6,
+    "name": "Amazon Europe",
+    "client_integration_name": "My Amazon Europe Store",
+    "client_id": 17,
+    "status": "DISCONNECTED",
+    "sales_channel_ref": "My Amazon Europe Store - Amazon FR",
+    "client_sales_channel_id": 897,
+    "sales_channel_id": 3
+  },
+  {
+    "integration_id": 6,
+    "name": "Amazon Europe",
+    "client_integration_name": "My Amazon Europe Store",
+    "client_id": 17,
+    "status": "DISCONNECTED",
+    "sales_channel_ref": "My Amazon Europe Store - Amazon UK",
+    "client_sales_channel_id": 898,
+    "sales_channel_id": 6
+  },
+  {
+    "integration_id": 6,
+    "name": "Amazon Europe",
+    "client_integration_name": "My Amazon Europe Store2",
+    "client_id": 5,
+    "status": "DISCONNECTED",
+    "sales_channel_ref": "My Amazon Europe Store2 - Amazon DE",
+    "client_sales_channel_id": 935,
+    "sales_channel_id": 1
+  },
+  {
+    "integration_id": 6,
+    "name": "Amazon Europe",
+    "client_integration_name": "My Amazon Europe Store2",
+    "client_id": 5,
+    "status": "DISCONNECTED",
+    "sales_channel_ref": "My Amazon Europe Store2 - Amazon ES",
+    "client_sales_channel_id": 936,
+    "sales_channel_id": 2
+  },
+  {
+    "integration_id": 6,
+    "name": "Amazon Europe",
+    "client_integration_name": "My Amazon Europe Store2",
+    "client_id": 5,
+    "status": "DISCONNECTED",
+    "sales_channel_ref": "My Amazon Europe Store2 - Amazon FR",
+    "client_sales_channel_id": 937,
+    "sales_channel_id": 3
+  },
+  {
+    "integration_id": 6,
+    "name": "Amazon Europe",
+    "client_integration_name": "My Amazon Europe Store2",
+    "client_id": 5,
+    "status": "DISCONNECTED",
+    "sales_channel_ref": "My Amazon Europe Store2 - Amazon UK",
+    "client_sales_channel_id": 938,
+    "sales_channel_id": 6
+  },
+  {
+    "integration_id": 2,
+    "name": "Amazon North America",
+    "client_integration_name": "VisioSound Amazon North Americ",
+    "client_id": 1,
+    "status": "CONNECTED",
+    "sales_channel_ref": "VisioSound Amazon North America Store - Amazon USA",
+    "client_sales_channel_id": 506,
+    "sales_channel_id": 7
+  },
+  {
+    "integration_id": 3,
+    "name": "Custom",
+    "client_integration_name": "Manual Imports - 14580700-9856",
+    "client_id": 1,
+    "status": "UNKNOWN",
+    "sales_channel_ref": "RESEND",
+    "client_sales_channel_id": 34,
+    "sales_channel_id": 19
+  },
+  {
+    "integration_id": 3,
+    "name": "Custom",
+    "client_integration_name": "Manual Imports - e081a48d-0a3d",
+    "client_id": 2,
+    "status": "UNKNOWN",
+    "sales_channel_ref": "Manual Orders",
+    "client_sales_channel_id": 35,
+    "sales_channel_id": 19
+  }
+]

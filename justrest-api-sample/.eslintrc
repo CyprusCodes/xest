@@ -1,0 +1,56 @@
+{
+  "extends": [
+    "airbnb-base", 
+    "prettier", 
+    "plugin:eslint-comments/recommended"
+  ],
+  "plugins": ["prettier", "justfulfil"],
+  "rules": {
+    "prettier/prettier": ["error"],
+    "camelcase": "off",
+    "no-unused-vars": "error",
+    "no-console": "error",
+    "no-restricted-syntax": ["off", "ForOfStatement"],
+    "no-await-in-loop": "off",
+    "justfulfil/wrong-snake-case-usage-in-query": "error",
+    "justfulfil/wrong-order-of-query-helpers": "error",
+    "justfulfil/module-alias-register-should-be-first": "error",
+    "eslint-comments/no-unused-disable": "error",
+    "eslint-comments/disable-enable-pair": "off",
+    "eslint-comments/no-unlimited-disable": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "alias": {
+        "map": [
+          ["~root", "./src/"],
+          ["~test", "./test/"]
+        ]
+      }
+    }
+  },
+  "globals": {
+    "it": true,
+    "before": true,
+    "expect": true,
+    "after": true,
+    "jest": true,
+    "test": true,
+    "beforeEach": true,
+    "afterEach": true
+  },
+  // "overrides": [
+  //   {
+  //     "files": [
+  //       "test/**/*.js",
+  //       "test.js",
+  //       "utils/monitoring/index.js"
+  //     ],
+  //     "rules": {
+  //       "no-console": 0,
+  //       "justfulfil/snapshots-always-updated": "error",
+  //       "max-classes-per-file": 0
+  //     }
+  //   }
+  // ]
+}

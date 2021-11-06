@@ -1,0 +1,156 @@
+{
+  "name": "learning-platform-api",
+  "version": "1.0.0",
+  "description": "API",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test jest --bail --coverage=true --coverageDirectory=coverage-unit",
+    "integration-test": "NODE_ENV=test nyc --reporter=lcov --reporter=json mocha --exit --recursive --timeout 60000 --file ./test/utils/setupTests/index.js",
+    "lint": "node_modules/eslint/bin/eslint.js .",
+    "migrate:new": "node node_modules/db-migrate/bin/db-migrate create",
+    "migrate-up:dry-once": "node node_modules/db-migrate/bin/db-migrate up -c 1 --dry-run",
+    "migrate-up:once": "node node_modules/db-migrate/bin/db-migrate up -c 1",
+    "migrate-up:all": "node node_modules/db-migrate/bin/db-migrate up",
+    "migrate-down:dry-once": "node node_modules/db-migrate/bin/db-migrate down -c 1 --dry-run",
+    "migrate-down:once": "node node_modules/db-migrate/bin/db-migrate down -c 1",
+    "migrate-up:prod:dry-once": "node node_modules/db-migrate/bin/db-migrate up -c 1 -e prod --dry-run",
+    "migrate-up:prod:once": "node node_modules/db-migrate/bin/db-migrate up -c 1 -e prod",
+    "migrate-down:prod:dry-once": "node node_modules/db-migrate/bin/db-migrate down -c 1 -e prod --dry-run",
+    "migrate-down:prod:once": "node node_modules/db-migrate/bin/db-migrate down -c 1 -e prod",
+    "coverage": "npm run merge-coverage && nyc report --reporter=lcov --report-dir=full-coverage/ && node src/tools/openFile/index.js full-coverage/lcov-report/index.html",
+    "merge-coverage": "node src/tools/mergeCoverage/index.js",
+    "print-coverage-report": "nyc report -t full-coverage --check-coverage",
+    "check-sls-deployments": "node src/tools/checkServerlessDeployments/index.js",
+    "check-mysql-status": "node src/tools/checkMySQLInstance/index.js",
+    "switch-env-vars": "node src/tools/switchEnvVars/index.js",
+    "dev": "nodemon app.js",
+    "start": "node index.js"
+  },
+  "author": "CyprusCodes",
+  "license": "ISC",
+  "_moduleAliases": {
+    "~root": "./src",
+    "~test": "./test"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "<rootDir>/test/apps/",
+      "<rootDir>/test/serverless/",
+      "<rootDir>/test/services/"
+    ],
+    "setupTestFrameworkScriptFile": "<rootDir>/src/setupTests.js",
+    "moduleNameMapper": {
+      "~root/(.*)": "<rootDir>/src/$1",
+      "~test/(.*)": "<rootDir>/test/$1"
+    },
+    "bail": true
+  },
+  "nyc": {
+    "branches": 15,
+    "lines": 50,
+    "functions": 10,
+    "statements": 50,
+    "include": [
+      "src/actions/**/*.js",
+      "src/apps/**/*.js",
+      "src/queries/**/*.js",
+      "src/utils/**/*.js",
+      "src/services/**/*.js"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged",
+      "pre-push": "npm run lint"
+    }
+  },
+  "prettier": {
+    "trailingComma": "none"
+  },
+  "justrest": {
+    "version": "0.0.1",
+    "scripts": {
+      "run": "npm start",
+      "dev": "npm run dev"
+    }
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-jest-snapshot": "^2.0.0",
+    "chalk": "^2.4.2",
+    "chipper": "^1.7.2",
+    "db-migrate": "^0.11.11",
+    "db-migrate-mysql": "^1.1.10",
+    "deep-equal-in-any-order": "^1.0.21",
+    "eslint": "^7.7.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-prettier": "^4.3.0",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-eslint-comments": "^3.1.2",
+    "eslint-plugin-import": "^2.17.3",
+    "eslint-plugin-justfulfil": "0.0.8",
+    "eslint-plugin-prettier": "^3.1.0",
+    "glob": "^7.1.4",
+    "husky": "^2.4.0",
+    "jest": "^23.6.0",
+    "json-diff": "^0.5.4",
+    "mocha": "^6.1.4",
+    "nock": "^11.7.0",
+    "node-mocks-http": "^1.7.0",
+    "nodemon": "^1.19.1",
+    "nyc": "^14.1.1",
+    "object-hash": "^2.0.1",
+    "prettier": "^1.18.2",
+    "pretty-quick": "^1.11.0",
+    "proxyquire": "^2.1.3",
+    "rimraf": "^3.0.2",
+    "sinon": "^7.5.0",
+    "sinon-chai": "^3.3.0",
+    "supertest": "^4.0.2"
+  },
+  "dependencies": {
+    "ascii-table": "0.0.9",
+    "atob": "^2.1.2",
+    "axios": "^0.21.1",
+    "chrono-node": "^1.3.11",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^6.2.0",
+    "es6-promisify": "^6.0.1",
+    "express": "^4.16.3",
+    "express-jwt": "^5.3.1",
+    "express-jwt-authz": "^2.3.1",
+    "express-rate-limit": "^5.0.0",
+    "faker": "^4.1.0",
+    "glossy": "^0.1.7",
+    "google-auth-library": "^7.8.0",
+    "googleapis": "^84.0.0",
+    "helmet": "^3.18.0",
+    "hogan.js": "^3.0.2",
+    "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^1.5.0",
+    "lodash": "^4.17.19",
+    "minio": "^7.0.19",
+    "mjml": "^4.5.1",
+    "module-alias": "^2.2.0",
+    "moment": "^2.24.0",
+    "moment-business-days": "^1.1.3",
+    "morgan": "^1.9.1",
+    "multer": "^1.4.3",
+    "mysql": "^2.16.0",
+    "nodemailer": "^4.6.8",
+    "oauth": "^0.9.15",
+    "objects-to-csv": "^1.3.6",
+    "qs": "^6.8.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
+    "sort-any": "^1.1.23",
+    "uuid": "^8.3.2",
+    "winston": "^3.2.1",
+    "winston-console-formatter": "^1.0.0-beta.3",
+    "winston-transport": "^4.3.0",
+    "yamlify-object": "^0.5.1",
+    "yamlify-object-colors": "^1.0.3",
+    "yup": "^0.27.0"
+  }
+}

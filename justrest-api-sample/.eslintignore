@@ -1,0 +1,2 @@
+migrations/*.js
+coverage-unit/*
