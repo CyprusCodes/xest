@@ -103,4 +103,8 @@ dist
 # TernJS port file
 .tern-port
 
+# Used For Testing Local CLI
+*-api
+
+# documentation
 .docusaurus

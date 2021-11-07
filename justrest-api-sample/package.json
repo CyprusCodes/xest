@@ -27,7 +27,7 @@
     "start": "node index.js"
   },
   "author": "CyprusCodes",
-  "license": "ISC",
+  "license": "MIT",
   "_moduleAliases": {
     "~root": "./src",
     "~test": "./test"

@@ -79,7 +79,7 @@ const generate = (program) => async (appName) => {
     cwd: projectDirectoryToCreate,
     stdio: "inherit",
   });
-  console.log(chalk.green`Setup finished. Ready to rock!`);
+  console.log(chalk.green`You're ready to rock!\n Run:\n${chalk.green`cd ${appNameKebapCase} && just run`}\nto begin.`);
 };
 
 module.exports = {
