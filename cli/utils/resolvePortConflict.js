@@ -53,7 +53,6 @@ const resolvePortConflict = async (portToCheck, serviceName) => {
         } else {
           await kill(portToCheck);
         }
-
         await kill(portToCheck);
       }
     }

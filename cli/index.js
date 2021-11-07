@@ -1,4 +1,5 @@
 module.exports = {
-    ...require('./generate'),
-    ...require('./run'),
-  }
+  ...require("./generate"),
+  ...require("./run"),
+  ...require("./fresh")
+};

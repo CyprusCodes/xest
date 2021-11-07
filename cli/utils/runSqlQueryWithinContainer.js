@@ -1,7 +1,7 @@
 const { exec } = require("child_process");
 
-const runSQL = (sql) => {
-  return new Promise((resolve) => {
+const runSqlQueryWithinContainer = sql => {
+  return new Promise(resolve => {
     exec(sql, (error, output) => {
       if (error) {
         error = error.toString();
@@ -15,4 +15,4 @@ const runSQL = (sql) => {
   });
 };
 
-module.exports = runSQL;
+module.exports = runSqlQueryWithinContainer;
