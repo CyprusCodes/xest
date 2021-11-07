@@ -105,3 +105,6 @@ dist
 
 # Used For Testing Local CLI
 *-api
+
+# documentation
+.docusaurus
