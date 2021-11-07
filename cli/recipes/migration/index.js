@@ -11,7 +11,7 @@ module.exports = {
     const lastElement = process.argv[process.argv.length - 1];
     let migrationName = null;
 
-    if (lastElement !== "migration") {
+    if (lastElement !== "migration" && lastElement !== "new") {
       migrationName = lastElement;
     }
 
