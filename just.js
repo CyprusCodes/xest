@@ -10,7 +10,10 @@ program
   .description("scaffold a new justREST API project")
   .action(generate(program));
 
-program.command("run").description("run your justREST project").action(run);
+program
+  .command("run")
+  .description("run your justREST project")
+  .action(run);
 
 program
   .command("fresh")

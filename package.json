@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "justrest CLI for managing API projects",
   "main": "index.js",
+  "bin": {
+    "just": "./just.js"
+  },
   "dependencies": {
     "commander": "^8.3.0",
     "cross-port-killer": "^1.3.0",
