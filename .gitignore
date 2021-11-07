@@ -104,4 +104,4 @@ dist
 .tern-port
 
 # Used For Testing Local CLI
-my-api
+*-api

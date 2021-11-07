@@ -7,6 +7,9 @@ const findJustRestProjectRoot = require("./utils/findProjectRoot");
 const path = require("path");
 const fs = require("fs");
 const runSQL = require("./utils/runSQLDockerContainer");
+const detect = require("detect-port");
+const { kill } = require("cross-port-killer");
+const sleep = require("./utils/sleep");
 
 const run = async () => {
   const projectDetails = findJustRestProjectRoot();
@@ -24,29 +27,110 @@ const run = async () => {
   const { filename } = projectDetails;
   const rootPath = dirname(filename);
 
+  // todo: check if docker daemon is running
+
   const isDockerMySQLContainerRunning = execSync(
     `docker ps --format "table {{.ID}}\t{{.Names}}" | grep ${projectName}-mysql-db | cut -d ' ' -f 1`,
     {
       cwd: path.join(rootPath, "database"),
     }
   ).toString();
+
+  let ready = false;
+  let retryCount = 1;
+  let error;
+  let output;
+
   let mySQLContainerId = isDockerMySQLContainerRunning.trim();
   if (!Boolean(isDockerMySQLContainerRunning)) {
+    // check if mysql port is available for use
+    const port = await detect("3306");
+    if (Number(port) !== 3306) {
+      const results = await inquirer.prompt([
+        {
+          type: "expand",
+          message: chalk.red`Another process is occupying port 3006. Do you want to stop this process?`,
+          name: "resolvePortConflict",
+          default: true,
+          choices: [
+            {
+              key: "y",
+              name: "Yes",
+              value: true,
+            },
+            {
+              key: "n",
+              name: "No",
+              value: false,
+            },
+          ],
+        },
+      ]);
+      const { resolvePortConflict } = results;
+      if (resolvePortConflict) {
+        const out = execSync(
+          `docker container ls --format "{{.ID}}\t{{.Names}}\t{{.Ports}}"`
+        ).toString();
+        if (out.includes("3306")) {
+          const containerId = out.split("\t")[0];
+          execSync(`docker stop ${containerId}`);
+        } else {
+          await kill(3306);
+        }
+      }
+    }
     const runMySQLContainer = execSync(`docker-compose up -d`, {
       cwd: path.join(rootPath, "database"),
     }).toString();
-    mySQLContainerId = runMySQLContainer.trim();
   }
-  // todo: check whether mysql is ready
-      
+
+  const isDockerMySQLContainerRunningAgain = execSync(
+    `docker ps --format "table {{.ID}}\t{{.Names}}" | grep ${projectName}-mysql-db | cut -d ' ' -f 1`,
+    {
+      cwd: path.join(rootPath, "database"),
+    }
+  ).toString();
+  mySQLContainerId = isDockerMySQLContainerRunningAgain.trim();
+
+  // check whether mysql is ready
+  console.log(
+    chalk.yellow`Waiting for MySQL Container to become ready. This should only take a few seconds.`
+  );
+  while (!ready && retryCount < 10) {
+    const mySQLConnectionString = `mysql -h localhost -u root -ppassword -e 'status'`;
+    const checkDatabaseSchema = `docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
+    ({ error, output } = await runSQL(checkDatabaseSchema));
+
+    if (!error) {
+      const uptimeStatus = output
+        .split("\n")
+        .find((row) => row.includes("Uptime"))
+        .replace(/\s/g, "")
+        .split(":")[1];
+      const uptimeRegex = /(\d*)sec$/;
+      const [_, secs] = uptimeStatus.match(uptimeRegex);
+      if (Number(secs) > 10 || uptimeStatus.includes("min")) {
+        ready = true;
+      }
+    }
+    retryCount++;
+    if(!ready) {
+      await sleep(1000 * retryCount);
+    }
+  }
+  if (!ready) {
+    console.log(
+      chalk.red`MySQL instance is not ready yet. Try running ${chalk.green`just run`} again.`
+    );
+  }
+
   const checkDatabaseSchemaAppliedQuery = `select count(*) as count from migrations where name = '/20211107064304-database-schema';`;
   const mySQLConnectionString = `mysql -h localhost -u root -ppassword ${snakeCase(
     projectName
   )}_db`;
-
   const checkDatabaseSchema = `docker exec -i ${mySQLContainerId} ${mySQLConnectionString} <<< "${checkDatabaseSchemaAppliedQuery}"`;
   // insert database schema
-  let { error, output } = await runSQL(checkDatabaseSchema);
+  ({ error, output } = await runSQL(checkDatabaseSchema));
   if (error && error.includes("ERROR 1146")) {
     console.log(chalk.yellow`Setting up your database schema.`);
     const runDbSchemaQuery = `cat ${rootPath}/database/database-schema.sql | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
@@ -72,12 +156,16 @@ const run = async () => {
 
       return b.localeCompare(a);
     });
-  const checkMigrationsQuery = `select count(*) as count from migrations where name='/${latestMigrationFile.replace(".js", "")}';`;
+  const checkMigrationsQuery = `select count(*) as count from migrations where name='/${latestMigrationFile.replace(
+    ".js",
+    ""
+  )}';`;
   const checkMigrations = `docker exec -i ${mySQLContainerId} ${mySQLConnectionString} <<< "${checkMigrationsQuery}"`;
   ({ error, output } = await runSQL(checkMigrations));
   if (!error && output.includes("count\n0\n")) {
     console.log(chalk.yellow`Applying database migrations.`);
-    execSync("npm run migrate-up:all", { // -- -v flag for verbose
+    execSync("npm run migrate-up:all", {
+      // -- -v flag for verbose
       cwd: rootPath,
       stdio: "inherit",
     });
@@ -93,7 +181,9 @@ const run = async () => {
     const populateSeedData = `cat ${rootPath}/database/seed-data.sql | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
     ({ error, output } = await runSQL(populateSeedData));
     if (error && error.includes("ERROR")) {
-      console.log(chalk.red`Failed to populate database with seed data. This might happen if you have recently updated your migrations, please modify your seed data to match new schema changes.`);
+      console.log(
+        chalk.red`Failed to populate database with seed data. This might happen if you have recently updated your migrations, please modify your seed data to match new schema changes.`
+      );
     }
   }
 
