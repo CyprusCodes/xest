@@ -1,4 +1,3 @@
-const inquirer = require("inquirer");
 const chalk = require("chalk");
 const snakeCase = require("lodash/snakeCase");
 const { execSync } = require("child_process");
@@ -7,8 +6,7 @@ const findJustRestProjectRoot = require("./utils/findProjectRoot");
 const path = require("path");
 const fs = require("fs");
 const runSQL = require("./utils/runSQLDockerContainer");
-const detect = require("detect-port");
-const { kill } = require("cross-port-killer");
+const resolvePortConflict = require("./utils/resolvePortConflict");
 const sleep = require("./utils/sleep");
 
 const run = async () => {
@@ -56,41 +54,8 @@ const run = async () => {
   let mySQLContainerId = isDockerMySQLContainerRunning.trim();
   if (!Boolean(isDockerMySQLContainerRunning)) {
     // check if mysql port is available for use
-    const port = await detect("3306");
-    if (Number(port) !== 3306) {
-      const results = await inquirer.prompt([
-        {
-          type: "expand",
-          message: chalk.red`Another process is occupying port 3006. Do you want to stop this process?`,
-          name: "resolvePortConflict",
-          default: true,
-          choices: [
-            {
-              key: "y",
-              name: "Yes",
-              value: true
-            },
-            {
-              key: "n",
-              name: "No",
-              value: false
-            }
-          ]
-        }
-      ]);
-      const { resolvePortConflict } = results;
-      if (resolvePortConflict) {
-        const out = execSync(
-          `docker container ls --format "{{.ID}}\t{{.Names}}\t{{.Ports}}"`
-        ).toString();
-        if (out.includes("3306")) {
-          const containerId = out.split("\t")[0];
-          execSync(`docker stop ${containerId}`);
-        } else {
-          await kill(3306);
-        }
-      }
-    }
+    await resolvePortConflict(3306, "MySQL Docker Container");
+
     const runMySQLContainer = execSync(`docker-compose up -d`, {
       cwd: path.join(rootPath, "database")
     }).toString();
@@ -199,6 +164,7 @@ const run = async () => {
     }
   }
 
+  await resolvePortConflict(3001, `${projectName} API`);
   console.log(chalk.yellow`Starting ${projectName} API project`);
   execSync("npm run dev", {
     cwd: rootPath,
