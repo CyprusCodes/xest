@@ -46,6 +46,21 @@ module.exports = {
     },
     {
       type: "category",
+      label: "CLI Reference",
+      items: [
+        "api/screens",
+        "api/menu",
+        "api/enumerate",
+        "api/query",
+        "api/maintain",
+        "api/service",
+        "api/queues",
+        "api/email",
+        "api/i18n-internationalization",
+      ],
+    },
+    {
+      type: "category",
       label: "Guides",
       collapsed: true,
       items: [
@@ -58,21 +73,6 @@ module.exports = {
         "guides/validation",
         "guides/v4-migration",
         "guides/default-screens",
-      ],
-    },
-    {
-      type: "category",
-      label: "API Reference",
-      items: [
-        "api/screens",
-        "api/menu",
-        "api/enumerate",
-        "api/query",
-        "api/maintain",
-        "api/service",
-        "api/queues",
-        "api/email",
-        "api/i18n-internationalization",
       ],
     },
   ],

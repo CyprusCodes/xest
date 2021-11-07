@@ -174,3 +174,8 @@
     display: none;
   }
 }
+
+.step-codeblock {
+  margin: 200px !important;
+  background: red;
+}

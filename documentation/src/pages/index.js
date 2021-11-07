@@ -7,6 +7,7 @@ import useBaseUrl from "@docusaurus/useBaseUrl";
 import styles from "./index.module.css";
 import Translate from "@docusaurus/Translate";
 import { translate } from "@docusaurus/core/lib/client/exports/Translate";
+import CodeBlock from "@theme/CodeBlock";
 
 const features = [
   {
@@ -181,22 +182,30 @@ function Home() {
           <Translate
             values={{
               migrationGuideLink: (
-                <Link to="/docs/guides/v4-migration">
+                <div>
                   <Translate
-                  // values={{
-                  //   just: <code> just my-new-app</code>,
-                  //   just-run: <code>ReactJS</code>,
-                  // }}
-                  // id="homepage.features.modern-ui"
-                  // description="Modern UI"
+                    values={{
+                      just: (
+                        <CodeBlock className="language-bash step-codeblock">
+                          npx justrest my-api
+                        </CodeBlock>
+                      ),
+                      justRunCommand: (
+                        <CodeBlock className="language-bash step-codeblock">
+                          cd my-api && just run
+                        </CodeBlock>
+                      ),
+                    }}
+                    id="homepage.features.modern-ui"
+                    description="Modern UI"
                   >
-                    {`{just} my-new-app ,then {just-run}  <code>ReactJS</code>`}
+                    {`{just} {justRunCommand}`}
                   </Translate>
-                </Link>
+                </div>
               ),
             }}
           >
-            {`Get up and running on your REST API project!  {migrationGuideLink}`}
+            {`Get started in seconds with just 2 steps.  {migrationGuideLink}`}
           </Translate>
           .
         </div>
