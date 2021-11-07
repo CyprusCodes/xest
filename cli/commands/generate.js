@@ -5,6 +5,7 @@ const chalk = require("chalk");
 const findJustRestProjectRoot = require("../utils/findProjectRoot");
 const { writeFile, writeDirectory } = require("../utils/createFile");
 const asyncSeries = require("../utils/asyncSeries");
+const writeDotEnvFile = require("../utils/writeDotEnvFile");
 const fs = require("fs");
 const path = require("path");
 const { fdir } = require("fdir");
@@ -72,12 +73,13 @@ const generate = program => async appName => {
   });
 
   console.log(chalk.green`Installing packages...`);
-  execSync("npm install", {
+  await writeDotEnvFile(projectDirectoryToCreate);
+  execSync(`npm install`, {
     cwd: projectDirectoryToCreate,
     stdio: "inherit"
   });
   console.log(
-    chalk.green`You're ready to rock!\n Run:\n${chalk.green`cd ${appNameKebapCase} && just run`}\nto begin.`
+    chalk.green`You're ready to go!\n Type ${chalk.green`cd ${appNameKebapCase} && just run`} to begin.`
   );
 };
 
