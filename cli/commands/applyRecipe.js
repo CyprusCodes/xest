@@ -1,4 +1,5 @@
 const chalk = require("chalk");
+const inquirer = require("inquirer");
 const allRecipes = require("../recipes/index");
 const asyncSeries = require("../utils/asyncSeries");
 const findJustRestProjectRoot = require("../utils/findProjectRoot");
@@ -65,7 +66,13 @@ const applyRecipe = async () => {
   const recipeToApply = allRecipes.find(recipe => recipe.name === recipeName);
 
   if (recipeToApply) {
-    await executeRecipe({ recipeToApply, projectName, projectRootPath });
+    await executeRecipe({
+      recipeToApply,
+      projectName,
+      projectRootPath,
+      argv: process.argv
+    });
+    return;
   }
 
   // user might have made a typo
@@ -75,7 +82,19 @@ const applyRecipe = async () => {
     );
   }
 
-  // todo inquirer goes here
+  const { recipeType: recipeChosen } = await inquirer.prompt({
+    type: "list",
+    name: "recipeType",
+    message: "What would you like to generate?",
+    choices: allRecipes.map(recipe => recipe.name)
+  });
+  const recipe = allRecipes.find(recipe => recipe.name === recipeChosen);
+  await executeRecipe({
+    recipeToApply: recipe,
+    projectName,
+    projectRootPath,
+    argv: process.argv
+  });
 };
 
 module.exports = {
