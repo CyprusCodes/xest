@@ -43,9 +43,6 @@ const generate = program => async appName => {
   const sourceProjectFiles = new fdir()
     .withBasePath()
     .withDirs()
-    .filter(path => {
-      return !path.includes("node_modules");
-    })
     .crawl(sampleProjectRootDirectory)
     .sync();
 
