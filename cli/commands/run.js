@@ -2,12 +2,12 @@ const chalk = require("chalk");
 const snakeCase = require("lodash/snakeCase");
 const { execSync } = require("child_process");
 const { dirname } = require("path");
-const findJustRestProjectRoot = require("./utils/findProjectRoot");
+const findJustRestProjectRoot = require("../utils/findProjectRoot");
 const path = require("path");
 const fs = require("fs");
-const runSqlQueryWithinContainer = require("./utils/runSqlQueryWithinContainer");
-const resolvePortConflict = require("./utils/resolvePortConflict");
-const runMySQLContainer = require("./utils/runMySQLContainer");
+const runSqlQueryWithinContainer = require("../utils/runSqlQueryWithinContainer");
+const resolvePortConflict = require("../utils/resolvePortConflict");
+const runMySQLContainer = require("../utils/runMySQLContainer");
 
 const run = async () => {
   const projectDetails = findJustRestProjectRoot();

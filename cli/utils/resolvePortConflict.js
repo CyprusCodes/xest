@@ -9,7 +9,7 @@ const resolvePortConflict = async (portToCheck, serviceName) => {
   if (Number(port) !== portToCheck) {
     const results = await inquirer.prompt([
       {
-        type: "expand",
+        type: "confirm",
         message: chalk.red`Can not start ${serviceName}, another process is occupying port ${portToCheck}. Do you want to stop this process?`,
         name: "resolvePortConflict",
         default: 0,
@@ -18,16 +18,16 @@ const resolvePortConflict = async (portToCheck, serviceName) => {
             index: 0,
             key: "Y",
             name: "Yes",
-            value: true
+            value: true,
           },
           {
             index: 1,
             key: "N",
             name: "No",
-            value: false
-          }
-        ]
-      }
+            value: false,
+          },
+        ],
+      },
     ]);
     const { resolvePortConflict } = results;
     if (resolvePortConflict) {
@@ -44,10 +44,10 @@ const resolvePortConflict = async (portToCheck, serviceName) => {
           const out = execSync(`ps -x | grep "nodemon app.js"`).toString();
           const processIds = out
             .split("\n")
-            .map(row => row.replace(/\s/g, " "))
-            .map(row => row.split(" "))
-            .map(row => row[0])
-            .filter(row => Boolean(row));
+            .map((row) => row.replace(/\s/g, " "))
+            .map((row) => row.split(" "))
+            .map((row) => row[0])
+            .filter((row) => Boolean(row));
 
           await killer.killByPids(processIds);
         } else {

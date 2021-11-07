@@ -1,9 +1,9 @@
 const snakeCase = require("lodash/snakeCase");
 const chalk = require("chalk");
-const findJustRestProjectRoot = require("./utils/findProjectRoot");
-const runMySQLContainer = require("./utils/runMySQLContainer");
+const findJustRestProjectRoot = require("../utils/findProjectRoot");
+const runMySQLContainer = require("../utils/runMySQLContainer");
 const { dirname } = require("path");
-const runSqlQueryWithinContainer = require("./utils/runSqlQueryWithinContainer");
+const runSqlQueryWithinContainer = require("../utils/runSqlQueryWithinContainer");
 const { run } = require("./run");
 
 const fresh = async () => {

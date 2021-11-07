@@ -2,16 +2,16 @@ const inquirer = require("inquirer");
 const snakeCase = require("lodash/snakeCase");
 const kebabCase = require("lodash/kebabCase");
 const chalk = require("chalk");
-const findJustRestProjectRoot = require("./utils/findProjectRoot");
-const { writeFile, writeDirectory } = require("./utils/createFile");
-const asyncSeries = require("./utils/asyncSeries");
+const findJustRestProjectRoot = require("../utils/findProjectRoot");
+const { writeFile, writeDirectory } = require("../utils/createFile");
+const asyncSeries = require("../utils/asyncSeries");
 const fs = require("fs");
 const path = require("path");
 const { fdir } = require("fdir");
 const replace = require("replace-in-file");
 const { execSync } = require("child_process");
 
-const generate = (program) => async (appName) => {
+const generate = program => async appName => {
   const projectRoot = findJustRestProjectRoot();
   if (projectRoot) {
     console.log(
@@ -43,14 +43,14 @@ const generate = (program) => async (appName) => {
   const sourceProjectFiles = new fdir()
     .withBasePath()
     .withDirs()
-    .filter((path) => {
+    .filter(path => {
       return !path.includes("node_modules");
     })
     .crawl(sampleProjectRootDirectory)
     .sync();
 
   const filesWritten = [];
-  await asyncSeries(sourceProjectFiles, async (sourceFilePath) => {
+  await asyncSeries(sourceProjectFiles, async sourceFilePath => {
     const isFile = fs.lstatSync(sourceFilePath).isFile();
     const isDirectory = fs.lstatSync(sourceFilePath).isDirectory();
     const target = sourceFilePath.replace(
@@ -71,17 +71,19 @@ const generate = (program) => async (appName) => {
   await replace({
     files: filesWritten,
     from: [/{{PROJECT_NAME_SNAKECASE}}/g, /{{PROJECT_NAME_KEBAPCASE}}/g],
-    to: [appNameSnakeCase, appNameKebapCase],
+    to: [appNameSnakeCase, appNameKebapCase]
   });
 
   console.log(chalk.green`Installing packages...`);
   execSync("npm install", {
     cwd: projectDirectoryToCreate,
-    stdio: "inherit",
+    stdio: "inherit"
   });
-  console.log(chalk.green`You're ready to rock!\n Run:\n${chalk.green`cd ${appNameKebapCase} && just run`}\nto begin.`);
+  console.log(
+    chalk.green`You're ready to rock!\n Run:\n${chalk.green`cd ${appNameKebapCase} && just run`}\nto begin.`
+  );
 };
 
 module.exports = {
-  generate,
+  generate
 };

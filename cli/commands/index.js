@@ -1,5 +1,6 @@
 module.exports = {
   ...require("./generate"),
   ...require("./run"),
-  ...require("./fresh")
+  ...require("./fresh"),
+  ...require("./applyRecipe")
 };
