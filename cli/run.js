@@ -5,9 +5,10 @@ const { exec, execSync } = require("child_process");
 const { dirname } = require("path");
 const findJustRestProjectRoot = require("./utils/findProjectRoot");
 const path = require("path");
+const fs = require("fs");
 const runSQL = require("./utils/runSQLDockerContainer");
 
-const run = async (appName) => {
+const run = async () => {
   const projectDetails = findJustRestProjectRoot();
   if (!projectDetails) {
     console.log(
@@ -22,22 +23,23 @@ const run = async (appName) => {
 
   const { filename } = projectDetails;
   const rootPath = dirname(filename);
-  console.log(rootPath);
 
   const isDockerMySQLContainerRunning = execSync(
     `docker ps --format "table {{.ID}}\t{{.Names}}" | grep ${projectName}-mysql-db | cut -d ' ' -f 1`,
     {
-      cwd: path.join(rootPath, "infrastructure"),
+      cwd: path.join(rootPath, "database"),
     }
   ).toString();
   let mySQLContainerId = isDockerMySQLContainerRunning.trim();
   if (!Boolean(isDockerMySQLContainerRunning)) {
     const runMySQLContainer = execSync(`docker-compose up -d`, {
-      cwd: path.join(rootPath, "infrastructure"),
+      cwd: path.join(rootPath, "database"),
     }).toString();
     mySQLContainerId = runMySQLContainer.trim();
   }
-  const checkDatabaseSchemaAppliedQuery = `select count(*) as count from migrations where name = 'database-schema';`;
+  // todo: check whether mysql is ready
+      
+  const checkDatabaseSchemaAppliedQuery = `select count(*) as count from migrations where name = '/20211107064304-database-schema';`;
   const mySQLConnectionString = `mysql -h localhost -u root -ppassword ${snakeCase(
     projectName
   )}_db`;
@@ -47,37 +49,59 @@ const run = async (appName) => {
   let { error, output } = await runSQL(checkDatabaseSchema);
   if (error && error.includes("ERROR 1146")) {
     console.log(chalk.yellow`Setting up your database schema.`);
-    const runDbSchemaQuery = `cat ${rootPath}/infrastructure/database-schema.sql | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
+    const runDbSchemaQuery = `cat ${rootPath}/database/database-schema.sql | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
     ({ error, output } = await runSQL(runDbSchemaQuery));
   }
 
+  // run migrations
+  // check whether the last migration has been run
+  const files = fs.readdirSync(path.join(rootPath, "migrations"));
+  const [latestMigrationFile] = files
+    .filter((file) => file.endsWith(".js"))
+    .sort(function (a, b) {
+      var aIsDir = fs.statSync(rootPath + "/migrations/" + a).isDirectory(),
+        bIsDir = fs.statSync(rootPath + "/migrations/" + b).isDirectory();
+
+      if (aIsDir && !bIsDir) {
+        return 1;
+      }
+
+      if (!aIsDir && bIsDir) {
+        return -1;
+      }
+
+      return b.localeCompare(a);
+    });
+  const checkMigrationsQuery = `select count(*) as count from migrations where name='/${latestMigrationFile.replace(".js", "")}';`;
+  const checkMigrations = `docker exec -i ${mySQLContainerId} ${mySQLConnectionString} <<< "${checkMigrationsQuery}"`;
+  ({ error, output } = await runSQL(checkMigrations));
+  if (!error && output.includes("count\n0\n")) {
+    console.log(chalk.yellow`Applying database migrations.`);
+    execSync("npm run migrate-up:all", { // -- -v flag for verbose
+      cwd: rootPath,
+      stdio: "inherit",
+    });
+  }
+
   // insert seed data
-  const checkSeedDataQuery = `select count(*) as count from migrations where name = 'seed-data';`;
-  const checkSeedData = `docker exec -i ${mySQLContainerId} ${mySQLConnectionString} <<< "${checkSeedDataQuery}"`;;
+  // seed data is inserted after migrations, so seed is always kept up to date
+  const checkSeedDataQuery = `select count(*) as count from migrations where name = '/20211107064324-seed-data';`;
+  const checkSeedData = `docker exec -i ${mySQLContainerId} ${mySQLConnectionString} <<< "${checkSeedDataQuery}"`;
   ({ error, output } = await runSQL(checkSeedData));
   if (!error && output.includes("count\n0\n")) {
     console.log(chalk.yellow`Populating database with seed data.`);
-    const populateSeedData = `cat ${rootPath}/infrastructure/seed-data.sql | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
+    const populateSeedData = `cat ${rootPath}/database/seed-data.sql | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
     ({ error, output } = await runSQL(populateSeedData));
+    if (error && error.includes("ERROR")) {
+      console.log(chalk.red`Failed to populate database with seed data. This might happen if you have recently updated your migrations, please modify your seed data to match new schema changes.`);
+    }
   }
- 
 
-  //console.log()
-  /*  
-    PG_CONTAINER_ID=$(docker ps -a --format "table {{.ID}}\t{{.Names}}" | grep pg-instance | cut -d ' ' -f 1)
-
-  for file in db/migrate/*.up.sql ; do
-      cat $file | docker exec -i $PG_CONTAINER_ID psql -U user -d local
-  done
-    @echo "Importing data from infrastructure/database-up.sql"
-    @cd infrastructure; docker exec -i my-api-mysql-db mysql -uroot -ppassword mysql < database-up.sql
-    @npm run migrate-up:all
-    @cd infrastructure; docker exec -i my-api-mysql-db mysql -uroot -ppassword mysql < db-seed.sql
-  */
-
-  // run docker instance if it's not running
-  // run db-migrations if necessary
-  // npm run dev
+  console.log(chalk.yellow`Starting ${projectName} API project`);
+  execSync("npm run dev", {
+    cwd: rootPath,
+    stdio: "inherit",
+  });
 };
 
 module.exports = {

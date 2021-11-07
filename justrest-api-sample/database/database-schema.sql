@@ -18,6 +18,25 @@ SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '';
 
 USE `{{PROJECT_NAME_SNAKECASE}}_db`;
 
+-- DONT MODIFY THIS MIGRATION
+-- it is used by justrest local development pipeline
+DROP TABLE IF EXISTS `migrations`;
+CREATE TABLE `migrations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `run_on` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+INSERT INTO `migrations` (
+  name,
+  run_on
+) VALUES (
+  "/20211107064324-database-schema",
+  "20211107064324"
+);
+
+-- YOU CAN MODIFY BELOW THIS LINE
 DROP TABLE IF EXISTS user_types;
 CREATE TABLE user_types(
   user_type_id int AUTO_INCREMENT PRIMARY KEY,
@@ -35,19 +54,3 @@ CREATE TABLE users(
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_type_id) REFERENCES user_types(user_type_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-DROP TABLE IF EXISTS `migrations`;
-CREATE TABLE `migrations` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `run_on` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-INSERT INTO `migrations` (
-  name,
-  run_on
-) VALUES (
-  "database-schema",
-  NOW()
-);
