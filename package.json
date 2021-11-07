@@ -1,6 +1,6 @@
 {
-  "name": "justrest",
-  "version": "0.0.1",
+  "name": "justweb",
+  "version": "0.0.2",
   "description": "justrest CLI for managing API projects",
   "main": "index.js",
   "bin": {

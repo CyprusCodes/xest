@@ -3,7 +3,7 @@ const program = require("commander");
 const chalk = require("chalk");
 const { description, version } = require("./package.json");
 
-const { generate, run, fresh, applyRecipe } = require("./cli/commands");
+const { generate, run, fresh, applyRecipe } = require("./cli/commands/index");
 
 program
   .command("start [appname]", { isDefault: true })

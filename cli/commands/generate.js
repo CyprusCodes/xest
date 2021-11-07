@@ -31,7 +31,7 @@ const generate = program => async appName => {
   const appNameKebapCase = kebabCase(appName);
   const sampleProjectRootDirectory = path.join(
     __filename,
-    "../../",
+    "../../../",
     "justrest-api-sample/"
   );
   const projectDirectoryToCreate = path.join(process.cwd(), appNameKebapCase);
