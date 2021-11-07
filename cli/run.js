@@ -1,7 +1,7 @@
 const inquirer = require("inquirer");
 const chalk = require("chalk");
 const snakeCase = require("lodash/snakeCase");
-const { exec, execSync } = require("child_process");
+const { execSync } = require("child_process");
 const { dirname } = require("path");
 const findJustRestProjectRoot = require("./utils/findProjectRoot");
 const path = require("path");
@@ -21,18 +21,30 @@ const run = async () => {
   }
 
   const {
-    value: { name: projectName },
+    value: { name: projectName }
   } = projectDetails;
 
   const { filename } = projectDetails;
   const rootPath = dirname(filename);
 
-  // todo: check if docker daemon is running
+  // check if docker daemon is running
+  try {
+    const isDockerDaemonRunning = execSync(`docker ps`, {
+      cwd: path.join(rootPath, "database")
+    }).toString();
+  } catch (err) {
+    if (err.toString().includes("Error")) {
+      console.log(
+        chalk.red`Docker is currently not running. Please start Docker and repeat ${chalk.green`just run`} again.`
+      );
+      return;
+    }
+  }
 
   const isDockerMySQLContainerRunning = execSync(
     `docker ps --format "table {{.ID}}\t{{.Names}}" | grep ${projectName}-mysql-db | cut -d ' ' -f 1`,
     {
-      cwd: path.join(rootPath, "database"),
+      cwd: path.join(rootPath, "database")
     }
   ).toString();
 
@@ -56,15 +68,15 @@ const run = async () => {
             {
               key: "y",
               name: "Yes",
-              value: true,
+              value: true
             },
             {
               key: "n",
               name: "No",
-              value: false,
-            },
-          ],
-        },
+              value: false
+            }
+          ]
+        }
       ]);
       const { resolvePortConflict } = results;
       if (resolvePortConflict) {
@@ -80,14 +92,14 @@ const run = async () => {
       }
     }
     const runMySQLContainer = execSync(`docker-compose up -d`, {
-      cwd: path.join(rootPath, "database"),
+      cwd: path.join(rootPath, "database")
     }).toString();
   }
 
   const isDockerMySQLContainerRunningAgain = execSync(
     `docker ps --format "table {{.ID}}\t{{.Names}}" | grep ${projectName}-mysql-db | cut -d ' ' -f 1`,
     {
-      cwd: path.join(rootPath, "database"),
+      cwd: path.join(rootPath, "database")
     }
   ).toString();
   mySQLContainerId = isDockerMySQLContainerRunningAgain.trim();
@@ -104,7 +116,7 @@ const run = async () => {
     if (!error) {
       const uptimeStatus = output
         .split("\n")
-        .find((row) => row.includes("Uptime"))
+        .find(row => row.includes("Uptime"))
         .replace(/\s/g, "")
         .split(":")[1];
       const uptimeRegex = /(\d*)sec$/;
@@ -114,7 +126,7 @@ const run = async () => {
       }
     }
     retryCount++;
-    if(!ready) {
+    if (!ready) {
       await sleep(1000 * retryCount);
     }
   }
@@ -141,8 +153,8 @@ const run = async () => {
   // check whether the last migration has been run
   const files = fs.readdirSync(path.join(rootPath, "migrations"));
   const [latestMigrationFile] = files
-    .filter((file) => file.endsWith(".js"))
-    .sort(function (a, b) {
+    .filter(file => file.endsWith(".js"))
+    .sort(function(a, b) {
       var aIsDir = fs.statSync(rootPath + "/migrations/" + a).isDirectory(),
         bIsDir = fs.statSync(rootPath + "/migrations/" + b).isDirectory();
 
@@ -167,7 +179,7 @@ const run = async () => {
     execSync("npm run migrate-up:all", {
       // -- -v flag for verbose
       cwd: rootPath,
-      stdio: "inherit",
+      stdio: "inherit"
     });
   }
 
@@ -190,10 +202,10 @@ const run = async () => {
   console.log(chalk.yellow`Starting ${projectName} API project`);
   execSync("npm run dev", {
     cwd: rootPath,
-    stdio: "inherit",
+    stdio: "inherit"
   });
 };
 
 module.exports = {
-  run,
+  run
 };
