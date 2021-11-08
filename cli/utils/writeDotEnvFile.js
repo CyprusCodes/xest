@@ -1,8 +1,9 @@
 const path = require("path");
 const fs = require("fs-extra");
 
-const dotEnv = `// dev - dynamically generated
-DB_NAME={{PROJECT_NAME_SNAKECASE}}_db
+const writeDotEnvFile = (projectRoot, appNameSnakeCase) => {
+  const dotEnv = `// dev - dynamically generated
+DB_NAME=${appNameSnakeCase}_db
 APP_BASE_URL=http://localhost:3000
 APP_ENVIRONMENT=DEVELOPMENT
 DB_USER=root
@@ -16,8 +17,6 @@ PASSWORD_SALT=SECRET_SALT
 // MINIO_ACCESS_KEY=
 // MINIO_SECRET_KEY=
 `;
-
-const writeDotEnvFile = projectRoot => {
   const filePath = path.join(projectRoot, "./.env");
   const doesItExist = fs.ensureFileSync(filePath);
   if (!doesItExist) {

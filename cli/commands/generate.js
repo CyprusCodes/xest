@@ -6,6 +6,7 @@ const findJustRestProjectRoot = require("../utils/findProjectRoot");
 const { writeFile, writeDirectory } = require("../utils/createFile");
 const asyncSeries = require("../utils/asyncSeries");
 const writeDotEnvFile = require("../utils/writeDotEnvFile");
+const writeDatabaseJSONFile = require("../utils/writeDatabaseJSONFile");
 const fs = require("fs");
 const path = require("path");
 const { fdir } = require("fdir");
@@ -73,7 +74,8 @@ const generate = program => async appName => {
   });
 
   console.log(chalk.green`Installing packages...`);
-  await writeDotEnvFile(projectDirectoryToCreate);
+  await writeDotEnvFile(projectDirectoryToCreate, appNameSnakeCase);
+  await writeDatabaseJSONFile(projectDirectoryToCreate, appNameSnakeCase);
   execSync(`npm install`, {
     cwd: projectDirectoryToCreate,
     stdio: "inherit"
