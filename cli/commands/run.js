@@ -1,6 +1,6 @@
 const chalk = require("chalk");
 const snakeCase = require("lodash/snakeCase");
-const { execSync } = require("child_process");
+const { execSync, exec } = require("child_process");
 const { dirname } = require("path");
 const findJustRestProjectRoot = require("../utils/findProjectRoot");
 const path = require("path");
@@ -19,7 +19,7 @@ const run = async () => {
   }
 
   const {
-    value: { name: projectName }
+    value: { name: projectName },
   } = projectDetails;
 
   const { filename } = projectDetails;
@@ -47,8 +47,8 @@ const run = async () => {
   // check whether the last migration has been run
   const files = fs.readdirSync(path.join(rootPath, "migrations"));
   const [latestMigrationFile] = files
-    .filter(file => file.endsWith(".js"))
-    .sort(function(a, b) {
+    .filter((file) => file.endsWith(".js"))
+    .sort(function (a, b) {
       var aIsDir = fs.statSync(rootPath + "/migrations/" + a).isDirectory(),
         bIsDir = fs.statSync(rootPath + "/migrations/" + b).isDirectory();
 
@@ -73,7 +73,7 @@ const run = async () => {
     execSync("npm run migrate-up:all", {
       // -- -v flag for verbose
       cwd: rootPath,
-      stdio: "inherit"
+      stdio: "inherit",
     });
   }
 
@@ -93,14 +93,42 @@ const run = async () => {
     }
   }
 
+  process.stdin.resume();
+  let isExiting = false;
+  // shutdown procedure
+  [
+    `exit`,
+    `SIGINT`,
+    `SIGUSR1`,
+    `SIGUSR2`,
+    `uncaughtException`,
+    `unhandledRejection`,
+    `SIGTERM`,
+  ].forEach((eventType) => {
+    process.on(eventType, () => {
+      if (!isExiting) {
+        console.log(chalk.yellow`Stopping API and MySQL container.`);
+        isExiting = true;
+        exec(
+          `docker-compose down`,
+          { cwd: path.join(rootPath, "database") },
+          () => {
+            console.log(chalk.yellow`Good bye.`);
+            process.exit(0);
+          }
+        );
+      }
+    });
+  });
+
   await resolvePortConflict(3001, `${projectName} API`);
   console.log(chalk.yellow`Starting ${projectName} API project`);
   execSync("npm run dev", {
     cwd: rootPath,
-    stdio: "inherit"
+    stdio: "inherit",
   });
 };
 
 module.exports = {
-  run
+  run,
 };
