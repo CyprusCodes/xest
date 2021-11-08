@@ -16,7 +16,7 @@ const writeDatabaseJSONFile = (projectRoot, appNameSnakeCase) => {
     "defaultEnv": "dev"
   }
 `;
-  const filePath = path.join(projectRoot, "./.env");
+  const filePath = path.join(projectRoot, "./database.json");
   const doesItExist = fs.ensureFileSync(filePath);
   if (!doesItExist) {
     fs.writeFileSync(filePath, databaseJSON);
