@@ -51,8 +51,7 @@ module.exports = {
     ]);
 
     const tableName = response.table;
-    const defaultColumns = schema[tableName].map(c => c.column);
-    console.log(defaultColumns)
+    const defaultColumns = schema[tableName].map((c) => c.column);
     const response2 = await inquirer.prompt([
       { ...ColumnSelector(schema, tableName), default: defaultColumns },
       {
@@ -62,6 +61,7 @@ module.exports = {
         message: "What is the name of entity queried? e.g: UserDetails",
       },
     ]);
+    return { ...response, response2 };
   },
   files: [
     {

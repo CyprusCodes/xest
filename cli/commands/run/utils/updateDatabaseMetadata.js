@@ -120,10 +120,10 @@ const updateDatabaseMetadata = async ({
       chalk.red`Can not generate database metadata. Please report the above error at https://github.com/CyprusCodes/justrest/issues`
     );
   }
-
+  
   if (databaseSchemaOutput && foreignKeySummaryOutput) {
     const listOfForeignKeys = Object.keys(foreignKeySummaryOutput);
-    let x = mapValues(databaseSchemaOutput, (columns) => {
+    const finalOutput = mapValues(databaseSchemaOutput, (columns) => {
       return columns.map((column) => {
         const pathToCheck = `${column.table}.${column.column}`;
         const isForeignKey = listOfForeignKeys.includes(pathToCheck);
@@ -145,7 +145,7 @@ const updateDatabaseMetadata = async ({
         return column;
       });
     });
-    writeFile(`${rootPath}/.just/schema.json`, JSON.stringify(databaseSchemaOutput));
+    writeFile(`${rootPath}/.just/schema.json`, JSON.stringify(finalOutput));
   }
 };
 
