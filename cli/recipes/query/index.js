@@ -19,7 +19,6 @@ module.exports = {
     if (!schema) {
       return;
     }
-    console.log(schema, "schema");
 
     const response = await inquirer.prompt([
       {
