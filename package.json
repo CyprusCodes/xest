@@ -15,6 +15,7 @@
     "fs-extra": "^10.0.0",
     "inquirer": "^8.2.0",
     "inquirer-file-tree-selection-prompt": "^1.0.13",
+    "inquirer-search-list": "^1.2.6",
     "lodash": "^4.17.21",
     "mkdirp": "^1.0.4",
     "picomatch": "^2.3.0",

@@ -1,6 +1,7 @@
 const fs = require("fs");
 const { execSync } = require("child_process");
 const snakeCase = require("lodash/snakeCase");
+const { writeFile } = require("../../../utils/createFile");
 const get = require("lodash/get");
 const { mapValues } = require("lodash");
 
@@ -29,7 +30,6 @@ const updateDatabaseMetadata = async ({
     out = await execSync(getForeignKeysQuery, {
       cwd: rootPath,
     }).toString();
-    console.log(out);
     const rows = out
       .replace(/\t/g, " ")
       .split("\n")
@@ -126,11 +126,9 @@ const updateDatabaseMetadata = async ({
     let x = mapValues(databaseSchemaOutput, (columns) => {
       return columns.map((column) => {
         const pathToCheck = `${column.table}.${column.column}`;
-        console.log({ pathToCheck, listOfForeignKeys, column });
         const isForeignKey = listOfForeignKeys.includes(pathToCheck);
 
         if (isForeignKey) {
-          console.log({foreignKeySummaryOutput})
           const foreignKeyInformation = get(
             foreignKeySummaryOutput[pathToCheck],
             `[0]`,
@@ -147,13 +145,7 @@ const updateDatabaseMetadata = async ({
         return column;
       });
     });
-    /*
-    fs.writeFileSync(
-      "schema.json",
-      JSON.stringify(databaseSchemaOutput, null, 2)
-    );
-    */
-    console.log(JSON.stringify(x, null, 2));
+    writeFile(`${rootPath}/.just/schema.json`, JSON.stringify(databaseSchemaOutput));
   }
 };
 
