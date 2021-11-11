@@ -16,11 +16,13 @@
     "inquirer": "^8.2.0",
     "inquirer-file-tree-selection-prompt": "^1.0.13",
     "inquirer-search-list": "^1.2.6",
+    "liquidjs": "^9.28.5",
     "lodash": "^4.17.21",
     "mkdirp": "^1.0.4",
     "picomatch": "^2.3.0",
     "prompts": "^2.4.2",
-    "replace-in-file": "^6.3.2"
+    "replace-in-file": "^6.3.2",
+    "sql-formatter": "^4.0.2"
   },
   "devDependencies": {},
   "scripts": {
