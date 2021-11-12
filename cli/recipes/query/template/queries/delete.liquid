@@ -1,0 +1,12 @@
+const { submitQuery } = require("~root/database");
+
+const delete{{entityName | toPascalCase}} = ({
+  {{ primaryField | toCamelCase }}
+}) => submitQuery`
+{% sql %}
+DELETE FROM {{tableName | toSnakeCase }}
+WHERE {{ primaryField | toSnakeCase }} = {{"${"}}{{primaryField | toCamelCase}}}
+{% endsql %}
+`;
+
+module.exports = delete{{ entityName | toPascalCase }};

@@ -2,12 +2,13 @@ const chalk = require("chalk");
 const snakeCase = require("lodash/snakeCase");
 const { execSync, exec } = require("child_process");
 const { dirname } = require("path");
-const findJustRestProjectRoot = require("../utils/findProjectRoot");
+const findJustRestProjectRoot = require("../../utils/findProjectRoot");
 const path = require("path");
 const fs = require("fs");
-const runSqlQueryWithinContainer = require("../utils/runSqlQueryWithinContainer");
-const resolvePortConflict = require("../utils/resolvePortConflict");
-const runMySQLContainer = require("../utils/runMySQLContainer");
+const runSqlQueryWithinContainer = require("../../utils/runSqlQueryWithinContainer");
+const resolvePortConflict = require("../../utils/resolvePortConflict");
+const runMySQLContainer = require("../../utils/runMySQLContainer");
+const updateDatabaseMetadata = require("./utils/updateDatabaseMetadata");
 
 const run = async () => {
   const projectDetails = findJustRestProjectRoot();
@@ -105,7 +106,7 @@ const run = async () => {
     `unhandledRejection`,
     `SIGTERM`,
   ].forEach((eventType) => {
-    process.on(eventType, () => {
+    process.on(eventType, (event) => {
       if (!isExiting) {
         console.log(chalk.yellow`Stopping API and MySQL container.`);
         isExiting = true;
@@ -113,13 +114,14 @@ const run = async () => {
           `docker-compose down`,
           { cwd: path.join(rootPath, "database") },
           () => {
-            console.log(chalk.yellow`Good bye.`);
             process.exit(0);
           }
         );
       }
     });
   });
+
+  updateDatabaseMetadata({ mySQLContainerId, rootPath, projectName });
 
   await resolvePortConflict(3001, `${projectName} API`);
   console.log(chalk.yellow`Starting ${projectName} API project`);
