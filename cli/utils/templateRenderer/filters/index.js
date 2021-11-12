@@ -7,6 +7,7 @@ const {
   upperCase,
   upperFirst,
 } = require("lodash");
+const { singular, plural } = require("pluralize");
 
 const enrichEngine = (engine) => {
   engine.registerFilter("toCamelCase", (v) => camelCase(v));
@@ -23,6 +24,8 @@ const enrichEngine = (engine) => {
   engine.registerFilter("toPathCase", (v) => lowerCase(v).replace(/ /g, "/"));
   engine.registerFilter("toSnakeCase", (v) => snakeCase(v));
   engine.registerFilter("toSentenceCase", (v) => upperFirst(lowerCase(str)));
+  engine.registerFilter("singular", (v) => singular(v));
+  engine.registerFilter("plural", (v) => plural(v));
 };
 
 module.exports = enrichEngine;

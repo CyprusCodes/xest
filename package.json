@@ -20,6 +20,7 @@
     "lodash": "^4.17.21",
     "mkdirp": "^1.0.4",
     "picomatch": "^2.3.0",
+    "pluralize": "^8.0.0",
     "prompts": "^2.4.2",
     "replace-in-file": "^6.3.2",
     "sql-formatter": "^4.0.2"

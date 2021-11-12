@@ -36,7 +36,12 @@ const registerTags = function (engine) {
         emitter
       );
       const out = await streamToString(stream);
-      return `\n${format(out)}\n`;
+      return `${format(out)
+        .split("\n")
+        .map((i) => `  ${i}`)
+        .join("\n")
+        .replace(/\$\s\{/g, "${")}`
+        .replace(/\${\s(.+)\s}/g, "${$1}");
     },
   });
 };

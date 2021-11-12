@@ -1,11 +1,12 @@
-{% javascript %}
 const { submitQuery } = require("~root/database");
 
-const delete{{entityName}} = ({
-  slug
+const delete{{entityName | toPascalCase}} = ({
+  {{ primaryField | toCamelCase }}
 }) => submitQuery`
-    DELETE FROM blogs
-    WHERE slug = ${slug} 
+{% sql %}
+DELETE FROM {{tableName | toSnakeCase }}
+WHERE {{ primaryField | toSnakeCase }} = {{"${"}}{{primaryField | toCamelCase}}}
+{% endsql %}
 `;
 
-module.exports = delete{{entityName}};
+module.exports = delete{{ entityName | toPascalCase }};
