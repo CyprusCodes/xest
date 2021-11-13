@@ -16,6 +16,7 @@ const {
 } = require("../../utils/getSchema");
 const chalk = require("chalk");
 const render = require("../../utils/templateRenderer");
+const prettifyFile = require("../../utils/prettifyFile");
 
 module.exports = {
   name: "query", // MUST match directory name
@@ -211,6 +212,7 @@ module.exports = {
         }
 
         await writeFile(targetFilePath, renderedTemplate);
+        await prettifyFile(targetFilePath);
 
         console.log(chalk.green`Succesfully created \n${targetFilePath}`);
         return true;
