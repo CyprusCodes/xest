@@ -26,7 +26,6 @@ module.exports = {
     }
 
     const { addField, addArrayField, getAnswers } = useForm();
-    /*
     addField((values) => {
       return {
         root: projectRootPath,
@@ -57,13 +56,15 @@ module.exports = {
         choices: ["SELECT", "INSERT", "UPDATE", "DELETE"],
       };
     });
-    */
 
     const { add } = addArrayField((values) => {
       return TableSelector({
         schema,
+        values,
         onReply: async (tableNameSelected) => {
-          // this is only applicable to select queries
+          if (values.crudType !== "SELECT") {
+            return;
+          }
           const tablesSelected = values.table;
           // get all foreign keys of all selected tables
           const newForeignKeys = getForeignKeys(tableNameSelected);
@@ -111,7 +112,8 @@ module.exports = {
         type: "input",
         name: "entityName",
         validate: (input) => Boolean(input.trim()),
-        message: "What is the name of entity queried? e.g: UserDetails",
+        message: "What is the name of entity queried? Default:",
+        default: values.table[0],
       };
     });
 
@@ -141,17 +143,29 @@ module.exports = {
         targetFilePath,
         userVariables,
       }) => {
-        const { crudType, entityName, table } = userVariables;
+        const { crudType, entityName, table, columns } = userVariables;
+
         sourceFilePath = sourceFilePath.replace(
           "insert.js",
           `${crudType.toLowerCase()}.liquid`
         );
         const templateFile = fs.readFileSync(sourceFilePath, "utf-8");
-        const renderedTemplate = await render(templateFile, {
-          entityName,
-          primaryField: getPrimaryKey(table).column,
-          tableName: table,
-        });
+
+        if (crudType === "SELECT") {
+          const renderedTemplate = await render(templateFile, {
+            entityName,
+            primaryField: getPrimaryKey(table[0]).column,
+            tableName: table[0],
+            columns,
+          });
+        } else {
+          const renderedTemplate = await render(templateFile, {
+            entityName,
+            primaryField: getPrimaryKey(table[0]).column,
+            tableName: table[0],
+          });
+        }
+
         await writeFile(targetFilePath, renderedTemplate);
 
         console.log(chalk.green`Succesfully created \n${targetFilePath}`);
