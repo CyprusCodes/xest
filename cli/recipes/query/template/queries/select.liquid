@@ -5,6 +5,7 @@ const select{{entityName | toPascalCase}} = (
 ) => submitQuery`
 {% sql %}
 SELECT {{ selectFields | sqlColumns: schema }} FROM {{tableName | toSnakeCase }}
+{{ tablesToJoin | joinGenerator: schema }}
 {{ filterFields | sqlFilters }}
 {% endsql %}
 `;

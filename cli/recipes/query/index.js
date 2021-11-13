@@ -178,6 +178,7 @@ module.exports = {
             entityName,
             primaryField: getPrimaryKey(table[0]).column,
             tableName: table[0],
+            tablesToJoin: table,
             filterFields: [],
             selectFields: columns,
             schema,

@@ -7,7 +7,7 @@ const {
   upperCase,
   upperFirst,
   uniq,
-  get
+  get,
 } = require("lodash");
 const { singular, plural } = require("pluralize");
 
@@ -63,17 +63,27 @@ const enrichEngine = (engine) => {
           });
 
           if (conflictingField) {
-            const fieldDetails = schema[field.table].find(c => c.column === field.column);
-            if (get(fieldDetails, "foreignKeyTo.targetTable") === conflictingField.table) {
+            const fieldDetails = schema[field.table].find(
+              (c) => c.column === field.column
+            );
+            if (
+              get(fieldDetails, "foreignKeyTo.targetTable") ===
+              conflictingField.table
+            ) {
               // this is just a FK to other field, so we can keep it
               return field;
             }
-            const conflictingFieldDetails = schema[conflictingField.table].find(c => c.column === conflictingField.column);
-            if (get(conflictingFieldDetails, "foreignKeyTo.targetTable") === field.table) {
+            const conflictingFieldDetails = schema[conflictingField.table].find(
+              (c) => c.column === conflictingField.column
+            );
+            if (
+              get(conflictingFieldDetails, "foreignKeyTo.targetTable") ===
+              field.table
+            ) {
               // this is the target of FK field, so we can skip it
               return null;
             }
-            
+
             // this is a legitimate name conflict
             // and these fields are not associated with each other, so rename them
             return {
@@ -83,7 +93,7 @@ const enrichEngine = (engine) => {
           }
           return field;
         })
-        .filter(v => !!v)
+        .filter((v) => !!v)
         .map((field) => `${field.table}.${field.column}`);
     } else {
       fieldList = uniq(fields);
@@ -99,6 +109,32 @@ const enrichEngine = (engine) => {
     return `WHERE ${fieldList
       .map((v) => snakeCase(v))
       .join(`${snakeCase(v)} = ${camelCase(v)},`)}`;
+  });
+  engine.registerFilter("joinGenerator", (tables, schema) => {
+    const joinedSoFar = [tables[0]]; // first table is used by the FROM
+    const joinSQL = (sourceTable, targetTable, sourceColumn, targetColumn) =>
+      `LEFT JOIN ${targetTable} ON ${sourceTable}.${sourceColumn} = ${targetTable}.${targetColumn}`;
+    let joins = ``;
+    const tablesToJoin = tables.slice(1);
+    tablesToJoin.forEach((targetTable) => {
+      joinedSoFar.forEach((joinedTable) => {
+        const targetColumn = schema[joinedTable].find(
+          (column) => get(column, "foreignKeyTo.targetTable") === targetTable
+        );
+        if (targetColumn) {
+          joins =
+            joins +
+            joinSQL(
+              joinedTable,
+              targetColumn.foreignKeyTo.targetTable,
+              targetColumn.column,
+              targetColumn.foreignKeyTo.targetColumn
+            );
+          joinedSoFar.push(targetColumn.foreignKeyTo.targetTable)
+        }
+      });
+    });
+    return joins;
   });
 };
 
