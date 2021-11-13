@@ -1,7 +1,7 @@
 const inquirer = require("inquirer");
 const chalk = require("chalk");
 
-module.exports = (schema, tableName) => {
+module.exports = ({ schema, tableName, ...rest }) => {
   return {
     type: "checkbox",
     message: "Select columns",
@@ -25,5 +25,6 @@ module.exports = (schema, tableName) => {
         return { name: label, value: column.column };
       });
     },
+    ...rest,
   };
 };

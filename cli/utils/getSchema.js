@@ -36,4 +36,24 @@ const getSchema = () => {
   return schemaData;
 };
 
-module.exports = getSchema;
+const getPrimaryKey = (tableName) => {
+  const schema = getSchema();
+  if (!schema) {
+    return null;
+  }
+
+  const table = schema[tableName];
+  return table.find(column => column.columnKey === "PRI");
+}
+
+const getForeignKeys = (tableName) => {
+  const schema = getSchema();
+  if (!schema) {
+    return [];
+  }
+
+  const table = schema[tableName];
+  return table.filter(column => column.columnKey === "MUL");
+}
+
+module.exports = { getSchema, getPrimaryKey, getForeignKeys };

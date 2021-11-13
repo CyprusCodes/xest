@@ -1,27 +1,32 @@
-const inquirer = require("inquirer");
 const fs = require("fs");
 const path = require("path");
 const startCase = require("lodash/startCase");
 const camelCase = require("lodash/camelCase");
 const replace = require("replace-in-file");
-const inquirerFileTreeSelection = require("inquirer-file-tree-selection-prompt");
-inquirer.registerPrompt("file-tree-selection", inquirerFileTreeSelection);
 const TableSelector = require("../../components/TableSelector");
 const ColumnSelector = require("../../components/ColumnSelector");
+const useForm = require("../../components/Form");
 const { writeFile } = require("../../utils/createFile");
-const getSchema = require("../../utils/getSchema");
+const {
+  getSchema,
+  getPrimaryKey,
+  getForeignKeys,
+} = require("../../utils/getSchema");
 const chalk = require("chalk");
+const render = require("../../utils/templateRenderer");
 
 module.exports = {
   name: "query", // MUST match directory name
   userPrompt: async (projectRootPath) => {
-    const schema = await getSchema();
+    const schema = getSchema();
     if (!schema) {
       return;
     }
 
-    const response = await inquirer.prompt([
-      {
+    const { addField, addArrayField, getAnswers } = useForm();
+    /*
+    addField((values) => {
+      return {
         root: projectRootPath,
         hideRoot: true,
         type: "file-tree-selection",
@@ -39,28 +44,52 @@ module.exports = {
         },
         onlyShowValid: true,
         message: "Choose directory to create a new query file",
-      },
-      {
+      };
+    });
+
+    addField((values) => {
+      return {
         type: "list",
         name: "crudType",
         message: "What type of operation will this query perform?",
         choices: ["SELECT", "INSERT", "UPDATE", "DELETE"],
-      },
-      TableSelector(schema),
-    ]);
+      };
+    });
+    */
 
-    const tableName = response.table;
-    const defaultColumns = schema[tableName].map((c) => c.column);
-    const response2 = await inquirer.prompt([
-      { ...ColumnSelector(schema, tableName), default: defaultColumns },
-      {
+    const { add } = addArrayField((values) => {
+      return TableSelector({
+        schema,
+        onReply: (tableNameSelect) => {
+          const foreignKeys = getForeignKeys(tableNameSelect);
+          if (foreignKeys.length) {
+            add(); // ask the same question again...
+          }
+        },
+      });
+    });
+
+    addField((values) => {
+      const tableName = values.table;
+      console.log(values)
+      const defaultColumns = schema[tableName].map((c) => c.column);
+      return {
+        ...ColumnSelector({ schema, tableName }),
+        default: defaultColumns,
+      };
+    });
+
+    addField((values) => {
+      return {
         type: "input",
         name: "entityName",
         validate: (input) => Boolean(input.trim()),
         message: "What is the name of entity queried? e.g: UserDetails",
-      },
-    ]);
-    return { ...response, response2 };
+      };
+    });
+
+    const responses = await getAnswers();
+    return responses;
   },
   files: [
     {
@@ -84,33 +113,19 @@ module.exports = {
         sourceFilePath,
         targetFilePath,
         userVariables,
-        sourceFileParentDirectory,
       }) => {
-        const { crudType } = userVariables;
+        const { crudType, entityName, table } = userVariables;
         sourceFilePath = sourceFilePath.replace(
           "insert.js",
-          `${crudType.toLowerCase()}.js`
+          `${crudType.toLowerCase()}.liquid`
         );
-
-        await writeFile(
-          targetFilePath,
-          fs.readFileSync(sourceFilePath, "utf-8")
-        );
-        const results = await replace({
-          files: targetFilePath,
-          from: /{{([^\s]+)}}/g,
-          to: (match) => {
-            const variableName = match.replace(/}/g, "").replace(/{/g, "");
-            if (!userVariables[variableName]) {
-              console.log(
-                chalk.red`Unknown template variable ${variableName} sourceFile: ${sourceFilePath}`
-              );
-              return "";
-            }
-
-            return userVariables[variableName];
-          },
+        const templateFile = fs.readFileSync(sourceFilePath, "utf-8");
+        const renderedTemplate = await render(templateFile, {
+          entityName,
+          primaryField: getPrimaryKey(table).column,
+          tableName: table,
         });
+        await writeFile(targetFilePath, renderedTemplate);
 
         console.log(chalk.green`Succesfully created \n${targetFilePath}`);
         return true;
