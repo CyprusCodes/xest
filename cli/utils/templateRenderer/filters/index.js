@@ -63,7 +63,6 @@ const enrichEngine = (engine) => {
           });
 
           if (conflictingField) {
-            console.log(conflictingField, field, "CONFLICT");
             const fieldDetails = schema[field.table].find(c => c.column === field.column);
             if (get(fieldDetails, "foreignKeyTo.targetTable") === conflictingField.table) {
               // this is just a FK to other field, so we can keep it

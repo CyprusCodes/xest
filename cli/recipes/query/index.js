@@ -59,19 +59,35 @@ module.exports = {
     });
 
     const { add } = addArrayField((values) => {
+      const tablesSelected = values.table || [];
+      const existingForeignKeys = flatten(
+        tablesSelected.map((table) => getForeignKeys(table))
+      );
+      const currentlySelectableTables = existingForeignKeys.map(
+        (x) => x.foreignKeyTo.targetTable
+      );
+
+      const tablesToSelect = Object.keys(schema)
+        .map((table) => ({
+          name: table,
+          value: table,
+        }))
+        .filter((c) => !(values.table || []).includes(c.name))
+        .filter((c) => {
+          if ((values.table || []).length > 0) {
+            return currentlySelectableTables.find((st) => st === c.name);
+          }
+          return true;
+        });
+
       return TableSelector({
-        schema,
-        values,
+        tables: tablesToSelect,
         onReply: async (tableNameSelected) => {
           if (values.crudType !== "SELECT") {
             return;
           }
-          const tablesSelected = values.table;
           // get all foreign keys of all selected tables
           const newForeignKeys = getForeignKeys(tableNameSelected);
-          const existingForeignKeys = flatten(
-            tablesSelected.map((table) => getForeignKeys(table))
-          );
           const allForeignKeys = uniqBy(
             [...newForeignKeys, ...existingForeignKeys],
             (check) => `${check.table}.${check.column}`
@@ -158,16 +174,16 @@ module.exports = {
         let renderedTemplate;
 
         if (crudType === "SELECT") {
-           renderedTemplate = await render(templateFile, {
+          renderedTemplate = await render(templateFile, {
             entityName,
             primaryField: getPrimaryKey(table[0]).column,
             tableName: table[0],
             filterFields: [],
-            selectFields:  columns,
-            schema
+            selectFields: columns,
+            schema,
           });
         } else {
-           renderedTemplate = await render(templateFile, {
+          renderedTemplate = await render(templateFile, {
             entityName,
             primaryField: getPrimaryKey(table[0]).column,
             tableName: table[0],
