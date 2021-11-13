@@ -51,18 +51,23 @@ const enrichEngine = (engine) => {
           column: fieldDetails[1],
         };
       });
+      console.log({ originalFields });
       fieldList = originalFields
         .map((field) => {
           // check for conflict
-          const hasConflictingColumnName = originalFields.find(
-            (checkField) => checkField.column === field.column
-          );
+          const hasConflictingColumnName = originalFields.find((checkField) => {
+            console.log({checkField, field})
+            checkField.column === field.column &&
+              checkField.table !== field.table;
+          });
           if (hasConflictingColumnName) {
+            console.log(field, "CONFLICT");
             return {
               table: field.table,
               column: `${field.table}_${field.column}`,
             };
           }
+          return field;
         })
         .map((field) => `${field.table}.${field.column}`);
     } else {
@@ -76,7 +81,9 @@ const enrichEngine = (engine) => {
       return "";
     }
     let fieldList = uniq(fields);
-    return `WHERE ${fieldList.map((v) => snakeCase(v)).join(`${snakeCase(v)} = ${camelCase(v)},`)}`;
+    return `WHERE ${fieldList
+      .map((v) => snakeCase(v))
+      .join(`${snakeCase(v)} = ${camelCase(v)},`)}`;
   });
 };
 
