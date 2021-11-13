@@ -2,7 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const startCase = require("lodash/startCase");
 const camelCase = require("lodash/camelCase");
-const replace = require("replace-in-file");
+const flatten = require("lodash/flatten");
+const uniqBy = require("lodash/uniqBy");
 const TableSelector = require("../../components/TableSelector");
 const ColumnSelector = require("../../components/ColumnSelector");
 const useForm = require("../../components/Form");
@@ -60,9 +61,26 @@ module.exports = {
     const { add } = addArrayField((values) => {
       return TableSelector({
         schema,
-        onReply: (tableNameSelect) => {
-          const foreignKeys = getForeignKeys(tableNameSelect);
-          if (foreignKeys.length) {
+        onReply: (tableNameSelected) => {
+          const tablesSelected = values.table;
+          // get all foreign keys of all selected tables
+          const newForeignKeys = getForeignKeys(tableNameSelected);
+          const existingForeignKeys = flatten(
+            tablesSelected.map((table) => getForeignKeys(table))
+          );
+          const allForeignKeys = uniqBy(
+            [...newForeignKeys, ...existingForeignKeys],
+            (check) => `${check.table}.${check.column}`
+          );
+          const selectableTables = allForeignKeys.map(
+            (x) => x.foreignKeyTo.targetTable
+          );
+          console.log({selectableTables, tablesSelected})
+          const areThereAnyOtherTablesToJoin = selectableTables.some((table) =>
+            !tablesSelected.includes(table)
+          );
+          if (areThereAnyOtherTablesToJoin) {
+            // ask if the user wants to join onto another table?
             add(); // ask the same question again...
           }
         },
@@ -71,7 +89,7 @@ module.exports = {
 
     addField((values) => {
       const tableName = values.table;
-      console.log(values)
+      console.log(values);
       const defaultColumns = schema[tableName].map((c) => c.column);
       return {
         ...ColumnSelector({ schema, tableName }),
