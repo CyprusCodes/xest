@@ -1,3 +1,4 @@
+const inquirer = require("inquirer");
 const fs = require("fs");
 const path = require("path");
 const startCase = require("lodash/startCase");
@@ -61,7 +62,8 @@ module.exports = {
     const { add } = addArrayField((values) => {
       return TableSelector({
         schema,
-        onReply: (tableNameSelected) => {
+        onReply: async (tableNameSelected) => {
+          // this is only applicable to select queries
           const tablesSelected = values.table;
           // get all foreign keys of all selected tables
           const newForeignKeys = getForeignKeys(tableNameSelected);
@@ -75,26 +77,33 @@ module.exports = {
           const selectableTables = allForeignKeys.map(
             (x) => x.foreignKeyTo.targetTable
           );
-          console.log({selectableTables, tablesSelected})
-          const areThereAnyOtherTablesToJoin = selectableTables.some((table) =>
-            !tablesSelected.includes(table)
+          const areThereAnyOtherTablesToJoin = selectableTables.some(
+            (table) => !tablesSelected.includes(table)
           );
           if (areThereAnyOtherTablesToJoin) {
-            // ask if the user wants to join onto another table?
-            add(); // ask the same question again...
+            console.log(
+              `You will be querying ${chalk.green`${tablesSelected.join(",")}`}`
+            );
+            const result = await inquirer.prompt({
+              type: "confirm",
+              name: "addMore",
+              message: chalk.yellow`Would you like to join onto another table?`,
+              default: "y",
+            });
+            if (result.addMore) {
+              add();
+            }
           }
         },
       });
     });
 
     addField((values) => {
-      const tableName = values.table;
-      console.log(values);
-      const defaultColumns = schema[tableName].map((c) => c.column);
-      return {
-        ...ColumnSelector({ schema, tableName }),
-        default: defaultColumns,
-      };
+      const tablesSelected = values.table;
+      const columns = flatten(tablesSelected.map((table) => schema[table]));
+      const defaultColumns = columns.map((c) => `${c.table}.${c.column}`);
+
+      return ColumnSelector({ columns, default: defaultColumns });
     });
 
     addField((values) => {

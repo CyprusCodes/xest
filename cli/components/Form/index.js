@@ -36,7 +36,7 @@ const useForm = () => {
       answerIndex++;
 
       if (questionObj.onReply) {
-        questionObj.onReply(answer);
+        await questionObj.onReply(answer);
       }
     }
     return values;

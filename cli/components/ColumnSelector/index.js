@@ -1,16 +1,20 @@
 const inquirer = require("inquirer");
 const chalk = require("chalk");
 
-module.exports = ({ schema, tableName, ...rest }) => {
+module.exports = ({ columns, ...rest }) => {
   return {
     type: "checkbox",
     message: "Select columns",
     name: "columns",
     choices: () => {
-      return Object.entries(schema[tableName]).map(([table, column]) => {
-        let label = `${chalk.bold`${column.column}`} ${column.columnnType} ${
+      const isSingleTable = columns.every((c) => c.table === columns[0].table);
+      return columns.map((column) => {
+        let label = `${
+          isSingleTable ? "" : `${column.table}.`
+        }${chalk.bold`${column.column}`} ${column.columnnType} ${
           column.nullable ? "NULL" : "NOT NULL"
         } `;
+
         const isPrimaryKey = column.columnKey === "PRI";
         const isForeignKey = column.columnKey === "MUL";
 
@@ -22,7 +26,7 @@ module.exports = ({ schema, tableName, ...rest }) => {
           label = label + "FOREIGN KEY";
         }
 
-        return { name: label, value: column.column };
+        return { name: label, value: `${column.table}.${column.column}` };
       });
     },
     ...rest,
