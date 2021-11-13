@@ -7,6 +7,7 @@ const {
   upperCase,
   upperFirst,
   uniq,
+  get
 } = require("lodash");
 const { singular, plural } = require("pluralize");
 
@@ -35,7 +36,7 @@ const enrichEngine = (engine) => {
 
     return `{ ${args.map((v) => camelCase(v)).join(",")} }`;
   });
-  engine.registerFilter("sqlColumns", (fields) => {
+  engine.registerFilter("sqlColumns", (fields, schema) => {
     if (!fields.length) {
       return "";
     }
@@ -51,17 +52,31 @@ const enrichEngine = (engine) => {
           column: fieldDetails[1],
         };
       });
-      console.log({ originalFields });
       fieldList = originalFields
         .map((field) => {
           // check for conflict
-          const hasConflictingColumnName = originalFields.find((checkField) => {
-            console.log({checkField, field})
-            checkField.column === field.column &&
-              checkField.table !== field.table;
+          const conflictingField = originalFields.find((checkField) => {
+            return (
+              checkField.column === field.column &&
+              checkField.table !== field.table
+            );
           });
-          if (hasConflictingColumnName) {
-            console.log(field, "CONFLICT");
+
+          if (conflictingField) {
+            console.log(conflictingField, field, "CONFLICT");
+            const fieldDetails = schema[field.table].find(c => c.column === field.column);
+            if (get(fieldDetails, "foreignKeyTo.targetTable") === conflictingField.table) {
+              // this is just a FK to other field, so we can keep it
+              return field;
+            }
+            const conflictingFieldDetails = schema[conflictingField.table].find(c => c.column === conflictingField.column);
+            if (get(conflictingFieldDetails, "foreignKeyTo.targetTable") === field.table) {
+              // this is the target of FK field, so we can skip it
+              return null;
+            }
+            
+            // this is a legitimate name conflict
+            // and these fields are not associated with each other, so rename them
             return {
               table: field.table,
               column: `${field.table}_${field.column}`,
@@ -69,12 +84,13 @@ const enrichEngine = (engine) => {
           }
           return field;
         })
+        .filter(v => !!v)
         .map((field) => `${field.table}.${field.column}`);
     } else {
       fieldList = uniq(fields);
     }
 
-    return `${fieldList.map((v) => snakeCase(v)).join(",")}`;
+    return `${fieldList.join(",")}`;
   });
   engine.registerFilter("sqlFilters", (fields) => {
     if (!fields.length) {

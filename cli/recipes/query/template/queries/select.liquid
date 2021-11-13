@@ -4,7 +4,8 @@ const select{{entityName | toPascalCase}} = (
     {{ filterFields | functionParameters }}
 ) => submitQuery`
 {% sql %}
-SELECT {{ selectFields | sqlColumns }} FROM {{tableName | toSnakeCase }}
+SELECT {{ selectFields | sqlColumns: schema }} FROM {{tableName | toSnakeCase }}
+
 {{ filterFields | sqlFilters }}
 {% endsql %}
 `;

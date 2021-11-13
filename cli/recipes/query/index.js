@@ -37,6 +37,7 @@ module.exports = {
             fs.statSync(path).isDirectory() &&
             !path.endsWith("node_modules") &&
             !path.endsWith("migrations") &&
+            !path.endsWith(".just") &&
             !path.endsWith("queries");
           // it would be better to disable database folder as well
           // but there seems to be a problem with expanding the first element
@@ -143,6 +144,10 @@ module.exports = {
         targetFilePath,
         userVariables,
       }) => {
+        const schema = getSchema();
+        if (!schema) {
+          return;
+        }
         const { crudType, entityName, table, columns } = userVariables;
 
         sourceFilePath = sourceFilePath.replace(
@@ -150,16 +155,19 @@ module.exports = {
           `${crudType.toLowerCase()}.liquid`
         );
         const templateFile = fs.readFileSync(sourceFilePath, "utf-8");
+        let renderedTemplate;
 
         if (crudType === "SELECT") {
-          const renderedTemplate = await render(templateFile, {
+           renderedTemplate = await render(templateFile, {
             entityName,
             primaryField: getPrimaryKey(table[0]).column,
             tableName: table[0],
-            columns,
+            filterFields: [],
+            selectFields:  columns,
+            schema
           });
         } else {
-          const renderedTemplate = await render(templateFile, {
+           renderedTemplate = await render(templateFile, {
             entityName,
             primaryField: getPrimaryKey(table[0]).column,
             tableName: table[0],
