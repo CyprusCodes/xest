@@ -128,6 +128,22 @@ module.exports = {
     });
 
     addField((values) => {
+      if (values.crudType !== "SELECT") {
+        return;
+      }
+      const tablesSelected = values.table;
+      const columns = flatten(tablesSelected.map((table) => schema[table]));
+      const defaultColumns = [];
+
+      return ColumnSelector({
+        columns,
+        default: defaultColumns,
+        message: "Select filters to apply",
+        name: "filterColumns",
+      });
+    });
+
+    addField((values) => {
       return {
         type: "input",
         name: "entityName",
@@ -167,7 +183,7 @@ module.exports = {
         if (!schema) {
           return;
         }
-        const { crudType, entityName, table, columns } = userVariables;
+        const { crudType, entityName, table, columns, filterColumns } = userVariables;
 
         sourceFilePath = sourceFilePath.replace(
           "insert.js",
@@ -182,7 +198,7 @@ module.exports = {
             primaryField: getPrimaryKey(table[0]).column,
             tableName: table[0],
             tablesToJoin: table,
-            filterFields: [],
+            filterFields: filterColumns,
             selectFields: columns,
             schema,
           });

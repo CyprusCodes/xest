@@ -34,7 +34,7 @@ const enrichEngine = (engine) => {
       return "";
     }
 
-    return `{ ${args.map((v) => camelCase(v)).join(",")} }`;
+    return `{ ${args.map((v) => camelCase(v.split(".")[1])).join(",")} }`;
   });
   engine.registerFilter("sqlColumns", (fields, schema) => {
     if (!fields.length) {
@@ -106,12 +106,13 @@ const enrichEngine = (engine) => {
       return "";
     }
     let fieldList = uniq(fields);
+
     return `WHERE ${fieldList
-      .map((v) => snakeCase(v))
-      .join(`${snakeCase(v)} = ${camelCase(v)},`)}`;
+      .map((v) => `${v} = \${${camelCase(v.split(".")[1])}\}`)
+      .join(",")}`;
   });
   engine.registerFilter("joinGenerator", (tables, schema) => {
-    if(tables.length <= 1) {
+    if (tables.length <= 1) {
       return ``;
     }
     const joinedSoFar = [tables[0]]; // first table is used by the FROM
@@ -133,7 +134,7 @@ const enrichEngine = (engine) => {
               targetColumn.column,
               targetColumn.foreignKeyTo.targetColumn
             );
-          joinedSoFar.push(targetColumn.foreignKeyTo.targetTable)
+          joinedSoFar.push(targetColumn.foreignKeyTo.targetTable);
         }
       });
     });
