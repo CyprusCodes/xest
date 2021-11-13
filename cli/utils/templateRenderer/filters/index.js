@@ -111,6 +111,9 @@ const enrichEngine = (engine) => {
       .join(`${snakeCase(v)} = ${camelCase(v)},`)}`;
   });
   engine.registerFilter("joinGenerator", (tables, schema) => {
+    if(tables.length <= 1) {
+      return ``;
+    }
     const joinedSoFar = [tables[0]]; // first table is used by the FROM
     const joinSQL = (sourceTable, targetTable, sourceColumn, targetColumn) =>
       `LEFT JOIN ${targetTable} ON ${sourceTable}.${sourceColumn} = ${targetTable}.${targetColumn}`;

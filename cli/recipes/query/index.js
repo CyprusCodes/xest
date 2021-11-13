@@ -117,6 +117,9 @@ module.exports = {
     });
 
     addField((values) => {
+      if (values.crudType !== "SELECT") {
+        return;
+      }
       const tablesSelected = values.table;
       const columns = flatten(tablesSelected.map((table) => schema[table]));
       const defaultColumns = columns.map((c) => `${c.table}.${c.column}`);
