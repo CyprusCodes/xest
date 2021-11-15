@@ -48,7 +48,6 @@ const enrichEngine = (engine) => {
 
     // check if columns with same name exist
     let fieldList = [];
-    console.log(fields)
     const isUsingDotNotation = fields.find((field) => field.includes("."));
     if (isUsingDotNotation) {
       const originalFields = fields.map((field) => {
@@ -105,7 +104,6 @@ const enrichEngine = (engine) => {
       fieldList = uniq(fields);
     }
 
-    console.log({fieldList})
     return `${fieldList.join(",")}`;
   });
   engine.registerFilter("sqlFilters", (fields) => {
