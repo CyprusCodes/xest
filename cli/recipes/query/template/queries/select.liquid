@@ -1,4 +1,4 @@
-const { submitQuery } = require("~root/database");
+const { submitQuery, camelKeys } = require("~root/database");
 
 const select{{entityName | toPascalCase}} = (
     {{ filterFields | functionParameters }}
@@ -10,4 +10,4 @@ SELECT {{ selectFields | sqlColumns: schema }} FROM {{tableName | toSnakeCase }}
 {% endsql %}
 `;
 
-module.exports = select{{ entityName | toPascalCase }};
+module.exports = camelKeys(select{{ entityName | toPascalCase }});

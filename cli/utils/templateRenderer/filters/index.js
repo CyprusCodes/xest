@@ -34,7 +34,7 @@ const enrichEngine = (engine) => {
       return "";
     }
 
-    const isUsingDotNotation = fields.find((field) => field.includes("."));
+    const isUsingDotNotation = args.find((field) => field.includes("."));
     if (isUsingDotNotation) {
       return `{ ${args.map((v) => camelCase(v.split(".")[1])).join(",")} }`;
     }

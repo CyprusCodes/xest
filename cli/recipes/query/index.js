@@ -206,12 +206,10 @@ module.exports = {
           });
         } else if (crudType === "INSERT") {
           const tableName = table[0];
-          const fields = schema[table]
-          .filter((c) => c.columnKey !== "PRI");
+          const fields = schema[table].filter((c) => c.columnKey !== "PRI");
 
-          const insertParameters = fields.map((c) => c.column);
-          const tableFields = insertParameters.map(c => camelCase(c));
-          console.log({insertParameters, tableFields})
+          const tableFields = fields.map((c) => c.column);
+          const insertParameters = insertParameters.map((c) => camelCase(c));
 
           renderedTemplate = await render(templateFile, {
             entityName,
