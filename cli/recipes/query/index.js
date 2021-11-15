@@ -184,7 +184,8 @@ module.exports = {
         if (!schema) {
           return;
         }
-        const { crudType, entityName, table, columns, filterColumns } = userVariables;
+        const { crudType, entityName, table, columns, filterColumns } =
+          userVariables;
 
         sourceFilePath = sourceFilePath.replace(
           "insert.js",
@@ -202,6 +203,21 @@ module.exports = {
             filterFields: filterColumns,
             selectFields: columns,
             schema,
+          });
+        } else if (crudType === "INSERT") {
+          const tableName = table[0];
+          const fields = schema[table]
+          .filter((c) => c.columnKey !== "PRI");
+
+          const insertParameters = fields.map((c) => c.column);
+          const tableFields = insertParameters.map(c => camelCase(c));
+          console.log({insertParameters, tableFields})
+
+          renderedTemplate = await render(templateFile, {
+            entityName,
+            tableName,
+            insertParameters,
+            tableFields,
           });
         } else {
           renderedTemplate = await render(templateFile, {

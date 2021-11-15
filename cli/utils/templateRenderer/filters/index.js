@@ -34,7 +34,12 @@ const enrichEngine = (engine) => {
       return "";
     }
 
-    return `{ ${args.map((v) => camelCase(v.split(".")[1])).join(",")} }`;
+    const isUsingDotNotation = fields.find((field) => field.includes("."));
+    if (isUsingDotNotation) {
+      return `{ ${args.map((v) => camelCase(v.split(".")[1])).join(",")} }`;
+    }
+
+    return `{ ${args.map((v) => camelCase(v)).join(",")} }`;
   });
   engine.registerFilter("sqlColumns", (fields, schema) => {
     if (!fields.length) {
@@ -43,6 +48,7 @@ const enrichEngine = (engine) => {
 
     // check if columns with same name exist
     let fieldList = [];
+    console.log(fields)
     const isUsingDotNotation = fields.find((field) => field.includes("."));
     if (isUsingDotNotation) {
       const originalFields = fields.map((field) => {
@@ -99,6 +105,7 @@ const enrichEngine = (engine) => {
       fieldList = uniq(fields);
     }
 
+    console.log({fieldList})
     return `${fieldList.join(",")}`;
   });
   engine.registerFilter("sqlFilters", (fields) => {

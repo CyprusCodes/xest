@@ -1,0 +1,16 @@
+const { submitQuery } = require("~root/database");
+
+const insert{{entityName | toPascalCase}} = (
+    {{ tableFields | functionParameters }}
+) => submitQuery`
+{% sql %}
+INSERT INTO {{ tableName | toSnakeCase }} (
+    {{ tableFields | sqlColumns }}
+) VALUES (
+    {{ insertParameters | join: "," }}
+    
+);
+{% endsql %}
+`;
+
+module.exports = insert{{ entityName | toPascalCase }};
