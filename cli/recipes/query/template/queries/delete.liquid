@@ -4,7 +4,7 @@ const delete{{entityName | toPascalCase}} = ({
   {{ primaryField | toCamelCase }}
 }) => submitQuery`
 {% sql %}
-DELETE FROM {{tableName | toSnakeCase }}
+DELETE FROM {{ tableName | toSnakeCase }}
 WHERE {{ primaryField | toSnakeCase }} = {{"${"}}{{primaryField | toCamelCase}}}
 {% endsql %}
 `;

@@ -1,0 +1,15 @@
+const { submitQuery, getInsertId } = require("~root/database");
+
+const insert{{entityName | toPascalCase}} = (
+    {{ tableFields | functionParameters }}
+) => submitQuery`
+{% sql %}
+INSERT INTO {{ tableName | toSnakeCase }} (
+    {{ tableFields | sqlColumns }}
+) VALUES (
+    {{ insertParameters | sqlVariables }}
+);
+{% endsql %}
+`;
+
+module.exports = getInsertId(insert{{ entityName | toPascalCase }});

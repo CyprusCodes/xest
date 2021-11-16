@@ -1,0 +1,13 @@
+const { submitQuery, camelKeys } = require("~root/database");
+
+const select{{entityName | toPascalCase}} = (
+    {{ filterFields | functionParameters }}
+) => submitQuery`
+{% sql %}
+SELECT {{ selectFields | sqlColumns: schema }} FROM {{tableName | toSnakeCase }}
+{{ tablesToJoin | joinGenerator: schema }}
+{{ filterFields | sqlFilters }}
+{% endsql %}
+`;
+
+module.exports = camelKeys(select{{ entityName | toPascalCase }});
