@@ -118,30 +118,38 @@ module.exports = {
     });
 
     addField((values) => {
-      if (values.crudType !== "SELECT") {
-        return;
-      }
+      const crud = values.crudType;
       const tablesSelected = values.table;
       const columns = flatten(tablesSelected.map((table) => schema[table]));
-      const defaultColumns = columns.map((c) => `${c.table}.${c.column}`);
 
-      return ColumnSelector({ columns, default: defaultColumns });
+      if (crud === "SELECT") {
+        const defaultColumns = columns.map((c) => `${c.table}.${c.column}`);
+        return ColumnSelector({ columns, default: defaultColumns });
+      } else if (crud === "UPDATE") {
+        const defaultColumns = columns
+          .filter((c) => c.columnKey !== "PRI")
+          .map((c) => `${c.table}.${c.column}`);
+        return ColumnSelector({ columns, default: defaultColumns });
+      } else if (crud === "INSERT") {
+      }
     });
 
     addField((values) => {
-      if (values.crudType !== "SELECT") {
-        return;
-      }
+      const crud = values.crudType;
       const tablesSelected = values.table;
       const columns = flatten(tablesSelected.map((table) => schema[table]));
-      const defaultColumns = [];
 
-      return ColumnSelector({
-        columns,
-        default: defaultColumns,
-        message: "Select filters to apply",
-        name: "filterColumns",
-      });
+      if (crud === "SELECT") {
+        const defaultColumns = columns
+          .filter((c) => c.columnKey === "PRI")
+          .map((c) => `${c.table}.${c.column}`);
+        return ColumnSelector({
+          columns,
+          default: defaultColumns,
+          message: "Select columns to filter",
+          name: "filterColumns",
+        });
+      }
     });
 
     addField((values) => {
@@ -209,13 +217,27 @@ module.exports = {
           const fields = schema[table].filter((c) => c.columnKey !== "PRI");
 
           const tableFields = fields.map((c) => c.column);
-          const insertParameters = insertParameters.map((c) => camelCase(c));
+          const insertParameters = tableFields.map((c) => camelCase(c));
 
           renderedTemplate = await render(templateFile, {
             entityName,
             tableName,
             insertParameters,
             tableFields,
+          });
+        } else if (crudType === "UPDATE") {
+          const tableName = table[0];
+          const primaryField = getPrimaryKey(table[0]).column;
+
+          renderedTemplate = await render(templateFile, {
+            entityName,
+            tableName,
+            filterFields: columns,
+            primaryField,
+            filterFieldsWithPrimary: [
+              `${tableName}.${primaryField}`,
+              ...columns,
+            ],
           });
         } else {
           renderedTemplate = await render(templateFile, {

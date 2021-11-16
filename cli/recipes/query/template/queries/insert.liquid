@@ -1,4 +1,4 @@
-const { submitQuery } = require("~root/database");
+const { submitQuery, getInsertId } = require("~root/database");
 
 const insert{{entityName | toPascalCase}} = (
     {{ tableFields | functionParameters }}
@@ -7,10 +7,9 @@ const insert{{entityName | toPascalCase}} = (
 INSERT INTO {{ tableName | toSnakeCase }} (
     {{ tableFields | sqlColumns }}
 ) VALUES (
-    {{ insertParameters | join: "," }}
-    
+    {{ insertParameters | sqlVariables }}
 );
 {% endsql %}
 `;
 
-module.exports = insert{{ entityName | toPascalCase }};
+module.exports = getInsertId(insert{{ entityName | toPascalCase }});

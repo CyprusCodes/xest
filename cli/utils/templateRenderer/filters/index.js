@@ -106,6 +106,7 @@ const enrichEngine = (engine) => {
 
     return `${fieldList.join(",")}`;
   });
+
   engine.registerFilter("sqlFilters", (fields) => {
     if (!fields.length) {
       return "";
@@ -116,6 +117,37 @@ const enrichEngine = (engine) => {
       .map((v) => `${v} = \${${camelCase(v.split(".")[1])}\}`)
       .join(",")}`;
   });
+
+  engine.registerFilter("sqlVariables", (fields) => {
+    if (!fields.length) {
+      return "";
+    }
+    let fieldList = uniq(fields);
+    const isUsingDotNotation = fields[0].includes(".");
+
+    if (isUsingDotNotation) {
+      return `${fieldList
+        .map((v) => `\${${camelCase(v.split(".")[1])}\}`)
+        .join(",")}`;
+    }
+    return `${fieldList.map((v) => `\${${camelCase(v)}\}`).join(",")}`;
+  });
+
+  engine.registerFilter("sqlUpdateParams", (fields) => {
+    if (!fields.length) {
+      return "";
+    }
+    let fieldList = uniq(fields);
+    const isUsingDotNotation = fields[0].includes(".");
+
+    if (isUsingDotNotation) {
+      return `${fieldList
+        .map((v) => `${v} = \${${camelCase(v.split(".")[1])}\}`)
+        .join(",")}`;
+    }
+    return `${fieldList.map((v) => `${v} = \${${camelCase(v)}\}`).join(",")}`;
+  });
+
   engine.registerFilter("joinGenerator", (tables, schema) => {
     if (tables.length <= 1) {
       return ``;
