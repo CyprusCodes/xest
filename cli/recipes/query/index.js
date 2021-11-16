@@ -100,9 +100,13 @@ module.exports = {
             (table) => !tablesSelected.includes(table)
           );
           if (areThereAnyOtherTablesToJoin) {
+            const hasSelectedTables = tablesSelected.length;
             console.log(
-              `You will be querying ${chalk.green`${tablesSelected.join(",")}`}`
+              `You will be querying ${chalk.green`${
+                hasSelectedTables ? tablesSelected.join(",") : tableNameSelected
+              }`}`
             );
+
             const result = await inquirer.prompt({
               type: "confirm",
               name: "addMore",
@@ -145,7 +149,7 @@ module.exports = {
           .map((c) => `${c.table}.${c.column}`);
         return ColumnSelector({
           columns,
-          default: defaultColumns,
+          default: [defaultColumns[0]],
           message: "Select columns to filter",
           name: "filterColumns",
         });
