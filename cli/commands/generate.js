@@ -11,9 +11,9 @@ const fs = require("fs");
 const path = require("path");
 const { fdir } = require("fdir");
 const replace = require("replace-in-file");
-const { execSync } = require("child_process");
+const execa = require("execa");
 
-const generate = program => async appName => {
+const generate = (program) => async (appName) => {
   const projectRoot = findJustRestProjectRoot();
   if (projectRoot) {
     console.log(
@@ -49,7 +49,7 @@ const generate = program => async appName => {
     .sync();
 
   const filesWritten = [];
-  await asyncSeries(sourceProjectFiles, async sourceFilePath => {
+  await asyncSeries(sourceProjectFiles, async (sourceFilePath) => {
     const isFile = fs.lstatSync(sourceFilePath).isFile();
     const isDirectory = fs.lstatSync(sourceFilePath).isDirectory();
     const target = sourceFilePath.replace(
@@ -70,15 +70,15 @@ const generate = program => async appName => {
   await replace({
     files: filesWritten,
     from: [/{{PROJECT_NAME_SNAKECASE}}/g, /{{PROJECT_NAME_KEBAPCASE}}/g],
-    to: [appNameSnakeCase, appNameKebapCase]
+    to: [appNameSnakeCase, appNameKebapCase],
   });
 
   console.log(chalk.green`Installing packages...`);
   await writeDotEnvFile(projectDirectoryToCreate, appNameSnakeCase);
   await writeDatabaseJSONFile(projectDirectoryToCreate, appNameSnakeCase);
-  execSync(`npm install`, {
+  await execa(`npm install`, {
     cwd: projectDirectoryToCreate,
-    stdio: "inherit"
+    shell: true,
   });
   console.log(
     chalk.green`You're ready to go!\n Type ${chalk.green`cd ${appNameKebapCase} && just run`} to begin.`
@@ -86,5 +86,5 @@ const generate = program => async appName => {
 };
 
 module.exports = {
-  generate
+  generate,
 };

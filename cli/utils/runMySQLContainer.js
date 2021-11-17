@@ -4,14 +4,13 @@ const path = require("path");
 const snakeCase = require("lodash/snakeCase");
 const runSqlQueryWithinContainer = require("./runSqlQueryWithinContainer");
 const resolvePortConflict = require("./resolvePortConflict");
+const execa = require("execa");
 const sleep = require("./sleep");
 
 const runMySQLContainer = async (rootPath, projectName) => {
   // check if docker daemon is running
   try {
-    const isDockerDaemonRunning = execSync(`docker ps`, {
-      cwd: path.join(rootPath, "database")
-    }).toString();
+    await execa("docker", ["ps"]);
   } catch (err) {
     if (err.toString().includes("Error")) {
       console.log(
@@ -24,7 +23,7 @@ const runMySQLContainer = async (rootPath, projectName) => {
   const isDockerMySQLContainerRunning = execSync(
     `docker ps --format "table {{.ID}}\t{{.Names}}" | grep ${projectName}-mysql-db | cut -d ' ' -f 1`,
     {
-      cwd: path.join(rootPath, "database")
+      cwd: path.join(rootPath, "database"),
     }
   ).toString();
 
@@ -39,14 +38,14 @@ const runMySQLContainer = async (rootPath, projectName) => {
     await resolvePortConflict(3306, "MySQL Docker Container");
 
     const runMySQLContainer = execSync(`docker-compose up -d`, {
-      cwd: path.join(rootPath, "database")
+      cwd: path.join(rootPath, "database"),
     }).toString();
   }
 
   const isDockerMySQLContainerRunningAgain = execSync(
     `docker ps --format "table {{.ID}}\t{{.Names}}" | grep ${projectName}-mysql-db | cut -d ' ' -f 1`,
     {
-      cwd: path.join(rootPath, "database")
+      cwd: path.join(rootPath, "database"),
     }
   ).toString();
   mySQLContainerId = isDockerMySQLContainerRunningAgain.trim();
@@ -57,15 +56,17 @@ const runMySQLContainer = async (rootPath, projectName) => {
   );
 
   while (!ready && retryCount < 60) {
-    const query = `SELECT COUNT(*) as tbl_count FROM information_schema.tables WHERE table_schema = '${snakeCase(projectName)}_db';`
+    const query = `SELECT COUNT(*) as tbl_count FROM information_schema.tables WHERE table_schema = '${snakeCase(
+      projectName
+    )}_db';`;
     const mySQLConnectionString = `mysql -h localhost -u root -ppassword ${snakeCase(
       projectName
     )}_db`;
     const checkDatabaseSchema = `docker exec -i ${mySQLContainerId} ${mySQLConnectionString} <<< "${query}"`;
     ({ error, output } = await runSqlQueryWithinContainer(checkDatabaseSchema));
-      
+
     if (!error) {
-      const tableCount = output.replace(/\s/g, "").replace(/\D/g,'');
+      const tableCount = output.replace(/\s/g, "").replace(/\D/g, "");
       if (Number(tableCount) > 0 || Number(tableCount) === 0) {
         ready = true;
       }
