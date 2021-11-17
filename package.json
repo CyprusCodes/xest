@@ -1,10 +1,10 @@
 {
-  "name": "justweb",
+  "name": "xest",
   "version": "0.0.0-alpha.3",
   "description": "justrest CLI for managing API projects",
   "main": "index.js",
   "bin": {
-    "just": "./just.js"
+    "xx": "./just.js"
   },
   "dependencies": {
     "commander": "^8.3.0",
