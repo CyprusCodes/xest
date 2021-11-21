@@ -21,8 +21,8 @@ const constructSeederPath = (path, method) => {
     }
 
     return {
-        path,
-        sampleOutput: JSON.stringify(sampleOutput, null, 2)
+      path,
+      sampleOutput,
     };
   } else {
     return Object.entries(method).map(([methodName, method]) => {
@@ -42,7 +42,7 @@ const getFakerMethods = () => {
         "fake",
         "unique",
         "mersenne",
-        "helpers"
+        "helpers",
       ];
       return !hide.includes(key);
     })
@@ -50,7 +50,7 @@ const getFakerMethods = () => {
       return constructSeederPath(key, methods);
     });
 
-  return flatten(allMethods);
+  return flatten(allMethods).filter((v) => !!v);
 };
 
 module.exports = getFakerMethods;

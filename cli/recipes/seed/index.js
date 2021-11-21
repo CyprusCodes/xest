@@ -19,6 +19,7 @@ const chalk = require("chalk");
 const render = require("../../utils/templateRenderer");
 const prettifyFile = require("../../utils/prettifyFile");
 const getFakerMethods = require("./utils/fakerMethods");
+const chooseDefaultSeedMethod = require("./utils/chooseDefaultSeedMethod");
 
 module.exports = {
   name: "seed", // MUST match directory name
@@ -70,7 +71,7 @@ module.exports = {
           if (areThereAnyOtherTablesToJoin) {
             const hasSelectedTables = tablesSelected.length;
             console.log(
-              `You will be querying ${chalk.green`${
+              `You will be seeding ${chalk.green`${
                 hasSelectedTables ? tablesSelected.join(",") : tableNameSelected
               }`}`
             );
@@ -78,7 +79,7 @@ module.exports = {
             const result = await inquirer.prompt({
               type: "confirm",
               name: "addMore",
-              message: chalk.yellow`Would you like to join onto another table?`,
+              message: chalk.yellow`Would you like to seed another table?`,
               default: "y",
             });
             if (result.addMore) {
@@ -89,25 +90,29 @@ module.exports = {
       });
     });
 
-    addField((values) => {
-      
-      const seedFunctions = getFakerMethods();
+    console.log(chalk.green`Seeder Examples: https://rawgit.com/Marak/faker.js/master/examples/browser/index.html`);
 
-      console.log(seedFunctions);
-      return {
-        type: "list",
-        name: "crudType",
-        message: "What type of operation will this query perform?",
-        choices: ["SELECT", "INSERT", "UPDATE", "DELETE"],
-      };
-    });
-
-    addField((values) => {
+    addArrayField((values) => {
       const tablesSelected = values.table;
       const columns = flatten(tablesSelected.map((table) => schema[table]));
-
-      const defaultColumns = columns.map((c) => `${c.table}.${c.column}`);
-      return ColumnSelector({ columns, default: defaultColumns });
+      const columnsSeedable = columns
+        .filter((c) => c.columnKey !== "PRI")
+        .filter((c) => c.columnKey !== "MUL");
+      const seedFunctions = getFakerMethods();
+      columnsSeedable.forEach((column) => {
+        const defaultValue = chooseDefaultSeedMethod(column);
+        addField(() => {
+          return {
+            type: "search-list",
+            name: "crudType",
+            message: `Choose seed generator for column: ${column.table}.${column.column}`,
+            choices: seedFunctions.map(
+              (s) => `${s.path}, e.g: ${s.sampleOutput}`
+            ),
+            default: defaultValue
+          };
+        });
+      });
     });
 
     const responses = await getAnswers();

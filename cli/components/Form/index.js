@@ -1,6 +1,8 @@
 const inquirer = require("inquirer");
 const inquirerFileTreeSelection = require("inquirer-file-tree-selection-prompt");
 inquirer.registerPrompt("file-tree-selection", inquirerFileTreeSelection);
+const searchList = require("inquirer-search-list");
+inquirer.registerPrompt("search-list", searchList);
 
 const useForm = () => {
   const questions = [];
@@ -42,7 +44,11 @@ const useForm = () => {
     return values;
   };
 
-  return { addField, addArrayField, getAnswers };
+  getValues = () => {
+    return values;
+  };
+
+  return { addField, addArrayField, getAnswers, getValues };
 };
 
 module.exports = useForm;
