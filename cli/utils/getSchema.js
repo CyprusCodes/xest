@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const chalk = require("chalk");
-const findJustRestProjectRoot = require("./findProjectRoot");
+const findProjectRoot = require("./findProjectRoot");
 
 let schemaData;
 
@@ -11,7 +11,7 @@ const getSchema = () => {
     return schemaData;
   }
 
-  const projectDetails = findJustRestProjectRoot();
+  const projectDetails = findProjectRoot();
   if (!projectDetails) {
     console.log(
       chalk.red`No schema metadata was found. Autosuggestion wont work for table/column names.`

@@ -22,7 +22,7 @@ const features = [
         id="homepage.features.easy-to-use"
         description="Feature easy to use"
       >
-        JustREST framework is designed from the ground up to be easily installed
+        Xest framework is designed from the ground up to be easily installed
         and used to build your REST API up and running quickly.
       </Translate>
     ),
@@ -154,7 +154,7 @@ function Home() {
                 __html: translate({
                   id: "homepage.hero.title",
                   message:
-                    "Create elegant and ligth-weight <b>REST APIs</b> in seconds. <b>JustREST</b> is a modern  Javascript framework <b>simply</b> built on <b>ExpresJS</b>",
+                    "Create elegant and ligth-weight <b>REST APIs</b> in seconds. <b>Xest</b> is a modern  Javascript framework <b>simply</b> built on <b>ExpresJS</b>",
                   description:
                     "Home page hero title, can contain simple html tags",
                 }),
@@ -187,7 +187,7 @@ function Home() {
                     values={{
                       just: (
                         <CodeBlock className="language-bash step-codeblock">
-                          npx justrest my-api
+                          npx xest my-api
                         </CodeBlock>
                       ),
                       justRunCommand: (

@@ -2,13 +2,13 @@ const isEmpty = require("lodash/isEmpty");
 const get = require("lodash/get");
 const finder = require("find-package-json");
 
-const findJustRestProjectRoot = () => {
+const findProjectRoot = () => {
   let found = false;
   let f = finder(process.cwd());
   let projectRoot = { done: false };
   while (!found && projectRoot.done === false) {
     projectRoot = f.next();
-    found = !isEmpty(get(projectRoot, "value.justrest", {}));
+    found = !isEmpty(get(projectRoot, "value.xest", {}));
   }
 
   if (found) {
@@ -17,4 +17,4 @@ const findJustRestProjectRoot = () => {
   return false;
 };
 
-module.exports = findJustRestProjectRoot;
+module.exports = findProjectRoot;

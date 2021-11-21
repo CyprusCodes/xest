@@ -9,7 +9,7 @@ module.exports = {
   docs: [
     {
       type: "category",
-      label: "JustREST framework",
+      label: "Xest framework",
       collapsed: false,
       items: ["intro", "purpose", "architecture", "security"],
     },

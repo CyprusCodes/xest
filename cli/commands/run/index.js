@@ -2,7 +2,7 @@ const chalk = require("chalk");
 const snakeCase = require("lodash/snakeCase");
 const { execSync, exec } = require("child_process");
 const { dirname } = require("path");
-const findJustRestProjectRoot = require("../../utils/findProjectRoot");
+const findProjectRoot = require("../../utils/findProjectRoot");
 const path = require("path");
 const fs = require("fs");
 const runSqlQueryWithinContainer = require("../../utils/runSqlQueryWithinContainer");
@@ -11,10 +11,10 @@ const runMySQLContainer = require("../../utils/runMySQLContainer");
 const updateDatabaseMetadata = require("./utils/updateDatabaseMetadata");
 
 const run = async () => {
-  const projectDetails = findJustRestProjectRoot();
+  const projectDetails = findProjectRoot();
   if (!projectDetails) {
     console.log(
-      chalk.red`You are not within a justREST project directory. Please check your current path directory.`
+      chalk.red`You are not within a Xest project directory. Please check your current path directory.`
     );
     return;
   }

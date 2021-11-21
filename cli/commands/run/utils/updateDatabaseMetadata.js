@@ -63,7 +63,7 @@ const updateDatabaseMetadata = async ({
     console.log(err);
     console.log(`DEBUG END`);
     console.log(
-      chalk.red`Can not generate database metadata. Please report the above error at https://github.com/CyprusCodes/justrest/issues`
+      chalk.red`Can not generate database metadata. Please report the above error at https://github.com/CyprusCodes/xest/issues`
     );
   }
 
@@ -117,7 +117,7 @@ const updateDatabaseMetadata = async ({
     console.log(err);
     console.log(`DEBUG END`);
     console.log(
-      chalk.red`Can not generate database metadata. Please report the above error at https://github.com/CyprusCodes/justrest/issues`
+      chalk.red`Can not generate database metadata. Please report the above error at https://github.com/CyprusCodes/xest/issues`
     );
   }
   

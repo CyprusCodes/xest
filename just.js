@@ -7,12 +7,12 @@ const { generate, run, fresh, applyRecipe } = require("./cli/commands/index");
 
 program
   .command("start [appname]", { isDefault: true })
-  .description("scaffold a new justREST API project")
+  .description("scaffold a new Xest API project")
   .action(generate(program));
 
 program
   .command("run")
-  .description("run your justREST project")
+  .description("run your Xest project")
   .action(run);
 
 program
@@ -29,7 +29,7 @@ Starts your MySQL container instance, runs seed data and other migrations if nec
 
 program
   .command("new [recipe]")
-  .description("Create new resources with JustREST interactive wizard.")
+  .description("Create new resources with Xest interactive wizard.")
   .action(applyRecipe);
 
 program

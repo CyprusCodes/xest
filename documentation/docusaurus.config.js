@@ -17,7 +17,7 @@ const config = {
   projectName: "docusaurus", // Usually your repo name.
   themeConfig: {
     navbar: {
-      title: "JustREST",
+      title: "Xest",
       logo: {
         alt: "Awe framework Logo",
         src: "img/logo.svg",

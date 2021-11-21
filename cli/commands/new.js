@@ -2,7 +2,7 @@ const chalk = require("chalk");
 const inquirer = require("inquirer");
 const allRecipes = require("../recipes/index");
 const asyncSeries = require("../utils/asyncSeries");
-const findJustRestProjectRoot = require("../utils/findProjectRoot");
+const findProjectRoot = require("../utils/findProjectRoot");
 const path = require("path");
 
 const executeRecipe = async ({
@@ -46,10 +46,10 @@ const executeRecipe = async ({
 };
 
 const applyRecipe = async () => {
-  const projectDetails = findJustRestProjectRoot();
+  const projectDetails = findProjectRoot();
   if (!projectDetails) {
     console.log(
-      chalk.red`You are not within a justREST project directory. Please check your current path directory.`
+      chalk.red`You are not within a Xest project directory. Please check your current path directory.`
     );
     return;
   }

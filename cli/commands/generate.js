@@ -2,7 +2,7 @@ const inquirer = require("inquirer");
 const snakeCase = require("lodash/snakeCase");
 const kebabCase = require("lodash/kebabCase");
 const chalk = require("chalk");
-const findJustRestProjectRoot = require("../utils/findProjectRoot");
+const findProjectRoot = require("../utils/findProjectRoot");
 const { writeFile, writeDirectory } = require("../utils/createFile");
 const asyncSeries = require("../utils/asyncSeries");
 const writeDotEnvFile = require("../utils/writeDotEnvFile");
@@ -14,10 +14,10 @@ const replace = require("replace-in-file");
 const execa = require("execa");
 
 const generate = (program) => async (appName) => {
-  const projectRoot = findJustRestProjectRoot();
+  const projectRoot = findProjectRoot();
   if (projectRoot) {
     console.log(
-      chalk.red`You are already in a justrest project directory. No need to scaffold a new API. Exiting.`
+      chalk.red`You are already in a Xest project directory. No need to scaffold a new API. Exiting.`
     );
 
     program.outputHelp();
@@ -34,7 +34,7 @@ const generate = (program) => async (appName) => {
   const sampleProjectRootDirectory = path.join(
     __filename,
     "../../../",
-    "justrest-api-sample/"
+    "api-sample/"
   );
   const projectDirectoryToCreate = path.join(process.cwd(), appNameKebapCase);
 

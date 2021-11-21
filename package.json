@@ -1,10 +1,10 @@
 {
   "name": "xest",
   "version": "0.0.0-alpha.3",
-  "description": "justrest CLI for managing API projects",
+  "description": "Xest CLI for managing projects",
   "main": "index.js",
   "bin": {
-    "xx": "./just.js"
+    "xx": "./xest.js"
   },
   "dependencies": {
     "commander": "^8.3.0",
@@ -32,7 +32,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CyprusCodes/justrest.git"
+    "url": "git+https://github.com/CyprusCodes/xest.git"
   },
   "keywords": [
     "cli",
@@ -42,7 +42,7 @@
   "author": "CyprusCodes",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/CyprusCodes/justrest/issues"
+    "url": "https://github.com/CyprusCodes/xest/issues"
   },
-  "homepage": "https://github.com/CyprusCodes/justrest#readme"
+  "homepage": "https://github.com/CyprusCodes/xest#readme"
 }

@@ -1,13 +1,13 @@
 ---
 id: intro
-title: JustREST API Framework
+title: Xest API Framework
 sidebar_label: Introduction
 slug: /
 ---
 
-<img alt="JustRest" src={require('@docusaurus/useBaseUrl').default('img/awe_logo.png')} />
+<img alt="Xest" src={require('@docusaurus/useBaseUrl').default('img/awe_logo.png')} />
 
-JustREST is a light-weight Javascript API framework. Allows you build web APIs in the fastest way.
+Xest is a light-weight Javascript API framework. Allows you build web APIs in the fastest way.
 
 - :white_check_mark: Automatic server-client communication with WebSocket support
 - :white_check_mark: Use ExpresJS for building endpoints
@@ -17,9 +17,9 @@ JustREST is a light-weight Javascript API framework. Allows you build web APIs i
 - :white_check_mark: Built-in authentication and authorization
 - :white_check_mark: Easiest learning curve
 
-## JustREST Project main page
+## Xest Project main page
 
-Please visit us at [https://www.aweframework.com](https://justrest.dev)
+Please visit us at [https://www.xestjs.com](https://xestjs.com)
 
 ## Prerequisites
 
