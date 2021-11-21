@@ -19,7 +19,7 @@ SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '';
 USE `{{PROJECT_NAME_SNAKECASE}}_db`;
 
 -- DONT MODIFY THIS MIGRATION
--- it is used by justrest local development pipeline
+-- it is used by Xest local development pipeline
 DROP TABLE IF EXISTS `migrations`;
 CREATE TABLE `migrations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

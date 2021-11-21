@@ -67,12 +67,8 @@
   "prettier": {
     "trailingComma": "none"
   },
-  "justrest": {
-    "version": "0.0.1",
-    "scripts": {
-      "run": "npm start",
-      "dev": "npm run dev"
-    }
+  "xest": {
+    "version": "0.0.1"
   },
   "devDependencies": {
     "chai": "^4.2.0",

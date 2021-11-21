@@ -2,7 +2,7 @@
 USE `{{PROJECT_NAME_SNAKECASE}}_db`;
 
 -- DONT MODIFY THIS MIGRATION
--- it is used by justrest local development pipeline
+-- it is used by Xest local development pipeline
 INSERT INTO `migrations` (
   name,
   run_on
