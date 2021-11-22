@@ -35,7 +35,7 @@ const run = async () => {
   const mySQLConnectionString = `mysql -h localhost -u root -ppassword ${snakeCase(
     projectName
   )}_db`;
-  const checkDatabaseSchema = `docker exec -i ${mySQLContainerId} ${mySQLConnectionString} <<< "${checkDatabaseSchemaAppliedQuery}"`;
+  const checkDatabaseSchema = `printf "${checkDatabaseSchemaAppliedQuery}" | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
   // insert database schema
   ({ error, output } = await runSqlQueryWithinContainer(checkDatabaseSchema));
   if (error && error.includes("ERROR 1146")) {
@@ -67,7 +67,7 @@ const run = async () => {
     ".js",
     ""
   )}';`;
-  const checkMigrations = `docker exec -i ${mySQLContainerId} ${mySQLConnectionString} <<< "${checkMigrationsQuery}"`;
+  const checkMigrations = `printf "${checkMigrationsQuery}" | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
   ({ error, output } = await runSqlQueryWithinContainer(checkMigrations));
   if (!error && output.includes("count\n0\n")) {
     console.log(chalk.yellow`Applying database migrations.`);
@@ -81,7 +81,7 @@ const run = async () => {
   // insert seed data
   // seed data is inserted after migrations, so seed is always kept up to date
   const checkSeedDataQuery = `select count(*) as count from migrations where name = '/20211107064324-seed-data';`;
-  const checkSeedData = `docker exec -i ${mySQLContainerId} ${mySQLConnectionString} <<< "${checkSeedDataQuery}"`;
+  const checkSeedData = `printf "${checkSeedDataQuery}" | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
   ({ error, output } = await runSqlQueryWithinContainer(checkSeedData));
   if (!error && output.includes("count\n0\n")) {
     console.log(chalk.yellow`Populating database with seed data.`);

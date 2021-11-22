@@ -35,7 +35,7 @@ const fresh = async () => {
   const mySQLConnectionString = `mysql -h localhost -u root -ppassword ${snakeCase(
     projectName
   )}_db`;
-  const dropDatabaseCmd = `docker exec -i ${mySQLContainerId} ${mySQLConnectionString} <<< "${dropDatabaseQuery}"`;
+  const dropDatabaseCmd = `printf "${dropDatabaseQuery}" | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
   ({ error, output } = await runSqlQueryWithinContainer(dropDatabaseCmd));
   if (error) {
     console.log(
@@ -46,7 +46,7 @@ const fresh = async () => {
   console.log(chalk.yellow`Creating database ${snakeCase(projectName)}_db`);
   const createDatabaseQuery = `create database ${snakeCase(projectName)}_db`;
   const mySQLConnectionString2 = `mysql -h localhost -u root -ppassword`;
-  const createDatabaseCmd = `docker exec -i ${mySQLContainerId} ${mySQLConnectionString2} <<< "${createDatabaseQuery}"`;
+  const createDatabaseCmd = `printf "${createDatabaseQuery}" | docker exec -i ${mySQLContainerId} ${mySQLConnectionString2}`;
   ({ error, output } = await runSqlQueryWithinContainer(createDatabaseCmd));
   if (error) {
     console.log(error);

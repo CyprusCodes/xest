@@ -62,7 +62,7 @@ const runMySQLContainer = async (rootPath, projectName) => {
     const mySQLConnectionString = `mysql -h localhost -u root -ppassword ${snakeCase(
       projectName
     )}_db`;
-    const checkDatabaseSchema = `docker exec -i ${mySQLContainerId} ${mySQLConnectionString} <<< "${query}"`;
+    const checkDatabaseSchema = `printf "${query}" | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
     ({ error, output } = await runSqlQueryWithinContainer(checkDatabaseSchema));
 
     if (!error) {

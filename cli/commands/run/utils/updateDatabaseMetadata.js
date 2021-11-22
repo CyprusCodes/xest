@@ -26,7 +26,7 @@ const updateDatabaseMetadata = async ({
     WHERE
         REFERENCED_TABLE_SCHEMA = '${dbName}';`;
 
-    const getForeignKeysQuery = `docker exec -i ${mySQLContainerId} ${mySQLConnectionString} <<< "${getForeignKeys}"`;
+    const getForeignKeysQuery = `printf "${getForeignKeys}" | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
     out = await execSync(getForeignKeysQuery, {
       cwd: rootPath,
     }).toString();
@@ -80,7 +80,7 @@ const updateDatabaseMetadata = async ({
     FROM information_schema.columns 
     WHERE table_schema = '${dbName}';`;
 
-    const getColumnsQuery = `docker exec -i ${mySQLContainerId} ${mySQLConnectionString} <<< "${getColumns}"`;
+    const getColumnsQuery = `printf "${getColumns}" | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
     out = await execSync(getColumnsQuery, {
       cwd: rootPath,
     }).toString();
