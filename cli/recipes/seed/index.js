@@ -20,6 +20,9 @@ const render = require("../../utils/templateRenderer");
 const prettifyFile = require("../../utils/prettifyFile");
 const getFakerMethods = require("./utils/fakerMethods");
 const chooseDefaultSeedMethod = require("./utils/chooseDefaultSeedMethod");
+const getFakerExample = require("./utils/getFakerExample");
+const leven = require("fast-levenshtein");
+const quickScore = require("quick-score").quickScore;
 
 module.exports = {
   name: "seed", // MUST match directory name
@@ -90,26 +93,53 @@ module.exports = {
       });
     });
 
-    console.log(chalk.green`Seeder Examples: https://rawgit.com/Marak/faker.js/master/examples/browser/index.html`);
+    console.log(
+      chalk.green`=== SEEDER EXAMPLES ===\n https://rawgit.com/Marak/faker.js/master/examples/browser/index.html\n`
+    );
 
     addArrayField((values) => {
       const tablesSelected = values.table;
       const columns = flatten(tablesSelected.map((table) => schema[table]));
-      const columnsSeedable = columns
+
+      const seedableColumns = columns
         .filter((c) => c.columnKey !== "PRI")
         .filter((c) => c.columnKey !== "MUL");
       const seedFunctions = getFakerMethods();
-      columnsSeedable.forEach((column) => {
+
+      seedableColumns.forEach((column) => {
         const defaultValue = chooseDefaultSeedMethod(column);
+        const seederChoicesOrderedByRelevance = seedFunctions
+          .map((s) => {
+            return {
+              ...s,
+              quickScore: quickScore(s.path, column.column),
+              levenDistance: leven.get(s.path, column.column),
+            };
+          })
+          .sort((a, b) => {
+            if (a.quickScore > 0 || b.quickScore > 0) {
+              return b.quickScore - a.quickScore;
+            }
+
+            return a.levenDistance - b.levenDistance;
+          })
+          .map((s) => ({
+            name: `${s.path}, e.g: ${s.sampleOutput}`,
+            value: s.path,
+          }));
         addField(() => {
           return {
             type: "search-list",
             name: "crudType",
             message: `Choose seed generator for column: ${column.table}.${column.column}`,
-            choices: seedFunctions.map(
-              (s) => `${s.path}, e.g: ${s.sampleOutput}`
-            ),
-            default: defaultValue
+            choices: [
+              {
+                name: `${defaultValue} e.g: ${getFakerExample(defaultValue)}`,
+                value: defaultValue,
+              },
+              ...seederChoicesOrderedByRelevance,
+            ],
+            default: defaultValue,
           };
         });
       });

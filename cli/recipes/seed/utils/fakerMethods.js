@@ -1,5 +1,13 @@
 const faker = require("faker");
-const flatten = require("lodash/flatten");
+const flattenDeep = require("lodash/flattenDeep");
+
+const trimSampleOutput = (output) => {
+    let string = output.replace((/  |\r\n|\n|\r/gm),"").replace(/\\"/g, '"');
+    if (string.length > 80) {
+        return string.substring(0, 77) + "...";
+      }
+    return string;
+}
 
 const constructSeederPath = (path, method) => {
   if (typeof method === "function") {
@@ -22,7 +30,7 @@ const constructSeederPath = (path, method) => {
 
     return {
       path,
-      sampleOutput,
+      sampleOutput: trimSampleOutput(JSON.stringify(sampleOutput)),
     };
   } else {
     return Object.entries(method).map(([methodName, method]) => {
@@ -50,7 +58,7 @@ const getFakerMethods = () => {
       return constructSeederPath(key, methods);
     });
 
-  return flatten(allMethods).filter((v) => !!v);
+  return flattenDeep(allMethods).filter((v) => !!v);
 };
 
 module.exports = getFakerMethods;
