@@ -107,15 +107,11 @@ const DEFAULT_SEEDERS = {
   },
   //Values range from '1000-01-01' to '9999-12-31'.	Displayed as 'YYYY-MM-DD'.
   DATE: () => {
-    const d = new Date();
-    let time = d.getTime();
-    return `datatype.datetime(${time})`;
+    return `date.past(1)`;
   },
   // Values range from '1000-01-01 00:00:00' to '9999-12-31 23:59:59'.	Displayed as 'YYYY-MM-DD HH:MM:SS'.
   DATETIME: () => {
-    const d = new Date();
-    let time = d.getTime();
-    return `datatype.datetime(${time})`;
+    return `date.past(1)`;
   },
   // (m)	Values range from '1970-01-01 00:00:01' UTC to '2038-01-19 03:14:07' UTC.	Displayed as 'YYYY-MM-DD HH:MM:SS'.
   TIMESTAMP: () => {

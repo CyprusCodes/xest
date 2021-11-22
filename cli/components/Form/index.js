@@ -1,3 +1,4 @@
+const get = require("lodash/get");
 const inquirer = require("inquirer");
 const inquirerFileTreeSelection = require("inquirer-file-tree-selection-prompt");
 inquirer.registerPrompt("file-tree-selection", inquirerFileTreeSelection);
@@ -27,7 +28,7 @@ const useForm = () => {
         continue;
       }
       const results = await inquirer.prompt(questionObj);
-      const answer = results[questionObj.name];
+      const answer = get(results, questionObj.name);
 
       if (question.isArrayField) {
         values[questionObj.name] = values[questionObj.name] || [];
@@ -44,11 +45,7 @@ const useForm = () => {
     return values;
   };
 
-  getValues = () => {
-    return values;
-  };
-
-  return { addField, addArrayField, getAnswers, getValues };
+  return { addField, addArrayField, getAnswers };
 };
 
 module.exports = useForm;

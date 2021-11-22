@@ -1,20 +1,12 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
-const faker = require("faker");
 const path = require("path");
-const startCase = require("lodash/startCase");
-const camelCase = require("lodash/camelCase");
 const flatten = require("lodash/flatten");
 const uniqBy = require("lodash/uniqBy");
 const TableSelector = require("../../components/TableSelector");
-const ColumnSelector = require("../../components/ColumnSelector");
 const useForm = require("../../components/Form");
 const { writeFile } = require("../../utils/createFile");
-const {
-  getSchema,
-  getPrimaryKey,
-  getForeignKeys,
-} = require("../../utils/getSchema");
+const { getSchema, getForeignKeys } = require("../../utils/getSchema");
 const chalk = require("chalk");
 const render = require("../../utils/templateRenderer");
 const prettifyFile = require("../../utils/prettifyFile");
@@ -93,6 +85,15 @@ module.exports = {
       });
     });
 
+    addField((values) => {
+      return {
+        type: "input",
+        name: "seedCount",
+        message: "How many seed records do you want to create?",
+        default: 1,
+      };
+    });
+
     console.log(
       chalk.green`=== SEEDER EXAMPLES ===\n https://rawgit.com/Marak/faker.js/master/examples/browser/index.html\n`
     );
@@ -123,14 +124,17 @@ module.exports = {
 
             return a.levenDistance - b.levenDistance;
           })
-          .map((s) => ({
-            name: `${s.path}, e.g: ${s.sampleOutput}`,
-            value: s.path,
-          }));
+          .map((s) => {
+            return {
+              name: `${s.path}, e.g: ${s.sampleOutput}`,
+              value: s.path,
+            };
+          });
+
         addField(() => {
           return {
             type: "search-list",
-            name: "crudType",
+            name: `${column.table}.${column.column}`,
             message: `Choose seed generator for column: ${column.table}.${column.column}`,
             choices: [
               {
@@ -165,6 +169,9 @@ module.exports = {
         }
         const { crudType, entityName, table, columns, filterColumns } =
           userVariables;
+
+        // date mapping -> https://stackoverflow.com/a/9035732
+          console.log({userVariables})
 
         console.log(chalk.green`Succesfully created \n${targetFilePath}`);
         return true;
