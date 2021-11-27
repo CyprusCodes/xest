@@ -187,7 +187,7 @@ function Home() {
                     values={{
                       just: (
                         <CodeBlock className="language-bash step-codeblock">
-                          npx xest my-api
+                          npm i xest -g
                         </CodeBlock>
                       ),
                       justRunCommand: (
