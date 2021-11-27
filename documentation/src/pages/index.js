@@ -192,7 +192,7 @@ function Home() {
                       ),
                       justRunCommand: (
                         <CodeBlock className="language-bash step-codeblock">
-                          cd my-api && just run
+                          cd my-api && xx run
                         </CodeBlock>
                       ),
                     }}
