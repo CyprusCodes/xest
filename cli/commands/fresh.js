@@ -55,7 +55,6 @@ const fresh = async () => {
     );
   }
 
-  // `just run` as usual for a clean build...
   await run();
 };
 

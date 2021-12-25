@@ -81,7 +81,7 @@ const generate = (program) => async (appName) => {
     shell: true,
   });
   console.log(
-    chalk.green`You're ready to go!\n Type ${chalk.green`cd ${appNameKebapCase} && just run`} to begin.`
+    chalk.green`You're ready to go!\n Type ${chalk.green`cd ${appNameKebapCase} && xx run`} to begin.`
   );
 };
 
