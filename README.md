@@ -3,3 +3,10 @@
 
  # To install globally 
 `npm i xest -G`
+
+# Quick Start
+
+### After installing xest framework globally; you can create your api with one simple command
+
+`xx new <app-name-goes-here>`
+
