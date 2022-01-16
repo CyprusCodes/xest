@@ -26,4 +26,11 @@ Please note xest framework has already got a few endpoints prepared for you to g
 ## Refresh your database & Run the project
 `xx fresh`
 
+# Using the xest CLI to build your endpoints
+Xest framework gives you the flexibility to write your routes, controllers actions and query by using cli. 
+It will aitomaticaly create the 
 
+## Building your sql query 
+Start building your queries by writing the following command in your cli and pick the required options. 
+
+`xx new`
