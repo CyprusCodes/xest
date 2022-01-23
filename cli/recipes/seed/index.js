@@ -5,6 +5,7 @@ const flatten = require("lodash/flatten");
 const uniqBy = require("lodash/uniqBy");
 const TableSelector = require("../../components/TableSelector");
 const useForm = require("../../components/Form");
+const Graph = require("../../utils/Graph");
 const { writeFile } = require("../../utils/createFile");
 const { getSchema, getForeignKeys } = require("../../utils/getSchema");
 const chalk = require("chalk");
@@ -171,7 +172,49 @@ module.exports = {
           userVariables;
 
         // date mapping -> https://stackoverflow.com/a/9035732
-          console.log({userVariables})
+        console.log({ userVariables });
+        const { table: tables } = userVariables;
+        let graph = new Graph();
+        tables.forEach((tableName) => {
+          console.log(tableName);
+          graph.addVertex(tableName);
+        });
+
+        tables.forEach((sourceTableName) => {
+          const foreignKeys = getForeignKeys(sourceTableName);
+          // we are only interested in the foreign keys
+          // user has decided to populate automatically
+          // rest will be left as TODO comments for the programmer
+          foreignKeys.forEach((fk) => {
+            const targetTable = fk.foreignKeyTo.targetTable;
+            if (tables.includes(targetTable)) {
+              graph.addEdge(sourceTableName, targetTable);
+            }
+          });
+        });
+
+        const tablesToPopulate = tables.map((name) => {
+          return {
+            name,
+            inDegree: graph.getIndegree(name),
+          };
+        });
+
+        const finalTableToPopulate = tablesToPopulate.find(
+          (t) => t.inDegree === 0
+        );
+        const tablesToPopulateInOrder = tablesToPopulate.map((table) => {
+          const pathExists = graph.doesPathExist(
+            finalTableToPopulate.name,
+            table.name
+          );
+          return {
+            ...table,
+            depth: pathExists.pathExists ? pathExists.path.length - 1 : 0,
+          };
+        });
+        console.log("Final table:", finalTableToPopulate);
+        console.log("Depths", tablesToPopulateInOrder);
 
         console.log(chalk.green`Succesfully created \n${targetFilePath}`);
         return true;
