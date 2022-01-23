@@ -14,7 +14,7 @@ const runMySQLContainer = async (rootPath, projectName) => {
   } catch (err) {
     if (err.toString().includes("Error")) {
       console.log(
-        chalk.red`Docker is currently not running. Please start Docker and repeat ${chalk.green`just run`} again.`
+        chalk.red`Docker is currently not running. Please start Docker and repeat ${chalk.green`xx run`} again.`
       );
       return false;
     }
@@ -78,7 +78,7 @@ const runMySQLContainer = async (rootPath, projectName) => {
   }
   if (!ready) {
     console.log(
-      chalk.red`MySQL instance is not ready yet. Try running ${chalk.green`just run`} again.`
+      chalk.red`MySQL instance is not ready yet. Try running ${chalk.green`xx run`} again.`
     );
     return false;
   }

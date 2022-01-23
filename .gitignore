@@ -108,3 +108,4 @@ dist
 
 # documentation
 .docusaurus
+.vscode

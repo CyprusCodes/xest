@@ -145,7 +145,7 @@ const updateDatabaseMetadata = async ({
         return column;
       });
     });
-    writeFile(`${rootPath}/.just/schema.json`, JSON.stringify(finalOutput));
+    writeFile(`${rootPath}/.xest/schema.json`, JSON.stringify(finalOutput));
   }
 };
 

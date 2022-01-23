@@ -1,4 +1,5 @@
 const inquirer = require("inquirer");
+const isEmpty = require("lodash/isEmpty");
 const chalk = require("chalk");
 
 module.exports = ({ columns, ...rest }) => {
@@ -16,7 +17,7 @@ module.exports = ({ columns, ...rest }) => {
         } `;
 
         const isPrimaryKey = column.columnKey === "PRI";
-        const isForeignKey = column.columnKey === "MUL";
+        const isForeignKey = !isEmpty(column.foreignKeyTo);
 
         if (isPrimaryKey) {
           label = label + "PRIMARY";

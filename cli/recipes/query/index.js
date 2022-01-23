@@ -38,7 +38,7 @@ module.exports = {
             fs.statSync(path).isDirectory() &&
             !path.endsWith("node_modules") &&
             !path.endsWith("migrations") &&
-            !path.endsWith(".just") &&
+            !path.endsWith(".xest") &&
             !path.endsWith("queries");
           // it would be better to disable database folder as well
           // but there seems to be a problem with expanding the first element

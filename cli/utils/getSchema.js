@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const chalk = require("chalk");
+const isEmpty = require("lodash/isEmpty");
 const findProjectRoot = require("./findProjectRoot");
 
 let schemaData;
@@ -22,8 +23,8 @@ const getSchema = () => {
   const { filename } = projectDetails;
   const rootPath = path.dirname(filename);
   try {
-    console.log(`${rootPath}/.just/schema.json`);
-    const schema = fs.readFileSync(`${rootPath}/.just/schema.json`, "utf-8");
+    console.log(`${rootPath}/.xest/schema.json`);
+    const schema = fs.readFileSync(`${rootPath}/.xest/schema.json`, "utf-8");
     schemaData = JSON.parse(schema);
   } catch (err) {
     console.log(err);
@@ -53,7 +54,7 @@ const getForeignKeys = (tableName) => {
   }
 
   const table = schema[tableName];
-  return table.filter(column => column.columnKey === "MUL");
+  return table.filter(column => !isEmpty(column.foreignKeyTo));
 }
 
 module.exports = { getSchema, getPrimaryKey, getForeignKeys };
