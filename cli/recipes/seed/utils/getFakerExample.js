@@ -28,7 +28,7 @@ const getFakerValue = (methodToCall) => {
     return date.toISOString();
   }
 
-  return out;
+  return out.replace(/\"/g, ''); // strip "
 };
 
 module.exports = { getFakerExample, getFakerValue };

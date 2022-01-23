@@ -225,7 +225,6 @@ module.exports = {
           for (let i = 0; i < seedCount; i++) {
             const columnsToInsert = columns
               .map((column) => {
-                console.log(column);
                 const seederTemplate =
                   userVariables[`${column.table}.${column.column}`];
                 const isItFK = !isEmpty(column.foreignKeyTo);
@@ -238,9 +237,10 @@ module.exports = {
                 let seed =
                   "NULL, -- todo: please fill above value, or drop this comment";
                 if (isItFK) {
+                  
                   const targetTable = column.foreignKeyTo.targetTable;
-                  if (insertedRecords[targetTable][seedCount]) {
-                    seed = `${insertedRecords[targetTable][seedCount]},`;
+                  if (insertedRecords[targetTable][i]) {
+                    seed = `@${insertedRecords[targetTable][i]},`;
                   }
                 }
 
@@ -259,8 +259,8 @@ module.exports = {
                 };
               })
               .filter((v) => !!v);
-            console.log("WTF X:", columnsToInsert[0].table);
-            let sql = `\nINSERT INTO ${columnsToInsert[0].table}`;
+
+            let sql = `\n\nINSERT INTO ${columnsToInsert[0].table}`;
             sql = sql + `(${columnsToInsert.map((v) => v.column).join(",")})`;
             const listOfColumns = columnsToInsert.map((v) => v.value).join("\n").slice(0, -1)
             sql =
@@ -268,22 +268,23 @@ module.exports = {
               `VALUES (${listOfColumns});`;
             sql =
               sql +
-              `\nSET @${columnsToInsert[0].table}_${seedCount} = LAST_INSERT_ID();`;
+              `\nSET @${columnsToInsert[0].table}_${i} = LAST_INSERT_ID();`;
             insertSeedSQL = insertSeedSQL + sql;
             if (insertedRecords[columnsToInsert[0].table]) {
               insertedRecords[columnsToInsert[0].table].push(
-                `${columnsToInsert[0].table}_${seedCount}`
+                `${columnsToInsert[0].table}_${i}`
               );
             } else {
               insertedRecords[columnsToInsert[0].table] = [
-                `${columnsToInsert[0].table}_${seedCount}`,
+                `${columnsToInsert[0].table}_${i}`,
               ];
             }
           }
         });
 
-        console.log(insertedRecords);
-        console.log(format(insertSeedSQL));
+        const formattedSQL = format(insertSeedSQL);
+        const finalSQL = formattedSQL.replace(/@ /g, '@').replace(/SET\s\s+/g, 'SET ');
+        console.log(finalSQL);
         // console.log(chalk.green`Succesfully created \n${targetFilePath}`);
         return true;
       },
