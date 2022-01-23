@@ -1,4 +1,4 @@
-const faker = require("faker");
+const faker = require("@faker-js/faker");
 const flattenDeep = require("lodash/flattenDeep");
 
 const trimSampleOutput = (output) => {

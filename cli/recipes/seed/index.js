@@ -2,7 +2,11 @@ const inquirer = require("inquirer");
 const fs = require("fs");
 const path = require("path");
 const flatten = require("lodash/flatten");
+const faker = require("@faker-js/faker");
 const uniqBy = require("lodash/uniqBy");
+const { format } = require("sql-formatter");
+const isEmpty = require("lodash/isEmpty");
+const orderBy = require("lodash/orderBy");
 const TableSelector = require("../../components/TableSelector");
 const useForm = require("../../components/Form");
 const Graph = require("../../utils/Graph");
@@ -13,7 +17,7 @@ const render = require("../../utils/templateRenderer");
 const prettifyFile = require("../../utils/prettifyFile");
 const getFakerMethods = require("./utils/fakerMethods");
 const chooseDefaultSeedMethod = require("./utils/chooseDefaultSeedMethod");
-const getFakerExample = require("./utils/getFakerExample");
+const { getFakerExample, getFakerValue } = require("./utils/getFakerExample");
 const leven = require("fast-levenshtein");
 const quickScore = require("quick-score").quickScore;
 
@@ -95,17 +99,15 @@ module.exports = {
       };
     });
 
-    console.log(
-      chalk.green`=== SEEDER EXAMPLES ===\n https://rawgit.com/Marak/faker.js/master/examples/browser/index.html\n`
-    );
+    console.log(chalk.green`=== SEEDER EXAMPLES ===\n https://fakerjs.dev/\n`);
 
     addArrayField((values) => {
       const tablesSelected = values.table;
       const columns = flatten(tablesSelected.map((table) => schema[table]));
 
       const seedableColumns = columns
-        .filter((c) => c.columnKey !== "PRI")
-        .filter((c) => c.columnKey !== "MUL");
+        .filter((c) => c.extra !== "auto_increment")
+        .filter((c) => isEmpty(c.foreignKeyTo));
       const seedFunctions = getFakerMethods();
 
       seedableColumns.forEach((column) => {
@@ -168,12 +170,8 @@ module.exports = {
         if (!schema) {
           return;
         }
-        const { crudType, entityName, table, columns, filterColumns } =
-          userVariables;
 
-        // date mapping -> https://stackoverflow.com/a/9035732
-        console.log({ userVariables });
-        const { table: tables } = userVariables;
+        const { table: tables, seedCount } = userVariables;
         let graph = new Graph();
         tables.forEach((tableName) => {
           console.log(tableName);
@@ -203,7 +201,7 @@ module.exports = {
         const finalTableToPopulate = tablesToPopulate.find(
           (t) => t.inDegree === 0
         );
-        const tablesToPopulateInOrder = tablesToPopulate.map((table) => {
+        const tablesToPopulateWithDepths = tablesToPopulate.map((table) => {
           const pathExists = graph.doesPathExist(
             finalTableToPopulate.name,
             table.name
@@ -213,10 +211,80 @@ module.exports = {
             depth: pathExists.pathExists ? pathExists.path.length - 1 : 0,
           };
         });
-        console.log("Final table:", finalTableToPopulate);
-        console.log("Depths", tablesToPopulateInOrder);
 
-        console.log(chalk.green`Succesfully created \n${targetFilePath}`);
+        const insertedRecords = {};
+        let insertSeedSQL = ``;
+        const tablesToInsert = orderBy(
+          tablesToPopulateWithDepths,
+          ["depth"],
+          ["desc"]
+        );
+        tablesToInsert.forEach((table) => {
+          const { name } = table;
+          const columns = schema[name];
+          for (let i = 0; i < seedCount; i++) {
+            const columnsToInsert = columns
+              .map((column) => {
+                console.log(column);
+                const seederTemplate =
+                  userVariables[`${column.table}.${column.column}`];
+                const isItFK = !isEmpty(column.foreignKeyTo);
+                const isAutoIncrement = column.extra === "auto_increment";
+                if (isAutoIncrement) {
+                  // this column will be filled automatically
+                  return null;
+                }
+
+                let seed =
+                  "NULL, -- todo: please fill above value, or drop this comment";
+                if (isItFK) {
+                  const targetTable = column.foreignKeyTo.targetTable;
+                  if (insertedRecords[targetTable][seedCount]) {
+                    seed = `${insertedRecords[targetTable][seedCount]},`;
+                  }
+                }
+
+                if (seederTemplate) {
+                  let rawSeedValue = getFakerExample(seederTemplate);
+                  if (isNaN(rawSeedValue)) {
+                    seed = `"${rawSeedValue}",`;
+                  } else {
+                    seed = `${rawSeedValue},`;
+                  }
+                }
+                return {
+                  table: column.table,
+                  column: column.column,
+                  value: seed,
+                };
+              })
+              .filter((v) => !!v);
+            console.log("WTF X:", columnsToInsert[0].table);
+            let sql = `\nINSERT INTO ${columnsToInsert[0].table}`;
+            sql = sql + `(${columnsToInsert.map((v) => v.column).join(",")})`;
+            const listOfColumns = columnsToInsert.map((v) => v.value).join("\n").slice(0, -1)
+            sql =
+              sql +
+              `VALUES (${listOfColumns});`;
+            sql =
+              sql +
+              `\nSET @${columnsToInsert[0].table}_${seedCount} = LAST_INSERT_ID();`;
+            insertSeedSQL = insertSeedSQL + sql;
+            if (insertedRecords[columnsToInsert[0].table]) {
+              insertedRecords[columnsToInsert[0].table].push(
+                `${columnsToInsert[0].table}_${seedCount}`
+              );
+            } else {
+              insertedRecords[columnsToInsert[0].table] = [
+                `${columnsToInsert[0].table}_${seedCount}`,
+              ];
+            }
+          }
+        });
+
+        console.log(insertedRecords);
+        console.log(format(insertSeedSQL));
+        // console.log(chalk.green`Succesfully created \n${targetFilePath}`);
         return true;
       },
     },
