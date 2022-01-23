@@ -34,3 +34,8 @@ It will aitomaticaly create the
 Start building your queries by writing the following command in your cli and pick the required options. 
 
 `xx new`
+
+## Building database-schema seed queries 
+Generate your mock data by writing the following command in your cli and pick the required options. 
+
+`xx new` ->seed
