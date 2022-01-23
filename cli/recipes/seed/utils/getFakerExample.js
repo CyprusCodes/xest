@@ -27,8 +27,8 @@ const getFakerExample = (methodToCall) => {
     const out = getFakerValue(methodToCall);
     return trimSampleOutput(out);
   } catch (error) {
-    // console.error("CLI failed to generate seed data.");
-    // console.log(error);
+    console.error("CLI failed to generate seed data.");
+    console.log(error);
     return "";
   }
 };
