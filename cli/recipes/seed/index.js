@@ -1,8 +1,6 @@
 const inquirer = require("inquirer");
-const fs = require("fs");
-const path = require("path");
 const flatten = require("lodash/flatten");
-const faker = require("@faker-js/faker");
+const get = require("lodash/get");
 const uniqBy = require("lodash/uniqBy");
 const { format } = require("sql-formatter");
 const isEmpty = require("lodash/isEmpty");
@@ -10,11 +8,8 @@ const orderBy = require("lodash/orderBy");
 const TableSelector = require("../../components/TableSelector");
 const useForm = require("../../components/Form");
 const Graph = require("../../utils/Graph");
-const { writeFile } = require("../../utils/createFile");
 const { getSchema, getForeignKeys } = require("../../utils/getSchema");
 const chalk = require("chalk");
-const render = require("../../utils/templateRenderer");
-const prettifyFile = require("../../utils/prettifyFile");
 const getFakerMethods = require("./utils/fakerMethods");
 const chooseDefaultSeedMethod = require("./utils/chooseDefaultSeedMethod");
 const { getFakerExample, getFakerValue } = require("./utils/getFakerExample");
@@ -174,7 +169,6 @@ module.exports = {
         const { table: tables, seedCount } = userVariables;
         let graph = new Graph();
         tables.forEach((tableName) => {
-          console.log(tableName);
           graph.addVertex(tableName);
         });
 
@@ -237,15 +231,16 @@ module.exports = {
                 let seed =
                   "NULL, -- todo: please fill above value, or drop this comment";
                 if (isItFK) {
-                  
                   const targetTable = column.foreignKeyTo.targetTable;
-                  if (insertedRecords[targetTable][i]) {
+                  // todo: might need lodash get here
+                  // , if user decides to skip populating other tables on purpose
+                  if (get(insertedRecords, `${targetTable}[${i}]`)) {
                     seed = `@${insertedRecords[targetTable][i]},`;
                   }
                 }
 
                 if (seederTemplate) {
-                  let rawSeedValue = getFakerExample(seederTemplate);
+                  let rawSeedValue = getFakerValue(seederTemplate);
                   if (isNaN(rawSeedValue)) {
                     seed = `"${rawSeedValue}",`;
                   } else {
@@ -262,30 +257,40 @@ module.exports = {
 
             let sql = `\n\nINSERT INTO ${columnsToInsert[0].table}`;
             sql = sql + `(${columnsToInsert.map((v) => v.column).join(",")})`;
-            const listOfColumns = columnsToInsert.map((v) => v.value).join("\n").slice(0, -1)
+
+            let listOfColumns = columnsToInsert.map((v) => v.value).join("\n");
+            if (listOfColumns[listOfColumns.length - 1] === ",") {
+              listOfColumns = listOfColumns.slice(0, -1);
+            }
+
+            sql = sql + `VALUES (${listOfColumns}\n);`;
             sql =
               sql +
-              `VALUES (${listOfColumns});`;
-            sql =
-              sql +
-              `\nSET @${columnsToInsert[0].table}_${i} = LAST_INSERT_ID();`;
+              `\nSET @${columnsToInsert[0].table}_${i + 1} = LAST_INSERT_ID();`;
             insertSeedSQL = insertSeedSQL + sql;
             if (insertedRecords[columnsToInsert[0].table]) {
               insertedRecords[columnsToInsert[0].table].push(
-                `${columnsToInsert[0].table}_${i}`
+                `${columnsToInsert[0].table}_${i + 1}`
               );
             } else {
               insertedRecords[columnsToInsert[0].table] = [
-                `${columnsToInsert[0].table}_${i}`,
+                `${columnsToInsert[0].table}_${i + 1}`,
               ];
             }
           }
         });
 
+        console.log(chalk.green`\nSEED MIGRATIONS BELOW:\n`);
         const formattedSQL = format(insertSeedSQL);
-        const finalSQL = formattedSQL.replace(/@ /g, '@').replace(/SET\s\s+/g, 'SET ');
+        const finalSQL = formattedSQL
+          .replace(/@ /g, "@")
+          .replace(/SET\s\s+/g, "SET ")
+          .replace(/\_ID\(\);/g, "_ID();\n");
         console.log(finalSQL);
-        // console.log(chalk.green`Succesfully created \n${targetFilePath}`);
+
+        console.log(
+          chalk.green`You can use MySQL Workbench to test your migration script. Once happy copy and paste it to the database/seed-data.sql file.`
+        );
         return true;
       },
     },

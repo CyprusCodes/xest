@@ -20,42 +20,42 @@ const DEFAULT_SEEDERS = {
   // (size)	Maximum size of 255 characters.	Where size is the number of characters to store. Fixed-length strings. Space padded on right to equal size characters.
   CHAR: (columnType) => {
     const [size] = parseColumnTypeArgs(columnType);
-    return `datatype.string(${size})`;
+    return `lorem.words(${size})`;
   },
   // (size)	Maximum size of 255 characters.	Where size is the number of characters to store. Variable-length string.
   VARCHAR: (columnType) => {
     const [size] = parseColumnTypeArgs(columnType);
-    return `datatype.string(${size})`;
+    return `lorem.words(${size})`;
   },
   // (size)	Maximum size of 255 characters.	Where size is the number of characters to store.
   TINYTEXT: (columnType) => {
     const [size] = parseColumnTypeArgs(columnType);
-    return `datatype.string(${size})`;
+    return `lorem.words(${size})`;
   },
   // (size)	Maximum size of 65,535 characters.	Where size is the number of characters to store.
   TEXT: (columnType) => {
     const [size] = parseColumnTypeArgs(columnType);
-    return `datatype.string(${size})`;
+    return `lorem.words(${size})`;
   },
   // (size)	Maximum size of 16,777,215 characters.	Where size is the number of characters to store.
   MEDIUMTEXT: (columnType) => {
     const [size] = parseColumnTypeArgs(columnType);
-    return `datatype.string(${size})`;
+    return `lorem.words(${size})`;
   },
   // (size)	Maximum size of 4GB or 4,294,967,295 characters.	Where size is the number of characters to store.
   LONGTEXT: (columnType) => {
     const [size] = parseColumnTypeArgs(columnType);
-    return `datatype.string(${size})`;
+    return `lorem.words(${size})`;
   },
   // (size)	Maximum size of 255 characters.	Where size is the number of binary characters to store. Fixed-length strings. Space padded on right to equal size characters. (Introduced in MySQL 4.1.2)
   BINARY: (columnType) => {
     const [size] = parseColumnTypeArgs(columnType);
-    return `datatype.string(${size})`;
+    return `lorem.words(${size})`;
   },
   // (size)	Maximum size of 255 characters.	Where size is the number of characters to store. Variable-length string. (Introduced in MySQL 4.1.2)
   VARBINARY: (columnType) => {
     const [size] = parseColumnTypeArgs(columnType);
-    return `datatype.string(${size})`;
+    return `lorem.words(${size})`;
   },
   //	Very small integer value that is equivalent to TINYINT(1). Signed values range from -128 to 127. Unsigned values range from 0 to 255.
   BIT: () => {
@@ -133,19 +133,19 @@ const DEFAULT_SEEDERS = {
   },
   // Maximum size of 255 bytes.
   TINYBLOB: () => {
-    return `datatype.string(50)`;
+    return `lorem.words(50)`;
   },
   // (size)	Maximum size of 65,535 bytes.	Where size is the number of characters to store. (size is optional and was introduced in MySQL 4.1)
   BLOB: () => {
-    return `datatype.string(50)`;
+    return `lorem.words(50)`;
   },
   // Maximum size of 16,777,215 bytes.
   MEDIUMBLOB: () => {
-    return `datatype.string(50)`;
+    return `lorem.words(50)`;
   },
   // Maximum size of 4GB or 4,294,967,295 characters.
   LONGTEXT: () => {
-    return `datatype.string(50)`;
+    return `lorem.words(50)`;
   },
   JSON: () => {
     return `datatype.json({})`;
