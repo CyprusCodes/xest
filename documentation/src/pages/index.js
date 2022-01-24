@@ -146,7 +146,7 @@ function Home() {
             <img
               alt="Awe logo"
               className={styles.heroLogo}
-              src={useBaseUrl("img/logo.svg")}
+              src={useBaseUrl("icon/cc_logo2.png")}
             />
             <span
               className={styles.heroTitleTextHtml}
@@ -186,26 +186,31 @@ function Home() {
                   <Translate
                     values={{
                       just: (
-                        <CodeBlock className="language-bash step-codeblock">
-                          npm i xest -g
+                        <CodeBlock className="language-javascript step-codeblock">
+                          npm i xest -g //To install globally.
                         </CodeBlock>
                       ),
                       justRunCommand: (
-                        <CodeBlock className="language-bash step-codeblock">
-                          cd my-api && xx run
+                        <CodeBlock className="language-javascript step-codeblock">
+                          xx run //Run the project.
+                        </CodeBlock>
+                      ),
+                      justFreshCommand: (
+                        <CodeBlock className="language-javascript step-codeblock">
+                          xx fresh //Refresh your database & Run the project.
                         </CodeBlock>
                       ),
                     }}
                     id="homepage.features.modern-ui"
                     description="Modern UI"
                   >
-                    {`{just} {justRunCommand}`}
+                    {`{just} {justRunCommand} {justFreshCommand}`}
                   </Translate>
                 </div>
               ),
             }}
           >
-            {`Get started in seconds with just 2 steps.  {migrationGuideLink}`}
+            {`Get started in seconds with just few steps.  {migrationGuideLink}`}
           </Translate>
           .
         </div>

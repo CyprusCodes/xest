@@ -5,7 +5,7 @@ sidebar_label: Introduction
 slug: /
 ---
 
-<img alt="Xest" src={require('@docusaurus/useBaseUrl').default('img/awe_logo.png')} />
+![xest-logo](https://user-images.githubusercontent.com/1476886/147765281-e871657c-37a8-495d-b08b-c5dccf6334c3.png)
 
 Xest is a light-weight Javascript API framework. Allows you build web APIs in the fastest way.
 

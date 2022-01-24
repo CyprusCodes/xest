@@ -20,26 +20,7 @@ module.exports = {
       items: [
         "installation",
         {
-          Configuration: [
-            "maven",
-            {
-              type: "category",
-              label: "Modules",
-              collapsed: true,
-              items: [
-                "annotations",
-                "developer-tools",
-                "builder",
-                "rest",
-                "scheduler",
-                "notifier",
-                "database-migration",
-              ],
-            },
-            "properties",
-            "application-options",
-            "session",
-          ],
+
         },
         "deployment",
       ],
@@ -120,23 +101,6 @@ module.exports = {
       label: "Schedule Task",
       collapsed: false,
       items: ["guides/schedule-configuration", "guides/dependency-task"],
-    },
-  ],
-  training: [
-    {
-      type: "category",
-      label: "Basic tutorials",
-      collapsed: false,
-      items: [
-        "training/awe-101",
-        "training/awe-102",
-        "training/awe-103",
-        "training/awe-104",
-        "training/awe-105",
-        "training/awe-106",
-        "training/awe-107",
-        "training/awe-108",
-      ],
     },
   ],
 };

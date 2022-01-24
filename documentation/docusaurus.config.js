@@ -6,13 +6,13 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "My Site",
-  tagline: "Dinosaurs are cool",
+  title: "Xest Framework",
+  tagline: "",
   url: "https://your-docusaurus-test-site.com",
   baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
-  favicon: "img/favicon.ico",
+  favicon: "img/cc_logo2.png",
   organizationName: "facebook", // Usually your GitHub org/user name.
   projectName: "docusaurus", // Usually your repo name.
   themeConfig: {
@@ -20,7 +20,7 @@ const config = {
       title: "Xest",
       logo: {
         alt: "Awe framework Logo",
-        src: "img/logo.svg",
+        src: "img/cc_logo2.png", 
         // srcDark: 'img/logo white.svg'
       },
       hideOnScroll: true,
@@ -30,21 +30,15 @@ const config = {
           position: "left",
           label: "Docs",
         },
-        {
-          type: "doc",
-          docId: "training/awe-101",
-          position: "left",
-          label: "Training",
-          activeSidebarClassName: "navbar__link--active",
-        },
+        
         {
           to: "blog",
           label: "Blog",
           position: "left",
         },
         {
-          alt: "Gitlab repository",
-          href: "https://gitlab.com/aweframework/awe",
+          alt: "GitHub repository",
+          href: "https://github.com/CyprusCodes",
           className: "header-gitlab-link",
           position: "right",
         },
@@ -59,10 +53,6 @@ const config = {
             {
               label: "Introduction",
               to: "docs/",
-            },
-            {
-              label: "Migration from v3 to v4",
-              to: "docs/guides/v4-migration",
             },
           ],
         },
@@ -83,17 +73,13 @@ const config = {
           title: "More",
           items: [
             {
-              label: "Gitlab repository",
-              href: "https://gitlab.com/aweframework/awe",
-            },
-            {
-              label: "Javadoc",
-              href: "https://aweframework.gitlab.io/awe/javadoc-api/index.html",
+              label:"GitHub repository",
+              href: "https://github.com/CyprusCodes",
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Awe framework, Almis Informática S.L.`,
+      copyright: `Copyright © ${new Date().getFullYear()}  Cyprus Codes, Xest framework`,
     },
     algolia: {
       apiKey: "bbb756b741640f975ac0158bcedcefcb",
