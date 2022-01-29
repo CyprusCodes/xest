@@ -38,7 +38,7 @@ const config = {
         },
         {
           alt: "GitHub repository",
-          href: "https://github.com/CyprusCodes",
+          href: "https://github.com/CyprusCodes/xest",
           className: "header-gitlab-link",
           position: "right",
         },
@@ -74,7 +74,7 @@ const config = {
           items: [
             {
               label:"GitHub repository",
-              href: "https://github.com/CyprusCodes",
+              href: "https://github.com/CyprusCodes/xest",
             },
           ],
         },
