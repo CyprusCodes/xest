@@ -9,6 +9,7 @@ const runSqlQueryWithinContainer = require("../../utils/runSqlQueryWithinContain
 const resolvePortConflict = require("../../utils/resolvePortConflict");
 const runMySQLContainer = require("../../utils/runMySQLContainer");
 const updateDatabaseMetadata = require("./utils/updateDatabaseMetadata");
+const isAppleSilicon = require("../../utils/isAppleSilicon");
 
 const run = async () => {
   const projectDetails = findProjectRoot();
@@ -96,6 +97,13 @@ const run = async () => {
 
   process.stdin.resume();
   let isExiting = false;
+
+  let dockerComposeCommand = `docker-compose down`;
+  const usingAppleSiliconChipset = isAppleSilicon();
+  if(usingAppleSiliconChipset) {
+    dockerComposeCommand = `docker-compose -f docker-compose.apple-silicon.yml down`
+  }
+
   // shutdown procedure
   [
     `exit`,
@@ -111,7 +119,7 @@ const run = async () => {
         console.log(chalk.yellow`Stopping API and MySQL container.`);
         isExiting = true;
         exec(
-          `docker-compose down`,
+          dockerComposeCommand,
           { cwd: path.join(rootPath, "database") },
           () => {
             process.exit(0);

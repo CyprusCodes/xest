@@ -4,6 +4,7 @@ const path = require("path");
 const snakeCase = require("lodash/snakeCase");
 const runSqlQueryWithinContainer = require("./runSqlQueryWithinContainer");
 const resolvePortConflict = require("./resolvePortConflict");
+const isAppleSilicon = require("./isAppleSilicon");
 const execa = require("execa");
 const sleep = require("./sleep");
 
@@ -37,7 +38,13 @@ const runMySQLContainer = async (rootPath, projectName) => {
     // check if mysql port is available for use
     await resolvePortConflict(3306, "MySQL Docker Container");
 
-    const runMySQLContainer = execSync(`docker-compose up -d`, {
+    let dockerComposeCommand = `docker-compose up -d`;
+    const usingAppleSiliconChipset = isAppleSilicon();
+    if(usingAppleSiliconChipset) {
+      dockerComposeCommand = `docker-compose -f docker-compose.apple-silicon.yml up -d`
+    }
+
+    const runMySQLContainer = execSync(dockerComposeCommand, {
       cwd: path.join(rootPath, "database"),
     }).toString();
   }

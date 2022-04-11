@@ -1,0 +1,19 @@
+version: "3.3"
+services:
+  {{PROJECT_NAME_KEBAPCASE}}-db:
+    container_name: {{PROJECT_NAME_KEBAPCASE}}-mysql-db
+    image: jamielsharief/mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: "{{PROJECT_NAME_SNAKECASE}}_db"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "password"
+      MYSQL_ROOT_PASSWORD: "password"
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    volumes:
+      - vol-{{PROJECT_NAME_KEBAPCASE}}-db:/var/lib/mysql
+volumes:
+  vol-{{PROJECT_NAME_KEBAPCASE}}-db:

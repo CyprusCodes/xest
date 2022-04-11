@@ -7,6 +7,7 @@ const { writeFile, writeDirectory } = require("../utils/createFile");
 const asyncSeries = require("../utils/asyncSeries");
 const writeDotEnvFile = require("../utils/writeDotEnvFile");
 const writeDatabaseJSONFile = require("../utils/writeDatabaseJSONFile");
+const writeGitIgnoreFile = require("../utils/writeGitIgnoreFile");
 const fs = require("fs");
 const path = require("path");
 const { fdir } = require("fdir");
@@ -76,6 +77,7 @@ const generate = (program) => async (appName) => {
   console.log(chalk.green`Installing packages...`);
   await writeDotEnvFile(projectDirectoryToCreate, appNameSnakeCase);
   await writeDatabaseJSONFile(projectDirectoryToCreate, appNameSnakeCase);
+  await writeGitIgnoreFile(projectDirectoryToCreate);
   await execa(`npm install`, {
     cwd: projectDirectoryToCreate,
     shell: true,

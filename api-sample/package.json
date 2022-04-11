@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test jest --bail --coverage=true --coverageDirectory=coverage-unit",
-    "integration-test": "NODE_ENV=test nyc --reporter=lcov --reporter=json mocha --exit --recursive --timeout 60000 --file ./test/utils/setupTests/index.js",
+    "integration-test": "PORT=3002 NODE_ENV=test nyc --reporter=lcov --reporter=json mocha --exit --recursive --timeout 60000 --file ./test/utils/setupTests/index.js",
     "lint": "node_modules/eslint/bin/eslint.js .",
     "migrate:new": "node node_modules/db-migrate/bin/db-migrate create",
     "migrate-up:dry-once": "node node_modules/db-migrate/bin/db-migrate up -c 1 --dry-run",
