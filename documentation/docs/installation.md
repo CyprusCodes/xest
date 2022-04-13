@@ -66,6 +66,15 @@ Docker.compose.yml is our config file that will speak to our database. When you 
 
 .sql files are your configuration files as well, you will create your tables at database-schema.sql, a schema sets out the structure of how data will be stored in our database and insert data in seed-data.sql.
 
+---
+
+### Here's a brief overview of those core files
+
+| Syntax    | Description |
+| --------- | ----------- |
+| Header    | Title       |
+| Paragraph | Text        |
+
 <!-- To install an AWE-based application just deploy it on an application server, like Apache Tomcat, Wildfly (old JBoss) or IBM WebSphere
 
 ## Optimization
