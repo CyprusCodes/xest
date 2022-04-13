@@ -30,9 +30,9 @@ So if you follow the established conventions, you can develop a web application 
 
 Please visit us at [https://www.xestjs.com](https://xestjs.com)
 
-<!-- ## Prerequisites
+## Prerequisites
 
-You must have Maven 3.x installed on your computer and JDK 8 or higher -->
+Before starting this framework you will need to understand what server-side web programming and web frameworks are, ideally by reading the topics in our Server-side website programming first steps module. A general knowledge of programming concepts and JavaScript is highly recommended, but not essential to understanding the core concepts.
 
 <!-- ## Getting Started
 
