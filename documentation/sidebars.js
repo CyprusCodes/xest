@@ -5,8 +5,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+// overview
+// development environment
+// CLI
+//database Model
+// Security
+// Testing
+
 module.exports = {
   docs: [
+    {
+      type: "category",
+      label: "Overview",
+      collapsed: false,
+      items: ["what-is-xest-why", "installation", "CRUD"],
+    },
     {
       type: "category",
       label: "Xest framework",
