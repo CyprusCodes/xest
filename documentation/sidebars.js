@@ -22,6 +22,37 @@ module.exports = {
     },
     {
       type: "category",
+      label: "Development Environment",
+      collapsed: false,
+      items: ["docker", "mysql", "node"],
+    },
+    {
+      type: "category",
+      label: "CLI",
+      collapsed: false,
+      items: [
+        "bootstrap",
+        "run",
+        "refresh",
+        "query-generator",
+        "seed-generator",
+      ],
+    },
+    {
+      type: "category",
+      label: "Database Model",
+      collapsed: false,
+      items: [
+        "bootstrap",
+        "run",
+        "refresh",
+        "query-generator",
+        "seed-generator",
+      ],
+    },
+
+    {
+      type: "category",
       label: "Xest framework",
       collapsed: false,
       items: ["intro", "purpose", "architecture", "security"],
