@@ -109,3 +109,4 @@ dist
 # documentation
 .docusaurus
 .vscode
+.DS_Store
