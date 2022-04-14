@@ -32,14 +32,24 @@ Controller activities may be summarized as follows:
 
 In well-factored apps, it doesn't directly include data access or business logic. Instead, the controller delegates to services handling these responsibilities.
 
---
-
 `Actions` folder inside `src` is where you can talk to the database, so it’s where the actions take place.
+
+---
+
+![alt_text](https://minio.cypruscodes.com/beckend-new-chapter/1.png "crud")
 
 ### Create
 
+In order to _create_ something within the API e.g user, you need to use `post` for controller, `create` for actions, and `insert` for the query function.
+
 ### Read
+
+In order to _read_ something within the API e.g user, you need to use `get` for controller, `fetch` for actions, and `select` for the query function.
 
 ### Update
 
+In order to _update_ something within the API e.g user, you need to use `put` for controller, `modify` for actions, and `update` for the query function.
+
 ### Delete
+
+In order to _delete_ something within the API e.g user, you need to use `delete` for controller, `remove` for actions, and `delete` for the query function.

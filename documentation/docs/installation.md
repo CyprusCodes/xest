@@ -26,13 +26,13 @@ With one simple command, you will be installing all the necessary packages, util
 and creating your api. Have a look at the created directory. Type;
 
 ```
-cd project-name
+$ cd project-name
 ```
 
 &&
 
 ```
-xx run
+$ xx run
 ```
 
 to begin.
