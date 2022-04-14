@@ -91,7 +91,7 @@ application.paths.temp=/tmp/
 # Application Images
 ################################################
 # Home screen logo
-application.images.startup.logo=../../images/logo/logo.svg
+application.images.startup.logo=../../images/logo/xest-icon.png
 # Home screen background
 application.images.startup.background=../../images/background/signin-bg-1.jpg
 # Navigation bar logo

@@ -19,8 +19,8 @@ const config = {
     navbar: {
       title: "Xest",
       logo: {
-        alt: "Awe framework Logo",
-        src: "img/logo.svg",
+        alt: "Xest Logo",
+        src: "img/xest-icon.png",
         // srcDark: 'img/logo white.svg'
       },
       hideOnScroll: true,
@@ -93,7 +93,7 @@ const config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Awe framework, Almis Informática S.L.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Xest Framework <br/> Built with ❤️ in Cyprus ☀️.`,
     },
     algolia: {
       apiKey: "bbb756b741640f975ac0158bcedcefcb",
