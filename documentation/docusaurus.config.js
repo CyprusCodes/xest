@@ -43,8 +43,8 @@ const config = {
           position: "left",
         },
         {
-          alt: "Gitlab repository",
-          href: "https://gitlab.com/aweframework/awe",
+          alt: "Github repository",
+          href: "https://github.com/CyprusCodes/xest",
           className: "header-gitlab-link",
           position: "right",
         },
@@ -60,36 +60,36 @@ const config = {
               label: "Introduction",
               to: "docs/",
             },
-            {
-              label: "Migration from v3 to v4",
-              to: "docs/guides/v4-migration",
-            },
+            // {
+            //   label: "Migration from v3 to v4",
+            //   to: "docs/guides/v4-migration",
+            // },
           ],
         },
-        {
-          title: "Community",
-          items: [
-            {
-              label: "Stack Overflow",
-              href: "https://stackoverflow.com/questions/tagged/awe",
-            },
-            {
-              label: "Forum",
-              href: "https://forum.aweframework.com/",
-            },
-          ],
-        },
+        // {
+        //   title: "Community",
+        //   items: [
+        //     {
+        //       label: "Stack Overflow",
+        //       href: "https://stackoverflow.com/questions/tagged/awe",
+        //     },
+        //     {
+        //       label: "Forum",
+        //       href: "https://forum.aweframework.com/",
+        //     },
+        //   ],
+        // },
         {
           title: "More",
           items: [
             {
-              label: "Gitlab repository",
-              href: "https://gitlab.com/aweframework/awe",
+              label: "Github repository",
+              href: "https://github.com/CyprusCodes/xest",
             },
-            {
-              label: "Javadoc",
-              href: "https://aweframework.gitlab.io/awe/javadoc-api/index.html",
-            },
+            // {
+            //   label: "Javadoc",
+            //   href: "https://aweframework.gitlab.io/awe/javadoc-api/index.html",
+            // },
           ],
         },
       ],

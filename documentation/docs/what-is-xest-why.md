@@ -16,7 +16,7 @@ sidebar_label: What is Xest?
 - :white_check_mark: Built-in authentication and authorization
 - :white_check_mark: Easiest learning curve
 
-A framework built by :boom: Cyprus Codes:boom: that allows you to quickly and easily build REST APIs.
+A framework built by :boom: [Cyprus Codes](https://cypruscodes.com/):boom: that allows you to quickly and easily build REST APIs.
 
 `Xest` framework is built on top of Express.js, which is one of the most popular Node.js libraries and it takes a “convention over configuration” approach which means developers are not required to create the build process themselves.
 
