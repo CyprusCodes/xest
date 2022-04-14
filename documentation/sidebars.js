@@ -43,11 +43,11 @@ module.exports = {
       label: "Database Model",
       collapsed: false,
       items: [
-        "bootstrap",
-        "run",
-        "refresh",
-        "query-generator",
-        "seed-generator",
+        "use-mysql",
+        "database-schema-file",
+        "seed-data-file",
+        "managing-migrations",
+        "query-interface",
       ],
     },
 
