@@ -4,8 +4,6 @@ title: What is Xest? And Why?
 sidebar_label: What is Xest?
 ---
 
-![xest-logo](https://user-images.githubusercontent.com/1476886/147765281-e871657c-37a8-495d-b08b-c5dccf6334c3.png)
-
 `Xest` is a light-weight Javascript API framework. Allows you build web APIs in the fastest way.
 
 - :white_check_mark: Automatic server-client communication with WebSocket support
