@@ -58,7 +58,7 @@ const config = {
           items: [
             {
               label: "Introduction",
-              to: "docs/",
+              to: "what-is-xest-why",
             },
             // {
             //   label: "Migration from v3 to v4",

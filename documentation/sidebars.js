@@ -5,13 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-// overview
-// development environment
-// CLI
-//database Model
-// Security
-// Testing
-
 module.exports = {
   docs: [
     {
@@ -55,24 +48,24 @@ module.exports = {
       label: "Security",
       collapsed: false,
       items: [
-        "security/auth-midd",
-        "security/authz-midd",
-        "security/secur-api",
-        "security/account-sys",
-        "security/rate-limit",
+        "auth-midd",
+        "authz-midd",
+        "secur-api",
+        "account-sys",
+        "rate-limit",
       ],
     },
     {
       type: "category",
       label: "Testing",
-      collapsed: false,
-      items: ["test/supertest"],
+      collapsed: true,
+      items: ["supertest"],
     },
     {
       type: "category",
       label: "CLI Reference",
       collapsed: false,
-      items: ["trouble/trouble"],
+      items: ["trouble"],
     },
     {
       type: "category",
