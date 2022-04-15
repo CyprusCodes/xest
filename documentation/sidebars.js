@@ -50,12 +50,17 @@ module.exports = {
         "query-interface",
       ],
     },
-
     {
       type: "category",
-      label: "Xest framework",
+      label: "Security",
       collapsed: false,
-      items: ["intro", "purpose", "architecture", "security"],
+      items: [
+        "auth-midd",
+        "authz-midd",
+        "secur-api",
+        "account-sys",
+        "rate-limit",
+      ],
     },
     {
       type: "category",
