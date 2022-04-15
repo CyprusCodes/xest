@@ -53,9 +53,9 @@ module.exports = {
 
     {
       type: "category",
-      label: "Xest framework",
+      label: "Security",
       collapsed: false,
-      items: ["intro", "purpose", "architecture", "security"],
+      items: ["account-system"],
     },
     {
       type: "category",
