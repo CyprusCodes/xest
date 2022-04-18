@@ -3,7 +3,7 @@
 
 
 # To install globally 
-`npm i xest -G`
+`npm i xest -g`
 
 
 # Quick Start
