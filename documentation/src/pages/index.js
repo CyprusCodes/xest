@@ -146,7 +146,7 @@ function Home() {
             <img
               alt="Awe logo"
               className={styles.heroLogo}
-              src={useBaseUrl("img/logo.svg")}
+              src={useBaseUrl("img/xest-icon.png")}
             />
             <span
               className={styles.heroTitleTextHtml}
@@ -154,7 +154,7 @@ function Home() {
                 __html: translate({
                   id: "homepage.hero.title",
                   message:
-                    "Create elegant and ligth-weight <b>REST APIs</b> in seconds. <b>Xest</b> is a modern  Javascript framework <b>simply</b> built on <b>ExpresJS</b>",
+                    "Create elegant and fast Node.js APIs in seconds with <b>Xest</b>",
                   description:
                     "Home page hero title, can contain simple html tags",
                 }),
@@ -183,31 +183,36 @@ function Home() {
             values={{
               migrationGuideLink: (
                 <div>
+                 <br></br>
                   <Translate
                     values={{
-                      just: (
+                      c1: (
                         <CodeBlock className="language-bash step-codeblock">
                           npm i xest -g
                         </CodeBlock>
                       ),
-                      justRunCommand: (
+                      c2: (
                         <CodeBlock className="language-bash step-codeblock">
-                          cd my-api && xx run
+                          xx new my-xest-api
+                        </CodeBlock>
+                      ),
+                      c3: (
+                        <CodeBlock className="language-bash step-codeblock">
+                          cd my-xest-api && xx run
                         </CodeBlock>
                       ),
                     }}
                     id="homepage.features.modern-ui"
                     description="Modern UI"
                   >
-                    {`{just} {justRunCommand}`}
+                    {`{c1} {c2} {c3}`}
                   </Translate>
                 </div>
               ),
             }}
           >
-            {`Get started in seconds with just 2 steps.  {migrationGuideLink}`}
+            {`Get your API up and running in 3 steps 🚀 {migrationGuideLink}`}
           </Translate>
-          .
         </div>
       </div>
       <main>

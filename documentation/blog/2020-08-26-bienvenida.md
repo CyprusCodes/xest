@@ -9,7 +9,7 @@ tags: [awe, hola]
 
 <img style={{ width: "50%", margin: "10% 25%", padding: "50" }} 
     alt="Awe Logo" 
-    src={require('@docusaurus/useBaseUrl').default('img/logo.svg')}
+    src={require('@docusaurus/useBaseUrl').default('img/xest-icon.png')}
 />
 
 Desde el equipo de `AWE` queremos daros la bienvenida y presentaros este nuevo canal de comunicación.

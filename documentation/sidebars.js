@@ -5,75 +5,69 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+// overview
+// development environment
+// CLI
+//database Model
+// Security
+// Testing
+
 module.exports = {
   docs: [
     {
       type: "category",
-      label: "Xest framework",
+      label: "Overview",
       collapsed: false,
-      items: ["intro", "purpose", "architecture", "security"],
+      items: ["intro", "what-is-xest-why", "installation", "routing", "CRUD"],
     },
     {
       type: "category",
-      label: "Getting Started",
+      label: "Development Environment",
+      collapsed: true,
+      items: ["docker", "mysql", "node"],
+    },
+    {
+      type: "category",
+      label: "CLI",
       collapsed: true,
       items: [
-        "installation",
-        {
-          Configuration: [
-            "maven",
-            {
-              type: "category",
-              label: "Modules",
-              collapsed: true,
-              items: [
-                "annotations",
-                "developer-tools",
-                "builder",
-                "rest",
-                "scheduler",
-                "notifier",
-                "database-migration",
-              ],
-            },
-            "properties",
-            "application-options",
-            "session",
-          ],
-        },
-        "deployment",
+        "bootstrap",
+        "run",
+        "refresh",
+        "query-generator",
+        "seed-generator",
       ],
     },
     {
       type: "category",
-      label: "CLI Reference",
-      items: [
-        "api/screens",
-        "api/menu",
-        "api/enumerate",
-        "api/query",
-        "api/maintain",
-        "api/service",
-        "api/queues",
-        "api/email",
-        "api/i18n-internationalization",
-      ],
-    },
-    {
-      type: "category",
-      label: "Guides",
+      label: "Database Model",
       collapsed: true,
       items: [
-        "guides/project-structure",
-        "guides/scheduler",
-        "guides/notifier",
-        "guides/selenium-testing",
-        "guides/print-engine",
-        "guides/debugging",
-        "guides/validation",
-        "guides/v4-migration",
-        "guides/default-screens",
+        "use-mysql",
+        "database-schema-file",
+        "seed-data-file",
+        "managing-migrations",
+        "query-interface",
       ],
+    },
+
+    {
+      type: "category",
+      label: "Security",
+      collapsed: true,
+      items: [
+        "authentication",
+        "authorization",
+        "securing-api-endpoints",
+        "account-system",
+        "rate-limiting",
+      ],
+    },
+    {
+      type: "category",
+      label: "Testing",
+      collapsed: true,
+      items: ["supertest"],
     },
   ],
   screens: [

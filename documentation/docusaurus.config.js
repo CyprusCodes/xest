@@ -6,8 +6,8 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "My Site",
-  tagline: "Dinosaurs are cool",
+  title: "Xest",
+  tagline: "REST APIs made easy",
   url: "https://your-docusaurus-test-site.com",
   baseUrl: "/",
   onBrokenLinks: "throw",
@@ -19,8 +19,8 @@ const config = {
     navbar: {
       title: "Xest",
       logo: {
-        alt: "Awe framework Logo",
-        src: "img/logo.svg",
+        alt: "Xest Logo",
+        src: "img/xest-icon.png",
         // srcDark: 'img/logo white.svg'
       },
       hideOnScroll: true,
@@ -43,8 +43,8 @@ const config = {
           position: "left",
         },
         {
-          alt: "Gitlab repository",
-          href: "https://gitlab.com/aweframework/awe",
+          alt: "Github repository",
+          href: "https://github.com/CyprusCodes/xest",
           className: "header-gitlab-link",
           position: "right",
         },
@@ -60,40 +60,40 @@ const config = {
               label: "Introduction",
               to: "docs/",
             },
-            {
-              label: "Migration from v3 to v4",
-              to: "docs/guides/v4-migration",
-            },
+            // {
+            //   label: "Migration from v3 to v4",
+            //   to: "docs/guides/v4-migration",
+            // },
           ],
         },
-        {
-          title: "Community",
-          items: [
-            {
-              label: "Stack Overflow",
-              href: "https://stackoverflow.com/questions/tagged/awe",
-            },
-            {
-              label: "Forum",
-              href: "https://forum.aweframework.com/",
-            },
-          ],
-        },
+        // {
+        //   title: "Community",
+        //   items: [
+        //     {
+        //       label: "Stack Overflow",
+        //       href: "https://stackoverflow.com/questions/tagged/awe",
+        //     },
+        //     {
+        //       label: "Forum",
+        //       href: "https://forum.aweframework.com/",
+        //     },
+        //   ],
+        // },
         {
           title: "More",
           items: [
             {
-              label: "Gitlab repository",
-              href: "https://gitlab.com/aweframework/awe",
+              label: "Github repository",
+              href: "https://github.com/CyprusCodes/xest",
             },
-            {
-              label: "Javadoc",
-              href: "https://aweframework.gitlab.io/awe/javadoc-api/index.html",
-            },
+            // {
+            //   label: "Javadoc",
+            //   href: "https://aweframework.gitlab.io/awe/javadoc-api/index.html",
+            // },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Awe framework, Almis Informática S.L.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Xest Framework <br/> Built with ❤️ in Cyprus ☀️.`,
     },
     algolia: {
       apiKey: "bbb756b741640f975ac0158bcedcefcb",
