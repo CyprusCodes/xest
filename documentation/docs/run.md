@@ -6,7 +6,7 @@ sidebar_label: Running a project
 
 # Running The Project
 
-To run the project within `Xest` framework;
+To run the project within **XEST** framework;
 
 ```
 $ xx run
@@ -41,10 +41,10 @@ Starting project-name API project
 
   `Docker is currently not running. Please start Docker and repeat xx run again.`
 
-  restart your `Docker`.
+  restart your *Docker*.
 
 ### Stop the project
 
 If at any point you want to stop the project, such in case of updating the `seed-data.sql`, you can do with going into your `terminal` and pressing `ctrl + c`.
 
-This will stop your `docker`, API and the MYSQL container.
+This will stop your *Docker*, API and the MYSQL container.

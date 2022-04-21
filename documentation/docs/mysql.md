@@ -6,9 +6,9 @@ sidebar_label: MySQL
 
 # MySQL
 
-`XEST` framework uses `MySQL` within `Docker` which allows you to not to **install** the MySQL software.
+**XEST** framework uses *MySQL* within *Docker* which allows you to not to **install** the MySQL software.
 
-When you start `Xest` framework, therefore the `Docker` it automatically forms your database, so that you don't have to do any extra work.
+When you start **XEST** framework, therefore the *Docker* it automatically forms your database, so that you don't have to do any extra work.
 
 ## Database Management Tools
 

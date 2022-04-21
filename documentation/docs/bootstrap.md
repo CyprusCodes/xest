@@ -4,9 +4,9 @@ title: Bootstrapping a new Xest Project
 sidebar_label: Bootstrapping
 ---
 
-# Bootstrapping a new `Xest` Project
+# Bootstrapping a new Xest Project
 
-Once you have installed the `Xest` framework with;
+Once you have installed the **Xest** framework with;
 
 ```
 $ npm install xest -g

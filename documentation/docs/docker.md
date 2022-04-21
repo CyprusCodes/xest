@@ -6,7 +6,7 @@ sidebar_label: Docker
 
 # Docker
 
-`XEST` framework uses `Docker` to manage database. Docker is a tool designed to make it easier to create, deploy and run applications by using containers and images.
+**XEST** framework uses *Docker* to manage database. Docker is a tool designed to make it easier to create, deploy and run applications by using containers and images.
 
 The main difference between a normal virtual machine and a docker container is the docker containers are able to share resources with the host operating system (e.g. with your laptop). This makes them a lot less intensive for your computer to run. You can read more about them [here](https://www.docker.com/).
 
@@ -16,17 +16,37 @@ A Docker image is a pre-configured application. It contains all of the software 
 
 If you have already installed Docker recently, you can skip the installation instructions below.
 
-You can check whether you already have Docker installed by running `docker --version`
+You can check whether you already have Docker installed by running
+
+```
+docker --version
+```
 
 ### Ubuntu
 
-Update your software database: `sudo apt update`
+Update your software database:
 
-Remove any old versions of docker that might be on your system: `sudo apt remove docker docker-engine docker.io`
+```
+sudo apt update
+```
 
-Install docker: `sudo apt install docker.io`
+Remove any old versions of docker that might be on your system:
 
-Check docker version: `docker --version`
+```
+sudo apt remove docker docker-engine docker.io
+```
+
+Install docker:
+
+```
+sudo apt install docker.io
+```
+
+Check docker version:
+
+```
+docker --version
+```
 
 ### Windows and Mac
 

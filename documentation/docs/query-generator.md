@@ -6,7 +6,7 @@ sidebar_label: Query Generator
 
 # Generating a `Query`
 
-One of the advantages of using `Xest` framework is that you can generate your queries from your command line with;
+One of the advantages of using **XEST** framework is that you can generate your queries from your command line with;
 
 ```
 $ xx new

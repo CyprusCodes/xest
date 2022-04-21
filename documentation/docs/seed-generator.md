@@ -6,7 +6,7 @@ sidebar_label: Seed Generator
 
 # Generating a `Seed`
 
-One of the advantages of using `Xest` framework is that you can generate your seed data from your command line with;
+One of the advantages of using **XEST** framework is that you can generate your seed data from your command line with;
 
 ```
 $ xx new
@@ -34,7 +34,7 @@ You can choose which one you would like to generate with arrows, in this case `s
 
 Choosing the table lets your seed-data to be entered in the selected table.
 
-In the `Xest` framework there is an option to link two tables, which you can do from your command line after choosing your first table `Xest` framework asks you;
+In the **XEST** framework there is an option to link two tables, which you can do from your command line after choosing your first table **XEST** framework asks you;
 
 `Would you like to seed another table? (Y/n)`
 

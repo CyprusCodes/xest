@@ -4,7 +4,7 @@ title: What is Xest? And Why?
 sidebar_label: What is Xest?
 ---
 
-`Xest` is a light-weight Javascript API framework. Allows you build web APIs in the fastest way.
+**XEST** is a light-weight Javascript API framework. Allows you build web APIs in the fastest way.
 
 - :white_check_mark: Automatic server-client communication with WebSocket support
 - :white_check_mark: Use ExpresJS for building endpoints
@@ -16,11 +16,11 @@ sidebar_label: What is Xest?
 
 A framework built by :boom: [Cyprus Codes](https://cypruscodes.com/):boom: that allows you to quickly and easily build REST APIs.
 
-`Xest` framework is built on top of Express.js, which is one of the most popular Node.js libraries and it takes a “convention over configuration” approach which means developers are not required to create the build process themselves.
+**XEST** framework is built on top of Express.js, which is one of the most popular Node.js libraries and it takes a “convention over configuration” approach which means developers are not required to create the build process themselves.
 
-Each and every configuration detail is initiated when the app is created at the beginning of the process. `Xest` provides sensible and sane default behavior for projects. When a Xest project is created, a default project structure is created.
+Each and every configuration detail is initiated when the app is created at the beginning of the process. **XEST** provides sensible and sane default behavior for projects. When a Xest project is created, a default project structure is created.
 
-With the default convention the complexity of having to configure all and each of the areas of application development is eliminated, another advantage of Xest is that you do not need to take care of configurations, file structures and code organizations to work with databases, it is all started for you when you created the `Xest` project.
+With the default convention the complexity of having to configure all and each of the areas of application development is eliminated, another advantage of Xest is that you do not need to take care of configurations, file structures and code organizations to work with databases, it is all started for you when you created the **XEST** project.
 
 So if you follow the established conventions, you can develop a web application in much less time than you would need developing a similar web application.
 
