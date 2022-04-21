@@ -8,11 +8,11 @@ sidebar_label: Query Interface
 
 _submitQuery_ gives you the property of using the sql language inside backticks.
 
-### sql
+## sql
 
 This helper is used when you want to stitch together bits of SQL, below is an example where `invoiceId` or `clientId` variables are used to construct a **WHERE** clause dynamically. User can provide either of these two parameters when calling `selectMiscCharges` query.
 
-```
+```js
 const { submitQuery, sql } = require("~root/database");
 
 const selectMiscCharges = ({
@@ -33,11 +33,11 @@ const selectMiscCharges = ({
 module.exports = selectMiscCharges;
 ```
 
-### sqlId
+## sqlId
 
 This helper is used when you want to set _table names_, or _column names_ in your query dynamically. It gives you protection against SQL injection attacks. It uses `mysql.escapeId` utility behind the scenes. You can refer to docs [here](https://github.com/mysqljs/mysql#escaping-query-identifiers).
 
-```
+```js
 const { submitQuery, sqlId } = require("~root/database");
 const TagGroupAssociatedWith = require("~root/constants/TagGroupAssociatedWith");
 
@@ -61,11 +61,11 @@ const removeAnnotations = ({
 module.exports = removeAnnotations;
 ```
 
-### sqlValueOrNull
+## sqlValueOrNull
 
 This helper is used when writing UPDATE or INSERT queries where target column is a NULLABLE field. It converts any **undefined** variables to NULL values.
 
-```
+```js
 const { submitQuery, sqlValueOrNull } = require("~root/database");
 
 const updateOrderImportLogs = ({
@@ -93,13 +93,13 @@ const updateOrderImportLogs = ({
 module.exports = updateOrderImportLogs;
 ```
 
-### Transactions
+## Transactions
 
 Xest allows you to work with SQL transactions by utilising 3 helper functions in your actions. If any of the queries within the transaction block fails, all queries within the transaction will be reverted.
 
 You'll have to wrap all the queries you want to be part of the transaction between `startTransaction` and `commitTransaction` calls in a try/catch block, and make sure you call `rollbackTransaction` in the catch section.
 
-```
+```js
 const deleteProductSkus = require("../../queries/deleteProductSkus");
 const deleteProduct = require("../../queries/deleteProduct");
 
@@ -129,11 +129,11 @@ const removeBundle = async ({ productId }) => {
 module.exports = removeBundle;
 ```
 
-### camelKeys
+## camelKeys
 
 By convention SQL developers tend to use **snake_case** whilst naming column and table names, whereas JavaScript developers tend to prefer **camelCase** in their code. camelKeys helper converts snake_case column names to camelCase when using SELECT queries.
 
-```
+```js
 const { submitQuery, camelKeys } = require("~root/database");
 
 const selectServiceLevels = () => submitQuery`
@@ -148,18 +148,18 @@ module.exports = camelKeys(selectServiceLevels);
 
 Returned data from the above query will look like:
 
-```
+```js
 [ 
   { serviceLevel: 1, priorityScore: 10 },
   { serviceLevel: 2, priorityScore: 30 }
 ]
 ```
 
-### getFirst
+## getFirst
 
 This helper is used when you want to **query just a single record** from a table. Instead of getting an array of values, your query will return a single object -- the first row from the resultset.
 
-```
+```js
 const { submitQuery, getFirst } = require("~root/database");
 
 const selectUserName = ({ userId }) => submitQuery`
@@ -175,23 +175,23 @@ module.exports = getFirst(selectUser);
 
 Above query will return
 
-```
+```js
 { user_id: 1, name: "ersel" }
 ```
 
 You can also pick a single column from the resulting row, by supplying a second argument to the getFirst helper.
 
-```
+```js
 module.exports = getFirst(selectUser, "name");
 ```
 
 The above query will return `ersel` (a string value).
 
-### getProperty
+## getProperty
 
 This helper is useful when you want to fetch an array of values from the target table and column.
 
-```
+```js
 const { submitQuery, getProperty } = require("~root/database");
 
 const selectUserNames = () => submitQuery`
@@ -205,15 +205,15 @@ module.exports = getProperty(selectUserNames, "name");
 
 Above query will return an array of strings.
 
-```
+```js
 ["ersel", "buse", "kemal"]
 ```
 
-### getInstertIds
+## getInstertIds
 
 This helper is used to get the ID of the last inserted record.
 
-```
+```js
 const { submitQuery, getInsertId } = require("~root/database");
 
 const insertCycle = ({ systemId }) => submitQuery`
@@ -229,16 +229,16 @@ module.exports = getInsertId(insertCycle);
 
 **Usage:**
 
-```
+```js
 const insertedCycleId = await insertCycle({ systemId: 1 });
 // insertedCycleId will be the primary key of the last inserted record in cycles table
 ```
 
-### getInsertId
+## getInsertId
 
 You can also get the insert ids of multiple insert values.
 
-```
+```js
 const { submitQuery, sql, getInsertIds, toCSV } = require("~root/database");
 
 const insertReadings = ({ systemId, readings }) => submitQuery`
@@ -265,11 +265,11 @@ const insertReadings = ({ systemId, readings }) => submitQuery`
 module.exports = getInsertIds(insertReadings);
 ```
 
-### toCSV
+## toCSV
 
 This helper is used to concatenate sql statements as comma seperated values. Useful when you're doing a queries with `IN()` operator.
 
-```
+```js
 const { submitQuery, toCSV } = require("~root/database");
 
 const deleteReadings = ({ readingIds }) => submitQuery`
@@ -284,15 +284,15 @@ module.exports = deleteReadings;
 
 **Usage:**
 
-```
+```js
 await deleteReadings({ readingIds: [1,2,3] }); // reading records with ids 1,2,3, will be deleted
 ```
 
-### ToUnionAll
+## ToUnionAll
 
 This helper is used to construct multiple select statements with UNION ALL operatior between.
 
-```
+```js
 const {
   submitQuery,
   sql,
@@ -346,7 +346,7 @@ const insertMatchedProducts = ({ products, clientSalesChannelId }) => {
 module.exports = insertMatchedProducts;
 ```
 
-### Nest
+## nest
 
 **nest** helper is used when you want to generate a nested query output from a resultset with multiple join statements. You can nest as many levels by providing multiple array items.
 
@@ -354,7 +354,7 @@ module.exports = insertMatchedProducts;
 `childrenLabel` attribute sets the key for the nested objects.
 `fieldsToKeep` attribute determines the columns that will be kept under that nest branch.
 
-```
+```js
 const { submitQuery, nest, camelKeys } = require("~root/lib/database");
 
 const selectBlogsByTag = ({ userId }) => submitQuery`
@@ -393,4 +393,4 @@ module.exports = nest(camelKeys(selectBlogsByTag), [
     ]
   }
 ]);
-````
+```
