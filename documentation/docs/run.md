@@ -39,12 +39,12 @@ Starting project-name API project
 
 - If your project didn't start or gives an error like this
 
-  `Docker is currently not running. Please start Docker and repeat xx run again.`
+**Docker is currently not running. Please start Docker and repeat xx run again.**
 
-  restart your *Docker*.
+You need to **restart** your *Docker*.
 
 ### Stop the project
 
-If at any point you want to stop the project, such in case of updating the `seed-data.sql`, you can do with going into your `terminal` and pressing `ctrl + c`.
+If at any point you want to stop the project, such in case of updating the `seed-data.sql`, you can do with going into your terminal and pressing **ctrl + c**.
 
 This will stop your *Docker*, API and the MYSQL container.

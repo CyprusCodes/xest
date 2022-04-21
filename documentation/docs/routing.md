@@ -32,9 +32,9 @@ Now let's have a look at the example below;
 router.get("/user-types", getUserTypes);
 ```
 
-`/user-types` is the route extention of the URL when the request has been sent to that URL.
+*/user-types* is the route extention of the URL when the request has been sent to that URL.
 
-`getUserTypes` is the function that does the job to get the user types.
+*getUserType* is the function that does the job to get the user types.
 
 These routing methods specify a callback function (sometimes called “handler functions”) called when the application receives a request to the specified route (endpoint) and HTTP method. In other words, the application “listens” for requests that match the specified route(s) and method(s), and when it detects a match, it calls the specified callback function.
 
