@@ -8,19 +8,19 @@ sidebar_label: Bootstrapping
 
 Once you have installed the **Xest** framework with;
 
-```
+```bash
 $ npm install xest -g
 ```
 
 You can start with creating your directory and running your project with;
 
-```
+```bash
 $ xx [project-name]
 ```
 
 Then;
 
-```
+```bash
 $ cd [project-name]
 ```
 

@@ -18,7 +18,7 @@ If you have already installed Docker recently, you can skip the installation ins
 
 You can check whether you already have Docker installed by running
 
-```
+```bash
 docker --version
 ```
 
@@ -26,25 +26,25 @@ docker --version
 
 Update your software database:
 
-```
+```bash
 sudo apt update
 ```
 
 Remove any old versions of docker that might be on your system:
 
-```
+```bash
 sudo apt remove docker docker-engine docker.io
 ```
 
 Install docker:
 
-```
+```bash
 sudo apt install docker.io
 ```
 
 Check docker version:
 
-```
+```bash
 docker --version
 ```
 

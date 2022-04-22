@@ -5,13 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-// overview
-// development environment
-// CLI
-//database Model
-// Security
-// Testing
-
 module.exports = {
   docs: [
     {
@@ -104,18 +97,7 @@ module.exports = {
       ],
     },
   ],
-  schedule: [
-    {
-      type: "ref",
-      id: "guides/scheduler",
-    },
-    {
-      type: "category",
-      label: "Schedule Task",
-      collapsed: false,
-      items: ["guides/schedule-configuration", "guides/dependency-task"],
-    },
-  ],
+
   training: [
     {
       type: "category",
@@ -128,8 +110,6 @@ module.exports = {
         "training/awe-104",
         "training/awe-105",
         "training/awe-106",
-        "training/awe-107",
-        "training/awe-108",
       ],
     },
   ],

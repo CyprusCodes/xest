@@ -22,15 +22,15 @@ const features = [
         id="homepage.features.easy-to-use"
         description="Feature easy to use"
       >
-        Xest framework is designed from the ground up to be easily installed
-        and used to build your REST API up and running quickly.
+        Xest framework is designed from the ground up to be easily installed and
+        used to build your REST API up and running quickly.
       </Translate>
     ),
   },
   {
     title: translate({
       id: "homepage.features.modern-ui.title",
-      message: "Modern UI",
+      message: "CLI Tool",
       description: "Title of feature of Modern UI on the home page",
     }),
     imageUrl: "img/undraw_responsive.svg",
@@ -43,15 +43,14 @@ const features = [
         id="homepage.features.modern-ui"
         description="Modern UI"
       >
-        {`All AWE web components let you design modern and responsive user interfaces using a declarative API.
-        Works with {angularJS} and {reactJS}.`}
+        {`Modern CLI tool lets you use your CLI for generating tables, seed-data, do your migrations. No need to worry about complex data structures.`}
       </Translate>
     ),
   },
   {
     title: translate({
       id: "homepage.features.pluggable-extensible.title",
-      message: "Pluggable and Extensible",
+      message: "Built in authentication",
       description:
         "Title of feature of pluggable and extensible on the home page",
     }),
@@ -62,14 +61,14 @@ const features = [
         id="homepage.features.pluggable-extensible"
         description="Feature Pluggable and Extensible"
       >
-        {`Extend or customize all AWE features. The Spring Boot {starters} design lets you to enable the modules and features that you need.`}
+        {`Xest framework comes with built-in authentication, which allows you to save a lot of time.`}
       </Translate>
     ),
   },
   {
     title: translate({
       id: "homepage.features.connect-information.title",
-      message: "Connect your information",
+      message: "All required packages in one place",
       description:
         "Title of feature of Connect your information on the home page",
     }),
@@ -79,15 +78,15 @@ const features = [
         id="homepage.features.connect-information"
         description="Feature Connect your information"
       >
-        Bind your data to web forms easily. AWE allows to connect to different
-        data sources like SQL and NoSQL databases, Rest APIs, JavaBeans, etc.
+        Bind your data with single framework. XEST allows to connect to
+        different data sources like MySQL databases, Rest APIs, Docker, etc.
       </Translate>
     ),
   },
   {
     title: translate({
       id: "homepage.features.customize-easy.title",
-      message: "Customize easy",
+      message: "Easy configuration",
       description: "Title of feature of Customize easy on the home page",
     }),
     imageUrl: "img/undraw_add_color.svg",
@@ -96,15 +95,15 @@ const features = [
         id="homepage.features.customize-easy"
         description="Feature Customize easy"
       >
-        AWE has multiple preconfigured themes and multi-language support. You
-        can add custom CSS according to your needs.
+        Xest has multiple preconfigured built in features to allow you to build
+        your API. You can form tables, edit seed-data according to your needs.
       </Translate>
     ),
   },
   {
     title: translate({
       id: "homepage.features.powered-by.title",
-      message: "Powered by Spring Boot with AngularJS",
+      message: "Built with NPM, Express JS, Node.js and Docker",
       description: "Title of feature of Powered By on the home page",
     }),
     imageUrl: "img/undraw_code_review.svg",
@@ -112,9 +111,10 @@ const features = [
       <Translate
         values={{ autowired: <code>@Autowired</code> }}
         id="homepage.features.powered-by"
-        description="Powered by Spring Boot with AngularJS"
+        description="Built with NPM, Express JS, Node.js and Docker"
       >
-        {`Uses Spring 5 and Spring Boot 2. {autowired} is available for AWE components and layouts.`}
+        {`Uses Express JS and Node.js. Xest framework is built on top of Express.js, which is one of the most popular Node.js libraries and it takes a “convention over configuration” approach which means developers are not required to create the build process themselves. 
+`}
       </Translate>
     ),
   },
@@ -183,7 +183,7 @@ function Home() {
             values={{
               migrationGuideLink: (
                 <div>
-                 <br></br>
+                  <br></br>
                   <Translate
                     values={{
                       c1: (
@@ -193,7 +193,7 @@ function Home() {
                       ),
                       c2: (
                         <CodeBlock className="language-bash step-codeblock">
-                          xx new my-xest-api
+                          xx my-xest-api
                         </CodeBlock>
                       ),
                       c3: (

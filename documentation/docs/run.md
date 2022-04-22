@@ -8,13 +8,13 @@ sidebar_label: Running a project
 
 To run the project within **XEST** framework;
 
-```
+```bash
 $ xx run
 ```
 
 Which should start the docker, set up the database schema and start the project giving the following output;
 
-```
+```bash
 Creating network "database_default" with the default driver
 Creating volume "database_vol-project-name-db" with default driver
 Creating project-name-mysql-db ...

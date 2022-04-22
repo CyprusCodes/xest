@@ -8,7 +8,7 @@ sidebar_label: Query Generator
 
 One of the advantages of using **XEST** framework is that you can generate your queries from your command line with;
 
-```
+```bash
 $ xx new
 ```
 

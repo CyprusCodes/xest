@@ -8,7 +8,7 @@ sidebar_label: Uses MySQL
 
 In this framework docker runs MySQL server in a container, when the following command is run on your terminal/command line interface;
 
-```
+```bash
 $ xx run
 ```
 

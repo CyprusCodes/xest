@@ -6,7 +6,7 @@ sidebar_label: Routing
 
 Routing refers to how an application’s endpoints (URIs) respond to client requests.
 
-```
+```js
 └── src
  └── routes.js
 ```
@@ -15,7 +15,7 @@ You define routing using methods that correspond to HTTP methods; for example, r
 
 You will be creating your endpoints according to your business logic in this file. You should define endpoints(links) so that users can use them to operate CRUD on the UI.
 
-```
+```js
 router.METHOD(PATH, HANDLER)
 ```
 
@@ -28,7 +28,7 @@ Where:
 
 Now let's have a look at the example below;
 
-```
+```js
 router.get("/user-types", getUserTypes);
 ```
 
