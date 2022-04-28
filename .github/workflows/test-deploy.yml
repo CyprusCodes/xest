@@ -18,6 +18,8 @@ jobs:
           node-version: 16.x
           cache: yarn
 
+      - name: Go to documentation folder
+        run: cd documentation
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Test build website
