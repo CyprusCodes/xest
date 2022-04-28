@@ -8,13 +8,14 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 const config = {
   title: "Xest",
   tagline: "REST APIs made easy",
-  url: "https://your-docusaurus-test-site.com",
+  url: "https://xestjs.com",
   baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
-  organizationName: "facebook", // Usually your GitHub org/user name.
-  projectName: "docusaurus", // Usually your repo name.
+  organizationName: "CyprusCodes", // Usually your GitHub org/user name.
+  projectName: "xest", // Usually your repo name.
+  deploymentBranch: "gh-pages",
   themeConfig: {
     navbar: {
       title: "Xest",
@@ -118,13 +119,13 @@ const config = {
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
-          editUrl: "https://github.com/facebook/docusaurus/edit/main/website/",
+          editUrl: "https://github.com/CyprusCodes/xest/tree/main/documentation/docs/",
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           editUrl:
-            "https://github.com/facebook/docusaurus/edit/main/website/blog/",
+            "https://github.com/CyprusCodes/xest/tree/main/documentation/website/blog/",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
