@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocumentation=self.webpackChunkdocumentation||[]).push([[2535],{5641:function(e){e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Bienvenido al Blog de AWE","permalink":"/blog/2020/08/26/bienvenida"}]}')}}]);
