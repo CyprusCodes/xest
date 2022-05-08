@@ -6,13 +6,13 @@ sidebar_label: Running a project
 
 # Running The Project
 
-To run the project within **XEST** framework;
+To run a Xest API project, run the following command in the project directory
 
 ```bash
 $ xx run
 ```
 
-Which should start the docker, set up the database schema and start the project giving the following output;
+Which should start the MySQL docker container, set up the database schema, populate the database with seed data, and start the nodejs server process giving the following output:
 
 ```bash
 Creating network "database_default" with the default driver
@@ -37,14 +37,16 @@ Starting project-name API project
 [INFO] API listening on port 3001!
 ```
 
-- If your project didn't start or gives an error like this
+If everything goes well, you should see a message saying `API listening on port 3001!`
 
-**Docker is currently not running. Please start Docker and repeat xx run again.**
+:::caution
 
-You need to **restart** your *Docker*.
+If you see a warning in your terminal saying **Docker is currently not running.** You'll need to start the Docker application on your computer and run `xx start` again.
 
-### Stop the project
+:::
 
-If at any point you want to stop the project, such in case of updating the `seed-data.sql`, you can do with going into your terminal and pressing **ctrl + c**.
+### Stopping the Xest API
 
-This will stop your *Docker*, API and the MYSQL container.
+If at any point you want to stop the project, you can do it by going to your terminal and pressing **ctrl + c** keys.
+
+This will stop your Nodejs API and the MySQL docker container.

@@ -6,24 +6,24 @@ sidebar_label: Bootstrapping
 
 # Bootstrapping a new Xest Project
 
-Once you have installed the **Xest** framework with;
+Once you have installed the **Xest** CLI with
 
 ```bash
 $ npm install xest -g
 ```
 
-You can start with creating your directory and running your project with;
+You can bootstrap your API project with the following command
 
 ```bash
 $ xx [project-name]
 ```
 
-Then;
+Then navigate to your API directory
 
 ```bash
 $ cd [project-name]
 ```
 
-Have a look at your files and file structure.
+Have a look at the generated files and directory structure.
 
 ![alt_text](https://minio.cypruscodes.com/xest/structure.drawio.png "structure")
