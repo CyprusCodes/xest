@@ -4,12 +4,12 @@ title: Node/NPM Environment
 sidebar_label: Node/NPM
 ---
 
-# Node/NPM
+# Nodejs
 
-**XEST** framework uses *node* framework in the background which allows our Javascript code to run on our machine.
+Xest framework uses *Nodejs* runtime for its CLI and also Expressjs behind the scenes for the API setup.
 
-**XEST** framework uses *npm* which automatically is being downloaded when you install the **XEST** framework.
+## Installing Nodejs with NVM
 
-## Node Version Manager - NVM
+We suggest that you use node version manager [nvm](https://heynode.com/tutorial/install-nodejs-locally-nvm/) to install Nodejs on your machine.
 
-We suggest that you use node version manager, [nvm](https://heynode.com/tutorial/install-nodejs-locally-nvm/), you can install and manage *node* packages with *nvm* . It would be handy to use *nvm*  while using **XEST** framework.
+We recommend using Node v14+ and higher whilst using Xest.
