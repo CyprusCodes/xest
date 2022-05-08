@@ -53,47 +53,7 @@ const config = {
     },
     footer: {
       style: "dark",
-      links: [
-        {
-          title: "Docs",
-          items: [
-            {
-              label: "Introduction",
-              to: "docs/",
-            },
-            // {
-            //   label: "Migration from v3 to v4",
-            //   to: "docs/guides/v4-migration",
-            // },
-          ],
-        },
-        // {
-        //   title: "Community",
-        //   items: [
-        //     {
-        //       label: "Stack Overflow",
-        //       href: "https://stackoverflow.com/questions/tagged/awe",
-        //     },
-        //     {
-        //       label: "Forum",
-        //       href: "https://forum.aweframework.com/",
-        //     },
-        //   ],
-        // },
-        {
-          title: "More",
-          items: [
-            {
-              label: "Github repository",
-              href: "https://github.com/CyprusCodes/xest",
-            },
-            // {
-            //   label: "Javadoc",
-            //   href: "https://aweframework.gitlab.io/awe/javadoc-api/index.html",
-            // },
-          ],
-        },
-      ],
+      links: [],
       copyright: `Copyright © ${new Date().getFullYear()} Xest Framework <br/> Built with ❤️ in Cyprus ☀️.`,
     },
     algolia: {
