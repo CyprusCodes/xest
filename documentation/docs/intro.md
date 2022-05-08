@@ -10,14 +10,9 @@ slug: /
     src={require('@docusaurus/useBaseUrl').default('img/xest-icon.png')}
 />
 
-Xest is a light-weight Javascript API framework. Allows you build web APIs in the fastest way.
+Xest is a light-weight Javascript API framework. Allows you build to REST APIs in the fastest way possible.
 
 - :star2: Easy to use
-- :star2: Modern UI
-- :star2: Include all the essential packages
-
-## Xest Project main page
-
-Please visit us at [https://www.xestjs.com](https://xestjs.com)
-
-For more information please head to next pages.
+- :star2: Xest CLI helps you generate endpoints, queries, and more.
+- :star2: Built with Nodejs, Expressjs, MySQL, and Docker
+- :rocket: AWS and PlanetScale support coming soon!

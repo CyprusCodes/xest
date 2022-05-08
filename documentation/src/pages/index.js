@@ -23,7 +23,7 @@ const features = [
         description="Feature easy to use"
       >
         Xest framework is designed from the ground up to be easily installed and
-        used to build your REST API up and running quickly.
+        to build your REST API quickly.
       </Translate>
     ),
   },
@@ -43,7 +43,7 @@ const features = [
         id="homepage.features.modern-ui"
         description="Modern UI"
       >
-        {`Modern CLI tool lets you use your CLI for generating tables, seed-data, do your migrations. No need to worry about complex data structures.`}
+        {`Modern CLI tool helps you to generate SQL queries, API endpoints, database migrations, and seed data.`}
       </Translate>
     ),
   },
@@ -61,14 +61,14 @@ const features = [
         id="homepage.features.pluggable-extensible"
         description="Feature Pluggable and Extensible"
       >
-        {`Xest framework comes with built-in authentication, which allows you to save a lot of time.`}
+        {`Xest comes with built-in JWT authentication, and role based authentication access control.`}
       </Translate>
     ),
   },
   {
     title: translate({
       id: "homepage.features.connect-information.title",
-      message: "All required packages in one place",
+      message: "Convenient local development",
       description:
         "Title of feature of Connect your information on the home page",
     }),
@@ -78,15 +78,14 @@ const features = [
         id="homepage.features.connect-information"
         description="Feature Connect your information"
       >
-        Bind your data with single framework. XEST allows to connect to
-        different data sources like MySQL databases, Rest APIs, Docker, etc.
+        Xest manages a local Docker development environment with a MySQL container and an Express API.
       </Translate>
     ),
   },
   {
     title: translate({
       id: "homepage.features.customize-easy.title",
-      message: "Easy configuration",
+      message: "Zero Config",
       description: "Title of feature of Customize easy on the home page",
     }),
     imageUrl: "img/undraw_add_color.svg",
@@ -95,15 +94,14 @@ const features = [
         id="homepage.features.customize-easy"
         description="Feature Customize easy"
       >
-        Xest has multiple preconfigured built in features to allow you to build
-        your API. You can form tables, edit seed-data according to your needs.
+       Xest comes with pre-configured development, test, and deployment pipelines so that you can focus on your application logic.
       </Translate>
     ),
   },
   {
     title: translate({
       id: "homepage.features.powered-by.title",
-      message: "Built with NPM, Express JS, Node.js and Docker",
+      message: "Built for Cloud",
       description: "Title of feature of Powered By on the home page",
     }),
     imageUrl: "img/undraw_code_review.svg",
@@ -113,8 +111,7 @@ const features = [
         id="homepage.features.powered-by"
         description="Built with NPM, Express JS, Node.js and Docker"
       >
-        {`Uses Express JS and Node.js. Xest framework is built on top of Express.js, which is one of the most popular Node.js libraries and it takes a “convention over configuration” approach which means developers are not required to create the build process themselves. 
-`}
+        Xest is packed with an email framework, a scheduling system, serverless integration, and many other features a modern application needs.
       </Translate>
     ),
   },
@@ -144,7 +141,7 @@ function Home() {
         <div className={styles.heroInner}>
           <h1 className={styles.heroProjectTagline}>
             <img
-              alt="Awe logo"
+              alt="Xest logo"
               className={styles.heroLogo}
               src={useBaseUrl("img/xest-icon.png")}
             />
@@ -154,7 +151,7 @@ function Home() {
                 __html: translate({
                   id: "homepage.hero.title",
                   message:
-                    "Create elegant and fast Node.js APIs in seconds with <b>Xest</b>",
+                    "Create fast Nodejs APIs in seconds with <b>Xest</b>",
                   description:
                     "Home page hero title, can contain simple html tags",
                 }),
@@ -211,7 +208,7 @@ function Home() {
               ),
             }}
           >
-            {`Get your API up and running in 3 steps 🚀 {migrationGuideLink}`}
+            {`Get up and running in 3 steps 🚀 {migrationGuideLink}`}
           </Translate>
         </div>
       </div>

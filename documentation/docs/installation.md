@@ -4,42 +4,41 @@ title: Installation
 sidebar_label: Installation
 ---
 
-You should install the XEST framework first then start on working in your project.
+You should install the XEST CLI first then start working on your project.
 
-To install XEST framework;
+To install XEST CLI;
 
 ```bash
 $ npm install xest -g
 ```
 
-After installing the XEST framework globally to your computer, you can now create your API directory.
+After installing the XEST CLI globally, you can now bootstrap your API.
 
-## Create Your API Directory
+## Bootstrapping Your API
 
-In order to create your API directory you need to do the following commmand:
+In order to create your API, you need to run the following commmand:
 
 ```bash
 $ xx [project-name]
 ```
 
-With one simple command, you will be installing all the necessary packages, utils and middlewares created for you.
-and creating your api. Have a look at the created directory. Type;
+With one simple command, you will be installing all the necessary packages, utils, middlewares and required modules will be created for you. Have a look at the created directory.
 
 ```bash
 $ cd project-name
 ```
 
-&&
+to start your Xest API, run
 
 ```bash
 $ xx run
 ```
 
-to begin.
+Et voila! You're ready to Xest :)
 
 The project-name directory will be created, node modules and a few other boilerplate files will be installed, and a src/ directory will be created and populated with several core files, forming a new API-directory with the following setup;
 
-```js
+```
 ├── README.md
 ├── index.js
 ├── package-lock.json
@@ -62,6 +61,8 @@ The project-name directory will be created, node modules and a few other boilerp
 └── src
 ```
 
-Docker.compose.yml is our config file that will speak to our database. When you run your application, at the start time your config files will be read. Only thing left for you now is to view your created database on your SQL Workbench where you can query, design, & edit databases. Set a new connection with the given details on the .yml file!
+`docker-compose.yml` is our local development environment configuration. When you run your application, a MySQL container will be started for you. You can connect to the local database instance by using the credentials listed in the `docker-compose.yml` file.
 
-.sql files are your configuration files as well, you will create your tables at database-schema.sql, a schema sets out the structure of how data will be stored in our database and insert data in seed-data.sql.
+`database-schema.sql` is where you will define your database schema. It will be a series of CREATE TABLE statements which is used to populate your local development database.
+
+`seed-data.sql` will contain the test data that you want to insert into your database whilst developing or testing your application locally.
