@@ -4,12 +4,12 @@ title: Refreshing the Database
 sidebar_label: Refreshing the Database
 ---
 
-# Refresh the project
+# Refreshing the project
 
-If at any point you want to refresh the project, such in case of updating the `seed-data.sql` or you made changes within the **MySQL Workbench** but want to refresh your API database you can do so with the following command;
+From time to time, you might need to make changes to your database architecture by modifying the `database-schema.sql` or you might want to update your test data by modifying the `seed-data.sql`. After making such changes, you'll need to refresh the state of your MySQL database container with the following command.
 
 ```bash
 $ xx fresh
 ```
 
-This will restart the project with the original data.
+This will restart the Xest API project and re-initialize your MySQL docker container from the ground up.
