@@ -6,11 +6,11 @@ sidebar_label: Docker
 
 # Docker
 
-**XEST** framework uses *Docker* to manage database. Docker is a tool designed to make it easier to create, deploy and run applications by using containers and images.
+Xest framework uses *Docker* to manage local development environment. Docker is a tool designed to make it easier to create, deploy and run applications by using containers and images.
 
-The main difference between a normal virtual machine and a docker container is the docker containers are able to share resources with the host operating system (e.g. with your laptop). This makes them a lot less intensive for your computer to run. You can read more about them [here](https://www.docker.com/).
+Xest runs a MySQL container using Docker for local development. This MySQL container is initialized with the schema file `database-schema.sql` and also the test seed data file `seed-data.sql`.
 
-A Docker image is a pre-configured application. It contains all of the software and files that you need to run an application. To use a Dockerized application, we just have to download its image, and then run the image in a container.
+If at any point, you make changes to these `.sql` files. You can restart your local development environment by running `xx fresh`.
 
 ## Installing Docker
 
