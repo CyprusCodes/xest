@@ -33,7 +33,7 @@ const config = {
         },
         {
           type: "doc",
-          docId: "training/awe-101",
+          docId: "training/xest-101",
           position: "left",
           label: "Training",
           activeSidebarClassName: "navbar__link--active",
@@ -56,12 +56,14 @@ const config = {
       links: [],
       copyright: `Copyright © ${new Date().getFullYear()} Xest Framework <br/> Built with ❤️ in Cyprus ☀️.`,
     },
+    /*
     algolia: {
-      apiKey: "bbb756b741640f975ac0158bcedcefcb",
-      indexName: "aweframework_awe",
+      apiKey: "",
+      indexName: "",
       contextualSearch: true,
     },
     hideableSidebar: true,
+    */
     colorMode: {
       defaultMode: "dark",
       disableSwitch: false,
