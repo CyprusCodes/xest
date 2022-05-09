@@ -74,7 +74,7 @@ module.exports = {
         "training/xest-103",
         "training/xest-104",
         "training/xest-105",
-        "training/xest-106",
+        "training/xest-106"
       ],
     },
   ],

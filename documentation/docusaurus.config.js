@@ -27,16 +27,16 @@ const config = {
       hideOnScroll: true,
       items: [
         {
-          type: "docsVersion",
+          type: "doc",
           position: "left",
           label: "Docs",
+          docId: "intro",
         },
         {
           type: "doc",
-          docId: "training/xest-101",
           position: "left",
+          docId: "training/xest-101",
           label: "Training",
-          activeSidebarClassName: "navbar__link--active",
         },
         {
           to: "blog",
@@ -81,7 +81,8 @@ const config = {
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
-          editUrl: "https://github.com/CyprusCodes/xest/tree/main/documentation/docs/",
+          editUrl:
+            "https://github.com/CyprusCodes/xest/tree/main/documentation/docs/",
         },
         blog: {
           showReadingTime: true,

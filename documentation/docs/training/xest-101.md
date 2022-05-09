@@ -1,6 +1,7 @@
 ---
 id: xest-101
 title: XEST-101 Your first XEST App
+slug: tutorial/
 sidebar_label: XEST-101 Your first XEST App
 ---
 
