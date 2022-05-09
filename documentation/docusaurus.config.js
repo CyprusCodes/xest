@@ -56,7 +56,7 @@ const config = {
       links: [],
       copyright: `Copyright © ${new Date().getFullYear()} Xest Framework <br/> Built with ❤️ in Cyprus ☀️.`,
     },
-    /*
+    /* todo
     algolia: {
       apiKey: "",
       indexName: "",

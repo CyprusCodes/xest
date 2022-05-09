@@ -44,6 +44,7 @@ module.exports = {
       ],
     },
 
+    /* todo
     {
       type: "category",
       label: "Security",
@@ -62,6 +63,7 @@ module.exports = {
       collapsed: true,
       items: ["supertest"],
     },
+    */
   ],
   training: [
     {
