@@ -4,14 +4,14 @@
         <title>Xest Blog</title>
         <link>https://xestjs.com/blog</link>
         <description>Xest Blog</description>
-        <lastBuildDate>Wed, 26 Aug 2020 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 09 May 2022 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <item>
-            <title><![CDATA[Bienvenido al Blog de AWE]]></title>
-            <link>https://xestjs.com/blog/2020/08/26/bienvenida</link>
-            <guid>Bienvenido al Blog de AWE</guid>
-            <pubDate>Wed, 26 Aug 2020 00:00:00 GMT</pubDate>
+            <title><![CDATA[Hello world]]></title>
+            <link>https://xestjs.com/blog/2022/05/09/hello-world</link>
+            <guid>Hello world</guid>
+            <pubDate>Mon, 09 May 2022 00:00:00 GMT</pubDate>
             <description><![CDATA[<img style={{ width "10% 25%", padding: "50" }}]]></description>
         </item>
     </channel>
