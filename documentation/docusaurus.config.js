@@ -12,7 +12,7 @@ const config = {
   baseUrl: "/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
-  favicon: "img/favicon.ico",
+  favicon: "icon/favicon.ico",
   organizationName: "CyprusCodes", // Usually your GitHub org/user name.
   projectName: "xest", // Usually your repo name.
   deploymentBranch: "gh-pages",
