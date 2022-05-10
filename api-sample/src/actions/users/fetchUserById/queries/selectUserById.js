@@ -6,7 +6,7 @@ const selectUserById = ({ userId }) => submitQuery`
         first_name,
         last_name,
         user_types.user_type_id,
-        user_types.user_role
+        user_types.user_type
     FROM users
     LEFT JOIN user_types ON users.user_type_id = user_types.user_type_id
     WHERE user_id = ${userId}
