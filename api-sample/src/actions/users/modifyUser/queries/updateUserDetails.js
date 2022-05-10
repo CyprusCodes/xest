@@ -10,7 +10,7 @@ const updateUserDetails = ({
     SET 
       first_name = ${firstName},
       last_name = ${lastName},
-      password= ${password},
+      password= SHA2(CONCAT(${password}, ${process.env.PASSWORD_SALT}), 224)
     WHERE user_id = ${userId};
 `;
 

@@ -11,6 +11,9 @@ const sinonChai = require("sinon-chai");
 const deepEqualInAnyOrder = require("deep-equal-in-any-order");
 const chaiJestSnapshot = require("chai-jest-snapshot");
 const dateSerializer = require("../JestSnapshotDateSerializer");
+const getTables = require("../getTableNames");
+const backupTable = require("./queries/backupTables");
+const dropBackupTable = require("./queries/dropBackupTable");
 
 chai.use(deepEqualInAnyOrder);
 chai.use(sinonChai);
@@ -27,6 +30,20 @@ chai.use(chai => {
 
 chaiJestSnapshot.addSerializer(dateSerializer);
 chai.use(chaiJestSnapshot);
+
+before(async function backup() {
+  const tables = await getTables();
+  await Promise.all(
+    tables.map(table => backupTable({ tableName: table.tableName }))
+  );
+});
+
+after(async function dropBackups() {
+  const tables = await getTables();
+  await Promise.all(
+    tables.map(table => dropBackupTable({ tableName: table.tableName }))
+  );
+});
 
 before(function resetSnapshotRegistry() {
   chaiJestSnapshot.resetSnapshotRegistry();

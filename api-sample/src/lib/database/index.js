@@ -37,7 +37,8 @@ const CONFIG = {
       return field.string();
     }
     return next();
-  }
+  },
+  multipleStatements: true
 };
 
 let connection = mysql.createConnection(CONFIG);
@@ -56,7 +57,11 @@ let submitQuery;
 let disconnect;
 
 let transactionStack = [];
+let queryLog = [];
 const _getTransactionStack = () => transactionStack;
+const _getQueryLog = () => queryLog;
+// eslint-disable-next-line no-return-assign
+const _resetTestQueryLog = () => (queryLog = []);
 const ESCAPE_SYMBOL = Symbol("ESCAPED");
 
 const initConnection = newConnection => {
@@ -145,6 +150,9 @@ const initConnection = newConnection => {
     if (strings[0].toLowerCase().includes("debug")) {
       // eslint-disable-next-line no-console
       console.log(`\x1B[36m${escapedQuery}\x1B[39m`);
+    }
+    if (process.env.NODE_ENV === "test") {
+      queryLog.push(escapedQuery);
     }
     return promisifiedQueryFunction(escapedQuery);
   };
@@ -286,6 +294,8 @@ module.exports = {
   commitTransaction,
   rollbackTransaction,
   _getTransactionStack, // for testing only
+  _getQueryLog, // for testing only
+  _resetTestQueryLog, // for testing only
   camelKeys,
   getFirst,
   getProperty,

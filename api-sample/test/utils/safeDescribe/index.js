@@ -1,66 +1,52 @@
-/* eslint-disable no-console */
 /* eslint-disable func-names */
 /* https://stackoverflow.com/questions/26107027/running-mocha-setup-before-each-suite-rather-than-before-each-test */
 const mocha = require("mocha");
-const chalk = require("chalk");
-const flattenDeep = require("lodash/flattenDeep");
-const getTableNames = require("./queries/getTableNames");
-const getTableRowCount = require("./queries/getTableRowCount");
-const { _getTransactionStack } = require("~root/lib/database");
+const {
+  _getQueryLog,
+  _resetTestQueryLog,
+  _getTransactionStack
+} = require("~root/lib/database");
+const getTableNames = require("../getTableNames");
+const revertTableData = require("./queries/revertTableData");
 
-function getTableSize(tableSizes) {
-  return flattenDeep(tableSizes).reduce((acc, curr) => {
-    acc[curr.table_name] = curr.rows;
-    return acc;
-  }, {});
+const DML_STATEMENTS = ["insert ", "create ", "update ", "delete "];
+
+async function getTables() {
+  const tableNames = await getTableNames();
+  return tableNames.filter(t => !t.tableName.includes("_xest_backup"));
 }
 
-function suitePatchesBefore(tableSize) {
+function suitePatchesBefore() {
   before(async function() {
-    const tableNames = await getTableNames();
-    const tableSizes = await Promise.all(
-      tableNames.map(t => getTableRowCount({ tableName: t.table_name }))
-    );
     const transactionsBefore = _getTransactionStack();
     if (transactionsBefore.length !== 0) {
       throw transactionsBefore[0];
     }
-    // eslint-disable-next-line no-param-reassign
-    tableSize.before = getTableSize(tableSizes);
   });
 }
 
-function suitePatchesAfter(tableSize) {
+function suitePatchesAfter() {
   after(async function() {
-    const tableNames = await getTableNames();
-    const tableSizes = await Promise.all(
-      tableNames.map(t => getTableRowCount({ tableName: t.table_name }))
+    const tableNames = await getTables();
+    const queries = [..._getQueryLog()];
+
+    const dataModificationQueries = queries
+      .map(q => q.toLowerCase())
+      .filter(query =>
+        DML_STATEMENTS.some(statement => query.includes(statement))
+      )
+      .join("");
+    const tablesToRevert = tableNames
+      .map(t => t.tableName)
+      .filter(table => dataModificationQueries.includes(` ${table}`));
+
+    await Promise.all(
+      tablesToRevert.map(async t => {
+        await revertTableData({ tableName: t });
+      })
     );
-    const tableSizesNow = getTableSize(tableSizes);
-    let tableIsNotClean = false;
-    Object.keys(tableSizesNow).forEach(k => {
-      if (tableSizesNow[k] !== tableSize.before[k]) {
-        const extraRows = tableSizesNow[k] - tableSize.before[k];
-        const label =
-          extraRows > -1
-            ? "added.\n\tDid you forget to clean up some mock records?"
-            : "deleted.\n\tDid you delete records that you've not created by mistake?";
 
-        const errorMsg = `\t${chalk.red(
-          `✘ ${k}`
-        )} table was not restored to its previous state. ${chalk.yellow(
-          Math.abs(extraRows)
-        )} extra row(s) ${label}`;
-
-        tableIsNotClean = true;
-        console.error(errorMsg);
-      }
-    });
-    if (tableIsNotClean) {
-      throw new Error(
-        "Test suite failed to clean some database tables. See logs above."
-      );
-    }
+    _resetTestQueryLog();
     const transactionsAfter = _getTransactionStack();
     if (transactionsAfter.length !== 0) {
       throw transactionsAfter[0];
@@ -77,6 +63,7 @@ const describe = function(n, tests) {
     suitePatchesAfter(tableSize);
   });
 };
+
 const origOnly = origDescribe.only;
 describe.only = function(n, tests) {
   origOnly(n, function() {
