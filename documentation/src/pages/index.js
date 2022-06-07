@@ -78,7 +78,8 @@ const features = [
         id="homepage.features.connect-information"
         description="Feature Connect your information"
       >
-        Xest manages a local Docker development environment with a MySQL container and an Express API.
+        Xest manages a local Docker development environment with a MySQL
+        container and an Express API.
       </Translate>
     ),
   },
@@ -94,7 +95,8 @@ const features = [
         id="homepage.features.customize-easy"
         description="Feature Customize easy"
       >
-       Xest comes with pre-configured development, test, and deployment pipelines so that you can focus on your application logic.
+        Xest comes with pre-configured development, test, and deployment
+        pipelines so that you can focus on your application logic.
       </Translate>
     ),
   },
@@ -111,7 +113,8 @@ const features = [
         id="homepage.features.powered-by"
         description="Built with NPM, Express JS, Node.js and Docker"
       >
-        Xest is packed with an email framework, a scheduling system, serverless integration, and many other features a modern application needs.
+        Xest is packed with an email framework, a scheduling system, serverless
+        integration, and many other features a modern application needs.
       </Translate>
     ),
   },
@@ -166,7 +169,7 @@ function Home() {
               <Translate>Documentation</Translate>
             </Link>
             <Link
-              className={clsx("margin-left--md", styles.indexTryMeButton)}
+              className={styles.indexTryMeButton}
               to={useBaseUrl("docs/installation")}
             >
               <Translate>Get Started</Translate>
