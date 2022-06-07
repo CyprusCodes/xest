@@ -56,14 +56,12 @@ const config = {
       links: [],
       copyright: `Copyright © ${new Date().getFullYear()} Xest Framework <br/> Built with ❤️ in Cyprus ☀️.`,
     },
-    /* todo
     algolia: {
-      apiKey: "",
-      indexName: "",
-      contextualSearch: true,
+      appId: "2DDWA1ZXGW",
+      apiKey: "8db3ccb1c8e18edce8deacf6fc9d84d2",
+      indexName: "xestjs"
     },
     hideableSidebar: true,
-    */
     colorMode: {
       defaultMode: "dark",
       disableSwitch: false,
