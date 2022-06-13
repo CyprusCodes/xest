@@ -1,11 +1,8 @@
 const { groupBy, omit } = require("lodash");
 
 const nest = (results, transformationsToApply, fieldsToOmit = []) => {
-  const {
-    mergeField,
-    childrenLabel,
-    fieldsToKeep
-  } = transformationsToApply.shift();
+  const transClone = [...transformationsToApply];
+  const { mergeField, childrenLabel, fieldsToKeep } = transClone.shift();
   const groupedResult = groupBy(results, mergeField);
   fieldsToOmit.push(...fieldsToKeep, mergeField);
 
@@ -16,8 +13,8 @@ const nest = (results, transformationsToApply, fieldsToOmit = []) => {
         acc[keyToKeep] = value[0][keyToKeep];
         return acc;
       }, {}),
-      [childrenLabel]: transformationsToApply.length
-        ? nest(value, transformationsToApply, fieldsToOmit)
+      [childrenLabel]: transClone.length
+      ? nest(value, transClone, fieldsToOmit)
         : Object.values(value).map(v => omit(v, fieldsToOmit))
     };
   });
