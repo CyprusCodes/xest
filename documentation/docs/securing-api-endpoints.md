@@ -73,8 +73,7 @@ module.exports = deleteUserPaymentSchema;
 ## Validating Request Payloads With Yup Schemas
 
 With Yup Schema validation you can check if the information provided by a user is in the correct type of input.
-You will be validating the data entered so instead of getting 500 API errors when the payload sent by the user is in incorrect form you will get a clearer,
-constructive error message stating what the requirements of a field according to the database schema is. You will be creating schema with built in base methods and the bare minimum suggested is;
+You will be validating the data entered so instead of getting 500 API errors when the payload sent by the user is in the incorrect form you; will get a clear and constructive error message stating what the requirements of a field according to the database schema is. You will be creating schema with built in base methods and the bare minimum suggested is;
 
 - ‘type’ which can be **string, number, object, array, boolean** etc…
 - **‘label’** that will override the key name used in error messages.
@@ -86,19 +85,19 @@ const yup = require("yup");
 const putUserDetailsSchema = yup.object().shape({
   firstName: yup
     .string()
-    .min(1, "This field has to be more than 1 character!")
+    .min(1, "This field can not be empty!")
     .max(50, "This field has to be be less than 50 characters")
     .label("First Name")
     .typeError("First name can not include symbols or numbers"),
   lastName: yup
     .string()
-    .min(1, "This field has to be more than 1 character!")
+    .min(1, "This field can not be empty!")
     .max(50, "This field has to be be less than 50 characters")
     .label("Last Name")
     .typeError("Last name can not include symbols or numbers"),
   password: yup
     .string()
-    .min(1, "This field has to be more than 1 character!")
+    .min(1, "This field can not be empty!")
     .max(500, "This field has to be be less than 500 characters")
     .label("Password")
     .typeError("Not a valid password"),
@@ -108,7 +107,7 @@ const putUserDetailsSchema = yup.object().shape({
     .typeError("Not valid user details"),
   email: yup
     .string()
-    .min(1, "This field has to be more than 1 character!")
+    .min(1, "This field can not be empty!")
     .max(50, "This field should be less than 50 characters")
     .email()
     .label("Email")
@@ -136,4 +135,51 @@ Since the first thing you need to do before editing the database is to validate 
       }
     );
 
+```
+
+## Validating The Existence of a Record With Yup Schemas
+
+Another way of using Yup schema is when you want to insert a new record to your the database that needs to refer to another table's data. You should be validating the existence of the record so that it can be inserted into the new table in the database. This is done with 'test' method again, below is an example of the query fetching the record from the database and then the query is imported in the schema function to be used in 'test' method. So ifthe data exist and the result is true, the request is validated.
+
+```js
+const { submitQuery, getFirst } = require("~root/lib/database");
+
+const selectProviders = ({ providerId }) => submitQuery`
+  SELECT 
+    provider_id
+  FROM providers
+  WHERE provider_id = ${providerId};
+  `;
+
+module.exports = getFirst(selectProviders, "provider_id");
+```
+
+```js
+const yup = require("yup");
+const selectProviders = require("./queries/selectProviders");
+
+const postUserProviderSchema = yup.object().shape({
+  metadata: yup
+    .object()
+    .label("User Provider Details")
+    .typeError("User provider details must be in JSON format"),
+
+  providerId: yup
+    .number()
+    .required()
+    .label("Provider Id")
+    .test(
+      "doesProviderExist",
+      "Invalid Provider Id",
+      async function test(providerId) {
+        return selectProviders({ providerId }).then((provider) => {
+          if (provider) {
+            return true;
+          }
+          return false;
+        });
+      }
+    ),
+});
+module.exports = postUserProviderSchema;
 ```
