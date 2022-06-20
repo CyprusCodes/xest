@@ -275,7 +275,7 @@ const getInsertId = query => {
 const nest = (query, nestOptions) => {
   return (...args) => {
     return query(...args).then(results => {
-      return nestTabularData(results, nestOptions)
+      return nestTabularData(results, nestOptions);
     });
   };
 };
