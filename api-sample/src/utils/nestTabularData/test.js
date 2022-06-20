@@ -10,7 +10,7 @@ it("should nest tabular result set", () => {
         fieldsToKeep: ["name", "client_id"]
       },
       {
-        mergeField: "client_integration_id",
+        mergeField: "client_integration_name",
         childrenLabel: "clientSalesChannels",
         fieldsToKeep: ["status", "token"]
       }
