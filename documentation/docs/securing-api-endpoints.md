@@ -20,8 +20,8 @@ Xest has Javascript schema builder; [**Yup**](https://github.com/jquense/yup) pa
 ## Securing Access To Resources With Yup Async Validators
 
 For an endpoint to be secure, non-authorized users should be forbidden to modify or delete data. So userNo#1 should not be allowed to modify or delete userNo#2’s data.
-With yup library’s built-in ‘test’ method you can check if the userId requesting to modify/delete the resource belongs to the user with the same user id.
-You will need a query function to fetch the unique id of the data in the database and the userId coming from the header. If the unique id of the data matches with the user id coming from the header; the result of the validation function will be true and the request will be validated.
+With yup library’s built-in ‘test’ method you can check if the userId requesting to modify/delete the resource belongs to the user with the same userId.
+You will need a query function to fetch the unique id of the data in the database and the userId coming from the header. If the unique id of the data matches with the user's id coming from the header; the result of the validation function will be true and the request will be validated.
 
 All tests must provide a name, an error message and a validation function that must return true when the current value is valid and false or a ValidationError otherwise.
 
@@ -88,13 +88,13 @@ const putUserDetailsSchema = yup.object().shape({
     .min(1, "This field can not be empty!")
     .max(50, "This field has to be be less than 50 characters")
     .label("First Name")
-    .typeError("First name can not include symbols or numbers"),
+    .typeError("Not a valid name"),
   lastName: yup
     .string()
     .min(1, "This field can not be empty!")
     .max(50, "This field has to be be less than 50 characters")
     .label("Last Name")
-    .typeError("Last name can not include symbols or numbers"),
+    .typeError("Not a valid name"),
   password: yup
     .string()
     .min(1, "This field can not be empty!")
@@ -111,14 +111,14 @@ const putUserDetailsSchema = yup.object().shape({
     .max(50, "This field should be less than 50 characters")
     .email()
     .label("Email")
-    .typeError("Not valid email address"),
+    .typeError("Not a valid email address"),
 });
 
 module.exports = putUserDetailsSchema;
 ```
 
 After creating the yup schema it's imported at the top level and used in the controller function within try and catch blocks of code.
-Since the first thing you need to do before editing the database is to validate the entries, you will need to write the schema as the first function in the try and catch blocks. If all types of data are in correct form, the user will be allowed to modify the database.
+Since the first thing you need to do before editing the database is to validate the entries, you will need to write the schema as the first function in the try and catch blocks. If all types of data are in the correct form, the user will be allowed to modify the database.
 
 ```js
   try {
@@ -139,7 +139,7 @@ Since the first thing you need to do before editing the database is to validate 
 
 ## Validating The Existence of a Record With Yup Schemas
 
-Another way of using Yup schema is when you want to insert a new record to your the database that needs to refer to another table's data. You should be validating the existence of the record so that it can be inserted into the new table in the database. This is done with 'test' method again, below is an example of the query fetching the record from the database and then the query is imported in the schema function to be used in 'test' method. So ifthe data exist and the result is true, the request is validated.
+Another way of using Yup schema is when you want to insert a new record to your the database that needs to refer to another table's data. You should be validating the existence of the record so that it can be inserted into the new table in the database. This is done with 'test' method again, below is an example of the query fetching the record from the database and then the query is imported in the schema function to be used in 'test' method. So if the data exist and the result is true, the request is validated.
 
 ```js
 const { submitQuery, getFirst } = require("~root/lib/database");
@@ -163,7 +163,6 @@ const postUserProviderSchema = yup.object().shape({
     .object()
     .label("User Provider Details")
     .typeError("User provider details must be in JSON format"),
-
   providerId: yup
     .number()
     .required()
