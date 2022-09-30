@@ -44,7 +44,6 @@ module.exports = {
       ],
     },
 
-    /* todo
     {
       type: "category",
       label: "Security",
@@ -53,10 +52,11 @@ module.exports = {
         "authentication",
         "authorization",
         "securing-api-endpoints",
-        "account-system",
-        "rate-limiting",
+        // "account-system",
+        // "rate-limiting",
       ],
     },
+    /* todo
     {
       type: "category",
       label: "Testing",
@@ -76,7 +76,7 @@ module.exports = {
         "training/xest-103",
         "training/xest-104",
         "training/xest-105",
-        "training/xest-106"
+        "training/xest-106",
       ],
     },
   ],
