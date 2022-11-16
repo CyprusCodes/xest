@@ -92,6 +92,10 @@ const run = async () => {
       console.log(
         chalk.red`Failed to populate database with seed data. This might happen if you have recently updated your migrations, please modify your seed data to match new schema changes.`
       );
+      
+      console.log(
+        chalk.red`Error: ${error.split("ERROR")[1]}`
+      );
     }
   }
 
