@@ -1,6 +1,6 @@
 {
   "name": "xest",
-  "version": "0.0.0-alpha.10",
+  "version": "0.0.0-alpha.11",
   "description": "Xest CLI for managing projects",
   "main": "index.js",
   "bin": {
