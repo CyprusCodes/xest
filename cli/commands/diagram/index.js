@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const findProjectRoot = require("../../utils/findProjectRoot");
 const chalk = require("chalk");
+const syncDatabaseDiagram = require("./utils/syncDatabaseDiagram");
 
 const diagram = () => {
   // diagram only works at Xest project root
@@ -16,14 +17,7 @@ const diagram = () => {
 
   const { filename } = projectDetails;
   const rootPath = path.dirname(filename);
-
-  // before starting express server
-  // check if our azimutt resources are in-sync with database
-  // populate sources
-  // remove unrecognized tables and columns from layouts
-  // FK, PK, DataType, NULL
-  // nice to have: unique constraint, indexes, composite pk
-  // update azimutt json
+  syncDatabaseDiagram({ rootPath });
 
   const app = express();
 

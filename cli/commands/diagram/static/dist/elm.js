@@ -2721,7 +2721,7 @@ var _VirtualDom_mapEventRecord = F2(function(func, record)
 	return {
 		cq: func(record.cq),
 		hw: record.hw,
-		jx: record.jx
+		jy: record.jy
 	}
 });
 
@@ -2993,7 +2993,7 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.hw;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.jx) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.jy) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3992,7 +3992,7 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.kL);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.kM);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
@@ -4053,8 +4053,8 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.no;
-	var onUrlRequest = impl.np;
+	var onUrlChange = impl.np;
+	var onUrlRequest = impl.nq;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
@@ -4074,9 +4074,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.jA === next.jA
+							&& curr.jB === next.jB
 							&& curr.iK === next.iK
-							&& curr.jv.a === next.jv.a
+							&& curr.jw.a === next.jw.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4156,17 +4156,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { gc: 'hidden', kT: 'visibilitychange' }
+		? { gc: 'hidden', kU: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { gc: 'mozHidden', kT: 'mozvisibilitychange' }
+		? { gc: 'mozHidden', kU: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { gc: 'msHidden', kT: 'msvisibilitychange' }
+		? { gc: 'msHidden', kU: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { gc: 'webkitHidden', kT: 'webkitvisibilitychange' }
-		: { gc: 'hidden', kT: 'visibilitychange' };
+		? { gc: 'webkitHidden', kU: 'webkitvisibilitychange' }
+		: { gc: 'hidden', kU: 'visibilitychange' };
 }
 
 
@@ -4247,10 +4247,10 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		jL: _Browser_getScene(),
-		kd: {
-			ki: _Browser_window.pageXOffset,
-			kk: _Browser_window.pageYOffset,
+		jM: _Browser_getScene(),
+		ke: {
+			kj: _Browser_window.pageXOffset,
+			kl: _Browser_window.pageYOffset,
 			bB: _Browser_doc.documentElement.clientWidth,
 			bj: _Browser_doc.documentElement.clientHeight
 		}
@@ -4286,13 +4286,13 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			jL: {
+			jM: {
 				bB: node.scrollWidth,
 				bj: node.scrollHeight
 			},
-			kd: {
-				ki: node.scrollLeft,
-				kk: node.scrollTop,
+			ke: {
+				kj: node.scrollLeft,
+				kl: node.scrollTop,
 				bB: node.clientWidth,
 				bj: node.clientHeight
 			}
@@ -4324,16 +4324,16 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			jL: _Browser_getScene(),
-			kd: {
-				ki: x,
-				kk: y,
+			jM: _Browser_getScene(),
+			ke: {
+				kj: x,
+				kl: y,
 				bB: _Browser_doc.documentElement.clientWidth,
 				bj: _Browser_doc.documentElement.clientHeight
 			},
-			ly: {
-				ki: x + rect.left,
-				kk: y + rect.top,
+			lz: {
+				kj: x + rect.left,
+				kl: y + rect.top,
 				bB: rect.width,
 				bj: rect.height
 			}
@@ -4711,13 +4711,13 @@ var _Http_toTask = F3(function(router, toTask, request)
 	return _Scheduler_binding(function(callback)
 	{
 		function done(response) {
-			callback(toTask(request.lH.a(response)));
+			callback(toTask(request.lI.a(response)));
 		}
 
 		var xhr = new XMLHttpRequest();
 		xhr.addEventListener('error', function() { done($elm$http$Http$NetworkError_); });
 		xhr.addEventListener('timeout', function() { done($elm$http$Http$Timeout_); });
-		xhr.addEventListener('load', function() { done(_Http_toResponse(request.lH.b, xhr)); });
+		xhr.addEventListener('load', function() { done(_Http_toResponse(request.lI.b, xhr)); });
 		$elm$core$Maybe$isJust(request.hM) && _Http_track(router, xhr, request.hM.a);
 
 		try {
@@ -4728,8 +4728,8 @@ var _Http_toTask = F3(function(router, toTask, request)
 
 		_Http_configureRequest(xhr, request);
 
-		request.kL.a && xhr.setRequestHeader('Content-Type', request.kL.a);
-		xhr.send(request.kL.b);
+		request.kM.a && xhr.setRequestHeader('Content-Type', request.kM.a);
+		xhr.send(request.kM.b);
 
 		return function() { xhr.c = true; xhr.abort(); };
 	});
@@ -4745,8 +4745,8 @@ function _Http_configureRequest(xhr, request)
 		xhr.setRequestHeader(headers.a.a, headers.a.b);
 	}
 	xhr.timeout = request.hK.a || 0;
-	xhr.responseType = request.lH.d;
-	xhr.withCredentials = request.ko;
+	xhr.responseType = request.lI.d;
+	xhr.withCredentials = request.kp;
 }
 
 
@@ -4970,9 +4970,9 @@ function _Markdown_formatOptions(options)
 		highlight: toHighlight,
 		gfm: gfm,
 		tables: gfm && gfm.oM,
-		breaks: gfm && gfm.kM,
+		breaks: gfm && gfm.kN,
 		sanitize: options.hm,
-		smartypants: options.jX
+		smartypants: options.jY
 	};
 }
 var $author$project$Main$ChangedUrl = function (a) {
@@ -5486,7 +5486,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {iA: fragment, iK: host, aA: path, jv: port_, jA: protocol, e1: query};
+		return {iA: fragment, iK: host, aA: path, jw: port_, jB: protocol, e1: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5768,7 +5768,7 @@ var $elm$browser$Browser$application = _Browser_application;
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $author$project$Main$Model = F4(
 	function (url, key, shared, page) {
-		return {dk: key, nz: page, a1: shared, o1: url};
+		return {dk: key, nA: page, a1: shared, o1: url};
 	});
 var $author$project$Main$Page = function (a) {
 	return {$: 3, a: a};
@@ -6038,7 +6038,7 @@ var $ryannhg$elm_spa$ElmSpa$Request$create = F4(
 	function (route, params, url, key) {
 		return {
 			dk: key,
-			nA: params,
+			nB: params,
 			e1: A2(
 				$elm$core$Maybe$withDefault,
 				$elm$core$Dict$empty,
@@ -6078,7 +6078,7 @@ var $elm$url$Url$Parser$oneOf = function (parsers) {
 };
 var $elm$url$Url$Parser$State = F5(
 	function (visited, unvisited, params, frag, value) {
-		return {bJ: frag, nA: params, bz: unvisited, a5: value, b$: visited};
+		return {bJ: frag, nB: params, bz: unvisited, a5: value, b$: visited};
 	});
 var $elm$url$Url$Parser$getFirstMatch = function (states) {
 	getFirstMatch:
@@ -6614,7 +6614,7 @@ var $elm$url$Url$Parser$mapState = F2(
 	function (func, _v0) {
 		var visited = _v0.b$;
 		var unvisited = _v0.bz;
-		var params = _v0.nA;
+		var params = _v0.nB;
 		var frag = _v0.bJ;
 		var value = _v0.a5;
 		return A5(
@@ -6631,7 +6631,7 @@ var $elm$url$Url$Parser$map = F2(
 		return function (_v1) {
 			var visited = _v1.b$;
 			var unvisited = _v1.bz;
-			var params = _v1.nA;
+			var params = _v1.nB;
 			var frag = _v1.bJ;
 			var value = _v1.a5;
 			return A2(
@@ -6645,7 +6645,7 @@ var $elm$url$Url$Parser$s = function (str) {
 	return function (_v0) {
 		var visited = _v0.b$;
 		var unvisited = _v0.bz;
-		var params = _v0.nA;
+		var params = _v0.nB;
 		var frag = _v0.bJ;
 		var value = _v0.a5;
 		if (!unvisited.b) {
@@ -6671,7 +6671,7 @@ var $author$project$Gen$Params$Embed$parser = $elm$url$Url$Parser$s('embed');
 var $author$project$Gen$Params$New$parser = $elm$url$Url$Parser$s('new');
 var $author$project$Gen$Params$NotFound$parser = $elm$url$Url$Parser$s('not-found');
 var $author$project$Gen$Params$Organization_$Create$Params = function (organization) {
-	return {nw: organization};
+	return {nx: organization};
 };
 var $elm$url$Url$Parser$slash = F2(
 	function (_v0, _v1) {
@@ -6689,7 +6689,7 @@ var $elm$url$Url$Parser$custom = F2(
 		return function (_v0) {
 			var visited = _v0.b$;
 			var unvisited = _v0.bz;
-			var params = _v0.nA;
+			var params = _v0.nB;
 			var frag = _v0.bJ;
 			var value = _v0.a5;
 			if (!unvisited.b) {
@@ -6725,7 +6725,7 @@ var $author$project$Gen$Params$Organization_$Create$parser = A2(
 		$elm$url$Url$Parser$string,
 		$elm$url$Url$Parser$s('create')));
 var $author$project$Gen$Params$Organization_$New$Params = function (organization) {
-	return {nw: organization};
+	return {nx: organization};
 };
 var $author$project$Gen$Params$Organization_$New$parser = A2(
 	$elm$url$Url$Parser$map,
@@ -6736,7 +6736,7 @@ var $author$project$Gen$Params$Organization_$New$parser = A2(
 		$elm$url$Url$Parser$s('new')));
 var $author$project$Gen$Params$Organization_$Project_$Params = F2(
 	function (organization, project) {
-		return {nw: organization, nN: project};
+		return {nx: organization, nN: project};
 	});
 var $author$project$Gen$Params$Organization_$Project_$parser = A2(
 	$elm$url$Url$Parser$map,
@@ -6833,10 +6833,10 @@ var $ryannhg$elm_spa$ElmSpa$Page$bundle = function (_v0) {
 	var redirecting = _v0.nZ;
 	var toRoute = _v0.oX;
 	var toUrl = _v0.oY;
-	var fromCmd = _v0.lS;
-	var mapEffect = _v0.my;
-	var mapView = _v0.mz;
-	var page = _v0.nz;
+	var fromCmd = _v0.lT;
+	var mapEffect = _v0.mz;
+	var mapView = _v0.mA;
+	var page = _v0.nA;
 	var toModel = _v0.oV;
 	var toMsg = _v0.oW;
 	return {
@@ -6853,13 +6853,13 @@ var $ryannhg$elm_spa$ElmSpa$Page$bundle = function (_v0) {
 					var record = _v1.a;
 					return A3(
 						$elm$core$Tuple$mapBoth,
-						toModel(req.nA),
+						toModel(req.nB),
 						mapEffect,
 						record.bl(0));
 				} else {
 					var route = _v1.a;
 					return _Utils_Tuple2(
-						redirecting.mS,
+						redirecting.mT,
 						fromCmd(
 							A2(
 								$elm$browser$Browser$Navigation$replaceUrl,
@@ -6899,13 +6899,13 @@ var $ryannhg$elm_spa$ElmSpa$Page$bundle = function (_v0) {
 					var record = _v3.a;
 					return A3(
 						$elm$core$Tuple$mapBoth,
-						toModel(req.nA),
+						toModel(req.nB),
 						mapEffect,
 						A2(record.fv, msg, model));
 				} else {
 					var route = _v3.a;
 					return _Utils_Tuple2(
-						redirecting.mS,
+						redirecting.mT,
 						fromCmd(
 							A2(
 								$elm$browser$Browser$Navigation$replaceUrl,
@@ -6970,10 +6970,10 @@ var $elm$html$Html$map = $elm$virtual_dom$VirtualDom$map;
 var $author$project$View$map = F2(
 	function (fn, view) {
 		return {
-			kL: A2(
+			kM: A2(
 				$elm$core$List$map,
 				$elm$html$Html$map(fn),
-				view.kL),
+				view.kM),
 			a4: view.a4
 		};
 	});
@@ -6981,7 +6981,7 @@ var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$View$placeholder = function (str) {
 	return {
-		kL: _List_fromArray(
+		kM: _List_fromArray(
 			[
 				$elm$html$Html$text(str)
 			]),
@@ -7014,28 +7014,28 @@ var $author$project$Gen$Route$toHref = function (route) {
 			var params = route.a;
 			return joinAsHref(
 				_List_fromArray(
-					[params.nw, 'create']));
+					[params.nx, 'create']));
 		case 5:
 			var params = route.a;
 			return joinAsHref(
 				_List_fromArray(
-					[params.nw, 'new']));
+					[params.nx, 'new']));
 		default:
 			var params = route.a;
 			return joinAsHref(
 				_List_fromArray(
-					[params.nw, params.nN]));
+					[params.nx, params.nN]));
 	}
 };
 var $author$project$Gen$Pages$bundle = F3(
 	function (page, toModel, toMsg) {
 		return $ryannhg$elm_spa$ElmSpa$Page$bundle(
 			{
-				lS: $author$project$Effect$fromCmd,
-				my: $author$project$Effect$map(toMsg),
-				mz: $author$project$View$map(toMsg),
-				nz: page,
-				nZ: {mS: $author$project$Gen$Model$Redirecting_, o3: $author$project$View$none},
+				lT: $author$project$Effect$fromCmd,
+				mz: $author$project$Effect$map(toMsg),
+				mA: $author$project$View$map(toMsg),
+				nA: page,
+				nZ: {mT: $author$project$Gen$Model$Redirecting_, o3: $author$project$View$none},
 				oV: toModel,
 				oW: toMsg,
 				oX: $author$project$Gen$Route$fromUrl,
@@ -7064,7 +7064,7 @@ var $ryannhg$elm_spa$ElmSpa$Page$adapters = {
 			o3: page.o3
 		};
 	},
-	ly: F2(
+	lz: F2(
 		function (fromCmd, page) {
 			return {
 				bl: function (_v0) {
@@ -7123,7 +7123,7 @@ var $ryannhg$elm_spa$ElmSpa$Page$element = F2(
 		return F2(
 			function (_v0, _v1) {
 				return $elm$core$Result$Ok(
-					A2($ryannhg$elm_spa$ElmSpa$Page$adapters.ly, fromCmd, page));
+					A2($ryannhg$elm_spa$ElmSpa$Page$adapters.lz, fromCmd, page));
 			});
 	});
 var $author$project$Page$element = $ryannhg$elm_spa$ElmSpa$Page$element($author$project$Effect$fromCmd);
@@ -7157,15 +7157,15 @@ var $author$project$Conf$github = 'https://github.com/azimuttapp/azimutt';
 var $elm$core$Basics$neq = _Utils_notEqual;
 var $author$project$Conf$twitter = 'azimuttapp';
 var $author$project$Conf$constants = {
-	kv: $author$project$Conf$github + '/issues',
-	kw: $author$project$Conf$github + '/discussions/9',
-	kx: $author$project$Conf$github + '/discussions/7',
-	ky: $author$project$Conf$github + '/discussions/8',
-	kz: $author$project$Conf$github + '/discussions',
-	kA: 'hey@azimutt.app',
-	kB: $author$project$Conf$github + '/issues?q=is%3Aissue+is%3Aopen+label%3A%22feature+request%22',
-	kC: $author$project$Conf$github,
-	kD: F2(
+	kw: $author$project$Conf$github + '/issues',
+	kx: $author$project$Conf$github + '/discussions/9',
+	ky: $author$project$Conf$github + '/discussions/7',
+	kz: $author$project$Conf$github + '/discussions/8',
+	kA: $author$project$Conf$github + '/discussions',
+	kB: 'hey@azimutt.app',
+	kC: $author$project$Conf$github + '/issues?q=is%3Aissue+is%3Aopen+label%3A%22feature+request%22',
+	kD: $author$project$Conf$github,
+	kE: F2(
 		function (title, body) {
 			return $author$project$Conf$github + ('/issues/new/?' + $author$project$Libs$Url$buildQueryString(
 				A2(
@@ -7180,19 +7180,19 @@ var $author$project$Conf$constants = {
 							_Utils_Tuple2('body', body)
 						]))));
 		}),
-	kE: $author$project$Conf$github + '/projects/1',
-	kF: 'https://twitter.com/' + $author$project$Conf$twitter,
-	kG: 'https://azimutt.app',
-	kQ: 20,
-	kY: 'Hi team, I really like what you\'ve done with @' + ($author$project$Conf$twitter + '. Keep up the good work 💪'),
-	lf: 'Next-Gen ERD: Design, Explore, Document and Analyze your database.',
-	lg: 'initial layout',
-	lh: 'Azimutt · Database explorer and analyzer',
-	m3: 'New Project',
+	kF: $author$project$Conf$github + '/projects/1',
+	kG: 'https://twitter.com/' + $author$project$Conf$twitter,
+	kH: 'https://azimutt.app',
+	kR: 20,
+	kZ: 'Hi team, I really like what you\'ve done with @' + ($author$project$Conf$twitter + '. Keep up the good work 💪'),
+	lg: 'Next-Gen ERD: Design, Explore, Document and Analyze your database.',
+	lh: 'initial layout',
+	li: 'Azimutt · Database explorer and analyzer',
+	m4: 'New Project',
 	ou: 'Hi @' + ($author$project$Conf$twitter + ', I just published my schema at ..., I would love if you can share 🚀'),
 	o5: 'default'
 };
-var $author$project$Services$Toasts$init = {l6: 0, bX: _List_Nil};
+var $author$project$Services$Toasts$init = {l7: 0, bX: _List_Nil};
 var $author$project$Libs$Maybe$mapOrElse = F3(
 	function (f, _default, maybe) {
 		return A2(
@@ -7312,10 +7312,10 @@ var $author$project$Libs$Models$Hotkey$encode = function (key) {
 				A2($author$project$Libs$Json$Encode$maybe, $author$project$Libs$Models$Hotkey$targetEncoder, key.hH)),
 				_Utils_Tuple2(
 				'onInput',
-				$elm$json$Json$Encode$bool(key.nm)),
+				$elm$json$Json$Encode$bool(key.nn)),
 				_Utils_Tuple2(
 				'preventDefault',
-				$elm$json$Json$Encode$bool(key.jx))
+				$elm$json$Json$Encode$bool(key.jy))
 			]));
 };
 var $author$project$Libs$Models$Uuid$encode = function (value) {
@@ -7392,7 +7392,7 @@ var $author$project$Models$Plan$encode = function (value) {
 				$elm$json$Json$Encode$bool(value.fR)),
 				_Utils_Tuple2(
 				'db_access',
-				$elm$json$Json$Encode$bool(value.lc))
+				$elm$json$Json$Encode$bool(value.ld))
 			]));
 };
 var $author$project$Models$Organization$encode = function (value) {
@@ -7410,7 +7410,7 @@ var $author$project$Models$Organization$encode = function (value) {
 				$author$project$Models$OrganizationName$encode(value.eS)),
 				_Utils_Tuple2(
 				'plan',
-				$author$project$Models$Plan$encode(value.nD)),
+				$author$project$Models$Plan$encode(value.jv)),
 				_Utils_Tuple2(
 				'logo',
 				$elm$json$Json$Encode$string(value.gv)),
@@ -7625,7 +7625,7 @@ var $author$project$Models$Project$Layout$encode = function (value) {
 				$author$project$Libs$Time$encode(value.ic)),
 				_Utils_Tuple2(
 				'updatedAt',
-				$author$project$Libs$Time$encode(value.ka))
+				$author$project$Libs$Time$encode(value.kb))
 			]));
 };
 var $author$project$Models$Project$LayoutName$encode = function (value) {
@@ -7696,7 +7696,7 @@ var $author$project$Models$Project$ProjectSettings$encodeHiddenColumns = F2(
 					A3($author$project$Libs$Json$Encode$withDefault, $elm$json$Json$Encode$string, _default.bn, value.bn)),
 					_Utils_Tuple2(
 					'max',
-					A3($author$project$Libs$Json$Encode$withDefault, $elm$json$Json$Encode$int, _default.mD, value.mD)),
+					A3($author$project$Libs$Json$Encode$withDefault, $elm$json$Json$Encode$int, _default.mE, value.mE)),
 					_Utils_Tuple2(
 					'props',
 					A3($author$project$Libs$Json$Encode$withDefault, $elm$json$Json$Encode$bool, _default.nU, value.nU)),
@@ -8129,10 +8129,10 @@ var $author$project$Models$Project$Column$encode = function (value) {
 				$author$project$Models$Project$ColumnType$encode(value.gi)),
 				_Utils_Tuple2(
 				'nullable',
-				A3($author$project$Libs$Json$Encode$withDefault, $elm$json$Json$Encode$bool, false, value.ne)),
+				A3($author$project$Libs$Json$Encode$withDefault, $elm$json$Json$Encode$bool, false, value.nf)),
 				_Utils_Tuple2(
 				'default',
-				A2($author$project$Libs$Json$Encode$maybe, $author$project$Models$Project$ColumnValue$encode, value.le)),
+				A2($author$project$Libs$Json$Encode$maybe, $author$project$Models$Project$ColumnValue$encode, value.lf)),
 				_Utils_Tuple2(
 				'comment',
 				A2($author$project$Libs$Json$Encode$maybe, $author$project$Models$Project$Comment$encode, value.h4)),
@@ -8148,7 +8148,7 @@ var $author$project$Models$Project$Column$encode = function (value) {
 							A2(
 								$elm$core$List$sortBy,
 								function ($) {
-									return $.l6;
+									return $.l7;
 								},
 								$author$project$Libs$Nel$toList(
 									$author$project$Libs$Ned$values(d))));
@@ -8243,7 +8243,7 @@ var $author$project$Models$Project$Table$encode = function (value) {
 					A2(
 						$elm$core$List$sortBy,
 						function ($) {
-							return $.l6;
+							return $.l7;
 						},
 						$elm$core$Dict$values(value.M)))),
 				_Utils_Tuple2(
@@ -8321,7 +8321,7 @@ var $author$project$Models$Project$Source$encode = function (value) {
 				$author$project$Libs$Time$encode(value.ic)),
 				_Utils_Tuple2(
 				'updatedAt',
-				$author$project$Libs$Time$encode(value.ka))
+				$author$project$Libs$Time$encode(value.kb))
 			]));
 };
 var $author$project$Models$RelationStyle$Bezier = 0;
@@ -8338,7 +8338,7 @@ var $author$project$Models$Project$ProjectSettings$init = function (defaultSchem
 		cW: 1,
 		cb: defaultSchema,
 		c8: $author$project$Models$Project$FindPathSettings$init,
-		ay: {bn: 'created_.+, updated_.+', mD: 15, nU: false, bT: false},
+		ay: {bn: 'created_.+, updated_.+', mE: 15, nU: false, bT: false},
 		dH: 0,
 		n2: false,
 		n3: _List_Nil,
@@ -8347,8 +8347,8 @@ var $author$project$Models$Project$ProjectSettings$init = function (defaultSchem
 };
 var $author$project$Conf$schema = {
 	bH: {o0: 'unknown'},
-	le: 'public',
-	lB: ''
+	lf: 'public',
+	lC: ''
 };
 var $author$project$Models$Project$LayoutName$toString = function (name) {
 	return name;
@@ -8359,7 +8359,7 @@ var $author$project$Models$Project$encode = function (value) {
 			[
 				_Utils_Tuple2(
 				'organization',
-				A2($author$project$Libs$Json$Encode$maybe, $author$project$Models$Organization$encode, value.nw)),
+				A2($author$project$Libs$Json$Encode$maybe, $author$project$Models$Organization$encode, value.nx)),
 				_Utils_Tuple2(
 				'id',
 				$author$project$Models$Project$ProjectId$encode(value.H)),
@@ -8393,7 +8393,7 @@ var $author$project$Models$Project$encode = function (value) {
 				A3(
 					$author$project$Libs$Json$Encode$withDefaultDeep,
 					$author$project$Models$Project$ProjectSettings$encode,
-					$author$project$Models$Project$ProjectSettings$init($author$project$Conf$schema.lB),
+					$author$project$Models$Project$ProjectSettings$init($author$project$Conf$schema.lC),
 					value.dM)),
 				_Utils_Tuple2(
 				'storage',
@@ -8406,7 +8406,7 @@ var $author$project$Models$Project$encode = function (value) {
 				$author$project$Libs$Time$encode(value.ic)),
 				_Utils_Tuple2(
 				'updatedAt',
-				$author$project$Libs$Time$encode(value.ka)),
+				$author$project$Libs$Time$encode(value.kb)),
 				_Utils_Tuple2(
 				'version',
 				$elm$json$Json$Encode$int($author$project$Models$Project$ProjectEncodingVersion$current))
@@ -8419,7 +8419,7 @@ var $author$project$Models$ProjectInfo$encode = function (value) {
 			[
 				_Utils_Tuple2(
 				'organization',
-				A2($author$project$Libs$Json$Encode$maybe, $author$project$Models$Organization$encode, value.nw)),
+				A2($author$project$Libs$Json$Encode$maybe, $author$project$Models$Organization$encode, value.nx)),
 				_Utils_Tuple2(
 				'id',
 				$author$project$Models$Project$ProjectId$encode(value.H)),
@@ -8440,7 +8440,7 @@ var $author$project$Models$ProjectInfo$encode = function (value) {
 				$author$project$Models$Project$ProjectVisibility$encode(value.hQ)),
 				_Utils_Tuple2(
 				'encodingVersion',
-				$author$project$Models$Project$ProjectEncodingVersion$encode(value.kc)),
+				$author$project$Models$Project$ProjectEncodingVersion$encode(value.kd)),
 				_Utils_Tuple2(
 				'nbSources',
 				$elm$json$Json$Encode$int(value.gM)),
@@ -8473,7 +8473,7 @@ var $author$project$Models$ProjectInfo$encode = function (value) {
 				$author$project$Libs$Time$encode(value.ic)),
 				_Utils_Tuple2(
 				'updatedAt',
-				$author$project$Libs$Time$encode(value.ka))
+				$author$project$Libs$Time$encode(value.kb))
 			]));
 };
 var $author$project$Models$ProjectTokenId$encode = function (value) {
@@ -8494,10 +8494,10 @@ var $author$project$Models$TrackEvent$encode = function (key) {
 					A2(
 						$elm$core$Maybe$map,
 						$author$project$Libs$Nel$toList,
-						$author$project$Libs$Nel$fromList(key.lo)))),
+						$author$project$Libs$Nel$fromList(key.lp)))),
 				_Utils_Tuple2(
 				'organization',
-				A2($author$project$Libs$Json$Encode$maybe, $author$project$Models$OrganizationId$encode, key.nw)),
+				A2($author$project$Libs$Json$Encode$maybe, $author$project$Models$OrganizationId$encode, key.nx)),
 				_Utils_Tuple2(
 				'project',
 				A2($author$project$Libs$Json$Encode$maybe, $author$project$Models$Project$ProjectId$encode, key.nN))
@@ -8547,7 +8547,7 @@ var $author$project$Models$Route$toUrl = function (route) {
 			$author$project$Libs$String$stripRight,
 			'/',
 			_Utils_ap(
-				$author$project$Conf$constants.kG,
+				$author$project$Conf$constants.kH,
 				$author$project$Gen$Route$toHref(route.hk))),
 		$author$project$Models$Route$buildQueryString(route.e1));
 };
@@ -8648,13 +8648,13 @@ var $author$project$Ports$elmEncoder = function (elm) {
 						A2(
 							$author$project$Libs$Json$Encode$maybe,
 							$elm$json$Json$Encode$string,
-							A2($elm$core$Maybe$map, $author$project$Models$Route$toUrl, meta.kP))),
+							A2($elm$core$Maybe$map, $author$project$Models$Route$toUrl, meta.kQ))),
 						_Utils_Tuple2(
 						'html',
-						A2($author$project$Libs$Json$Encode$maybe, $elm$json$Json$Encode$string, meta.l3)),
+						A2($author$project$Libs$Json$Encode$maybe, $elm$json$Json$Encode$string, meta.l4)),
 						_Utils_Tuple2(
 						'body',
-						A2($author$project$Libs$Json$Encode$maybe, $elm$json$Json$Encode$string, meta.kL))
+						A2($author$project$Libs$Json$Encode$maybe, $elm$json$Json$Encode$string, meta.kM))
 					]));
 		case 7:
 			var id = elm.a;
@@ -8964,21 +8964,21 @@ var $author$project$PagesComponents$Create$Init$init = function (urlOrganization
 				[
 					$author$project$Ports$setMeta(
 					{
-						kL: $elm$core$Maybe$Just('h-full'),
-						kP: $elm$core$Maybe$Just(
+						kM: $elm$core$Maybe$Just('h-full'),
+						kQ: $elm$core$Maybe$Just(
 							{
 								e1: $elm$core$Dict$empty,
 								hk: A3(
 									$author$project$Libs$Maybe$mapOrElse,
 									function (id) {
 										return $author$project$Gen$Route$Organization___Create(
-											{nw: id});
+											{nx: id});
 									},
 									$author$project$Gen$Route$Create,
 									urlOrganization)
 							}),
-						bf: $elm$core$Maybe$Just($author$project$Conf$constants.lf),
-						l3: $elm$core$Maybe$Just('h-full'),
+						bf: $elm$core$Maybe$Just($author$project$Conf$constants.lg),
+						l4: $elm$core$Maybe$Just('h-full'),
 						a4: $elm$core$Maybe$Just($author$project$PagesComponents$Create$Views$title)
 					}),
 					$author$project$Libs$Task$send($author$project$PagesComponents$Create$Models$InitProject)
@@ -9077,7 +9077,7 @@ var $author$project$Libs$Models$Delta$decode = A3(
 	A2($elm$json$Json$Decode$field, 'dy', $elm$json$Json$Decode$float));
 var $author$project$Models$Project$ColumnStats$ColumnStats = F6(
 	function (id, kind, rows, nulls, cardinality, commonValues) {
-		return {kR: cardinality, h5: commonValues, H: id, gi: kind, ji: nulls, bV: rows};
+		return {kS: cardinality, h5: commonValues, H: id, gi: kind, ji: nulls, bV: rows};
 	});
 var $elm$json$Json$Decode$string = _Json_decodeString;
 var $author$project$Models$Project$ColumnType$decode = $elm$json$Json$Decode$string;
@@ -9184,7 +9184,7 @@ var $author$project$Models$Project$TableId$decode = A2(
 	$elm$json$Json$Decode$string);
 var $author$project$Models$Project$TableStats$TableStats = F3(
 	function (id, rows, sampleValues) {
-		return {H: id, bV: rows, jJ: sampleValues};
+		return {H: id, bV: rows, jK: sampleValues};
 	});
 var $author$project$Models$Project$TableStats$decodeTableId = A3(
 	$elm$json$Json$Decode$map2,
@@ -9334,7 +9334,7 @@ var $author$project$Models$Size$viewport = function (pos) {
 var $author$project$Models$Size$decodeViewport = A2($elm$json$Json$Decode$map, $author$project$Models$Size$viewport, $author$project$Libs$Models$Size$decode);
 var $mpizenberg$elm_file$FileValue$File = F5(
 	function (value, name, mime, size, lastModified) {
-		return {mn: lastModified, i8: mime, eS: name, ox: size, a5: value};
+		return {mo: lastModified, i8: mime, eS: name, ox: size, a5: value};
 	});
 var $elm$json$Json$Decode$map5 = _Json_map5;
 var $elm$time$Time$Posix = $elm$core$Basics$identity;
@@ -9382,7 +9382,7 @@ var $author$project$Models$Project$ColumnRef$fromString = function (id) {
 				var column = _v3.a;
 				return {
 					bH: $author$project$Models$Project$ColumnPath$fromString(column),
-					aq: _Utils_Tuple2($author$project$Conf$schema.lB, table)
+					aq: _Utils_Tuple2($author$project$Conf$schema.lC, table)
 				};
 			}
 		} else {
@@ -9391,7 +9391,7 @@ var $author$project$Models$Project$ColumnRef$fromString = function (id) {
 	}
 	return {
 		bH: $author$project$Models$Project$ColumnPath$fromString(''),
-		aq: _Utils_Tuple2($author$project$Conf$schema.lB, id)
+		aq: _Utils_Tuple2($author$project$Conf$schema.lC, id)
 	};
 };
 var $elm$json$Json$Decode$map4 = _Json_map4;
@@ -9549,7 +9549,7 @@ var $elm$parser$Parser$Advanced$AddRight = F2(
 	});
 var $elm$parser$Parser$Advanced$DeadEnd = F4(
 	function (row, col, problem, contextStack) {
-		return {fO: col, k3: contextStack, hc: problem, hl: row};
+		return {fO: col, k4: contextStack, hc: problem, hl: row};
 	});
 var $elm$parser$Parser$Advanced$Empty = {$: 0};
 var $elm$parser$Parser$Advanced$fromState = F2(
@@ -10264,7 +10264,7 @@ var $author$project$Libs$Time$decode = $elm$json$Json$Decode$oneOf(
 		]));
 var $author$project$Models$Organization$Organization = F8(
 	function (id, slug, name, plan, logo, location, description, heroku) {
-		return {bf: description, gb: heroku, H: id, gu: location, gv: logo, eS: name, nD: plan, hr: slug};
+		return {bf: description, gb: heroku, H: id, gu: location, gv: logo, eS: name, jv: plan, hr: slug};
 	});
 var $author$project$Models$HerokuResource$HerokuResource = function (id) {
 	return {H: id};
@@ -10280,7 +10280,7 @@ var $author$project$Libs$Models$Slug$decode = $elm$json$Json$Decode$string;
 var $author$project$Models$OrganizationSlug$decode = $author$project$Libs$Models$Slug$decode;
 var $author$project$Models$Plan$Plan = F8(
 	function (id, name, layouts, memos, colors, privateLinks, dbAnalysis, dbAccess) {
-		return {eg: colors, lc: dbAccess, fR: dbAnalysis, H: id, i$: layouts, gw: memos, eS: name, nM: privateLinks};
+		return {eg: colors, ld: dbAccess, fR: dbAnalysis, H: id, i$: layouts, gw: memos, eS: name, nM: privateLinks};
 	});
 var $elm$json$Json$Decode$map8 = _Json_map8;
 var $author$project$Models$Plan$decode = A9(
@@ -10307,7 +10307,7 @@ var $author$project$Models$Organization$decode = A9(
 	A2($author$project$Libs$Json$Decode$maybeField, 'heroku', $author$project$Models$HerokuResource$decode));
 var $author$project$Models$Project$Layout$Layout = F5(
 	function (canvas, tables, memos, createdAt, updatedAt) {
-		return {fJ: canvas, ic: createdAt, gw: memos, oM: tables, ka: updatedAt};
+		return {fJ: canvas, ic: createdAt, gw: memos, oM: tables, kb: updatedAt};
 	});
 var $author$project$Models$Project$CanvasProps$CanvasProps = F2(
 	function (position, zoom) {
@@ -10461,7 +10461,7 @@ var $author$project$Models$Project$TableId$show = F2(
 	function (defaultSchema, _v0) {
 		var s = _v0.a;
 		var t = _v0.b;
-		return (_Utils_eq(s, $author$project$Conf$schema.lB) || _Utils_eq(s, defaultSchema)) ? t : (s + ('.' + t));
+		return (_Utils_eq(s, $author$project$Conf$schema.lC) || _Utils_eq(s, defaultSchema)) ? t : (s + ('.' + t));
 	});
 var $author$project$Models$Project$FindPathSettings$decodeTables = $elm$json$Json$Decode$oneOf(
 	_List_fromArray(
@@ -10472,10 +10472,10 @@ var $author$project$Models$Project$FindPathSettings$decodeTables = $elm$json$Jso
 			A2(
 				$elm$core$Basics$composeR,
 				$elm$core$List$map(
-					$author$project$Models$Project$TableId$show($author$project$Conf$schema.le)),
+					$author$project$Models$Project$TableId$show($author$project$Conf$schema.lf)),
 				$elm$core$String$join(', ')),
 			$elm$json$Json$Decode$list(
-				$author$project$Models$Project$TableId$decodeWith($author$project$Conf$schema.le)))
+				$author$project$Models$Project$TableId$decodeWith($author$project$Conf$schema.lf)))
 		]));
 var $author$project$Models$Project$FindPathSettings$decode = function (_default) {
 	return A4(
@@ -10502,7 +10502,7 @@ var $author$project$Models$RelationStyle$fromString = function (order) {
 var $author$project$Models$RelationStyle$decode = A2($elm$json$Json$Decode$map, $author$project$Models$RelationStyle$fromString, $elm$json$Json$Decode$string);
 var $author$project$Models$Project$ProjectSettings$HiddenColumns = F4(
 	function (list, max, props, relations) {
-		return {bn: list, mD: max, nU: props, bT: relations};
+		return {bn: list, mE: max, nU: props, bT: relations};
 	});
 var $author$project$Models$Project$ProjectSettings$decodeHiddenColumns = function (_default) {
 	return $elm$json$Json$Decode$oneOf(
@@ -10512,13 +10512,13 @@ var $author$project$Models$Project$ProjectSettings$decodeHiddenColumns = functio
 				$elm$json$Json$Decode$map4,
 				$author$project$Models$Project$ProjectSettings$HiddenColumns,
 				A3($author$project$Libs$Json$Decode$defaultField, 'list', $elm$json$Json$Decode$string, _default.bn),
-				A3($author$project$Libs$Json$Decode$defaultField, 'max', $elm$json$Json$Decode$int, _default.mD),
+				A3($author$project$Libs$Json$Decode$defaultField, 'max', $elm$json$Json$Decode$int, _default.mE),
 				A3($author$project$Libs$Json$Decode$defaultField, 'props', $elm$json$Json$Decode$bool, _default.nU),
 				A3($author$project$Libs$Json$Decode$defaultField, 'relations', $elm$json$Json$Decode$bool, _default.bT)),
 				A2(
 				$elm$json$Json$Decode$map,
 				function (list) {
-					return {bn: list, mD: _default.mD, nU: _default.nU, bT: _default.bT};
+					return {bn: list, mE: _default.mE, nU: _default.nU, bT: _default.bT};
 				},
 				$elm$json$Json$Decode$string)
 			]));
@@ -10874,7 +10874,7 @@ var $author$project$Models$Project$Check$decode = A5(
 		_List_Nil));
 var $author$project$Models$Project$Column$Column = F8(
 	function (index, name, kind, nullable, _default, comment, columns, origins) {
-		return {M: columns, h4: comment, le: _default, l6: index, gi: kind, eS: name, ne: nullable, jq: origins};
+		return {M: columns, h4: comment, lf: _default, l7: index, gi: kind, eS: name, nf: nullable, jq: origins};
 	});
 var $author$project$Models$Project$Column$NestedColumns = $elm$core$Basics$identity;
 var $author$project$Models$Project$ColumnValue$decode = $elm$json$Json$Decode$string;
@@ -11268,7 +11268,7 @@ var $author$project$Models$Project$Source$decodeSource = function (id) {
 														relations))) : _Utils_Tuple2(name, content);
 											var n = _v0.a;
 											var c = _v0.b;
-											return {cX: c, ic: createdAt, ip: enabled, iB: fromSample, H: id, gi: kind, eS: n, bT: relations, oM: tables, d3: types, ka: updatedAt};
+											return {cX: c, ic: createdAt, ip: enabled, iB: fromSample, H: id, gi: kind, eS: n, bT: relations, oM: tables, d3: types, kb: updatedAt};
 										};
 									};
 								};
@@ -11393,7 +11393,7 @@ var $author$project$Libs$Models$Position$zero = {C: 0, ad: 0};
 var $author$project$Models$Position$zeroDiagram = $author$project$Libs$Models$Position$zero;
 var $author$project$Models$Project$CanvasProps$empty = {e$: $author$project$Models$Position$zeroDiagram, hU: 1};
 var $author$project$Models$Project$Layout$empty = function (now) {
-	return {fJ: $author$project$Models$Project$CanvasProps$empty, ic: now, gw: _List_Nil, oM: _List_Nil, ka: now};
+	return {fJ: $author$project$Models$Project$CanvasProps$empty, ic: now, gw: _List_Nil, oM: _List_Nil, kb: now};
 };
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
@@ -11691,11 +11691,11 @@ var $author$project$Models$Project$Column$merge = F2(
 		return {
 			M: A3($author$project$Libs$Maybe$merge, $author$project$Models$Project$Column$mergeNested, c1.M, c2.M),
 			h4: A3($author$project$Libs$Maybe$merge, $author$project$Models$Project$Comment$merge, c1.h4, c2.h4),
-			le: A3($author$project$Libs$Maybe$merge, $author$project$Models$Project$ColumnValue$merge, c1.le, c2.le),
-			l6: c1.l6,
+			lf: A3($author$project$Libs$Maybe$merge, $author$project$Models$Project$ColumnValue$merge, c1.lf, c2.lf),
+			l7: c1.l7,
 			gi: _Utils_eq(c1.gi, $author$project$Conf$schema.bH.o0) ? c2.gi : c1.gi,
 			eS: c1.eS,
-			ne: c1.ne && c2.ne,
+			nf: c1.nf && c2.nf,
 			jq: _Utils_ap(c1.jq, c2.jq)
 		};
 	});
@@ -11792,7 +11792,7 @@ var $elm$core$List$member = F2(
 	});
 var $elm$regex$Regex$Match = F4(
 	function (match, index, number, submatches) {
-		return {l6: index, dn: match, nf: number, oG: submatches};
+		return {l7: index, dn: match, ng: number, oG: submatches};
 	});
 var $elm$regex$Regex$fromStringWith = _Regex_fromStringWith;
 var $elm$regex$Regex$never = _Regex_never;
@@ -11973,7 +11973,7 @@ var $author$project$Models$Project$new = function (organization) {
 													return function (createdAt) {
 														return function (updatedAt) {
 															return $author$project$Models$Project$compute(
-																{ic: createdAt, bf: description, H: id, i$: layouts, eS: name, bP: notes, nw: organization, bT: _List_Nil, dM: settings, hr: slug, hs: sources, cD: storage, oM: $elm$core$Dict$empty, d3: $elm$core$Dict$empty, ka: updatedAt, fw: usedLayout, kc: version, hQ: visibility});
+																{ic: createdAt, bf: description, H: id, i$: layouts, eS: name, bP: notes, nx: organization, bT: _List_Nil, dM: settings, hr: slug, hs: sources, cD: storage, oM: $elm$core$Dict$empty, d3: $elm$core$Dict$empty, kb: updatedAt, fw: usedLayout, kd: version, hQ: visibility});
 														};
 													};
 												};
@@ -12009,7 +12009,7 @@ var $author$project$Models$Project$decodeProject = function (organization) {
 																var slug = A2($elm$core$Maybe$withDefault, id, maybeSlug);
 																var allLayouts = _Utils_eq(
 																	layout,
-																	$author$project$Models$Project$Layout$empty($author$project$Libs$Time$zero)) ? layouts : A3($elm$core$Dict$insert, $author$project$Conf$constants.lg, layout, layouts);
+																	$author$project$Models$Project$Layout$empty($author$project$Libs$Time$zero)) ? layouts : A3($elm$core$Dict$insert, $author$project$Conf$constants.lh, layout, layouts);
 																return $author$project$Models$Project$new(organization)(id)(slug)(name)(description)(sources)(notes)(usedLayout)(allLayouts)(settings)(storage)(visibility)(version)(createdAt)(updatedAt);
 															};
 														};
@@ -12151,7 +12151,7 @@ var $author$project$Models$Project$decode = $author$project$Libs$Json$Decode$map
 		'layout',
 		$author$project$Models$Project$Layout$decode,
 		$author$project$Models$Project$Layout$empty($author$project$Libs$Time$zero)))(
-	A3($author$project$Libs$Json$Decode$defaultField, 'usedLayout', $author$project$Models$Project$LayoutName$decode, $author$project$Conf$constants.lg))(
+	A3($author$project$Libs$Json$Decode$defaultField, 'usedLayout', $author$project$Models$Project$LayoutName$decode, $author$project$Conf$constants.lh))(
 	A3(
 		$author$project$Libs$Json$Decode$defaultField,
 		'layouts',
@@ -12161,7 +12161,7 @@ var $author$project$Models$Project$decode = $author$project$Libs$Json$Decode$map
 		$author$project$Libs$Json$Decode$defaultFieldDeep,
 		'settings',
 		$author$project$Models$Project$ProjectSettings$decode,
-		$author$project$Models$Project$ProjectSettings$init($author$project$Conf$schema.lB)))(
+		$author$project$Models$Project$ProjectSettings$init($author$project$Conf$schema.lC)))(
 	A3($author$project$Libs$Json$Decode$defaultField, 'storage', $author$project$Models$Project$ProjectStorage$decode, 0))(
 	A3($author$project$Libs$Json$Decode$defaultField, 'visibility', $author$project$Models$Project$ProjectVisibility$decode, 0))(
 	A2($elm$json$Json$Decode$field, 'version', $author$project$Models$Project$ProjectEncodingVersion$decode))(
@@ -12375,7 +12375,7 @@ var $author$project$PagesComponents$Create$Models$Toast = function (a) {
 };
 var $author$project$Models$Project$Source$aml = F3(
 	function (name, now, id) {
-		return {cX: $elm$core$Array$empty, ic: now, ip: true, iB: $elm$core$Maybe$Nothing, H: id, gi: $author$project$Models$Project$SourceKind$AmlEditor, eS: name, bT: _List_Nil, oM: $elm$core$Dict$empty, d3: $elm$core$Dict$empty, ka: now};
+		return {cX: $elm$core$Array$empty, ic: now, ip: true, iB: $elm$core$Maybe$Nothing, H: id, gi: $author$project$Models$Project$SourceKind$AmlEditor, eS: name, bT: _List_Nil, oM: $elm$core$Dict$empty, d3: $elm$core$Dict$empty, kb: now};
 	});
 var $author$project$Libs$List$groupBy = F2(
 	function (key, list) {
@@ -12445,7 +12445,7 @@ var $author$project$Libs$List$maximumBy = F2(
 var $author$project$Models$Project$mostUsedSchema = function (table) {
 	return A2(
 		$elm$core$Maybe$withDefault,
-		$author$project$Conf$schema.lB,
+		$author$project$Conf$schema.lC,
 		A2(
 			$elm$core$Maybe$map,
 			$elm$core$Tuple$first,
@@ -12539,16 +12539,16 @@ var $author$project$Models$Project$create = F3(
 					projects),
 				name))($elm$core$Maybe$Nothing)(
 			_List_fromArray(
-				[source]))($elm$core$Dict$empty)($author$project$Conf$constants.lg)(
+				[source]))($elm$core$Dict$empty)($author$project$Conf$constants.lh)(
 			$elm$core$Dict$fromList(
 				_List_fromArray(
 					[
 						_Utils_Tuple2(
-						$author$project$Conf$constants.lg,
+						$author$project$Conf$constants.lh,
 						$author$project$Models$Project$Layout$empty(source.ic))
 					])))(
 			$author$project$Models$Project$ProjectSettings$init(
-				$author$project$Models$Project$mostUsedSchema(source.oM)))(0)(0)($author$project$Models$Project$ProjectEncodingVersion$current)(source.ic)(source.ka);
+				$author$project$Models$Project$mostUsedSchema(source.oM)))(0)(0)($author$project$Models$Project$ProjectEncodingVersion$current)(source.ic)(source.kb);
 	});
 var $author$project$Components$Atoms$Icon$Exclamation = 95;
 var $author$project$Components$Molecules$Toast$Simple = $elm$core$Basics$identity;
@@ -13046,7 +13046,7 @@ var $author$project$PagesComponents$Create$Updates$handleJsMessage = F4(
 						$author$project$Request$pushRoute,
 						$author$project$Gen$Route$Organization___Project_(
 							{
-								nw: A2(
+								nx: A2(
 									$elm$core$Maybe$withDefault,
 									$author$project$Models$OrganizationId$zero,
 									A2(
@@ -13060,7 +13060,7 @@ var $author$project$PagesComponents$Create$Updates$handleJsMessage = F4(
 											A2(
 												$elm$core$Maybe$andThen,
 												function ($) {
-													return $.nw;
+													return $.nx;
 												},
 												A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, project))))),
 								nN: A3(
@@ -13093,15 +13093,15 @@ var $author$project$PagesComponents$Create$Updates$handleJsMessage = F4(
 	});
 var $author$project$Services$DatabaseSource$init = F2(
 	function (src, callback) {
-		return {cP: callback, mu: $elm$core$Maybe$Nothing, cv: $elm$core$Maybe$Nothing, g8: $elm$core$Maybe$Nothing, oo: $elm$core$Maybe$Nothing, ov: '', fj: src, o1: ''};
+		return {cP: callback, mv: $elm$core$Maybe$Nothing, cv: $elm$core$Maybe$Nothing, g8: $elm$core$Maybe$Nothing, oo: $elm$core$Maybe$Nothing, ov: '', fj: src, o1: ''};
 	});
 var $author$project$Services$JsonSource$init = F2(
 	function (source, callback) {
-		return {cP: callback, mu: $elm$core$Maybe$Nothing, cv: $elm$core$Maybe$Nothing, g8: $elm$core$Maybe$Nothing, jS: $elm$core$Maybe$Nothing, jT: $elm$core$Maybe$Nothing, ov: '', fj: source, o1: ''};
+		return {cP: callback, mv: $elm$core$Maybe$Nothing, cv: $elm$core$Maybe$Nothing, g8: $elm$core$Maybe$Nothing, jT: $elm$core$Maybe$Nothing, jU: $elm$core$Maybe$Nothing, ov: '', fj: source, o1: ''};
 	});
 var $author$project$Services$SqlSource$init = F2(
 	function (source, callback) {
-		return {cP: callback, mt: $elm$core$Maybe$Nothing, cv: $elm$core$Maybe$Nothing, g8: $elm$core$Maybe$Nothing, jS: $elm$core$Maybe$Nothing, jT: $elm$core$Maybe$Nothing, fj: source, o1: ''};
+		return {cP: callback, mu: $elm$core$Maybe$Nothing, cv: $elm$core$Maybe$Nothing, g8: $elm$core$Maybe$Nothing, jT: $elm$core$Maybe$Nothing, jU: $elm$core$Maybe$Nothing, fj: source, o1: ''};
 	});
 var $elm$core$Tuple$mapFirst = F2(
 	function (func, _v0) {
@@ -13216,9 +13216,9 @@ var $author$project$Services$Lenses$mapToastsCmd = A2(
 var $author$project$Track$createEvent = F3(
 	function (name, details, project) {
 		return {
-			lo: details,
+			lp: details,
 			eS: name,
-			nw: A2(
+			nx: A2(
 				$elm$core$Maybe$map,
 				function ($) {
 					return $.H;
@@ -13226,7 +13226,7 @@ var $author$project$Track$createEvent = F3(
 				A2(
 					$elm$core$Maybe$andThen,
 					function ($) {
-						return $.nw;
+						return $.nx;
 					},
 					project)),
 			nN: A2(
@@ -13356,11 +13356,11 @@ var $author$project$Models$ProjectInfo$fromProject = function (p) {
 		gM: $elm$core$List$length(p.hs),
 		gN: $elm$core$Dict$size(tables),
 		gO: $elm$core$Dict$size(p.d3),
-		nw: p.nw,
+		nx: p.nx,
 		hr: p.hr,
 		cD: p.cD,
-		ka: p.ka,
-		kc: p.kc,
+		kb: p.kb,
+		kd: p.kd,
 		hQ: p.hQ
 	};
 };
@@ -13480,11 +13480,11 @@ var $author$project$DataSources$DatabaseMiner$DatabaseAdapter$buildColumn = F3(
 				$elm$core$Maybe$map,
 				$author$project$DataSources$DatabaseMiner$DatabaseAdapter$buildComment(origins),
 				column.h4),
-			le: column.le,
-			l6: index,
+			lf: column.lf,
+			l7: index,
 			gi: column.gi,
 			eS: column.eS,
-			ne: column.ne,
+			nf: column.nf,
 			jq: origins
 		};
 	});
@@ -13642,7 +13642,7 @@ var $author$project$DataSources$DatabaseMiner$DatabaseAdapter$buildSource = F4(
 					$elm$core$List$map,
 					$author$project$DataSources$DatabaseMiner$DatabaseAdapter$buildType(origins),
 					schema.d3)),
-			ka: now
+			kb: now
 		};
 	});
 var $author$project$Models$Project$SourceKind$toString = function (value) {
@@ -13762,7 +13762,7 @@ var $author$project$DataSources$DatabaseMiner$Models$DatabaseTable$decodeDatabas
 	A2($author$project$Libs$Json$Decode$maybeField, 'predicate', $elm$json$Json$Decode$string));
 var $author$project$DataSources$DatabaseMiner$Models$DatabaseTable$DatabaseColumn = F5(
 	function (name, kind, nullable, _default, comment) {
-		return {h4: comment, le: _default, gi: kind, eS: name, ne: nullable};
+		return {h4: comment, lf: _default, gi: kind, eS: name, nf: nullable};
 	});
 var $author$project$DataSources$DatabaseMiner$Models$DatabaseTable$decodeDatabaseColumn = A6(
 	$elm$json$Json$Decode$map5,
@@ -14065,7 +14065,7 @@ var $elm$http$Http$Request = function (a) {
 };
 var $elm$http$Http$State = F2(
 	function (reqs, subs) {
-		return {jG: reqs, j0: subs};
+		return {jH: reqs, j1: subs};
 	});
 var $elm$http$Http$init = $elm$core$Task$succeed(
 	A2($elm$http$Http$State, $elm$core$Dict$empty, _List_Nil));
@@ -14139,7 +14139,7 @@ var $elm$http$Http$onEffects = F4(
 				return $elm$core$Task$succeed(
 					A2($elm$http$Http$State, reqs, subs));
 			},
-			A3($elm$http$Http$updateReqs, router, cmds, state.jG));
+			A3($elm$http$Http$updateReqs, router, cmds, state.jH));
 	});
 var $elm$http$Http$maybeSend = F4(
 	function (router, desiredTracker, progress, _v0) {
@@ -14164,7 +14164,7 @@ var $elm$http$Http$onSelfMsg = F3(
 				A2(
 					$elm$core$List$filterMap,
 					A3($elm$http$Http$maybeSend, router, tracker, progress),
-					state.j0)));
+					state.j1)));
 	});
 var $elm$http$Http$Cancel = function (a) {
 	return {$: 0, a: a};
@@ -14178,9 +14178,9 @@ var $elm$http$Http$cmdMap = F2(
 			var r = cmd.a;
 			return $elm$http$Http$Request(
 				{
-					ko: r.ko,
-					kL: r.kL,
-					lH: A2(_Http_mapExpect, func, r.lH),
+					kp: r.kp,
+					kM: r.kM,
+					lI: A2(_Http_mapExpect, func, r.lI),
 					f9: r.f9,
 					gy: r.gy,
 					hK: r.hK,
@@ -14208,17 +14208,17 @@ var $elm$http$Http$subscription = _Platform_leaf('Http');
 var $elm$http$Http$riskyRequest = function (r) {
 	return $elm$http$Http$command(
 		$elm$http$Http$Request(
-			{ko: true, kL: r.kL, lH: r.lH, f9: r.f9, gy: r.gy, hK: r.hK, hM: r.hM, o1: r.o1}));
+			{kp: true, kM: r.kM, lI: r.lI, f9: r.f9, gy: r.gy, hK: r.hK, hM: r.hM, o1: r.o1}));
 };
 var $author$project$Services$Backend$riskyPost = function (r) {
 	return $elm$http$Http$riskyRequest(
-		{kL: r.kL, lH: r.lH, f9: _List_Nil, gy: 'POST', hK: $elm$core$Maybe$Nothing, hM: $elm$core$Maybe$Nothing, o1: r.o1});
+		{kM: r.kM, lI: r.lI, f9: _List_Nil, gy: 'POST', hK: $elm$core$Maybe$Nothing, hM: $elm$core$Maybe$Nothing, o1: r.o1});
 };
 var $author$project$Services$Backend$getDatabaseSchema = F2(
 	function (url, toMsg) {
 		return $author$project$Services$Backend$riskyPost(
 			{
-				kL: $elm$http$Http$jsonBody(
+				kM: $elm$http$Http$jsonBody(
 					$elm$json$Json$Encode$object(
 						_List_fromArray(
 							[
@@ -14226,7 +14226,7 @@ var $author$project$Services$Backend$getDatabaseSchema = F2(
 								'url',
 								$author$project$Libs$Models$DatabaseUrl$encode(url))
 							]))),
-				lH: A2($elm$http$Http$expectStringResponse, toMsg, $author$project$Services$Backend$handleResponse),
+				lI: A2($elm$http$Http$expectStringResponse, toMsg, $author$project$Services$Backend$handleResponse),
 				o1: '/api/v1/analyzer/schema'
 			});
 	});
@@ -14317,7 +14317,7 @@ var $author$project$Services$DatabaseSource$update = F5(
 					_Utils_update(
 						model,
 						{
-							mu: $elm$core$Maybe$Just(result)
+							mv: $elm$core$Maybe$Just(result)
 						}),
 					$author$project$Libs$Task$send(
 						wrap($author$project$Services$DatabaseSource$ParseSource)));
@@ -14329,7 +14329,7 @@ var $author$project$Services$DatabaseSource$update = F5(
 							cv: A2(
 								$elm$core$Maybe$map,
 								$elm$json$Json$Decode$decodeString($author$project$DataSources$DatabaseMiner$DatabaseSchema$decode),
-								A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.mu))
+								A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.mv))
 						}),
 					A2(
 						$elm$random$Random$generate,
@@ -14391,7 +14391,7 @@ var $author$project$Services$DatabaseSource$update = F5(
 											return $author$project$DataSources$DatabaseMiner$DatabaseSchema$empty;
 										}),
 									$elm$core$Result$mapError($author$project$Services$Backend$errorToString)),
-								model.mu),
+								model.mv),
 							A2(
 								$elm$core$Maybe$map,
 								$elm$core$Result$mapError($elm$json$Json$Decode$errorToString),
@@ -14467,11 +14467,11 @@ var $author$project$DataSources$JsonMiner$JsonAdapter$buildColumn = F3(
 				$elm$core$Maybe$map,
 				$author$project$DataSources$JsonMiner$JsonAdapter$buildComment(origins),
 				column.h4),
-			le: column.le,
-			l6: index,
+			lf: column.lf,
+			l7: index,
 			gi: column.gi,
 			eS: column.eS,
-			ne: A2($elm$core$Maybe$withDefault, false, column.ne),
+			nf: A2($elm$core$Maybe$withDefault, false, column.nf),
 			jq: origins
 		};
 	});
@@ -14619,7 +14619,7 @@ var $author$project$DataSources$JsonMiner$JsonAdapter$buildSource = F2(
 					$elm$core$List$map,
 					$author$project$DataSources$JsonMiner$JsonAdapter$buildType(origins),
 					schema.d3)),
-			ka: source.ka
+			kb: source.kb
 		};
 	});
 var $author$project$DataSources$JsonMiner$JsonSchema$JsonSchema = F3(
@@ -14665,7 +14665,7 @@ var $author$project$DataSources$JsonMiner$Models$JsonTable$decodeJsonCheck = A4(
 	A2($author$project$Libs$Json$Decode$maybeField, 'predicate', $elm$json$Json$Decode$string));
 var $author$project$DataSources$JsonMiner$Models$JsonTable$JsonColumn = F6(
 	function (name, kind, nullable, _default, comment, columns) {
-		return {M: columns, h4: comment, le: _default, gi: kind, eS: name, ne: nullable};
+		return {M: columns, h4: comment, lf: _default, gi: kind, eS: name, nf: nullable};
 	});
 var $author$project$DataSources$JsonMiner$Models$JsonTable$JsonNestedColumns = $elm$core$Basics$identity;
 function $author$project$DataSources$JsonMiner$Models$JsonTable$cyclic$decodeJsonColumn() {
@@ -14846,15 +14846,15 @@ var $elm$http$Http$emptyBody = _Http_emptyBody;
 var $elm$http$Http$request = function (r) {
 	return $elm$http$Http$command(
 		$elm$http$Http$Request(
-			{ko: false, kL: r.kL, lH: r.lH, f9: r.f9, gy: r.gy, hK: r.hK, hM: r.hM, o1: r.o1}));
+			{kp: false, kM: r.kM, lI: r.lI, f9: r.f9, gy: r.gy, hK: r.hK, hM: r.hM, o1: r.o1}));
 };
 var $elm$http$Http$get = function (r) {
 	return $elm$http$Http$request(
-		{kL: $elm$http$Http$emptyBody, lH: r.lH, f9: _List_Nil, gy: 'GET', hK: $elm$core$Maybe$Nothing, hM: $elm$core$Maybe$Nothing, o1: r.o1});
+		{kM: $elm$http$Http$emptyBody, lI: r.lI, f9: _List_Nil, gy: 'GET', hK: $elm$core$Maybe$Nothing, hM: $elm$core$Maybe$Nothing, o1: r.o1});
 };
 var $author$project$Models$SourceInfo$SourceInfo = F7(
 	function (id, name, kind, enabled, fromSample, createdAt, updatedAt) {
-		return {ic: createdAt, ip: enabled, iB: fromSample, H: id, gi: kind, eS: name, ka: updatedAt};
+		return {ic: createdAt, ip: enabled, iB: fromSample, H: id, gi: kind, eS: name, kb: updatedAt};
 	});
 var $author$project$Libs$List$last = function (list) {
 	last:
@@ -15021,7 +15021,7 @@ var $author$project$Services$JsonSource$update = F5(
 						return _Utils_update(
 							m,
 							{
-								jT: $elm$core$Maybe$Just(
+								jU: $elm$core$Maybe$Just(
 									$elm$core$Result$Err('Invalid url, it should start with \'http\'')),
 								o1: schemaUrl
 							});
@@ -15032,7 +15032,7 @@ var $author$project$Services$JsonSource$update = F5(
 						return _Utils_update(
 							m,
 							{
-								jT: $elm$core$Maybe$Just(
+								jU: $elm$core$Maybe$Just(
 									$elm$core$Result$Ok(schemaUrl)),
 								o1: schemaUrl
 							});
@@ -15040,7 +15040,7 @@ var $author$project$Services$JsonSource$update = F5(
 						A2($author$project$Services$JsonSource$init, model.fj, model.cP)),
 					$elm$http$Http$get(
 						{
-							lH: $elm$http$Http$expectString(
+							lI: $elm$http$Http$expectString(
 								A2(
 									$elm$core$Basics$composeR,
 									$author$project$Services$JsonSource$GotRemoteFile(schemaUrl),
@@ -15085,7 +15085,7 @@ var $author$project$Services$JsonSource$update = F5(
 						return _Utils_update(
 							m,
 							{
-								jS: $elm$core$Maybe$Just(file)
+								jT: $elm$core$Maybe$Just(file)
 							});
 					}(
 						A2($author$project$Services$JsonSource$init, model.fj, model.cP)),
@@ -15097,7 +15097,7 @@ var $author$project$Services$JsonSource$update = F5(
 					_Utils_update(
 						model,
 						{
-							mu: $elm$core$Maybe$Just(
+							mv: $elm$core$Maybe$Just(
 								_Utils_Tuple2(
 									A2(
 										$author$project$Services$Lenses$setId,
@@ -15130,7 +15130,7 @@ var $author$project$Services$JsonSource$update = F5(
 								$author$project$Libs$Task$send(
 									wrap($author$project$Services$JsonSource$BuildSource)));
 						},
-						model.mu));
+						model.mv));
 			case 6:
 				return A2(
 					$elm$core$Maybe$withDefault,
@@ -15165,7 +15165,7 @@ var $author$project$Services$JsonSource$update = F5(
 											$author$project$DataSources$JsonMiner$JsonAdapter$buildSource(info),
 											schema));
 								}),
-							model.mu,
+							model.mv,
 							model.cv)));
 			default:
 				var htmlId = msg.a;
@@ -15220,7 +15220,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$buildSource = F3(
 					return $.H;
 				},
 				schema.d3),
-			ka: source.ka
+			kb: source.kb
 		};
 	});
 var $author$project$Services$SqlSource$kind = 'sql-source';
@@ -15438,11 +15438,11 @@ var $author$project$DataSources$SqlMiner$SqlParser$groupConsecutiveLines = funct
 					var cur = _v0.a;
 					var groups = _v0.b;
 					return ($elm$core$List$isEmpty(cur) || _Utils_eq(
-						line.l6 + 1,
+						line.l7 + 1,
 						A3(
 							$author$project$Libs$Maybe$mapOrElse,
 							function ($) {
-								return $.l6;
+								return $.l7;
 							},
 							0,
 							$elm$core$List$head(cur)))) ? _Utils_Tuple2(
@@ -15474,7 +15474,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$createOrigin = F2(
 				A2(
 					$author$project$Libs$Nel$map,
 					function ($) {
-						return $.l6;
+						return $.l7;
 					},
 					statement))
 		};
@@ -15482,7 +15482,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$createOrigin = F2(
 var $author$project$DataSources$SqlMiner$SqlAdapter$createTableId = F2(
 	function (schema, table) {
 		return _Utils_Tuple2(
-			A2($elm$core$Maybe$withDefault, $author$project$Conf$schema.lB, schema),
+			A2($elm$core$Maybe$withDefault, $author$project$Conf$schema.lC, schema),
 			table);
 	});
 var $author$project$DataSources$Helpers$defaultRelName = F2(
@@ -15518,7 +15518,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$createRelation = F6(
 							$elm$core$Maybe$Just(cols.ev),
 							_List_fromArray(
 								[
-									'Bad relation \'' + (name + ('\': target table ' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lB, refTable) + (' has a primary key with multiple columns (' + (A2(
+									'Bad relation \'' + (name + ('\': target table ' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lC, refTable) + (' has a primary key with multiple columns (' + (A2(
 									$elm$core$String$join,
 									', ',
 									$author$project$Libs$Nel$toList(
@@ -15529,7 +15529,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$createRelation = F6(
 							$elm$core$Maybe$Nothing,
 							_List_fromArray(
 								[
-									'Can\'t create relation \'' + (name + ('\': target table \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lB, refTable) + '\' has no primary key')))
+									'Can\'t create relation \'' + (name + ('\': target table \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lC, refTable) + '\' has no primary key')))
 								]));
 					}
 				},
@@ -15537,7 +15537,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$createRelation = F6(
 					$elm$core$Maybe$Nothing,
 					_List_fromArray(
 						[
-							'Can\'t create relation \'' + (name + ('\': target table \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lB, refTable) + '\' does not exist (yet)')))
+							'Can\'t create relation \'' + (name + ('\': target table \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lC, refTable) + '\' does not exist (yet)')))
 						])),
 				A2($elm$core$Dict$get, refTable, tables)),
 			A2(
@@ -15598,7 +15598,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$createChecks = F4(
 								_List_fromArray(
 									[origin]));
 						},
-						col.kX);
+						col.kY);
 				},
 				$author$project$Libs$Nel$toList(columns)));
 	});
@@ -15618,11 +15618,11 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$createColumn = F3(
 				$elm$core$Maybe$map,
 				$author$project$DataSources$SqlMiner$SqlAdapter$createComment(origin),
 				column.h4),
-			le: column.le,
-			l6: index,
+			lf: column.lf,
+			l7: index,
 			gi: column.gi,
 			eS: column.eS,
-			ne: column.ne,
+			nf: column.nf,
 			jq: _List_fromArray(
 				[origin])
 		};
@@ -15730,7 +15730,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$createRelations = F6(
 										$author$project$Models$Project$ColumnPath$fromString(col.eS)),
 									ref);
 							},
-							col.lP);
+							col.lQ);
 					},
 					$author$project$Libs$Nel$toList(columns)),
 				A2(
@@ -15852,7 +15852,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$buildViewColumn = F4(
 					return {
 						M: $elm$core$Maybe$Nothing,
 						h4: col.h4,
-						le: $elm$core$Maybe$Just(
+						lf: $elm$core$Maybe$Just(
 							_Utils_ap(
 								A3(
 									$author$project$Libs$Maybe$mapOrElse,
@@ -15862,10 +15862,10 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$buildViewColumn = F4(
 									'',
 									c.aq),
 								c.bH)),
-						l6: index,
+						l7: index,
 						gi: col.gi,
 						eS: A2($elm$core$Maybe$withDefault, c.bH, c.b2),
-						ne: col.ne,
+						nf: col.nf,
 						jq: _List_fromArray(
 							[origin])
 					};
@@ -15873,7 +15873,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$buildViewColumn = F4(
 				{
 					M: $elm$core$Maybe$Nothing,
 					h4: $elm$core$Maybe$Nothing,
-					le: $elm$core$Maybe$Just(
+					lf: $elm$core$Maybe$Just(
 						_Utils_ap(
 							A3(
 								$author$project$Libs$Maybe$mapOrElse,
@@ -15883,10 +15883,10 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$buildViewColumn = F4(
 								'',
 								c.aq),
 							c.bH)),
-					l6: index,
+					l7: index,
 					gi: $author$project$Conf$schema.bH.o0,
 					eS: A2($elm$core$Maybe$withDefault, c.bH, c.b2),
-					ne: false,
+					nf: false,
 					jq: _List_fromArray(
 						[origin])
 				},
@@ -15909,11 +15909,11 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$buildViewColumn = F4(
 			return {
 				M: $elm$core$Maybe$Nothing,
 				h4: $elm$core$Maybe$Nothing,
-				le: $elm$core$Maybe$Just(c.iz),
-				l6: index,
+				lf: $elm$core$Maybe$Just(c.iz),
+				l7: index,
 				gi: $author$project$Conf$schema.bH.o0,
 				eS: c.b2,
-				ne: false,
+				nf: false,
 				jq: _List_fromArray(
 					[origin])
 			};
@@ -15964,13 +15964,13 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$updateTable = F5(
 				_Utils_update(
 					content,
 					{
-						lF: A2(
+						lG: A2(
 							$elm$core$List$cons,
 							_List_fromArray(
 								[
-									'Table \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lB, id) + ('\' does not exist (in \'' + ($author$project$DataSources$SqlMiner$Utils$Helpers$buildRawSql(statement) + '\')')))
+									'Table \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lC, id) + ('\' does not exist (in \'' + ($author$project$DataSources$SqlMiner$Utils$Helpers$buildRawSql(statement) + '\')')))
 								]),
-							content.lF)
+							content.lG)
 					}),
 				A2(
 					$elm$core$Maybe$map,
@@ -15980,7 +15980,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$updateTable = F5(
 						return _Utils_update(
 							content,
 							{
-								lF: A2($author$project$DataSources$SqlMiner$SqlAdapter$addErrors, errors, content.lF),
+								lG: A2($author$project$DataSources$SqlMiner$SqlAdapter$addErrors, errors, content.lG),
 								oM: A3($elm$core$Dict$insert, id, t, content.oM)
 							});
 					},
@@ -16004,7 +16004,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$deleteColumn = F5(
 						t,
 						_List_fromArray(
 							[
-								'Can\'t delete missing column ' + (column + (' in table ' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lB, t.H) + (' (in \'' + ($author$project$DataSources$SqlMiner$Utils$Helpers$buildRawSql(statement) + '\')')))))
+								'Can\'t delete missing column ' + (column + (' in table ' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lC, t.H) + (' (in \'' + ($author$project$DataSources$SqlMiner$Utils$Helpers$buildRawSql(statement) + '\')')))))
 							])),
 					A2(
 						$elm$core$Maybe$map,
@@ -16013,7 +16013,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$deleteColumn = F5(
 								t,
 								_List_fromArray(
 									[
-										'Can\'t delete last column (' + (column + (') of table ' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lB, t.H) + (' (in \'' + ($author$project$DataSources$SqlMiner$Utils$Helpers$buildRawSql(statement) + '\')')))))
+										'Can\'t delete last column (' + (column + (') of table ' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lC, t.H) + (' (in \'' + ($author$project$DataSources$SqlMiner$Utils$Helpers$buildRawSql(statement) + '\')')))))
 									])) : _Utils_Tuple2(
 								_Utils_update(
 									t,
@@ -16053,7 +16053,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$updateColumn = F6(
 						t,
 						_List_fromArray(
 							[
-								'Column \'' + (column + ('\' does not exist in table \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lB, t.H) + ('\' (in \'' + ($author$project$DataSources$SqlMiner$Utils$Helpers$buildRawSql(statement) + '\')')))))
+								'Column \'' + (column + ('\' does not exist in table \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lC, t.H) + ('\' (in \'' + ($author$project$DataSources$SqlMiner$Utils$Helpers$buildRawSql(statement) + '\')')))))
 							])),
 					A2(
 						$elm$core$Maybe$map,
@@ -16093,7 +16093,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$evolve = F3(
 						_Utils_update(
 							content,
 							{
-								lF: A2($author$project$DataSources$SqlMiner$SqlAdapter$addErrors, errors, content.lF),
+								lG: A2($author$project$DataSources$SqlMiner$SqlAdapter$addErrors, errors, content.lG),
 								bT: _Utils_ap(relations, content.bT),
 								oM: A3($elm$core$Dict$insert, table.H, table, content.oM)
 							}),
@@ -16103,13 +16103,13 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$evolve = F3(
 								return _Utils_update(
 									content,
 									{
-										lF: A2(
+										lG: A2(
 											$elm$core$List$cons,
 											_List_fromArray(
 												[
-													'Table \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lB, table.H) + '\' is already defined')
+													'Table \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lC, table.H) + '\' is already defined')
 												]),
-											content.lF)
+											content.lG)
 									});
 							},
 							A2($elm$core$Dict$get, table.H, content.oM)));
@@ -16131,19 +16131,19 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$evolve = F3(
 								return _Utils_update(
 									content,
 									{
-										lF: A2(
+										lG: A2(
 											$elm$core$List$cons,
 											_List_fromArray(
 												[
-													'View \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lB, view.H) + '\' is already defined')
+													'View \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lC, view.H) + '\' is already defined')
 												]),
-											content.lF)
+											content.lG)
 									});
 							},
 							A2(
 								$author$project$Libs$Maybe$filterNot,
 								function (_v4) {
-									return sqlView.jF;
+									return sqlView.jG;
 								},
 								A2($elm$core$Dict$get, view.H, content.oM))));
 				}(
@@ -16171,7 +16171,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$evolve = F3(
 													t,
 													_List_fromArray(
 														[
-															'Primary key already defined for \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lB, t.H) + '\' table')
+															'Primary key already defined for \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lC, t.H) + '\' table')
 														]));
 											},
 											_Utils_Tuple2(
@@ -16204,7 +16204,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$evolve = F3(
 									return _Utils_update(
 										content,
 										{
-											lF: A2($author$project$DataSources$SqlMiner$SqlAdapter$addErrors, errors, content.lF),
+											lG: A2($author$project$DataSources$SqlMiner$SqlAdapter$addErrors, errors, content.lG),
 											bT: A3(
 												$author$project$Libs$Maybe$mapOrElse,
 												function (r) {
@@ -16313,7 +16313,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$evolve = F3(
 										_Utils_update(
 											c,
 											{
-												le: $elm$core$Maybe$Just(_default),
+												lf: $elm$core$Maybe$Just(_default),
 												jq: _Utils_ap(
 													c.jq,
 													_List_fromArray(
@@ -16416,7 +16416,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$evolve = F3(
 									t,
 									_List_fromArray(
 										[
-											'Comment already defined for \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lB, t.H) + '\' table')
+											'Comment already defined for \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lC, t.H) + '\' table')
 										]));
 							},
 							_Utils_Tuple2(
@@ -16452,7 +16452,7 @@ var $author$project$DataSources$SqlMiner$SqlAdapter$evolve = F3(
 										[
 											'Comment already defined for \'' + (c.eS + ('\' column in \'' + (A2(
 											$author$project$Models$Project$TableId$show,
-											$author$project$Conf$schema.lB,
+											$author$project$Conf$schema.lC,
 											A2($author$project$DataSources$SqlMiner$SqlAdapter$createTableId, comment.aI, comment.aq)) + '\' table')))
 										]));
 							},
@@ -16498,7 +16498,7 @@ var $author$project$Libs$Dict$fromIndexedList = function (list) {
 				}),
 			list));
 };
-var $author$project$DataSources$SqlMiner$SqlAdapter$initSchema = {lF: _List_Nil, bT: _List_Nil, oM: $elm$core$Dict$empty, d3: _List_Nil};
+var $author$project$DataSources$SqlMiner$SqlAdapter$initSchema = {lG: _List_Nil, bT: _List_Nil, oM: $elm$core$Dict$empty, d3: _List_Nil};
 var $author$project$DataSources$SqlMiner$SqlParser$AlterTable = function (a) {
 	return {$: 2, a: a};
 };
@@ -17516,19 +17516,19 @@ var $author$project$DataSources$SqlMiner$Parsers$CreateTable$parseCreateTableCol
 				var foreignKey = _v16.b;
 				var nullable3 = _v16.c;
 				return {
-					kX: maybeCheck,
+					kY: maybeCheck,
 					h4: A2(
 						$elm$core$Maybe$map,
 						$author$project$DataSources$SqlMiner$Utils$Helpers$buildComment,
 						A2($author$project$Libs$Maybe$orElse, maybeComment2, maybeComment)),
-					le: A2(
+					lf: A2(
 						$author$project$Libs$Maybe$orElse,
 						A2($elm$core$Maybe$map, $elm$core$String$trim, maybeGenerated),
 						A2($author$project$Libs$Maybe$orElse, default2, default1)),
-					lP: foreignKey,
+					lQ: foreignKey,
 					gi: $author$project$DataSources$SqlMiner$Utils$Helpers$buildColumnType(kind),
 					eS: $author$project$DataSources$SqlMiner$Utils$Helpers$buildColumnName(name),
-					ne: _Utils_eq(nullable, $elm$core$Maybe$Nothing) && (_Utils_eq(nullable2, $elm$core$Maybe$Nothing) && nullable3),
+					nf: _Utils_eq(nullable, $elm$core$Maybe$Nothing) && (_Utils_eq(nullable2, $elm$core$Maybe$Nothing) && nullable3),
 					nL: primaryKey,
 					o$: A2($elm$core$Maybe$map, $elm$core$String$trim, maybeUnique)
 				};
@@ -18258,7 +18258,7 @@ var $author$project$DataSources$SqlMiner$Parsers$CreateView$parseView = function
 			{
 				iv: extra,
 				i5: !_Utils_eq(materialized, $elm$core$Maybe$Nothing),
-				jF: !_Utils_eq(replace, $elm$core$Maybe$Nothing),
+				jG: !_Utils_eq(replace, $elm$core$Maybe$Nothing),
 				aI: A2($elm$core$Maybe$map, $author$project$DataSources$SqlMiner$Utils$Helpers$buildSchemaName, schema),
 				fe: A2(
 					$elm$core$Result$withDefault,
@@ -18360,7 +18360,7 @@ var $author$project$DataSources$SqlMiner$SqlParser$splitLines = function (input)
 		$elm$core$List$indexedMap,
 		F2(
 			function (i, line) {
-				return {l6: i, fp: line};
+				return {l7: i, fp: line};
 			}),
 		A2(
 			$elm$core$String$split,
@@ -18544,7 +18544,7 @@ var $author$project$Track$sqlSourceDetails = F2(
 							A3(
 								$author$project$Libs$Maybe$mapOrElse,
 								function ($) {
-									return $.lF;
+									return $.lG;
 								},
 								_List_Nil,
 								parser.aI))))
@@ -18590,7 +18590,7 @@ var $author$project$Services$SqlSource$update = F5(
 						return _Utils_update(
 							m,
 							{
-								jT: $elm$core$Maybe$Just(
+								jU: $elm$core$Maybe$Just(
 									$elm$core$Result$Err('Invalid url, it should start with \'http\'')),
 								o1: schemaUrl
 							});
@@ -18601,7 +18601,7 @@ var $author$project$Services$SqlSource$update = F5(
 						return _Utils_update(
 							m,
 							{
-								jT: $elm$core$Maybe$Just(
+								jU: $elm$core$Maybe$Just(
 									$elm$core$Result$Ok(schemaUrl)),
 								o1: schemaUrl
 							});
@@ -18609,7 +18609,7 @@ var $author$project$Services$SqlSource$update = F5(
 						A2($author$project$Services$SqlSource$init, model.fj, model.cP)),
 					$elm$http$Http$get(
 						{
-							lH: $elm$http$Http$expectString(
+							lI: $elm$http$Http$expectString(
 								A2(
 									$elm$core$Basics$composeR,
 									$author$project$Services$SqlSource$GotRemoteFile(schemaUrl),
@@ -18656,7 +18656,7 @@ var $author$project$Services$SqlSource$update = F5(
 						return _Utils_update(
 							m,
 							{
-								jS: $elm$core$Maybe$Just(file)
+								jT: $elm$core$Maybe$Just(file)
 							});
 					}(
 						A2($author$project$Services$SqlSource$init, model.fj, model.cP)),
@@ -18668,7 +18668,7 @@ var $author$project$Services$SqlSource$update = F5(
 					_Utils_update(
 						model,
 						{
-							mt: $elm$core$Maybe$Just(
+							mu: $elm$core$Maybe$Just(
 								_Utils_Tuple2(
 									A2(
 										$author$project$Services$Lenses$setId,
@@ -18719,7 +18719,7 @@ var $author$project$Services$SqlSource$update = F5(
 									A3($author$project$Services$SqlSource$parsingUpdate, sourceInfo.H, parseMsg, parsedSchema));
 							}),
 						model.cv,
-						model.mt));
+						model.mu));
 			case 6:
 				return A2(
 					$elm$core$Maybe$withDefault,
@@ -18759,7 +18759,7 @@ var $author$project$Services$SqlSource$update = F5(
 												parsedSchema,
 												A3($author$project$DataSources$SqlMiner$SqlAdapter$buildSource, sourceInfo, lines, schema));
 										}),
-									model.mt,
+									model.mu,
 									parsedSchema.a$,
 									parsedSchema.aI);
 							},
@@ -18794,18 +18794,18 @@ var $author$project$Services$Toasts$ToastShow = F2(
 var $author$project$Services$Lenses$setIndex = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.l6;
+		return $.l7;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{l6: value});
+				{l7: value});
 		}));
 var $author$project$Services$Lenses$mapIndex = A2(
 	$author$project$Services$Lenses$map_,
 	function ($) {
-		return $.l6;
+		return $.l7;
 	},
 	$author$project$Services$Lenses$setIndex);
 var $author$project$Services$Lenses$mapList = F4(
@@ -18864,7 +18864,7 @@ var $author$project$Services$Toasts$update = F3(
 							wrap(
 								A2($author$project$Services$Toasts$ToastShow, millis, key))));
 				}(
-					$elm$core$String$fromInt(model.l6));
+					$elm$core$String$fromInt(model.l7));
 			case 1:
 				var millis = msg.a;
 				var key = msg.b;
@@ -18941,7 +18941,7 @@ var $author$project$PagesComponents$Create$Updates$update = F7(
 						$elm$core$Maybe$andThen,
 						$author$project$Models$Project$ProjectStorage$fromString,
 						A2($elm$core$Dict$get, 'storage', req.e1));
-					var name = A3($author$project$Libs$Dict$getOrElse, 'name', $author$project$Conf$constants.m3, req.e1);
+					var name = A3($author$project$Libs$Dict$getOrElse, 'name', $author$project$Conf$constants.m4, req.e1);
 					return _Utils_Tuple2(
 						A2(
 							$elm$core$Maybe$withDefault,
@@ -22576,7 +22576,7 @@ var $author$project$Services$Toasts$view = F2(
 	});
 var $author$project$PagesComponents$Create$Views$view = function (model) {
 	return {
-		kL: _List_fromArray(
+		kM: _List_fromArray(
 			[
 				$author$project$Components$Atoms$Loader$fullScreen,
 				A3($elm$html$Html$Lazy$lazy2, $author$project$Services$Toasts$view, $author$project$PagesComponents$Create$Models$Toast, model.bX)
@@ -22591,7 +22591,7 @@ var $author$project$Pages$Create$page = F2(
 			{
 				bl: $author$project$PagesComponents$Create$Init$init(urlOrganization),
 				by: $author$project$PagesComponents$Create$Subscriptions$subscriptions,
-				fv: A5($author$project$PagesComponents$Create$Updates$update, req, shared.nd, shared.nQ, shared.nR, urlOrganization),
+				fv: A5($author$project$PagesComponents$Create$Updates$update, req, shared.ne, shared.nQ, shared.nR, urlOrganization),
 				o3: $author$project$PagesComponents$Create$Views$view
 			});
 	});
@@ -22636,7 +22636,7 @@ var $elm$core$List$all = F2(
 			list);
 	});
 var $author$project$PagesComponents$Organization_$Project_$Models$EmbedMode$advanced = 'advanced';
-var $author$project$PagesComponents$Organization_$Project_$Models$ErdConf$embedDefault = {fP: false, c8: false, fY: true, f3: true, bk: false, aM: false, mp: false, jb: false, hd: false, fa: false, fe: false, os: false, jV: false, fv: false};
+var $author$project$PagesComponents$Organization_$Project_$Models$ErdConf$embedDefault = {fP: false, c8: false, fY: true, f3: true, bk: false, aM: false, mq: false, jb: false, hd: false, fa: false, fe: false, os: false, jW: false, fv: false};
 var $author$project$PagesComponents$Organization_$Project_$Models$EmbedMode$frozen = 'frozen';
 var $author$project$PagesComponents$Organization_$Project_$Models$EmbedMode$full = 'full';
 var $author$project$PagesComponents$Organization_$Project_$Models$EmbedMode$layout = 'layout';
@@ -22669,14 +22669,14 @@ var $author$project$PagesComponents$Organization_$Project_$Models$EmbedMode$all 
 		{
 		Z: _Utils_update(
 			$author$project$PagesComponents$Organization_$Project_$Models$ErdConf$embedDefault,
-			{c8: true, bk: true, aM: true, jb: true, fe: true, jV: true}),
+			{c8: true, bk: true, aM: true, jb: true, fe: true, jW: true}),
 		bf: 'can seen and navigate between layouts',
 		H: $author$project$PagesComponents$Organization_$Project_$Models$EmbedMode$advanced
 	},
 		{
 		Z: _Utils_update(
 			$author$project$PagesComponents$Organization_$Project_$Models$ErdConf$embedDefault,
-			{c8: true, bk: true, aM: true, mp: true, jb: true, fe: true, jV: true}),
+			{c8: true, bk: true, aM: true, mq: true, jb: true, fe: true, jW: true}),
 		bf: 'can do anything, except save',
 		H: $author$project$PagesComponents$Organization_$Project_$Models$EmbedMode$full
 	}
@@ -22710,8 +22710,8 @@ var $author$project$Ports$getProject = F3(
 		return $author$project$Ports$messageToJs(
 			A3($author$project$Ports$GetProject, organization, project, token));
 	});
-var $author$project$Libs$Models$Hotkey$hotkey = {fA: false, at: false, dk: '', nm: false, jx: false, hp: false, hH: $elm$core$Maybe$Nothing};
-var $author$project$Conf$ids = {kr: 'aml-sidebar', k0: 'confirm-dialog', k8: 'custom-dialog', lq: 'details-sidebar', lw: 'edit-notes-dialog', lD: 'erd', lO: 'find-path-dialog', lY: 'help-dialog', mR: 'modal', nT: 'prompt-dialog', oj: 'schema-analysis-dialog', fc: 'app-nav-search', op: 'selection-box', or: 'settings-dialog', ot: 'sharing-dialog', oz: 'source-parsing-dialog', oB: 'source-update-dialog'};
+var $author$project$Libs$Models$Hotkey$hotkey = {fA: false, at: false, dk: '', nn: false, jy: false, hp: false, hH: $elm$core$Maybe$Nothing};
+var $author$project$Conf$ids = {ks: 'aml-sidebar', k1: 'confirm-dialog', k9: 'custom-dialog', lr: 'details-sidebar', lx: 'edit-notes-dialog', lE: 'erd', lP: 'find-path-dialog', lZ: 'help-dialog', mS: 'modal', nT: 'prompt-dialog', oj: 'schema-analysis-dialog', fc: 'app-nav-search', op: 'selection-box', or: 'settings-dialog', ot: 'sharing-dialog', oz: 'source-parsing-dialog', oB: 'source-update-dialog'};
 var $author$project$Libs$Models$Hotkey$target = {fL: $elm$core$Maybe$Nothing, H: $elm$core$Maybe$Nothing, hG: $elm$core$Maybe$Nothing};
 var $author$project$Conf$hotkeys = $elm$core$Dict$fromList(
 	_List_fromArray(
@@ -22843,7 +22843,7 @@ var $author$project$Conf$hotkeys = $elm$core$Dict$fromList(
 				[
 					_Utils_update(
 					$author$project$Libs$Models$Hotkey$hotkey,
-					{at: true, dk: 's', nm: true, jx: true})
+					{at: true, dk: 's', nn: true, jy: true})
 				])),
 			_Utils_Tuple2(
 			'move-up',
@@ -22915,7 +22915,7 @@ var $author$project$Conf$hotkeys = $elm$core$Dict$fromList(
 				[
 					_Utils_update(
 					$author$project$Libs$Models$Hotkey$hotkey,
-					{at: true, dk: 'a', jx: true})
+					{at: true, dk: 'a', jy: true})
 				])),
 			_Utils_Tuple2(
 			'create-layout',
@@ -23012,7 +23012,7 @@ var $author$project$Services$SqlSource$hasErrors = function (parser) {
 		A3(
 			$author$project$Libs$Maybe$mapOrElse,
 			function ($) {
-				return $.lF;
+				return $.lG;
 			},
 			_List_Nil,
 			parser.aI));
@@ -23122,7 +23122,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$title = functio
 		function (e) {
 			return e.nN.eS + ' - Azimutt';
 		},
-		$author$project$Conf$constants.lh,
+		$author$project$Conf$constants.li,
 		erd);
 };
 var $author$project$Libs$Models$Position$move = F2(
@@ -23147,8 +23147,8 @@ var $author$project$Models$ErdProps$zero = {
 var $author$project$Pages$Embed$init = function (query) {
 	return _Utils_Tuple2(
 		{
-			kq: $elm$core$Maybe$Nothing,
-			k_: $elm$core$Dict$empty,
+			kr: $elm$core$Maybe$Nothing,
+			k$: $elm$core$Dict$empty,
 			Z: A3(
 				$author$project$Libs$Maybe$mapOrElse,
 				function ($) {
@@ -23168,34 +23168,34 @@ var $author$project$Pages$Embed$init = function (query) {
 					},
 					query.eQ)),
 			b8: $elm$core$Maybe$Nothing,
-			k2: $elm$core$Maybe$Nothing,
-			k7: 1,
-			lp: $elm$core$Maybe$Nothing,
-			lr: false,
+			k3: $elm$core$Maybe$Nothing,
+			k8: 1,
+			lq: $elm$core$Maybe$Nothing,
+			ls: false,
 			ep: $elm$core$Maybe$Nothing,
-			lv: $elm$core$Maybe$Nothing,
+			lw: $elm$core$Maybe$Nothing,
 			_: $elm$core$Maybe$Nothing,
-			lA: A6($author$project$PagesComponents$Organization_$Project_$Components$EmbedSourceParsingDialog$init, $author$project$PagesComponents$Organization_$Project_$Models$SourceParsed, $author$project$PagesComponents$Organization_$Project_$Models$ModalClose, $author$project$PagesComponents$Organization_$Project_$Models$Noop, query.ca, query.cA, query.cm),
-			lD: $elm$core$Maybe$Nothing,
-			lE: $author$project$Models$ErdProps$zero,
+			lB: A6($author$project$PagesComponents$Organization_$Project_$Components$EmbedSourceParsingDialog$init, $author$project$PagesComponents$Organization_$Project_$Models$SourceParsed, $author$project$PagesComponents$Organization_$Project_$Models$ModalClose, $author$project$PagesComponents$Organization_$Project_$Models$Noop, query.ca, query.cA, query.cm),
+			lE: $elm$core$Maybe$Nothing,
+			lF: $author$project$Models$ErdProps$zero,
 			c8: $elm$core$Maybe$Nothing,
-			lX: $elm$core$Maybe$Nothing,
-			l0: $elm$core$Maybe$Nothing,
+			lY: $elm$core$Maybe$Nothing,
 			l1: $elm$core$Maybe$Nothing,
-			ms: A2(
+			l2: $elm$core$Maybe$Nothing,
+			mt: A2(
 				$elm$core$List$all,
 				function (a) {
 					return _Utils_eq(a, $elm$core$Maybe$Nothing);
 				},
 				_List_fromArray(
 					[query.cw, query.dF, query.ca, query.cA, query.cm])),
-			mR: $elm$core$Maybe$Nothing,
-			m_: {
-				mQ: false,
+			mS: $elm$core$Maybe$Nothing,
+			m$: {
+				mR: false,
 				fb: {bb: 0, fp: ''}
 			},
-			m2: $elm$core$Maybe$Nothing,
-			ns: _List_Nil,
+			m3: $elm$core$Maybe$Nothing,
+			nt: _List_Nil,
 			jo: '',
 			eX: '',
 			nS: $elm$core$Maybe$Nothing,
@@ -23215,14 +23215,14 @@ var $author$project$Pages$Embed$init = function (query) {
 					[
 						$author$project$Ports$setMeta(
 						{
-							kL: $elm$core$Maybe$Just('h-full overflow-hidden'),
-							kP: $elm$core$Maybe$Just(
+							kM: $elm$core$Maybe$Just('h-full overflow-hidden'),
+							kQ: $elm$core$Maybe$Just(
 								{
 									e1: $author$project$Pages$Embed$serializeQueryString(query),
 									hk: $author$project$Gen$Route$Embed
 								}),
-							bf: $elm$core$Maybe$Just($author$project$Conf$constants.lf),
-							l3: $elm$core$Maybe$Just('h-full'),
+							bf: $elm$core$Maybe$Just($author$project$Conf$constants.lg),
+							l4: $elm$core$Maybe$Just('h-full'),
 							a4: $elm$core$Maybe$Just(
 								$author$project$PagesComponents$Organization_$Project_$Views$title($elm$core$Maybe$Nothing))
 						}),
@@ -23294,7 +23294,7 @@ var $author$project$Pages$Embed$init = function (query) {
 												[
 													$elm$http$Http$get(
 													{
-														lH: A2(
+														lI: A2(
 															$author$project$Libs$Http$decodeJson,
 															A2(
 																$elm$core$Basics$composeR,
@@ -23350,7 +23350,7 @@ var $author$project$PagesComponents$Organization_$Project_$Models$VirtualRelatio
 };
 var $mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$Event = F6(
 	function (keys, button, clientPos, offsetPos, pagePos, screenPos) {
-		return {kN: button, h3: clientPos, mh: keys, ng: offsetPos, js: pagePos, ok: screenPos};
+		return {kO: button, h3: clientPos, mi: keys, nh: offsetPos, js: pagePos, ok: screenPos};
 	});
 var $mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$BackButton = 4;
 var $mpizenberg$elm_pointer_events$Html$Events$Extra$Mouse$ErrorButton = 0;
@@ -23436,7 +23436,7 @@ var $elm$browser$Browser$Events$MySub = F3(
 	});
 var $elm$browser$Browser$Events$State = F2(
 	function (subs, pids) {
-		return {ju: pids, j0: subs};
+		return {ju: pids, j1: subs};
 	});
 var $elm$browser$Browser$Events$init = $elm$core$Task$succeed(
 	A2($elm$browser$Browser$Events$State, _List_Nil, $elm$core$Dict$empty));
@@ -23570,7 +23570,7 @@ var $elm$browser$Browser$Events$onSelfMsg = F3(
 			var decoder = _v3.c;
 			return _Utils_eq(subKey, key) ? A2(_Browser_decodeEvent, decoder, event) : $elm$core$Maybe$Nothing;
 		};
-		var messages = A2($elm$core$List$filterMap, toMessage, state.j0);
+		var messages = A2($elm$core$List$filterMap, toMessage, state.j1);
 		return A2(
 			$elm$core$Task$andThen,
 			function (_v1) {
@@ -23717,7 +23717,7 @@ var $author$project$PagesComponents$Organization_$Project_$Subscriptions$subscri
 				_Utils_ap(
 					A3(
 						$author$project$Libs$Bool$cond,
-						_Utils_eq(model.k2, $elm$core$Maybe$Nothing),
+						_Utils_eq(model.k3, $elm$core$Maybe$Nothing),
 						_List_Nil,
 						_List_fromArray(
 							[
@@ -24108,7 +24108,7 @@ var $goyalarchit$elm_dagre$Dagre$Attributes$heightDict = function (dict) {
 	return function (a) {
 		return _Utils_update(
 			a,
-			{lW: absDict});
+			{lX: absDict});
 	};
 };
 var $author$project$Services$Lenses$setMemos = A2(
@@ -25123,7 +25123,7 @@ var $goyalarchit$elm_dagre$Dagre$Rank$assignRanks = function (g) {
 		$elm_community$graph$Graph$heightLevels(g));
 };
 var $goyalarchit$elm_dagre$Dagre$Attributes$TB = 0;
-var $goyalarchit$elm_dagre$Dagre$defaultConfig = {lu: 10, bj: 32, lW: $elm$core$Dict$empty, mA: 20, mB: 20, m4: 50, nV: 0, nW: 75, bB: 32, o7: $elm$core$Dict$empty};
+var $goyalarchit$elm_dagre$Dagre$defaultConfig = {lv: 10, bj: 32, lX: $elm$core$Dict$empty, mB: 20, mC: 20, m5: 50, nV: 0, nW: 75, bB: 32, o7: $elm$core$Dict$empty};
 var $elm_community$graph$Graph$edges = function (graph) {
 	var flippedFoldl = F3(
 		function (f, dict, list) {
@@ -25828,7 +25828,7 @@ var $goyalarchit$elm_dagre$Dagre$Position$BK$sep = F2(
 			return A2($goyalarchit$elm_dagre$Dagre$Position$BK$width, config, n);
 		};
 		var getSep = function (nId) {
-			return A2($goyalarchit$elm_dagre$Dagre$Utils$isDummyNode, initDummyId, nId) ? config.lu : config.m4;
+			return A2($goyalarchit$elm_dagre$Dagre$Utils$isDummyNode, initDummyId, nId) ? config.lv : config.m5;
 		};
 		return F2(
 			function (u, v) {
@@ -26397,7 +26397,7 @@ var $goyalarchit$elm_dagre$Dagre$Position$height = function (config) {
 		return A2(
 			$elm$core$Maybe$withDefault,
 			config.bj,
-			A2($elm$core$Dict$get, n, config.lW));
+			A2($elm$core$Dict$get, n, config.lX));
 	};
 };
 var $goyalarchit$elm_dagre$Dagre$Position$assignAbsoluteY = F3(
@@ -26480,11 +26480,11 @@ var $goyalarchit$elm_dagre$Dagre$Position$translate = F2(
 		var minX = A2(
 			$elm$core$Maybe$withDefault,
 			_Utils_Tuple2(0, 0),
-			A2($elm_community$list_extra$List$Extra$minimumBy, $elm$core$Tuple$first, coordsWithMinXY)).a - config.mA;
+			A2($elm_community$list_extra$List$Extra$minimumBy, $elm$core$Tuple$first, coordsWithMinXY)).a - config.mB;
 		var minY = A2(
 			$elm$core$Maybe$withDefault,
 			_Utils_Tuple2(0, 0),
-			A2($elm_community$list_extra$List$Extra$minimumBy, $elm$core$Tuple$second, coordsWithMinXY)).b - config.mB;
+			A2($elm_community$list_extra$List$Extra$minimumBy, $elm$core$Tuple$second, coordsWithMinXY)).b - config.mC;
 		var coordsWithMaxXY = $elm$core$Dict$values(
 			A2(
 				$elm$core$Dict$map,
@@ -26500,11 +26500,11 @@ var $goyalarchit$elm_dagre$Dagre$Position$translate = F2(
 		var maxX = (A2(
 			$elm$core$Maybe$withDefault,
 			_Utils_Tuple2(500, 500),
-			A2($elm_community$list_extra$List$Extra$maximumBy, $elm$core$Tuple$first, coordsWithMaxXY)).a - minX) + config.mA;
+			A2($elm_community$list_extra$List$Extra$maximumBy, $elm$core$Tuple$first, coordsWithMaxXY)).a - minX) + config.mB;
 		var maxY = (A2(
 			$elm$core$Maybe$withDefault,
 			_Utils_Tuple2(500, 500),
-			A2($elm_community$list_extra$List$Extra$maximumBy, $elm$core$Tuple$second, coordsWithMaxXY)).b - minY) + config.mB;
+			A2($elm_community$list_extra$List$Extra$maximumBy, $elm$core$Tuple$second, coordsWithMaxXY)).b - minY) + config.mC;
 		return _Utils_Tuple2(
 			A2(
 				$elm$core$Dict$map,
@@ -26523,7 +26523,7 @@ var $goyalarchit$elm_dagre$Dagre$Position$position = F3(
 		var edges = _v0.b;
 		var adjustedConfig = ((config.nV === 2) || (config.nV === 3)) ? _Utils_update(
 			config,
-			{bj: config.bB, lW: config.o7, bB: config.bj, o7: config.lW}) : config;
+			{bj: config.bB, lX: config.o7, bB: config.bj, o7: config.lX}) : config;
 		var xs = A3(
 			$goyalarchit$elm_dagre$Dagre$Position$BK$positionX,
 			adjustedConfig,
@@ -27391,7 +27391,7 @@ var $goyalarchit$elm_dagre$Dagre$runLayout = F2(
 		var _v4 = _v3.b;
 		var w = _v4.a;
 		var h = _v4.b;
-		return {h9: finalControlPoints, k4: finalDict, bj: h, bB: w};
+		return {h9: finalControlPoints, k5: finalDict, bj: h, bB: w};
 	});
 var $author$project$Services$Lenses$setPosition = A2(
 	$author$project$Services$Lenses$set_,
@@ -27568,7 +27568,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Canvas$arrang
 			function (_v0) {
 				return A2($elm$core$Basics$composeR, $author$project$Libs$Models$Position$fromTuple, $author$project$Models$Position$canvas);
 			},
-			diagram.k4);
+			diagram.k5);
 		var finalContentArea = A2(
 			$elm$core$Maybe$map,
 			function (p) {
@@ -27637,7 +27637,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Canvas$arrang
 				layout));
 	});
 var $author$project$PagesComponents$Organization_$Project_$Models$ErdLayout$empty = function (now) {
-	return {fJ: $author$project$Models$Project$CanvasProps$empty, ic: now, gw: _List_Nil, oM: _List_Nil, ka: now};
+	return {fJ: $author$project$Models$Project$CanvasProps$empty, ic: now, gw: _List_Nil, oM: _List_Nil, kb: now};
 };
 var $author$project$PagesComponents$Organization_$Project_$Models$Erd$currentLayout = function (erd) {
 	return A3(
@@ -27677,9 +27677,9 @@ var $author$project$Models$Area$centerCanvas = function (area) {
 		area.e$);
 };
 var $author$project$Conf$canvas = {
-	lU: 10,
+	lV: 10,
 	pi: {oM: 10},
-	hU: {mD: 5, mL: 0.001, oC: 0.001}
+	hU: {mE: 5, mM: 0.001, oC: 0.001}
 };
 var $elm$core$Basics$clamp = F3(
 	function (low, high, number) {
@@ -27711,7 +27711,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Canvas$comput
 		var grow = A2($author$project$Models$Size$ratioCanvas, contentArea.ox, viewportSize);
 		var newZoom = A3(
 			$elm$core$Basics$clamp,
-			$author$project$Conf$canvas.hU.mL,
+			$author$project$Conf$canvas.hU.mM,
 			1,
 			zoom * A2($elm$core$Basics$min, grow.aY, grow.aZ));
 		return newZoom;
@@ -27837,7 +27837,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Canvas$fitCan
 					var _v0 = A4(
 						$author$project$PagesComponents$Organization_$Project_$Updates$Canvas$computeFit,
 						A2($author$project$Models$Project$CanvasProps$viewport, erdElem, layout.fJ),
-						$author$project$Conf$constants.kQ,
+						$author$project$Conf$constants.kR,
 						contentArea,
 						layout.fJ.hU);
 					var newZoom = _v0.a;
@@ -27928,7 +27928,7 @@ var $author$project$PagesComponents$Organization_$Project_$Models$Erd$mapCurrent
 				function (l) {
 					return _Utils_update(
 						l,
-						{ka: now});
+						{kb: now});
 				}),
 			erd);
 	});
@@ -28002,53 +28002,8 @@ var $author$project$Ports$autofocusWithin = function (id) {
 	return $author$project$Ports$messageToJs(
 		$author$project$Ports$AutofocusWithin(id));
 };
-var $author$project$Conf$features = {
-	lc: {lR: false, eS: 'data_access'},
-	fR: {lR: false, eS: 'analysis'},
-	i$: {lR: 3, eS: 'layouts'},
-	gw: {lR: 5, eS: 'memos'},
-	nM: {lR: true, eS: 'private_links'},
-	oI: {lR: false, eS: 'table_color'}
-};
-var $author$project$Models$Plan$free = {
-	eg: $author$project$Conf$features.oI.lR,
-	lc: $author$project$Conf$features.fR.lR,
-	fR: $author$project$Conf$features.fR.lR,
-	H: 'free',
-	i$: $elm$core$Maybe$Just($author$project$Conf$features.i$.lR),
-	gw: $elm$core$Maybe$Just($author$project$Conf$features.gw.lR),
-	eS: 'Free plan',
-	nM: $author$project$Conf$features.nM.lR
-};
-var $author$project$Models$Organization$zero = {bf: $elm$core$Maybe$Nothing, gb: $elm$core$Maybe$Nothing, H: $author$project$Models$OrganizationId$zero, gu: $elm$core$Maybe$Nothing, gv: 'https://azimutt.app/imageshttps://xestjs.com/img/xest-icon.png', eS: 'zero', nD: $author$project$Models$Plan$free, hr: $author$project$Models$OrganizationId$zero};
-var $author$project$PagesComponents$Organization_$Project_$Models$Erd$getOrganizationM = F2(
-	function (urlOrganization, erd) {
-		var organization = $author$project$Models$Organization$zero;
-		return A2(
-			$elm$core$Maybe$withDefault,
-			A3(
-				$author$project$Libs$Maybe$mapOrElse,
-				function (id) {
-					return _Utils_update(
-						organization,
-						{H: id});
-				},
-				organization,
-				urlOrganization),
-			A2(
-				$elm$core$Maybe$andThen,
-				A2(
-					$elm$core$Basics$composeR,
-					function ($) {
-						return $.nN;
-					},
-					function ($) {
-						return $.nw;
-					}),
-				erd));
-	});
 var $author$project$PagesComponents$Organization_$Project_$Models$Erd$canChangeTableColor = function (erd) {
-	return A2($author$project$PagesComponents$Organization_$Project_$Models$Erd$getOrganizationM, $elm$core$Maybe$Nothing, erd).nD.eg;
+	return true;
 };
 var $author$project$Components$Slices$ProPlan$colorsInit = {bU: $elm$core$Maybe$Nothing, d2: false, ft: ''};
 var $elm$html$Html$b = _VirtualDom_node('b');
@@ -28261,13 +28216,13 @@ var $author$project$Components$Atoms$Icon$quote = function (styles) {
 var $elm$html$Html$a = _VirtualDom_node('a');
 var $author$project$Track$externalLink = function (url) {
 	return {
-		lo: _List_fromArray(
+		lp: _List_fromArray(
 			[
 				_Utils_Tuple2('source', 'editor'),
 				_Utils_Tuple2('url', url)
 			]),
 		eS: 'external_link_clicked',
-		nw: $elm$core$Maybe$Nothing,
+		nx: $elm$core$Maybe$Nothing,
 		nN: $elm$core$Maybe$Nothing
 	};
 };
@@ -28295,7 +28250,7 @@ var $author$project$Libs$Html$Attributes$track = function (event) {
 				function (id) {
 					return _Utils_Tuple2('organization', id);
 				},
-				event.nw)),
+				event.nx)),
 		$author$project$Libs$Maybe$toList(
 			A2(
 				$elm$core$Maybe$map,
@@ -28313,7 +28268,7 @@ var $author$project$Libs$Html$Attributes$track = function (event) {
 				var v = _v0.b;
 				return A2($elm$html$Html$Attributes$attribute, 'data-track-event-' + k, v);
 			},
-			_Utils_ap(moreDetails, event.lo)));
+			_Utils_ap(moreDetails, event.lp)));
 };
 var $author$project$Libs$Html$extLink = F3(
 	function (url, attrs, children) {
@@ -28426,6 +28381,14 @@ var $author$project$Components$Slices$ProPlan$colorsTweetSuccess = function (clo
 						$elm$html$Html$text('Back to editor')
 					]))
 			]));
+};
+var $author$project$Conf$features = {
+	ld: {lS: false, eS: 'data_access'},
+	fR: {lS: false, eS: 'analysis'},
+	i$: {lS: 3, eS: 'layouts'},
+	gw: {lS: 5, eS: 'memos'},
+	nM: {lS: true, eS: 'private_links'},
+	oI: {lS: false, eS: 'table_color'}
 };
 var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $author$project$Services$Backend$organizationBillingUrl = F2(
@@ -28698,7 +28661,7 @@ var $author$project$Components$Slices$ProPlan$colorsModalBody = F5(
 															$elm$html$Html$text('Your tweet has to be published within the last 10 minutes, mention '),
 															A3(
 															$author$project$Libs$Html$extLink,
-															$author$project$Conf$constants.kF,
+															$author$project$Conf$constants.kG,
 															_List_fromArray(
 																[
 																	$elm$html$Html$Attributes$class('link')
@@ -28710,7 +28673,7 @@ var $author$project$Components$Slices$ProPlan$colorsModalBody = F5(
 															$elm$html$Html$text(' and have a link to '),
 															A3(
 															$author$project$Libs$Html$extLink,
-															$author$project$Conf$constants.kG,
+															$author$project$Conf$constants.kH,
 															_List_fromArray(
 																[
 																	$elm$html$Html$Attributes$class('link')
@@ -28827,11 +28790,11 @@ var $author$project$Components$Slices$ProPlan$colorsTweetResult = function (r) {
 		A2(
 			$elm$core$Maybe$map,
 			$author$project$Libs$Nel$join(', '),
-			$author$project$Libs$Nel$fromList(r.lF)));
+			$author$project$Libs$Nel$fromList(r.lG)));
 };
 var $author$project$Services$Backend$TableColorTweet = F2(
 	function (tweet, errors) {
-		return {lF: errors, o_: tweet};
+		return {lG: errors, o_: tweet};
 	});
 var $author$project$Libs$Json$Decode$indent = function (str) {
 	return A2(
@@ -28962,7 +28925,7 @@ var $author$project$Services$Backend$getTableColorTweet = F3(
 	function (organizationId, tweetUrl, toMsg) {
 		return $author$project$Services$Backend$riskyPost(
 			{
-				kL: $elm$http$Http$jsonBody(
+				kM: $elm$http$Http$jsonBody(
 					$elm$json$Json$Encode$object(
 						_List_fromArray(
 							[
@@ -28970,7 +28933,7 @@ var $author$project$Services$Backend$getTableColorTweet = F3(
 								'tweet_url',
 								$elm$json$Json$Encode$string(tweetUrl))
 							]))),
-				lH: A2(
+				lI: A2(
 					$author$project$Services$Backend$expectJson,
 					toMsg,
 					A3(
@@ -29120,7 +29083,7 @@ var $author$project$PagesComponents$Organization_$Project_$Models$ErdLayout$unpa
 				return $author$project$PagesComponents$Organization_$Project_$Models$ErdTableLayout$unpack(t);
 			},
 			layout.oM),
-		ka: layout.ka
+		kb: layout.kb
 	};
 };
 var $author$project$Models$Project$ColumnRef$toString = function (ref) {
@@ -29244,11 +29207,11 @@ var $author$project$PagesComponents$Organization_$Project_$Models$ErdColumn$unpa
 			},
 			column.M),
 		h4: column.h4,
-		le: column.le,
-		l6: column.l6,
+		lf: column.lf,
+		l7: column.l7,
 		gi: column.gi,
 		eS: $author$project$Models$Project$ColumnPath$name(column.aA),
-		ne: column.ne,
+		nf: column.nf,
 		jq: column.jq
 	};
 };
@@ -29285,7 +29248,7 @@ var $author$project$PagesComponents$Organization_$Project_$Models$Erd$unpack = f
 			erd.i$),
 		eS: erd.nN.eS,
 		bP: $author$project$PagesComponents$Organization_$Project_$Models$ErdNotes$unpack(erd.bP),
-		nw: erd.nN.nw,
+		nx: erd.nN.nx,
 		bT: A2($elm$core$List$map, $author$project$PagesComponents$Organization_$Project_$Models$ErdRelation$unpack, erd.bT),
 		dM: erd.dM,
 		hr: erd.nN.hr,
@@ -29298,9 +29261,9 @@ var $author$project$PagesComponents$Organization_$Project_$Models$Erd$unpack = f
 			},
 			erd.oM),
 		d3: erd.d3,
-		ka: erd.nN.ka,
+		kb: erd.nN.kb,
 		fw: erd.id,
-		kc: erd.nN.kc,
+		kd: erd.nN.kd,
 		hQ: erd.nN.hQ
 	};
 };
@@ -29334,7 +29297,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Project$creat
 												$author$project$Services$Toasts$warning('Project already created')))
 										]);
 								},
-								p.nw));
+								p.nx));
 					},
 					_List_fromArray(
 						[
@@ -29342,7 +29305,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Project$creat
 							$author$project$PagesComponents$Organization_$Project_$Models$Toast(
 								$author$project$Services$Toasts$warning('No project to save')))
 						]),
-					A2($elm$core$Maybe$map, $author$project$PagesComponents$Organization_$Project_$Models$Erd$unpack, model.lD)))) : _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					A2($elm$core$Maybe$map, $author$project$PagesComponents$Organization_$Project_$Models$Erd$unpack, model.lE)))) : _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 	});
 var $elm$core$Array$length = function (_v0) {
 	var len = _v0.a;
@@ -29466,13 +29429,13 @@ var $elm$core$Array$push = F2(
 var $author$project$Services$Lenses$setUpdatedAt = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.ka;
+		return $.kb;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{ka: value});
+				{kb: value});
 		}));
 var $author$project$Models$Project$Relation$virtual = F3(
 	function (src, ref, origin) {
@@ -29608,10 +29571,10 @@ var $author$project$PagesComponents$Organization_$Project_$Models$ErdColumnRef$c
 	function (tables, ref) {
 		return {
 			bH: ref.bH,
-			ne: A3(
+			nf: A3(
 				$author$project$Libs$Maybe$mapOrElse,
 				function ($) {
-					return $.ne;
+					return $.nf;
 				},
 				false,
 				A2(
@@ -29744,8 +29707,8 @@ var $author$project$PagesComponents$Organization_$Project_$Models$ErdColumn$crea
 				column.M),
 			h4: column.h4,
 			ie: A3($author$project$Models$Project$CustomType$get, defaultSchema, column.gi, types),
-			le: column.le,
-			ig: A2($elm$core$Maybe$map, $author$project$Models$Project$ColumnValue$label, column.le),
+			lf: column.lf,
+			ig: A2($elm$core$Maybe$map, $author$project$Models$Project$ColumnValue$label, column.lf),
 			iO: A2(
 				$elm$core$List$map,
 				function ($) {
@@ -29757,7 +29720,7 @@ var $author$project$PagesComponents$Organization_$Project_$Models$ErdColumn$crea
 						return _Utils_eq(r.dG.aq, table.H) && _Utils_eq(r.dG.bH, path);
 					},
 					columnRelations)),
-			l6: column.l6,
+			l7: column.l7,
 			dg: A2(
 				$elm$core$List$map,
 				function ($) {
@@ -29784,7 +29747,7 @@ var $author$project$PagesComponents$Organization_$Project_$Models$ErdColumn$crea
 					table.nL)),
 			gi: column.gi,
 			iX: A2($author$project$Models$Project$ColumnType$label, defaultSchema, column.gi),
-			ne: column.ne,
+			nf: column.nf,
 			jq: table.jq,
 			jr: A2(
 				$elm$core$List$map,
@@ -30084,6 +30047,43 @@ var $author$project$Ports$fullscreen = function (id) {
 	return $author$project$Ports$messageToJs(
 		$author$project$Ports$Fullscreen(id));
 };
+var $author$project$Models$Plan$free = {
+	eg: $author$project$Conf$features.oI.lS,
+	ld: $author$project$Conf$features.fR.lS,
+	fR: $author$project$Conf$features.fR.lS,
+	H: 'free',
+	i$: $elm$core$Maybe$Just($author$project$Conf$features.i$.lS),
+	gw: $elm$core$Maybe$Just($author$project$Conf$features.gw.lS),
+	eS: 'Free plan',
+	nM: $author$project$Conf$features.nM.lS
+};
+var $author$project$Models$Organization$zero = {bf: $elm$core$Maybe$Nothing, gb: $elm$core$Maybe$Nothing, H: $author$project$Models$OrganizationId$zero, gu: $elm$core$Maybe$Nothing, gv: 'https://azimutt.app/imageshttps://xestjs.com/img/xest-icon.png', eS: 'zero', jv: $author$project$Models$Plan$free, hr: $author$project$Models$OrganizationId$zero};
+var $author$project$PagesComponents$Organization_$Project_$Models$Erd$getOrganizationM = F2(
+	function (urlOrganization, erd) {
+		var organization = $author$project$Models$Organization$zero;
+		return A2(
+			$elm$core$Maybe$withDefault,
+			A3(
+				$author$project$Libs$Maybe$mapOrElse,
+				function (id) {
+					return _Utils_update(
+						organization,
+						{H: id});
+				},
+				organization,
+				urlOrganization),
+			A2(
+				$elm$core$Maybe$andThen,
+				A2(
+					$elm$core$Basics$composeR,
+					function ($) {
+						return $.nN;
+					},
+					function ($) {
+						return $.nx;
+					}),
+				erd));
+	});
 var $author$project$PagesComponents$Organization_$Project_$Models$Erd$getLayoutTable = F2(
 	function (table, erd) {
 		return A3(
@@ -30274,18 +30274,18 @@ var $author$project$PagesComponents$Organization_$Project_$Models$MemoId$isHtmlI
 var $author$project$Services$Lenses$setErd = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.lD;
+		return $.lE;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{lD: value});
+				{lE: value});
 		}));
 var $author$project$Services$Lenses$mapErdM = A2(
 	$author$project$Services$Lenses$mapM_,
 	function ($) {
-		return $.lD;
+		return $.lE;
 	},
 	$author$project$Services$Lenses$setErd);
 var $author$project$Libs$Models$Delta$div = F2(
@@ -30414,10 +30414,10 @@ var $author$project$Ports$projectDirty = function (dirty) {
 		$author$project$Ports$ProjectDirty(dirty));
 };
 var $author$project$PagesComponents$Organization_$Project_$Updates$Utils$setDirty = function (model) {
-	return (model.lr || (!model.Z.fa)) ? _Utils_Tuple2(model, $elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+	return (model.ls || (!model.Z.fa)) ? _Utils_Tuple2(model, $elm$core$Platform$Cmd$none) : _Utils_Tuple2(
 		_Utils_update(
 			model,
-			{lr: true}),
+			{ls: true}),
 		$author$project$Ports$projectDirty(true));
 };
 var $author$project$Services$Lenses$setSelectionBox = A2(
@@ -30442,8 +30442,8 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Drag$handleDr
 					return $.fJ;
 				}),
 			$author$project$Models$Project$CanvasProps$empty,
-			model.lD);
-		return _Utils_eq(drag.H, $author$project$Conf$ids.lD) ? ((isEnd && (!_Utils_eq(drag.bl, drag.iZ))) ? $author$project$PagesComponents$Organization_$Project_$Updates$Utils$setDirty(
+			model.lE);
+		return _Utils_eq(drag.H, $author$project$Conf$ids.lE) ? ((isEnd && (!_Utils_eq(drag.bl, drag.iZ))) ? $author$project$PagesComponents$Organization_$Project_$Updates$Utils$setDirty(
 			A2(
 				$author$project$Services$Lenses$mapErdM,
 				A2(
@@ -30480,7 +30480,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Drag$handleDr
 						$elm$core$Maybe$Just(area),
 						model));
 			}(
-				A3($author$project$PagesComponents$Organization_$Project_$Updates$Drag$buildSelectionArea, model.lE, canvas, drag)),
+				A3($author$project$PagesComponents$Organization_$Project_$Updates$Drag$buildSelectionArea, model.lF, canvas, drag)),
 			$elm$core$Platform$Cmd$none)) : ((isEnd && (!_Utils_eq(drag.bl, drag.iZ))) ? ($author$project$PagesComponents$Organization_$Project_$Models$MemoId$isHtmlId(drag.H) ? $author$project$PagesComponents$Organization_$Project_$Updates$Utils$setDirty(
 			A2(
 				$author$project$Services$Lenses$mapErdM,
@@ -30638,7 +30638,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$FindPath$comp
 		return {
 			bK: from,
 			dy: $elm$core$Maybe$Nothing,
-			nC: A6(
+			nD: A6(
 				$author$project$PagesComponents$Organization_$Project_$Updates$FindPath$buildPaths,
 				tables,
 				A2($author$project$PagesComponents$Organization_$Project_$Updates$FindPath$filterRelations, settings, relations),
@@ -30663,7 +30663,7 @@ var $author$project$PagesComponents$Organization_$Project_$Models$Erd$defaultSch
 			function ($) {
 				return $.cb;
 			}),
-		$author$project$Conf$schema.lB,
+		$author$project$Conf$schema.lC,
 		erd);
 };
 var $author$project$Services$Lenses$setFindPath = A2(
@@ -30741,7 +30741,7 @@ var $author$project$Track$findPathDetails = function (result) {
 			_Utils_Tuple2(
 			'nb_results',
 			$elm$json$Json$Encode$int(
-				$elm$core$List$length(result.nC))),
+				$elm$core$List$length(result.nD))),
 			_Utils_Tuple2(
 			'nb_ignored_columns',
 			$elm$json$Json$Encode$int(
@@ -30782,7 +30782,7 @@ var $author$project$PagesComponents$Organization_$Project_$Models$Erd$getTable =
 			var t = _v1.a;
 			return $elm$core$Maybe$Just(t);
 		} else {
-			return _Utils_eq(schema, $author$project$Conf$schema.lB) ? A2(
+			return _Utils_eq(schema, $author$project$Conf$schema.lC) ? A2(
 				$elm$core$Dict$get,
 				_Utils_Tuple2(erd.dM.cb, table),
 				erd.oM) : $elm$core$Maybe$Nothing;
@@ -30888,15 +30888,15 @@ var $author$project$Models$Project$TableId$parseWith = F2(
 		}
 	});
 var $author$project$Models$Project$TableId$parse = function (tableId) {
-	return A2($author$project$Models$Project$TableId$parseWith, $author$project$Conf$schema.lB, tableId);
+	return A2($author$project$Models$Project$TableId$parseWith, $author$project$Conf$schema.lC, tableId);
 };
 var $author$project$PagesComponents$Organization_$Project_$Updates$Utils$setDirtyCmd = function (_v0) {
 	var model = _v0.a;
 	var cmd = _v0.b;
-	return (model.lr || (!model.Z.fa)) ? _Utils_Tuple2(model, cmd) : _Utils_Tuple2(
+	return (model.ls || (!model.Z.fa)) ? _Utils_Tuple2(model, cmd) : _Utils_Tuple2(
 		_Utils_update(
 			model,
-			{lr: true}),
+			{ls: true}),
 		$elm$core$Platform$Cmd$batch(
 			_List_fromArray(
 				[
@@ -30959,9 +30959,9 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$FindPath$hand
 											A2(
 												$elm$core$Maybe$map,
 												$author$project$Models$Project$TableId$show(
-													$author$project$PagesComponents$Organization_$Project_$Models$Erd$defaultSchemaM(model.lD)),
+													$author$project$PagesComponents$Organization_$Project_$Models$Erd$defaultSchemaM(model.lE)),
 												from)),
-										H: $author$project$Conf$ids.lO,
+										H: $author$project$Conf$ids.lP,
 										bU: $author$project$PagesComponents$Organization_$Project_$Models$FindPathState$Empty,
 										ow: false,
 										oT: A2(
@@ -30970,7 +30970,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$FindPath$hand
 											A2(
 												$elm$core$Maybe$map,
 												$author$project$Models$Project$TableId$show(
-													$author$project$PagesComponents$Organization_$Project_$Models$Erd$defaultSchemaM(model.lD)),
+													$author$project$PagesComponents$Organization_$Project_$Models$Erd$defaultSchemaM(model.lE)),
 												to))
 									}),
 								model)),
@@ -30980,9 +30980,9 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$FindPath$hand
 									A2(
 									$author$project$Libs$Task$sendAfter,
 									1,
-									$author$project$PagesComponents$Organization_$Project_$Models$ModalOpen($author$project$Conf$ids.lO)),
+									$author$project$PagesComponents$Organization_$Project_$Models$ModalOpen($author$project$Conf$ids.lP)),
 									$author$project$Ports$track(
-									$author$project$Track$findPathOpened(model.lD))
+									$author$project$Track$findPathOpened(model.lE))
 								]))));
 			case 1:
 				return _Utils_Tuple2(
@@ -31049,7 +31049,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$FindPath$hand
 									$author$project$Models$Project$TableId$parse(fp.oT),
 									erd));
 						},
-						A2($author$project$Libs$Maybe$zip, model.c8, model.lD)));
+						A2($author$project$Libs$Maybe$zip, model.c8, model.lE)));
 			case 5:
 				var tables = msg.a;
 				var relations = msg.b;
@@ -31067,7 +31067,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$FindPath$hand
 							_List_fromArray(
 								[
 									$author$project$Ports$track(
-									A2($author$project$Track$findPathResults, model.lD, result))
+									A2($author$project$Track$findPathResults, model.lE, result))
 								])));
 				}(
 					A5($author$project$PagesComponents$Organization_$Project_$Updates$FindPath$computeFindPath, tables, relations, from, to, settings));
@@ -31127,7 +31127,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Help$setHelp 
 		return _Utils_update(
 			item,
 			{
-				lX: A2($elm$core$Maybe$map, transform, item.lX)
+				lY: A2($elm$core$Maybe$map, transform, item.lY)
 			});
 	});
 var $author$project$PagesComponents$Organization_$Project_$Updates$Help$setOpenedSection = F2(
@@ -31135,7 +31135,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Help$setOpene
 		return _Utils_update(
 			item,
 			{
-				nt: transform(item.nt)
+				nu: transform(item.nu)
 			});
 	});
 var $author$project$PagesComponents$Organization_$Project_$Updates$Help$handleHelp = F2(
@@ -31147,8 +31147,8 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Help$handleHe
 					_Utils_update(
 						model,
 						{
-							lX: $elm$core$Maybe$Just(
-								{H: $author$project$Conf$ids.lY, nt: section})
+							lY: $elm$core$Maybe$Just(
+								{H: $author$project$Conf$ids.lZ, nu: section})
 						}),
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
@@ -31156,15 +31156,15 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Help$handleHe
 								A2(
 								$author$project$Libs$Task$sendAfter,
 								1,
-								$author$project$PagesComponents$Organization_$Project_$Models$ModalOpen($author$project$Conf$ids.lY)),
+								$author$project$PagesComponents$Organization_$Project_$Models$ModalOpen($author$project$Conf$ids.lZ)),
 								$author$project$Ports$track(
-								A2($author$project$Track$docOpened, 'navbar_top', model.lD))
+								A2($author$project$Track$docOpened, 'navbar_top', model.lE))
 							])));
 			case 1:
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{lX: $elm$core$Maybe$Nothing}),
+						{lY: $elm$core$Maybe$Nothing}),
 					$elm$core$Platform$Cmd$none);
 			default:
 				var section = msg.a;
@@ -31367,7 +31367,7 @@ var $author$project$PagesComponents$Organization_$Project_$Models$ErdLayout$crea
 						t);
 				},
 				layout.oM),
-			ka: layout.ka
+			kb: layout.kb
 		};
 	});
 var $author$project$PagesComponents$Organization_$Project_$Models$Notes$Invalid = function (a) {
@@ -31616,7 +31616,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$cancel
 										function ($) {
 											return $.cy;
 										})))),
-						model.lD)),
+						model.lE)),
 				A2(
 					$author$project$Libs$Maybe$orElse,
 					A2(
@@ -31625,7 +31625,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$cancel
 							return $author$project$PagesComponents$Organization_$Project_$Models$ModalClose(
 								$author$project$PagesComponents$Organization_$Project_$Models$HelpMsg($author$project$PagesComponents$Organization_$Project_$Models$HClose));
 						},
-						model.lX),
+						model.lY),
 					A2(
 						$author$project$Libs$Maybe$orElse,
 						A2(
@@ -31670,7 +31670,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$cancel
 											function (_v9) {
 												return $author$project$PagesComponents$Organization_$Project_$Models$AmlSidebarMsg($author$project$PagesComponents$Organization_$Project_$Models$AClose);
 											},
-											model.kq),
+											model.kr),
 										A2(
 											$author$project$Libs$Maybe$orElse,
 											A2(
@@ -31706,7 +31706,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$cancel
 																return $author$project$PagesComponents$Organization_$Project_$Models$ModalClose(
 																	$author$project$PagesComponents$Organization_$Project_$Models$NewLayoutMsg($author$project$PagesComponents$Organization_$Project_$Views$Modals$NewLayout$Cancel));
 															},
-															model.m2),
+															model.m3),
 														A2(
 															$author$project$Libs$Maybe$orElse,
 															A2(
@@ -31730,7 +31730,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$cancel
 																		function (_v2) {
 																			return $author$project$PagesComponents$Organization_$Project_$Models$ModalClose($author$project$PagesComponents$Organization_$Project_$Models$CustomModalClose);
 																		},
-																		model.mR),
+																		model.mS),
 																	A2(
 																		$author$project$Libs$Maybe$orElse,
 																		A2(
@@ -31754,7 +31754,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$cancel
 																				function (_v0) {
 																					return $author$project$PagesComponents$Organization_$Project_$Models$ContextMenuClose;
 																				},
-																				model.k2)))))))))))))))))));
+																				model.k3)))))))))))))))))));
 };
 var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$currentTable = function (model) {
 	return A2(
@@ -31784,8 +31784,8 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$curren
 							function ($) {
 								return $.H;
 							})))),
-			model.lD),
-		model.l1);
+			model.lE),
+		model.l2);
 };
 var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$collapseElement = function (model) {
 	return A2(
@@ -31814,14 +31814,14 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$create
 						$author$project$Models$Area$centerCanvas(
 							A2(
 								$author$project$Models$Project$CanvasProps$viewport,
-								model.lE,
+								model.lF,
 								$author$project$PagesComponents$Organization_$Project_$Models$Erd$currentLayout(erd).fJ)))));
 		},
 		$elm$core$Platform$Cmd$none,
-		model.lD);
+		model.lE);
 };
 var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$currentColumn = function (model) {
-	return model.l0;
+	return model.l1;
 };
 var $author$project$PagesComponents$Organization_$Project_$Models$ShowRelatedTables = function (a) {
 	return {$: 14, a: a};
@@ -31874,18 +31874,18 @@ var $author$project$Services$Lenses$mapActive = A2(
 var $author$project$Services$Lenses$setNavbar = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.m_;
+		return $.m$;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{m_: value});
+				{m$: value});
 		}));
 var $author$project$Services$Lenses$mapNavbar = A2(
 	$author$project$Services$Lenses$map_,
 	function ($) {
-		return $.m_;
+		return $.m$;
 	},
 	$author$project$Services$Lenses$setNavbar);
 var $author$project$Services$Lenses$setSearch = A2(
@@ -31934,7 +31934,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$moveTa
 								return $.cy;
 							})))),
 			_List_Nil,
-			model.lD);
+			model.lE);
 		return $author$project$Libs$List$nonEmpty(selectedTables) ? $elm$core$Maybe$Just(
 			$elm$core$Platform$Cmd$batch(
 				A2(
@@ -31999,7 +31999,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$moveTa
 					return $.oM;
 				}),
 			_List_Nil,
-			model.lD);
+			model.lE);
 		var selectedTables = A2(
 			$elm$core$List$filter,
 			function (_v2) {
@@ -32051,7 +32051,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$moveTa
 								id,
 								tables));
 					},
-					model.l1)));
+					model.l2)));
 	});
 var $author$project$PagesComponents$Organization_$Project_$Components$DetailsSidebar$ShowColumn = function (a) {
 	return {$: 6, a: a};
@@ -32088,7 +32088,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$onDeta
 							return onColumn(view);
 					}
 				},
-				model.lp));
+				model.lq));
 	});
 var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$nextDetails = function (model) {
 	return A4(
@@ -32410,7 +32410,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$handle
 								function (_v3) {
 									return $author$project$PagesComponents$Organization_$Project_$Models$FPClose;
 								},
-								A2($author$project$PagesComponents$Organization_$Project_$Models$FPOpen, model.l1, $elm$core$Maybe$Nothing),
+								A2($author$project$PagesComponents$Organization_$Project_$Models$FPOpen, model.l2, $elm$core$Maybe$Nothing),
 								model.c8))));
 			case 'reset-zoom':
 				return _Utils_Tuple2(
@@ -32431,7 +32431,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$handle
 											return $.hU;
 										})),
 								0,
-								model.lD))));
+								model.lE))));
 			case 'fit-to-screen':
 				return _Utils_Tuple2(
 					model,
@@ -32463,7 +32463,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Hotkey$handle
 									return $author$project$PagesComponents$Organization_$Project_$Models$HClose;
 								},
 								$author$project$PagesComponents$Organization_$Project_$Models$HOpen(''),
-								model.lX))));
+								model.lY))));
 			default:
 				return _Utils_Tuple2(
 					model,
@@ -32531,8 +32531,8 @@ var $author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar
 					erd)),
 			id);
 		return {
-			lF: _List_Nil,
-			H: $author$project$Conf$ids.kr,
+			lG: _List_Nil,
+			H: $author$project$Conf$ids.ks,
 			g_: A2($author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar$getOtherSourcesTableIds, selectedId, erd),
 			cy: selectedId
 		};
@@ -32560,7 +32560,7 @@ var $author$project$Models$SourceInfo$jsonLocal = F3(
 			$author$project$Models$SourceInfo$SourceInfo,
 			sourceId,
 			file.eS,
-			A3($author$project$Models$Project$SourceKind$JsonLocalFile, file.eS, file.ox, file.mn),
+			A3($author$project$Models$Project$SourceKind$JsonLocalFile, file.eS, file.ox, file.mo),
 			true,
 			$elm$core$Maybe$Nothing,
 			now,
@@ -32607,13 +32607,13 @@ var $author$project$Ports$observeSize = function (id) {
 var $author$project$Services$Lenses$setCursorMode = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.k7;
+		return $.k8;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{k7: value});
+				{k8: value});
 		}));
 var $author$project$Models$SourceInfo$sqlLocal = F3(
 	function (now, sourceId, file) {
@@ -32621,7 +32621,7 @@ var $author$project$Models$SourceInfo$sqlLocal = F3(
 			$author$project$Models$SourceInfo$SourceInfo,
 			sourceId,
 			file.eS,
-			A3($author$project$Models$Project$SourceKind$SqlLocalFile, file.eS, file.ox, file.mn),
+			A3($author$project$Models$Project$SourceKind$SqlLocalFile, file.eS, file.ox, file.mo),
 			true,
 			$elm$core$Maybe$Nothing,
 			now,
@@ -32651,7 +32651,7 @@ var $author$project$PagesComponents$Organization_$Project_$Models$Erd$mapCurrent
 var $author$project$Services$Lenses$mapErdMCmd = A2(
 	$author$project$Services$Lenses$mapMCmd_,
 	function ($) {
-		return $.lD;
+		return $.lE;
 	},
 	$author$project$Services$Lenses$setErd);
 var $author$project$Libs$List$memberBy = F3(
@@ -32713,7 +32713,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$isSameTopRigh
 		var bPos = _v1.b;
 		return _Utils_eq(aPos.ad, bPos.ad) && _Utils_eq(aPos.C + aSize.bB, bPos.C + bSize.bB);
 	});
-var $author$project$Conf$ui = {kZ: 300, nr: 200, oJ: 24, oK: 45};
+var $author$project$Conf$ui = {k_: 300, ns: 200, oJ: 24, oK: 45};
 var $author$project$PagesComponents$Organization_$Project_$Updates$moveDownIfExists = F3(
 	function (tables, size, position) {
 		return A2(
@@ -32851,7 +32851,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$updateSizes =
 				return _Utils_update(
 					model,
 					{
-						lE: {e$: c.e$, ox: c.ox}
+						lF: {e$: c.e$, ox: c.ox}
 					});
 			},
 			model,
@@ -32862,7 +32862,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$updateSizes =
 				},
 				'erd',
 				changes));
-		var erdViewport = A2($author$project$PagesComponents$Organization_$Project_$Models$Erd$viewportM, erdChanged.lE, erdChanged.lD);
+		var erdViewport = A2($author$project$PagesComponents$Organization_$Project_$Models$Erd$viewportM, erdChanged.lF, erdChanged.lE);
 		var newModel = A2(
 			$author$project$Services$Lenses$mapErdM,
 			function (erd) {
@@ -32890,7 +32890,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$updateSizes =
 			$author$project$Services$Lenses$mapErdMCmd,
 			function (e) {
 				return ($elm$core$List$length(
-					$author$project$PagesComponents$Organization_$Project_$Models$Erd$currentLayout(e).oM) > 0) ? A3($author$project$PagesComponents$Organization_$Project_$Updates$Canvas$fitCanvas, now, newModel.lE, e) : _Utils_Tuple2(e, $elm$core$Platform$Cmd$none);
+					$author$project$PagesComponents$Organization_$Project_$Models$Erd$currentLayout(e).oM) > 0) ? A3($author$project$PagesComponents$Organization_$Project_$Updates$Canvas$fitCanvas, now, newModel.lF, e) : _Utils_Tuple2(e, $elm$core$Platform$Cmd$none);
 			},
 			A2(
 				$author$project$Services$Lenses$mapConf,
@@ -32913,7 +32913,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$handleJsMessa
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{ms: true}),
+							{mt: true}),
 						$elm$core$Platform$Cmd$none);
 				} else {
 					if (res.a.$ === 1) {
@@ -32921,7 +32921,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$handleJsMessa
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{ms: true}),
+								{mt: true}),
 							$elm$core$Platform$Cmd$batch(
 								_List_fromArray(
 									[
@@ -32963,29 +32963,29 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$handleJsMessa
 									$author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar$init,
 									$elm$core$Maybe$Nothing,
 									$elm$core$Maybe$Just(erd))),
-							model.kq);
+							model.kr);
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{
-									kq: amlSidebar,
-									lr: false,
-									lD: $elm$core$Maybe$Just(erd),
-									ms: true
+									kr: amlSidebar,
+									ls: false,
+									lE: $elm$core$Maybe$Just(erd),
+									mt: true
 								}),
 							$elm$core$Platform$Cmd$batch(
 								_Utils_ap(
 									_List_fromArray(
 										[
-											$author$project$Ports$observeSize($author$project$Conf$ids.lD),
+											$author$project$Ports$observeSize($author$project$Conf$ids.lE),
 											$author$project$Ports$observeLayout(
 											$author$project$PagesComponents$Organization_$Project_$Models$Erd$currentLayout(erd)),
 											$author$project$Ports$setMeta(
 											{
-												kL: $elm$core$Maybe$Nothing,
-												kP: $elm$core$Maybe$Nothing,
+												kM: $elm$core$Maybe$Nothing,
+												kQ: $elm$core$Maybe$Nothing,
 												bf: $elm$core$Maybe$Nothing,
-												l3: $elm$core$Maybe$Nothing,
+												l4: $elm$core$Maybe$Nothing,
 												a4: $elm$core$Maybe$Just(
 													$author$project$PagesComponents$Organization_$Project_$Views$title(
 														$elm$core$Maybe$Just(erd)))
@@ -33072,7 +33072,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$handleJsMessa
 					_Utils_update(
 						model,
 						{
-							k_: A3(
+							k$: A3(
 								$elm$core$Dict$update,
 								stats.H,
 								A2(
@@ -33085,7 +33085,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$handleJsMessa
 											$author$project$Models$Project$SourceId$toString(source),
 											stats),
 										$elm$core$Maybe$Just)),
-								model.k_)
+								model.k$)
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 6:
@@ -33304,32 +33304,8 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Layout$handle
 					model));
 		}
 	});
-var $author$project$Libs$Maybe$all = F2(
-	function (predicate, maybe) {
-		return A2(
-			$elm$core$Maybe$withDefault,
-			true,
-			A2($elm$core$Maybe$map, predicate, maybe));
-	});
 var $author$project$PagesComponents$Organization_$Project_$Models$Erd$canCreateMemo = function (erd) {
-	return A2(
-		$author$project$Libs$Maybe$all,
-		function (max) {
-			return _Utils_cmp(
-				max,
-				$elm$core$List$length(
-					A3(
-						$author$project$Libs$Maybe$mapOrElse,
-						A2(
-							$elm$core$Basics$composeR,
-							$author$project$PagesComponents$Organization_$Project_$Models$Erd$currentLayout,
-							function ($) {
-								return $.gw;
-							}),
-						_List_Nil,
-						erd))) > 0;
-		},
-		A2($author$project$PagesComponents$Organization_$Project_$Models$Erd$getOrganizationM, $elm$core$Maybe$Nothing, erd).nD.gw);
+	return true;
 };
 var $author$project$PagesComponents$Organization_$Project_$Models$ErdLayout$createMemo = F2(
 	function (layout, position) {
@@ -33378,13 +33354,13 @@ var $elm$browser$Browser$Dom$focus = _Browser_call('focus');
 var $author$project$Services$Lenses$setEditMemo = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.lv;
+		return $.lw;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{lv: value});
+				{lw: value});
 		}));
 var $author$project$PagesComponents$Organization_$Project_$Models$MemoId$toInputId = function (id) {
 	return $author$project$PagesComponents$Organization_$Project_$Models$MemoId$htmlIdPrefix + ($elm$core$String$fromInt(id) + '-input');
@@ -33395,7 +33371,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Memo$editMemo
 			A2(
 				$author$project$Services$Lenses$setEditMemo,
 				$elm$core$Maybe$Just(
-					{cX: memo.cX, k5: createMode, H: memo.H}),
+					{cX: memo.cX, k6: createMode, H: memo.H}),
 				model),
 			A2(
 				$elm$core$Task$attempt,
@@ -33430,7 +33406,7 @@ var $author$project$Libs$String$pluralize = F2(
 	});
 var $author$project$Components$Slices$ProPlan$memosModalBody = F3(
 	function (organization, close, titleId) {
-		var limit = A2($elm$core$Maybe$withDefault, $author$project$Conf$features.gw.lR, organization.nD.gw);
+		var limit = A2($elm$core$Maybe$withDefault, $author$project$Conf$features.gw.lS, organization.jv.gw);
 		var color = $author$project$Libs$Tailwind$amber;
 		return A2(
 			$elm$html$Html$div,
@@ -33546,7 +33522,7 @@ var $author$project$Components$Slices$ProPlan$memosModalBody = F3(
 													$elm$html$Html$a,
 													_List_fromArray(
 														[
-															$elm$html$Html$Attributes$href('mailto:' + $author$project$Conf$constants.kA),
+															$elm$html$Html$Attributes$href('mailto:' + $author$project$Conf$constants.kB),
 															$elm$html$Html$Attributes$target('_blank'),
 															$elm$html$Html$Attributes$rel('noopener'),
 															$elm$html$Html$Attributes$class('link')
@@ -33640,7 +33616,7 @@ var $author$project$Track$proPlanLimit = F2(
 	});
 var $author$project$PagesComponents$Organization_$Project_$Updates$Memo$createMemo = F4(
 	function (now, position, erd, model) {
-		return $author$project$PagesComponents$Organization_$Project_$Models$Erd$canCreateMemo(model.lD) ? function (memo) {
+		return $author$project$PagesComponents$Organization_$Project_$Models$Erd$canCreateMemo(model.lE) ? function (memo) {
 			return A2(
 				$elm$core$Tuple$mapSecond,
 				function (cmd) {
@@ -33704,7 +33680,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Memo$deleteMe
 				_Utils_Tuple2(
 					m,
 					$author$project$Ports$track(
-						$author$project$Track$memoDeleted(model.lD))));
+						$author$project$Track$memoDeleted(model.lE))));
 		}(
 			A2(
 				$author$project$Services$Lenses$mapErdM,
@@ -33721,7 +33697,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Memo$deleteMe
 var $author$project$Services$Lenses$mapEditMemoM = A2(
 	$author$project$Services$Lenses$mapM_,
 	function ($) {
-		return $.lv;
+		return $.lw;
 	},
 	$author$project$Services$Lenses$setEditMemo);
 var $author$project$Services$Lenses$mapL_ = F6(
@@ -33782,12 +33758,12 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Memo$saveMemo
 						edit.H,
 						$author$project$PagesComponents$Organization_$Project_$Models$Erd$currentLayout(erd).gw);
 				},
-				model.lD));
+				model.lE));
 		return ($elm$core$String$trim(edit.cX) === '') ? A4(
 			$author$project$PagesComponents$Organization_$Project_$Updates$Memo$deleteMemo,
 			now,
 			edit.H,
-			edit.k5,
+			edit.k6,
 			A2($author$project$Services$Lenses$setEditMemo, $elm$core$Maybe$Nothing, model)) : (_Utils_eq(edit.cX, memoContent) ? _Utils_Tuple2(
 			A2($author$project$Services$Lenses$setEditMemo, $elm$core$Maybe$Nothing, model),
 			$elm$core$Platform$Cmd$none) : $author$project$PagesComponents$Organization_$Project_$Updates$Utils$setDirtyCmd(
@@ -33806,7 +33782,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Memo$saveMemo
 							$author$project$Services$Lenses$setContent(edit.cX))),
 					A2($author$project$Services$Lenses$setEditMemo, $elm$core$Maybe$Nothing, model)),
 				$author$project$Ports$track(
-					A3($author$project$Track$memoSaved, edit.k5, edit.cX, model.lD)))));
+					A3($author$project$Track$memoSaved, edit.k6, edit.cX, model.lE)))));
 	});
 var $author$project$Services$Lenses$setColor = A2(
 	$author$project$Services$Lenses$set_,
@@ -33830,7 +33806,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Memo$handleMe
 						return A4($author$project$PagesComponents$Organization_$Project_$Updates$Memo$createMemo, now, pos, erd, model);
 					},
 					_Utils_Tuple2(model, $elm$core$Platform$Cmd$none),
-					model.lD);
+					model.lE);
 			case 1:
 				var memo = msg.a;
 				return A3($author$project$PagesComponents$Organization_$Project_$Updates$Memo$editMemo, false, memo, model);
@@ -33855,7 +33831,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Memo$handleMe
 						function (memo) {
 							return A3($author$project$PagesComponents$Organization_$Project_$Updates$Memo$saveMemo, now, memo, model);
 						},
-						model.lv));
+						model.lw));
 			case 4:
 				var id = msg.a;
 				var color = msg.b;
@@ -34012,12 +33988,12 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Notes$handleN
 								return $.bP;
 							},
 							$author$project$PagesComponents$Organization_$Project_$Models$ErdNotes$get(ref)),
-						model.lD));
+						model.lE));
 				return _Utils_Tuple2(
 					A2(
 						$author$project$Services$Lenses$setEditNotes,
 						$elm$core$Maybe$Just(
-							{H: $author$project$Conf$ids.lw, l7: notes, bP: notes, dG: ref}),
+							{H: $author$project$Conf$ids.lx, l8: notes, bP: notes, dG: ref}),
 						model),
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
@@ -34025,7 +34001,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Notes$handleN
 								A2(
 								$author$project$Libs$Task$sendAfter,
 								1,
-								$author$project$PagesComponents$Organization_$Project_$Models$ModalOpen($author$project$Conf$ids.lw)),
+								$author$project$PagesComponents$Organization_$Project_$Models$ModalOpen($author$project$Conf$ids.lx)),
 								$elm$core$Platform$Cmd$none
 							])));
 			case 1:
@@ -34041,9 +34017,9 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Notes$handleN
 				var initialNotes = msg.b;
 				var notes = msg.c;
 				var cmd = _Utils_eq(initialNotes, notes) ? $elm$core$Platform$Cmd$none : ((notes === '') ? $author$project$Ports$track(
-					$author$project$Track$notesDeleted(model.lD)) : ((initialNotes === '') ? $author$project$Ports$track(
-					A2($author$project$Track$notesCreated, notes, model.lD)) : $author$project$Ports$track(
-					A2($author$project$Track$notesUpdated, notes, model.lD))));
+					$author$project$Track$notesDeleted(model.lE)) : ((initialNotes === '') ? $author$project$Ports$track(
+					A2($author$project$Track$notesCreated, notes, model.lE)) : $author$project$Ports$track(
+					A2($author$project$Track$notesUpdated, notes, model.lE))));
 				return $author$project$PagesComponents$Organization_$Project_$Updates$Utils$setDirtyCmd(
 					_Utils_Tuple2(
 						A2(
@@ -34292,7 +34268,7 @@ var $author$project$Models$Project$Source$refreshWith = F2(
 	function (_new, current) {
 		return (_Utils_eq(_new.H, current.H) && A2($author$project$Models$Project$SourceKind$same, current.gi, _new.gi)) ? _Utils_update(
 			current,
-			{cX: _new.cX, gi: _new.gi, bT: _new.bT, oM: _new.oM, d3: _new.d3, ka: _new.ka}) : current;
+			{cX: _new.cX, gi: _new.gi, bT: _new.bT, oM: _new.oM, d3: _new.d3, kb: _new.kb}) : current;
 	});
 var $author$project$Services$Lenses$setColumnOrder = A2(
 	$author$project$Services$Lenses$set_,
@@ -34330,13 +34306,13 @@ var $author$project$Services$Lenses$setList = A2(
 var $author$project$Services$Lenses$setMax = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.mD;
+		return $.mE;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{mD: value});
+				{mE: value});
 		}));
 var $author$project$Services$Lenses$setRelationStyle = A2(
 	$author$project$Services$Lenses$set_,
@@ -34665,7 +34641,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$ProjectSettin
 								_List_fromArray(
 									[
 										$author$project$Ports$observeTablesSize(
-										$author$project$PagesComponents$Organization_$Project_$Updates$ProjectSettings$getShownTables(updated.lD)),
+										$author$project$PagesComponents$Organization_$Project_$Updates$ProjectSettings$getShownTables(updated.lE)),
 										$author$project$Libs$Task$send(
 										$author$project$PagesComponents$Organization_$Project_$Models$Toast(
 											$author$project$Services$Toasts$info(
@@ -34698,7 +34674,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$ProjectSettin
 									$author$project$PagesComponents$Organization_$Project_$Models$Toast(
 										$author$project$Services$Toasts$info('Source ' + (source.eS + ' has been deleted from your project.')))),
 									$author$project$Ports$track(
-									A2($author$project$Track$sourceDeleted, model.lD, source))
+									A2($author$project$Track$sourceDeleted, model.lE, source))
 								]))));
 			case 4:
 				var message = msg.a;
@@ -34715,7 +34691,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$ProjectSettin
 							function ($) {
 								return $.nN;
 							},
-							model.lD),
+							model.lE),
 						message),
 					model);
 			case 5:
@@ -34732,7 +34708,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$ProjectSettin
 							erd.hs);
 					},
 					false,
-					model.lD) ? $author$project$PagesComponents$Organization_$Project_$Updates$Utils$setDirtyCmd(
+					model.lE) ? $author$project$PagesComponents$Organization_$Project_$Updates$Utils$setDirtyCmd(
 					_Utils_Tuple2(
 						A2(
 							$author$project$Services$Lenses$mapErdM,
@@ -34749,7 +34725,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$ProjectSettin
 										$author$project$PagesComponents$Organization_$Project_$Models$ProjectSettingsMsg(
 											$author$project$PagesComponents$Organization_$Project_$Models$PSSourceUpdate($author$project$PagesComponents$Organization_$Project_$Components$SourceUpdateDialog$Close)))),
 									$author$project$Ports$track(
-									A2($author$project$Track$sourceRefreshed, model.lD, source))
+									A2($author$project$Track$sourceRefreshed, model.lE, source))
 								])))) : $author$project$PagesComponents$Organization_$Project_$Updates$Utils$setDirtyCmd(
 					_Utils_Tuple2(
 						A2(
@@ -34765,7 +34741,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$ProjectSettin
 										$author$project$PagesComponents$Organization_$Project_$Models$ProjectSettingsMsg(
 											$author$project$PagesComponents$Organization_$Project_$Models$PSSourceUpdate($author$project$PagesComponents$Organization_$Project_$Components$SourceUpdateDialog$Close)))),
 									$author$project$Ports$track(
-									A2($author$project$Track$sourceAdded, model.lD, source))
+									A2($author$project$Track$sourceAdded, model.lE, source))
 								]))));
 			case 6:
 				var value = msg.a;
@@ -34782,7 +34758,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$ProjectSettin
 						return _Utils_Tuple2(
 							m,
 							$author$project$Ports$observeTablesSize(
-								$author$project$PagesComponents$Organization_$Project_$Updates$ProjectSettings$getShownTables(m.lD)));
+								$author$project$PagesComponents$Organization_$Project_$Updates$ProjectSettings$getShownTables(m.lE)));
 					}(
 						A2(
 							$author$project$Services$Lenses$mapErdM,
@@ -34796,7 +34772,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$ProjectSettin
 						return _Utils_Tuple2(
 							m,
 							$author$project$Ports$observeTablesSize(
-								$author$project$PagesComponents$Organization_$Project_$Updates$ProjectSettings$getShownTables(m.lD)));
+								$author$project$PagesComponents$Organization_$Project_$Updates$ProjectSettings$getShownTables(m.lE)));
 					}(
 						A2(
 							$author$project$Services$Lenses$mapErdM,
@@ -34810,7 +34786,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$ProjectSettin
 						return _Utils_Tuple2(
 							m,
 							$author$project$Ports$observeTablesSize(
-								$author$project$PagesComponents$Organization_$Project_$Updates$ProjectSettings$getShownTables(m.lD)));
+								$author$project$PagesComponents$Organization_$Project_$Updates$ProjectSettings$getShownTables(m.lE)));
 					}(
 						A2(
 							$author$project$Services$Lenses$mapErdM,
@@ -34913,7 +34889,7 @@ var $author$project$PagesComponents$Organization_$Project_$Models$CreateRelation
 var $author$project$PagesComponents$Organization_$Project_$Updates$VirtualRelation$adaptPosition = F3(
 	function (model, erd, pos) {
 		return function (l) {
-			return A4($author$project$Models$Position$canvasToViewport, model.lE.e$, l.fJ.e$, l.fJ.hU, pos);
+			return A4($author$project$Models$Position$canvasToViewport, model.lF.e$, l.fJ.e$, l.fJ.hU, pos);
 		}(
 			$author$project$PagesComponents$Organization_$Project_$Models$Erd$currentLayout(erd));
 	});
@@ -34996,7 +34972,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$VirtualRelati
 							A2($author$project$PagesComponents$Organization_$Project_$Models$Erd$getColumnPos, c, erd));
 					}),
 				src,
-				model.lD));
+				model.lE));
 	});
 var $author$project$Services$Lenses$setVirtualRelation = A2(
 	$author$project$Services$Lenses$set_,
@@ -35018,13 +34994,13 @@ var $author$project$Services$Lenses$mapVirtualRelationM = A2(
 var $author$project$Services$Lenses$setMouse = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.mT;
+		return $.mU;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{mT: value});
+				{mU: value});
 		}));
 var $author$project$PagesComponents$Organization_$Project_$Updates$VirtualRelation$handleVirtualRelation = F2(
 	function (msg, model) {
@@ -35036,7 +35012,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$VirtualRelati
 						$author$project$Services$Lenses$setVirtualRelation,
 						$elm$core$Maybe$Just(
 							{
-								mT: A2(
+								mU: A2(
 									$elm$core$Maybe$withDefault,
 									$author$project$Models$Position$zeroViewport,
 									A2($author$project$PagesComponents$Organization_$Project_$Updates$VirtualRelation$computeInitialPosition, model, src)),
@@ -35063,7 +35039,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$VirtualRelati
 								$author$project$Services$Lenses$setVirtualRelation,
 								$elm$core$Maybe$Just(
 									{
-										mT: pos,
+										mU: pos,
 										ht: $elm$core$Maybe$Just(ref)
 									}),
 								model),
@@ -35110,7 +35086,7 @@ var $author$project$Models$Position$roundDiagram = function (_v0) {
 };
 var $author$project$PagesComponents$Organization_$Project_$Updates$Canvas$performZoom = F4(
 	function (erdElem, delta, target, canvas) {
-		var newZoom = A3($elm$core$Basics$clamp, $author$project$Conf$canvas.hU.mL, $author$project$Conf$canvas.hU.mD, canvas.hU + delta);
+		var newZoom = A3($elm$core$Basics$clamp, $author$project$Conf$canvas.hU.mM, $author$project$Conf$canvas.hU.mE, canvas.hU + delta);
 		var targetDelta = A2(
 			$author$project$Models$Position$diffViewport,
 			target,
@@ -35131,7 +35107,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Canvas$perfor
 	});
 var $author$project$PagesComponents$Organization_$Project_$Updates$Canvas$handleWheel = F3(
 	function (event, erdElem, canvas) {
-		return event.at ? A4($author$project$PagesComponents$Organization_$Project_$Updates$Canvas$performZoom, erdElem, ((-event.lj.aZ) * $author$project$Conf$canvas.hU.oC) * canvas.hU, event.h3, canvas) : _Utils_update(
+		return event.at ? A4($author$project$PagesComponents$Organization_$Project_$Updates$Canvas$performZoom, erdElem, ((-event.lk.aZ) * $author$project$Conf$canvas.hU.oC) * canvas.hU, event.h3, canvas) : _Utils_update(
 			canvas,
 			{
 				e$: A2(
@@ -35139,7 +35115,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Canvas$handle
 					A2(
 						$author$project$Libs$Models$Delta$adjust,
 						canvas.hU,
-						$author$project$Libs$Models$Delta$negate(event.lj)),
+						$author$project$Libs$Models$Delta$negate(event.lk)),
 					canvas.e$)
 			});
 	});
@@ -35432,7 +35408,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Table$hideCol
 													if (!_v1.b.$) {
 														var _v4 = _v1.a;
 														var c = _v1.b.a;
-														return !c.ne;
+														return !c.nf;
 													} else {
 														break _v1$4;
 													}
@@ -35719,13 +35695,13 @@ var $author$project$Libs$List$dropUntil = F2(
 var $author$project$Services$Lenses$setHoverColumn = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.l0;
+		return $.l1;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{l0: value});
+				{l1: value});
 		}));
 var $author$project$PagesComponents$Organization_$Project_$Updates$Table$hoverNextColumn = F3(
 	function (table, column, model) {
@@ -35765,7 +35741,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Table$hoverNe
 								return $.H;
 							},
 							table))),
-				model.lD));
+				model.lE));
 		return A2(
 			$author$project$Services$Lenses$setHoverColumn,
 			A2(
@@ -35783,18 +35759,18 @@ var $author$project$Libs$Nel$last = function (nel) {
 var $author$project$Services$Lenses$setAmlSidebar = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.kq;
+		return $.kr;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{kq: value});
+				{kr: value});
 		}));
 var $author$project$Services$Lenses$mapAmlSidebarM = A2(
 	$author$project$Services$Lenses$mapM_,
 	function ($) {
-		return $.kq;
+		return $.kr;
 	},
 	$author$project$Services$Lenses$setAmlSidebar);
 var $author$project$PagesComponents$Organization_$Project_$Models$ErdColumnProps$mapAt = F3(
@@ -35817,18 +35793,18 @@ var $author$project$PagesComponents$Organization_$Project_$Models$ErdColumnProps
 var $author$project$Services$Lenses$setContextMenu = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.k2;
+		return $.k3;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{k2: value});
+				{k3: value});
 		}));
 var $author$project$Services$Lenses$mapContextMenuM = A2(
 	$author$project$Services$Lenses$mapM_,
 	function ($) {
-		return $.k2;
+		return $.k3;
 	},
 	$author$project$Services$Lenses$setContextMenu);
 var $author$project$Services$Lenses$mapDCmd_ = F5(
@@ -35874,127 +35850,127 @@ var $author$project$PagesComponents$Organization_$Project_$Models$Erd$mapCurrent
 					function (l) {
 						return _Utils_update(
 							l,
-							{ka: now});
+							{kb: now});
 					})),
 			erd);
 	});
 var $author$project$Services$Lenses$setDetailsSidebar = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.lp;
+		return $.lq;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{lp: value});
+				{lq: value});
 		}));
 var $author$project$Services$Lenses$mapDetailsSidebarCmd = A2(
 	$author$project$Services$Lenses$mapCmd_,
 	function ($) {
-		return $.lp;
+		return $.lq;
 	},
 	$author$project$Services$Lenses$setDetailsSidebar);
 var $author$project$Services$Lenses$setEmbedSourceParsing = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.lA;
+		return $.lB;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{lA: value});
+				{lB: value});
 		}));
 var $author$project$Services$Lenses$mapEmbedSourceParsingMCmd = A2(
 	$author$project$Services$Lenses$mapMCmd_,
 	function ($) {
-		return $.lA;
+		return $.lB;
 	},
 	$author$project$Services$Lenses$setEmbedSourceParsing);
 var $author$project$Services$Lenses$setHoverTable = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.l1;
+		return $.l2;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{l1: value});
+				{l2: value});
 		}));
 var $author$project$Services$Lenses$mapHoverTable = A2(
 	$author$project$Services$Lenses$map_,
 	function ($) {
-		return $.l1;
+		return $.l2;
 	},
 	$author$project$Services$Lenses$setHoverTable);
 var $author$project$Services$Lenses$setMobileMenuOpen = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.mQ;
+		return $.mR;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{mQ: value});
+				{mR: value});
 		}));
 var $author$project$Services$Lenses$mapMobileMenuOpen = A2(
 	$author$project$Services$Lenses$map_,
 	function ($) {
-		return $.mQ;
+		return $.mR;
 	},
 	$author$project$Services$Lenses$setMobileMenuOpen);
 var $author$project$Services$Lenses$setOpenedDialogs = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.ns;
+		return $.nt;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{ns: value});
+				{nt: value});
 		}));
 var $author$project$Services$Lenses$mapOpenedDialogs = A2(
 	$author$project$Services$Lenses$map_,
 	function ($) {
-		return $.ns;
+		return $.nt;
 	},
 	$author$project$Services$Lenses$setOpenedDialogs);
 var $author$project$Services$Lenses$setOrganization = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.nw;
+		return $.nx;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{nw: value});
+				{nx: value});
 		}));
 var $author$project$Services$Lenses$mapOrganizationM = A2(
 	$author$project$Services$Lenses$mapM_,
 	function ($) {
-		return $.nw;
+		return $.nx;
 	},
 	$author$project$Services$Lenses$setOrganization);
 var $author$project$Services$Lenses$setPlan = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.nD;
+		return $.jv;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{nD: value});
+				{jv: value});
 		}));
 var $author$project$Services$Lenses$mapPlan = A2(
 	$author$project$Services$Lenses$map_,
 	function ($) {
-		return $.nD;
+		return $.jv;
 	},
 	$author$project$Services$Lenses$setPlan);
 var $author$project$Services$Lenses$setProject = A2(
@@ -36265,7 +36241,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Project$moveP
 							$author$project$PagesComponents$Organization_$Project_$Models$Toast(
 								$author$project$Services$Toasts$warning('No project to move')))
 						]),
-					A2($elm$core$Maybe$map, $author$project$PagesComponents$Organization_$Project_$Models$Erd$unpack, model.lD)))) : _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					A2($elm$core$Maybe$map, $author$project$PagesComponents$Organization_$Project_$Models$Erd$unpack, model.lE)))) : _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 	});
 var $author$project$Services$Backend$dashboardUrl = '/home';
 var $author$project$Services$Backend$organizationUrl = function (organization) {
@@ -36386,13 +36362,13 @@ var $author$project$Services$Lenses$setLast = A2(
 var $author$project$Services$Lenses$setModal = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.mR;
+		return $.mS;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{mR: value});
+				{mS: value});
 		}));
 var $author$project$Services$Lenses$setName = A2(
 	$author$project$Services$Lenses$set_,
@@ -36435,7 +36411,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar
 				return _Utils_update(
 					v,
 					{
-						g_: A2($author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar$getOtherSourcesTableIds, sourceId, model.lD)
+						g_: A2($author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar$getOtherSourcesTableIds, sourceId, model.lE)
 					});
 			},
 			model);
@@ -37009,7 +36985,7 @@ var $author$project$Models$ColumnOrder$sortOffset = function (b) {
 var $elm$core$String$toLower = _String_toLower;
 var $author$project$PagesComponents$Organization_$Project_$Models$ErdColumn$withNullable = F2(
 	function (column, text) {
-		return column.ne ? (text + '?') : text;
+		return column.nf ? (text + '?') : text;
 	});
 var $author$project$Models$ColumnOrder$sortBy = F4(
 	function (order, table, relations, columns) {
@@ -37027,7 +37003,7 @@ var $author$project$Models$ColumnOrder$sortBy = F4(
 						$elm$core$Basics$composeR,
 						$elm$core$Tuple$first,
 						function ($) {
-							return $.l6;
+							return $.l7;
 						}),
 					columns);
 			case 1:
@@ -37037,19 +37013,19 @@ var $author$project$Models$ColumnOrder$sortBy = F4(
 						var c = _v1.a;
 						return $author$project$Libs$Maybe$isJust(
 							A2($author$project$PagesComponents$Organization_$Project_$Models$ErdTable$inPrimaryKey, table, c.aA)) ? _Utils_Tuple2(
-							0 + $author$project$Models$ColumnOrder$sortOffset(c.ne),
-							c.l6) : ($author$project$Libs$List$nonEmpty(
+							0 + $author$project$Models$ColumnOrder$sortOffset(c.nf),
+							c.l7) : ($author$project$Libs$List$nonEmpty(
 							A2($author$project$Models$Project$Relation$outRelation, tableRelations, c.aA)) ? _Utils_Tuple2(
-							1 + $author$project$Models$ColumnOrder$sortOffset(c.ne),
-							c.l6) : ($author$project$Libs$List$nonEmpty(
+							1 + $author$project$Models$ColumnOrder$sortOffset(c.nf),
+							c.l7) : ($author$project$Libs$List$nonEmpty(
 							A2($author$project$PagesComponents$Organization_$Project_$Models$ErdTable$inUniques, table, c.aA)) ? _Utils_Tuple2(
-							2 + $author$project$Models$ColumnOrder$sortOffset(c.ne),
-							c.l6) : ($author$project$Libs$List$nonEmpty(
+							2 + $author$project$Models$ColumnOrder$sortOffset(c.nf),
+							c.l7) : ($author$project$Libs$List$nonEmpty(
 							A2($author$project$PagesComponents$Organization_$Project_$Models$ErdTable$inIndexes, table, c.aA)) ? _Utils_Tuple2(
-							3 + $author$project$Models$ColumnOrder$sortOffset(c.ne),
-							c.l6) : _Utils_Tuple2(
-							4 + $author$project$Models$ColumnOrder$sortOffset(c.ne),
-							c.l6))));
+							3 + $author$project$Models$ColumnOrder$sortOffset(c.nf),
+							c.l7) : _Utils_Tuple2(
+							4 + $author$project$Models$ColumnOrder$sortOffset(c.nf),
+							c.l7))));
 					},
 					columns);
 			case 2:
@@ -37094,7 +37070,7 @@ var $author$project$PagesComponents$Organization_$Project_$Models$ErdColumnProps
 			},
 			A2(
 				$elm$core$List$take,
-				settings.ay.mD,
+				settings.ay.mE,
 				A4(
 					$author$project$Models$ColumnOrder$sortBy,
 					settings.cW,
@@ -37831,7 +37807,7 @@ var $author$project$Libs$List$one = function (list) {
 };
 var $elm$http$Http$post = function (r) {
 	return $elm$http$Http$request(
-		{kL: r.kL, lH: r.lH, f9: _List_Nil, gy: 'POST', hK: $elm$core$Maybe$Nothing, hM: $elm$core$Maybe$Nothing, o1: r.o1});
+		{kM: r.kM, lI: r.lI, f9: _List_Nil, gy: 'POST', hK: $elm$core$Maybe$Nothing, hM: $elm$core$Maybe$Nothing, o1: r.o1});
 };
 var $author$project$PagesComponents$Organization_$Project_$Updates$Project$triggerSaveProject = F3(
 	function (urlOrganization, organizations, model) {
@@ -37853,7 +37829,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Project$trigg
 		return _Utils_Tuple2(
 			_Utils_update(
 				model,
-				{lr: false}),
+				{ls: false}),
 			A3(
 				$author$project$Libs$Maybe$mapOrElse,
 				function (e) {
@@ -37864,10 +37840,10 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Project$trigg
 								[
 									$elm$http$Http$post(
 									{
-										kL: $elm$http$Http$jsonBody(
+										kM: $elm$http$Http$jsonBody(
 											$author$project$Models$Project$encode(
 												$author$project$PagesComponents$Organization_$Project_$Models$Erd$unpack(e))),
-										lH: $elm$http$Http$expectWhatever(
+										lI: $elm$http$Http$expectWhatever(
 											$elm$core$Basics$always($author$project$PagesComponents$Organization_$Project_$Models$UpdateProject)),
 										o1: '/post'
 									}),
@@ -37880,10 +37856,10 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Project$trigg
 							function (_v0) {
 								return $author$project$Libs$Task$send($author$project$PagesComponents$Organization_$Project_$Models$UpdateProject);
 							},
-							e.nN.nw));
+							e.nN.nx));
 				},
 				$elm$core$Platform$Cmd$none,
-				model.lD));
+				model.lE));
 	});
 var $author$project$Services$Lenses$mapOpenedDropdown = A2(
 	$author$project$Services$Lenses$map_,
@@ -37910,13 +37886,13 @@ var $author$project$PagesComponents$Organization_$Project_$Models$AOpen = functi
 var $author$project$Services$Lenses$setErrors = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.lF;
+		return $.lG;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{lF: value});
+				{lG: value});
 		}));
 var $author$project$PagesComponents$Organization_$Project_$Models$ShowColumns$List = function (a) {
 	return {$: 2, a: a};
@@ -37943,7 +37919,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar
 	});
 var $author$project$DataSources$AmlMiner$AmlAdapter$AmlSchema = F4(
 	function (tables, relations, types, errors) {
-		return {lF: errors, bT: relations, oM: tables, d3: types};
+		return {lG: errors, bT: relations, oM: tables, d3: types};
 	});
 var $author$project$DataSources$AmlMiner$AmlAdapter$AmlSchemaError = F3(
 	function (row, col, problem) {
@@ -37952,10 +37928,10 @@ var $author$project$DataSources$AmlMiner$AmlAdapter$AmlSchemaError = F3(
 var $author$project$DataSources$AmlMiner$AmlAdapter$createRelation = F3(
 	function (source, from, to) {
 		var toId = _Utils_Tuple2(
-			A2($elm$core$Maybe$withDefault, $author$project$Conf$schema.lB, to.aI),
+			A2($elm$core$Maybe$withDefault, $author$project$Conf$schema.lC, to.aI),
 			to.aq);
 		var fromId = _Utils_Tuple2(
-			A2($elm$core$Maybe$withDefault, $author$project$Conf$schema.lB, from.aI),
+			A2($elm$core$Maybe$withDefault, $author$project$Conf$schema.lC, from.aI),
 			from.aq);
 		return {
 			H: _Utils_Tuple2(
@@ -37997,11 +37973,11 @@ var $author$project$DataSources$AmlMiner$AmlAdapter$createColumn = F3(
 				$elm$core$Maybe$map,
 				$author$project$DataSources$AmlMiner$AmlAdapter$createComment(source),
 				column.bP),
-			le: column.le,
-			l6: index,
+			lf: column.lf,
+			l7: index,
 			gi: A2($elm$core$Maybe$withDefault, $author$project$Conf$schema.bH.o0, column.gi),
 			eS: column.eS,
-			ne: column.ne,
+			nf: column.nf,
 			jq: _List_fromArray(
 				[
 					{H: source, a$: _List_Nil}
@@ -38097,14 +38073,14 @@ var $author$project$DataSources$AmlMiner$AmlAdapter$createPrimaryKey = F2(
 	});
 var $author$project$DataSources$AmlMiner$AmlAdapter$createTableId = function (table) {
 	return _Utils_Tuple2(
-		A2($elm$core$Maybe$withDefault, $author$project$Conf$schema.lB, table.aI),
+		A2($elm$core$Maybe$withDefault, $author$project$Conf$schema.lC, table.aI),
 		table.aq);
 };
 var $author$project$DataSources$AmlMiner$AmlAdapter$createType = F4(
 	function (source, schema, name, values) {
 		return {
 			H: _Utils_Tuple2(
-				A2($elm$core$Maybe$withDefault, $author$project$Conf$schema.lB, schema),
+				A2($elm$core$Maybe$withDefault, $author$project$Conf$schema.lC, schema),
 				name),
 			eS: name,
 			jq: _List_fromArray(
@@ -38146,7 +38122,7 @@ var $author$project$DataSources$AmlMiner$AmlAdapter$createTable = F2(
 					A3(
 						$author$project$DataSources$AmlMiner$AmlAdapter$createConstraint,
 						function ($) {
-							return $.kX;
+							return $.kY;
 						},
 						$author$project$DataSources$Helpers$defaultCheckName(table.aq),
 						table.M)),
@@ -38182,7 +38158,7 @@ var $author$project$DataSources$AmlMiner$AmlAdapter$createTable = F2(
 					A3(
 						$author$project$DataSources$AmlMiner$AmlAdapter$createConstraint,
 						function ($) {
-							return $.l6;
+							return $.l7;
 						},
 						$author$project$DataSources$Helpers$defaultIndexName(table.aq),
 						table.M)),
@@ -38226,7 +38202,7 @@ var $author$project$DataSources$AmlMiner$AmlAdapter$createTable = F2(
 							$author$project$DataSources$AmlMiner$AmlAdapter$createRelation,
 							source,
 							{bH: c.eS, aI: table.aI, aq: table.aq}),
-						c.lP);
+						c.lQ);
 				},
 				table.M),
 			A2(
@@ -38242,7 +38218,7 @@ var $author$project$DataSources$AmlMiner$AmlAdapter$createTable = F2(
 							A2(
 								$author$project$DataSources$AmlMiner$AmlAdapter$createType,
 								source,
-								A2($author$project$Libs$Maybe$orElse, table.aI, c.mi)),
+								A2($author$project$Libs$Maybe$orElse, table.aI, c.mj)),
 							c.gi,
 							c.o2);
 					},
@@ -38272,14 +38248,14 @@ var $author$project$DataSources$AmlMiner$AmlAdapter$evolve = F3(
 							return _Utils_update(
 								schema,
 								{
-									lF: A2(
+									lG: A2(
 										$elm$core$List$cons,
 										A3(
 											$author$project$DataSources$AmlMiner$AmlAdapter$AmlSchemaError,
 											0,
 											0,
-											'Table \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lB, table.H) + '\' is already defined')),
-										schema.lF)
+											'Table \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lC, table.H) + '\' is already defined')),
+										schema.lG)
 								});
 						},
 						A2($elm$core$Dict$get, table.H, schema.oM)));
@@ -38389,7 +38365,7 @@ var $author$project$DataSources$AmlMiner$AmlAdapter$buildSource = F3(
 			A2($elm$core$List$foldl, $author$project$DataSources$AmlMiner$AmlAdapter$tablesColumnsOrdered, $elm$core$Dict$empty),
 			result);
 		return _Utils_Tuple3(
-			$elm$core$List$reverse(schema.lF),
+			$elm$core$List$reverse(schema.lG),
 			{
 				cX: content,
 				ic: source.ic,
@@ -38401,7 +38377,7 @@ var $author$project$DataSources$AmlMiner$AmlAdapter$buildSource = F3(
 				bT: $elm$core$List$reverse(schema.bT),
 				oM: schema.oM,
 				d3: schema.d3,
-				ka: source.ka
+				kb: source.kb
 			},
 			orderedColumns);
 	});
@@ -38929,14 +38905,14 @@ var $elm$parser$Parser$Advanced$sequence = function (i) {
 		$elm$parser$Parser$Advanced$token(i.hu),
 		A2(
 			$elm$parser$Parser$Advanced$skip,
-			i.jY,
+			i.jZ,
 			A5(
 				$elm$parser$Parser$Advanced$sequenceEnd,
 				$elm$parser$Parser$Advanced$token(i.ir),
-				i.jY,
+				i.jZ,
 				i.f,
-				$elm$parser$Parser$Advanced$token(i.jU),
-				i.j6)));
+				$elm$parser$Parser$Advanced$token(i.jV),
+				i.j7)));
 };
 var $elm$parser$Parser$Advanced$Forbidden = 0;
 var $elm$parser$Parser$Advanced$Mandatory = 2;
@@ -38965,17 +38941,17 @@ var $elm$parser$Parser$sequence = function (i) {
 		{
 			ir: $elm$parser$Parser$toToken(i.ir),
 			f: i.f,
-			jU: $elm$parser$Parser$toToken(i.jU),
-			jY: i.jY,
+			jV: $elm$parser$Parser$toToken(i.jV),
+			jZ: i.jZ,
 			hu: $elm$parser$Parser$toToken(i.hu),
-			j6: $elm$parser$Parser$toAdvancedTrailing(i.j6)
+			j7: $elm$parser$Parser$toAdvancedTrailing(i.j7)
 		});
 };
 var $author$project$DataSources$AmlMiner$AmlParser$properties = A2(
 	$elm$parser$Parser$map,
 	$elm$core$Dict$fromList,
 	$elm$parser$Parser$sequence(
-		{ir: '}', f: $author$project$DataSources$AmlMiner$AmlParser$property, jU: ',', jY: $author$project$DataSources$AmlMiner$AmlParser$spaces, hu: '{', j6: 0}));
+		{ir: '}', f: $author$project$DataSources$AmlMiner$AmlParser$property, jV: ',', jZ: $author$project$DataSources$AmlMiner$AmlParser$spaces, hu: '{', j7: 0}));
 var $author$project$DataSources$AmlMiner$AmlParser$columnProps = A2(
 	$elm$parser$Parser$andThen,
 	A2(
@@ -39020,12 +38996,12 @@ var $author$project$DataSources$AmlMiner$AmlParser$buildColumnType = F4(
 					$elm$core$Maybe$Nothing);
 			},
 			vals))) ? {
-			le: _default,
+			lf: _default,
 			eS: name + ('(' + (A2($elm$core$String$join, ', ', vals) + ')')),
 			aI: schema,
 			o2: $elm$core$Maybe$Nothing
 		} : {
-			le: _default,
+			lf: _default,
 			eS: name,
 			aI: schema,
 			o2: A2(
@@ -39109,7 +39085,7 @@ var $elm$parser$Parser$Advanced$variable = function (i) {
 				false,
 				A2($elm$parser$Parser$Advanced$fromState, s, i.iu));
 		} else {
-			var s1 = _Utils_eq(firstOffset, -2) ? A7($elm$parser$Parser$Advanced$varHelp, i.l9, s.g + 1, s.hl + 1, 1, s.ht, s.w, s.n) : A7($elm$parser$Parser$Advanced$varHelp, i.l9, firstOffset, s.hl, s.fO + 1, s.ht, s.w, s.n);
+			var s1 = _Utils_eq(firstOffset, -2) ? A7($elm$parser$Parser$Advanced$varHelp, i.ma, s.g + 1, s.hl + 1, 1, s.ht, s.w, s.n) : A7($elm$parser$Parser$Advanced$varHelp, i.ma, firstOffset, s.hl, s.fO + 1, s.ht, s.w, s.n);
 			var name = A3($elm$core$String$slice, s.g, s1.g, s.ht);
 			return A2($elm$core$Set$member, name, i.n8) ? A2(
 				$elm$parser$Parser$Advanced$Bad,
@@ -39120,7 +39096,7 @@ var $elm$parser$Parser$Advanced$variable = function (i) {
 };
 var $elm$parser$Parser$variable = function (i) {
 	return $elm$parser$Parser$Advanced$variable(
-		{iu: $elm$parser$Parser$ExpectingVariable, l9: i.l9, n8: i.n8, hu: i.hu});
+		{iu: $elm$parser$Parser$ExpectingVariable, ma: i.ma, n8: i.n8, hu: i.hu});
 };
 var $author$project$DataSources$AmlMiner$AmlParser$columnTypeName = $elm$parser$Parser$oneOf(
 	_List_fromArray(
@@ -39128,7 +39104,7 @@ var $author$project$DataSources$AmlMiner$AmlParser$columnTypeName = $elm$parser$
 			A2($author$project$DataSources$AmlMiner$AmlParser$quoted, '\"', '\"'),
 			$elm$parser$Parser$variable(
 			{
-				l9: function (c) {
+				ma: function (c) {
 					return !A2(
 						$elm$core$List$member,
 						c,
@@ -39159,10 +39135,10 @@ var $author$project$DataSources$AmlMiner$AmlParser$columnTypeValues = $elm$parse
 					_List_fromArray(
 						[',', ')', '\n']))
 				])),
-		jU: ',',
-		jY: $author$project$DataSources$AmlMiner$AmlParser$spaces,
+		jV: ',',
+		jZ: $author$project$DataSources$AmlMiner$AmlParser$spaces,
 		hu: '(',
-		j6: 1
+		j7: 1
 	});
 var $author$project$DataSources$AmlMiner$AmlParser$columnType = A2(
 	$elm$parser$Parser$keeper,
@@ -39276,23 +39252,23 @@ var $author$project$DataSources$AmlMiner$AmlParser$column = A2(
 																						return function (ntes) {
 																							return function (coms) {
 																								return {
-																									kX: chk,
+																									kY: chk,
 																									h4: coms,
-																									le: A2(
+																									lf: A2(
 																										$elm$core$Maybe$andThen,
 																										function ($) {
-																											return $.le;
+																											return $.lf;
 																										},
 																										kind),
-																									lP: fk,
-																									l6: idx,
+																									lQ: fk,
+																									l7: idx,
 																									gi: A2(
 																										$elm$core$Maybe$map,
 																										function ($) {
 																											return $.eS;
 																										},
 																										kind),
-																									mi: A2(
+																									mj: A2(
 																										$elm$core$Maybe$andThen,
 																										function ($) {
 																											return $.aI;
@@ -39300,7 +39276,7 @@ var $author$project$DataSources$AmlMiner$AmlParser$column = A2(
 																										kind),
 																									eS: name,
 																									bP: ntes,
-																									ne: !_Utils_eq(nullable, $elm$core$Maybe$Nothing),
+																									nf: !_Utils_eq(nullable, $elm$core$Maybe$Nothing),
 																									nL: !_Utils_eq(pk, $elm$core$Maybe$Nothing),
 																									nU: props,
 																									o$: unq,
@@ -39636,7 +39612,7 @@ var $author$project$DataSources$AmlMiner$AmlParser$parse = function (input) {
 	return A2($elm$parser$Parser$run, $author$project$DataSources$AmlMiner$AmlParser$parser, input);
 };
 var $author$project$Models$Project$Source$toInfo = function (source) {
-	return {ic: source.ic, ip: source.ip, iB: source.iB, H: source.H, gi: source.gi, eS: source.eS, ka: source.ka};
+	return {ic: source.ic, ip: source.ip, iB: source.iB, H: source.H, gi: source.gi, eS: source.eS, kb: source.kb};
 };
 var $author$project$Libs$Basics$tupled = F2(
 	function (f, _v0) {
@@ -39655,14 +39631,14 @@ var $author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar
 					return $.oM;
 				}),
 			_List_Nil,
-			model.lD);
+			model.lE);
 		var otherSourcesTableIds = A3(
 			$author$project$Libs$Maybe$mapOrElse,
 			function ($) {
 				return $.g_;
 			},
 			$elm$core$Set$empty,
-			model.kq);
+			model.kr);
 		var content = $author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar$contentSplit(input);
 		var _v0 = A3(
 			$author$project$DataSources$AmlMiner$AmlAdapter$buildSource,
@@ -39816,7 +39792,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar
 					A2(
 						$author$project$Services$Lenses$setAmlSidebar,
 						$elm$core$Maybe$Just(
-							A2($author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar$init, id, model.lD)),
+							A2($author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar$init, id, model.lE)),
 						model),
 					$elm$core$Platform$Cmd$none);
 			case 1:
@@ -39830,7 +39806,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar
 						$author$project$PagesComponents$Organization_$Project_$Models$AmlSidebarMsg(
 							A3(
 								$author$project$Libs$Bool$cond,
-								_Utils_eq(model.kq, $elm$core$Maybe$Nothing),
+								_Utils_eq(model.kr, $elm$core$Maybe$Nothing),
 								$author$project$PagesComponents$Organization_$Project_$Models$AOpen($elm$core$Maybe$Nothing),
 								$author$project$PagesComponents$Organization_$Project_$Models$AClose))));
 			case 3:
@@ -39876,7 +39852,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar
 									function (s) {
 										return _Utils_eq(s.H, id);
 									})),
-							model.lD)));
+							model.lE)));
 		}
 	});
 var $author$project$PagesComponents$Organization_$Project_$Models$NotesMsg$NSave = F3(
@@ -39913,7 +39889,7 @@ var $author$project$Components$Organisms$Details$buildColumnHeading = F3(
 					$author$project$Libs$Dict$find,
 					F2(
 						function (_v0, c) {
-							return _Utils_eq(c.l6, column.l6 + 1);
+							return _Utils_eq(c.l7, column.l7 + 1);
 						}),
 					table.M)),
 			bR: A2(
@@ -39923,7 +39899,7 @@ var $author$project$Components$Organisms$Details$buildColumnHeading = F3(
 					$author$project$Libs$Dict$find,
 					F2(
 						function (_v1, c) {
-							return _Utils_eq(c.l6, column.l6 - 1);
+							return _Utils_eq(c.l7, column.l7 - 1);
 						}),
 					table.M)),
 			fh: A2(
@@ -40118,7 +40094,7 @@ var $author$project$Ports$getTableStats = F2(
 			A3($author$project$Ports$GetTableStats, source, database, table));
 	});
 var $author$project$PagesComponents$Organization_$Project_$Components$DetailsSidebar$init = function (v) {
-	return {_: $elm$core$Maybe$Nothing, H: $author$project$Conf$ids.lq, bt: '', fb: '', o3: v};
+	return {_: $elm$core$Maybe$Nothing, H: $author$project$Conf$ids.lr, bt: '', fb: '', o3: v};
 };
 var $author$project$PagesComponents$Organization_$Project_$Components$DetailsSidebar$SchemaView = function (a) {
 	return {$: 1, a: a};
@@ -40342,7 +40318,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$EmbedSourc
 var $author$project$PagesComponents$Organization_$Project_$Components$ProjectSaveDialog$dialogId = 'project-save-dialog';
 var $author$project$Components$Slices$ProjectSaveDialogBody$init = F3(
 	function (id, name, organization) {
-		return {H: id, eS: name, nw: organization, cD: 1};
+		return {H: id, eS: name, nx: organization, cD: 1};
 	});
 var $author$project$Components$Slices$ProjectSaveDialogBody$update = F2(
 	function (msg, model) {
@@ -40359,7 +40335,7 @@ var $author$project$Components$Slices$ProjectSaveDialogBody$update = F2(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{nw: value}),
+						{nx: value}),
 					$elm$core$Platform$Cmd$none);
 			default:
 				var value = msg.a;
@@ -41016,13 +40992,13 @@ var $author$project$Models$ProjectInfo$organizationId = function (p) {
 			return $.H;
 		},
 		$author$project$Models$OrganizationId$zero,
-		p.nw);
+		p.nx);
 };
 var $author$project$Services$Backend$createProjectToken = F4(
 	function (name, expireAt, project, toMsg) {
 		return $author$project$Services$Backend$riskyPost(
 			{
-				kL: $elm$http$Http$jsonBody(
+				kM: $elm$http$Http$jsonBody(
 					$elm$json$Json$Encode$object(
 						_List_fromArray(
 							[
@@ -41033,13 +41009,13 @@ var $author$project$Services$Backend$createProjectToken = F4(
 								'expire_at',
 								A2($author$project$Libs$Json$Encode$maybe, $author$project$Libs$Time$encodeIso, expireAt))
 							]))),
-				lH: $author$project$Services$Backend$expectEmpty(toMsg),
+				lI: $author$project$Services$Backend$expectEmpty(toMsg),
 				o1: '/api/v1/organizations/' + ($author$project$Models$ProjectInfo$organizationId(project) + ('/projects/' + (project.H + '/access-tokens')))
 			});
 	});
 var $author$project$Models$ProjectToken$ProjectToken = F7(
 	function (id, name, nbAccess, lastAccess, expireAt, createdAt, createdBy) {
-		return {ic: createdAt, k6: createdBy, lJ: expireAt, H: id, mk: lastAccess, eS: name, m$: nbAccess};
+		return {ic: createdAt, k7: createdBy, lK: expireAt, H: id, ml: lastAccess, eS: name, m0: nbAccess};
 	});
 var $author$project$Models$ProjectTokenId$decode = $author$project$Libs$Models$Uuid$decode;
 var $author$project$Models$User$UserLight = function (id) {
@@ -41052,7 +41028,7 @@ var $author$project$Models$User$UserLight = function (id) {
 							return function (description) {
 								return function (github) {
 									return function (twitter) {
-										return {fD: avatar, h6: company, bf: description, io: email, iE: github, H: id, gu: location, eS: name, hr: slug, j9: twitter};
+										return {fD: avatar, h6: company, bf: description, io: email, iE: github, H: id, gu: location, eS: name, hr: slug, ka: twitter};
 									};
 								};
 							};
@@ -41098,13 +41074,13 @@ var $author$project$Models$ProjectToken$decode = A8(
 	A2($elm$json$Json$Decode$field, 'created_by', $author$project$Models$User$decodeLight));
 var $author$project$Services$Backend$riskyGet = function (r) {
 	return $elm$http$Http$riskyRequest(
-		{kL: $elm$http$Http$emptyBody, lH: r.lH, f9: _List_Nil, gy: 'GET', hK: $elm$core$Maybe$Nothing, hM: $elm$core$Maybe$Nothing, o1: r.o1});
+		{kM: $elm$http$Http$emptyBody, lI: r.lI, f9: _List_Nil, gy: 'GET', hK: $elm$core$Maybe$Nothing, hM: $elm$core$Maybe$Nothing, o1: r.o1});
 };
 var $author$project$Services$Backend$getProjectTokens = F2(
 	function (project, toMsg) {
 		return $author$project$Services$Backend$riskyGet(
 			{
-				lH: A2(
+				lI: A2(
 					$author$project$Services$Backend$expectJson,
 					toMsg,
 					$elm$json$Json$Decode$list($author$project$Models$ProjectToken$decode)),
@@ -41163,13 +41139,13 @@ var $author$project$Services$Lenses$mapTokenFormM = A2(
 	$author$project$Services$Lenses$setTokenForm);
 var $author$project$Services$Backend$riskyDelete = function (r) {
 	return $elm$http$Http$riskyRequest(
-		{kL: $elm$http$Http$emptyBody, lH: r.lH, f9: _List_Nil, gy: 'DELETE', hK: $elm$core$Maybe$Nothing, hM: $elm$core$Maybe$Nothing, o1: r.o1});
+		{kM: $elm$http$Http$emptyBody, lI: r.lI, f9: _List_Nil, gy: 'DELETE', hK: $elm$core$Maybe$Nothing, hM: $elm$core$Maybe$Nothing, o1: r.o1});
 };
 var $author$project$Services$Backend$revokeProjectToken = F3(
 	function (token, project, toMsg) {
 		return $author$project$Services$Backend$riskyDelete(
 			{
-				lH: $author$project$Services$Backend$expectEmpty(toMsg),
+				lI: $author$project$Services$Backend$expectEmpty(toMsg),
 				o1: '/api/v1/organizations/' + ($author$project$Models$ProjectInfo$organizationId(project) + ('/projects/' + (project.H + ('/access-tokens/' + token.H))))
 			});
 	});
@@ -41254,7 +41230,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$ProjectSha
 						$author$project$Services$Lenses$setTokenForm(
 							$elm$core$Maybe$Just($author$project$PagesComponents$Organization_$Project_$Components$ProjectSharing$initTokenForm)),
 						model),
-					A2($author$project$PagesComponents$Organization_$Project_$Models$Erd$getOrganizationM, $elm$core$Maybe$Nothing, erd).nD.nM ? A3(
+					A2($author$project$PagesComponents$Organization_$Project_$Models$Erd$getOrganizationM, $elm$core$Maybe$Nothing, erd).jv.nM ? A3(
 						$author$project$Libs$Maybe$mapOrElse,
 						function (e) {
 							return A2(
@@ -41469,21 +41445,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$ProjectSha
 		}
 	});
 var $author$project$PagesComponents$Organization_$Project_$Models$Erd$canCreateLayout = function (erd) {
-	return A2(
-		$author$project$Libs$Maybe$all,
-		function (max) {
-			return _Utils_cmp(
-				max + 1,
-				$elm$core$Dict$size(
-					A3(
-						$author$project$Libs$Maybe$mapOrElse,
-						function ($) {
-							return $.i$;
-						},
-						$elm$core$Dict$empty,
-						erd))) > 0;
-		},
-		A2($author$project$PagesComponents$Organization_$Project_$Models$Erd$getOrganizationM, $elm$core$Maybe$Nothing, erd).nD.i$);
+	return true;
 };
 var $author$project$Track$layoutCreated = F2(
 	function (project, layout) {
@@ -41691,18 +41653,18 @@ var $author$project$Components$Slices$ProPlan$layoutsModalBody = F3(
 var $author$project$Services$Lenses$setNewLayout = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
-		return $.m2;
+		return $.m3;
 	},
 	F2(
 		function (value, item) {
 			return _Utils_update(
 				item,
-				{m2: value});
+				{m3: value});
 		}));
 var $author$project$Services$Lenses$mapNewLayoutMCmd = A2(
 	$author$project$Services$Lenses$mapMCmd_,
 	function ($) {
-		return $.m2;
+		return $.m3;
 	},
 	$author$project$Services$Lenses$setNewLayout);
 var $author$project$Components$Slices$NewLayoutBody$update = F2(
@@ -41719,7 +41681,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$NewLayou
 		switch (msg.$) {
 			case 0:
 				var from = msg.a;
-				return $author$project$PagesComponents$Organization_$Project_$Models$Erd$canCreateLayout(model.lD) ? _Utils_Tuple2(
+				return $author$project$PagesComponents$Organization_$Project_$Models$Erd$canCreateLayout(model.lE) ? _Utils_Tuple2(
 					A2(
 						$author$project$Services$Lenses$setNewLayout,
 						$elm$core$Maybe$Just(
@@ -41740,9 +41702,9 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$NewLayou
 								$author$project$Libs$Task$send(
 								customModalOpen(
 									$author$project$Components$Slices$ProPlan$layoutsModalBody(
-										A2($author$project$PagesComponents$Organization_$Project_$Models$Erd$getOrganizationM, $elm$core$Maybe$Nothing, model.lD)))),
+										A2($author$project$PagesComponents$Organization_$Project_$Models$Erd$getOrganizationM, $elm$core$Maybe$Nothing, model.lE)))),
 								$author$project$Ports$track(
-								A2($author$project$Track$proPlanLimit, $author$project$Conf$features.i$.eS, model.lD))
+								A2($author$project$Track$proPlanLimit, $author$project$Conf$features.i$.eS, model.lE))
 							])));
 			case 1:
 				var m = msg.a;
@@ -41794,7 +41756,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Project$updat
 										$author$project$Ports$updateProject(p)
 									]);
 							},
-							p.nw));
+							p.nx));
 				},
 				_List_fromArray(
 					[
@@ -41802,7 +41764,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$Project$updat
 						$author$project$PagesComponents$Organization_$Project_$Models$Toast(
 							$author$project$Services$Toasts$warning('No project to save')))
 					]),
-				A2($elm$core$Maybe$map, $author$project$PagesComponents$Organization_$Project_$Models$Erd$unpack, model.lD)))) : _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				A2($elm$core$Maybe$map, $author$project$PagesComponents$Organization_$Project_$Models$Erd$unpack, model.lE)))) : _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 };
 var $author$project$PagesComponents$Organization_$Project_$Updates$Canvas$zoomCanvas = F3(
 	function (delta, erdElem, canvas) {
@@ -41852,7 +41814,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 								return $.oM;
 							}),
 						_List_Nil,
-						model.lD)) ? _Utils_Tuple2(
+						model.lE)) ? _Utils_Tuple2(
 					model,
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
@@ -41860,7 +41822,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 								$author$project$Libs$Task$send(
 								$author$project$PagesComponents$Organization_$Project_$Models$GoToTable(table)),
 								$author$project$Ports$track(
-								A3($author$project$Track$searchClicked, kind, true, model.lD))
+								A3($author$project$Track$searchClicked, kind, true, model.lE))
 							]))) : _Utils_Tuple2(
 					model,
 					$elm$core$Platform$Cmd$batch(
@@ -41869,7 +41831,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 								$author$project$Libs$Task$send(
 								A2($author$project$PagesComponents$Organization_$Project_$Models$ShowTable, table, $elm$core$Maybe$Nothing)),
 								$author$project$Ports$track(
-								A3($author$project$Track$searchClicked, kind, false, model.lD))
+								A3($author$project$Track$searchClicked, kind, false, model.lE))
 							])));
 			case 3:
 				return A3($author$project$PagesComponents$Organization_$Project_$Updates$Project$triggerSaveProject, urlOrganization, organizations, model);
@@ -41905,13 +41867,13 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 									function ($) {
 										return $.H;
 									},
-									project.nw)))));
+									project.nx)))));
 			case 9:
 				var id = msg.a;
 				return $author$project$PagesComponents$Organization_$Project_$Updates$Utils$setDirtyCmd(
 					A2(
 						$author$project$Services$Lenses$mapErdMCmd,
-						A3($author$project$PagesComponents$Organization_$Project_$Updates$Table$goToTable, now, id, model.lE),
+						A3($author$project$PagesComponents$Organization_$Project_$Updates$Table$goToTable, now, id, model.lF),
 						model));
 			case 10:
 				var id = msg.a;
@@ -41996,7 +41958,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 										return $.H;
 									},
 									id))),
-						model.lD));
+						model.lE));
 				return $author$project$PagesComponents$Organization_$Project_$Updates$Utils$setDirtyCmd(
 					A2(
 						$author$project$Services$Lenses$mapErdMCmd,
@@ -42185,8 +42147,8 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 			case 29:
 				var id = msg.a;
 				var color = msg.b;
-				var organization = A2($author$project$PagesComponents$Organization_$Project_$Models$Erd$getOrganizationM, $elm$core$Maybe$Nothing, model.lD);
-				return $author$project$PagesComponents$Organization_$Project_$Models$Erd$canChangeTableColor(model.lD) ? $author$project$PagesComponents$Organization_$Project_$Updates$Utils$setDirtyCmd(
+				var organization = A2($author$project$PagesComponents$Organization_$Project_$Models$Erd$getOrganizationM, $elm$core$Maybe$Nothing, model.lE);
+				return $author$project$PagesComponents$Organization_$Project_$Models$Erd$canChangeTableColor(model.lE) ? $author$project$PagesComponents$Organization_$Project_$Updates$Utils$setDirtyCmd(
 					A2(
 						$author$project$Services$Lenses$mapErdMCmd,
 						function (erd) {
@@ -42211,7 +42173,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 								$author$project$PagesComponents$Organization_$Project_$Models$CustomModalOpen(
 									A3($author$project$Components$Slices$ProPlan$colorsModalBody, organization, $author$project$PagesComponents$Organization_$Project_$Models$ProPlanColors, $author$project$Components$Slices$ProPlan$colorsInit))),
 								$author$project$Ports$track(
-								A2($author$project$Track$proPlanLimit, $author$project$Conf$features.oI.eS, model.lD))
+								A2($author$project$Track$proPlanLimit, $author$project$Conf$features.oI.eS, model.lE))
 							])));
 			case 30:
 				var column = msg.a;
@@ -42309,7 +42271,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 												return $.hs;
 											},
 											$author$project$Libs$List$last),
-										updated.lD)),
+										updated.lE)),
 								updated);
 						}(
 							A2(
@@ -42351,7 +42313,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 							model);
 					},
 					_Utils_Tuple2(model, $elm$core$Platform$Cmd$none),
-					model.lD);
+					model.lE);
 			case 42:
 				var message = msg.a;
 				return A2($author$project$PagesComponents$Organization_$Project_$Updates$VirtualRelation$handleVirtualRelation, message, model);
@@ -42376,7 +42338,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 										1,
 										$author$project$PagesComponents$Organization_$Project_$Models$ModalOpen($author$project$Conf$ids.oj)),
 										$author$project$Ports$track(
-										$author$project$Track$dbAnalysisOpened(model.lD))
+										$author$project$Track$dbAnalysisOpened(model.lE))
 									])));
 					case 1:
 						var section = msg.a.a;
@@ -42403,7 +42365,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 				var message = msg.a;
 				return A2(
 					$author$project$Services$Lenses$mapSharingCmd,
-					A7($author$project$PagesComponents$Organization_$Project_$Components$ProjectSharing$update, $author$project$PagesComponents$Organization_$Project_$Models$SharingMsg, $author$project$PagesComponents$Organization_$Project_$Models$ModalOpen, $author$project$PagesComponents$Organization_$Project_$Models$Toast, zone, now, model.lD, message),
+					A7($author$project$PagesComponents$Organization_$Project_$Components$ProjectSharing$update, $author$project$PagesComponents$Organization_$Project_$Models$SharingMsg, $author$project$PagesComponents$Organization_$Project_$Models$ModalOpen, $author$project$PagesComponents$Organization_$Project_$Models$Toast, zone, now, model.lE, message),
 					model);
 			case 46:
 				var message = msg.a;
@@ -42427,7 +42389,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 							function ($) {
 								return $.nN;
 							},
-							model.lD),
+							model.lE),
 						message),
 					model);
 			case 49:
@@ -42461,7 +42423,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 							return _Utils_update(
 								model,
 								{
-									mR: A2(
+									mS: A2(
 										$elm$core$Maybe$map,
 										function (m) {
 											return _Utils_update(
@@ -42469,12 +42431,12 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 												{
 													cX: A3(
 														$author$project$Components$Slices$ProPlan$colorsModalBody,
-														A2($author$project$PagesComponents$Organization_$Project_$Models$Erd$getOrganizationM, $elm$core$Maybe$Nothing, model.lD),
+														A2($author$project$PagesComponents$Organization_$Project_$Models$Erd$getOrganizationM, $elm$core$Maybe$Nothing, model.lE),
 														$author$project$PagesComponents$Organization_$Project_$Models$ProPlanColors,
 														s)
 												});
 										},
-										model.mR)
+										model.mS)
 								});
 						},
 						A3($author$project$Components$Slices$ProPlan$colorsUpdate, $author$project$PagesComponents$Organization_$Project_$Models$ProPlanColors, message, state));
@@ -42491,13 +42453,13 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 				return $author$project$PagesComponents$Organization_$Project_$Updates$Utils$setDirtyCmd(
 					A2(
 						$author$project$Services$Lenses$mapErdMCmd,
-						A2($author$project$PagesComponents$Organization_$Project_$Updates$Canvas$fitCanvas, now, model.lE),
+						A2($author$project$PagesComponents$Organization_$Project_$Updates$Canvas$fitCanvas, now, model.lF),
 						model));
 			case 54:
 				return $author$project$PagesComponents$Organization_$Project_$Updates$Utils$setDirtyCmd(
 					A2(
 						$author$project$Services$Lenses$mapErdMCmd,
-						A2($author$project$PagesComponents$Organization_$Project_$Updates$Canvas$arrangeTables, now, model.lE),
+						A2($author$project$PagesComponents$Organization_$Project_$Updates$Canvas$arrangeTables, now, model.lF),
 						model));
 			case 55:
 				var id = msg.a;
@@ -42513,7 +42475,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 							$author$project$PagesComponents$Organization_$Project_$Models$Erd$mapCurrentLayoutWithTime,
 							now,
 							$author$project$Services$Lenses$mapCanvas(
-								A2($author$project$PagesComponents$Organization_$Project_$Updates$Canvas$handleWheel, event, model.lE))),
+								A2($author$project$PagesComponents$Organization_$Project_$Updates$Canvas$handleWheel, event, model.lF))),
 						model));
 			case 57:
 				var delta = msg.a;
@@ -42524,7 +42486,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 							$author$project$PagesComponents$Organization_$Project_$Models$Erd$mapCurrentLayoutWithTime,
 							now,
 							$author$project$Services$Lenses$mapCanvas(
-								A2($author$project$PagesComponents$Organization_$Project_$Updates$Canvas$zoomCanvas, delta, model.lE))),
+								A2($author$project$PagesComponents$Organization_$Project_$Updates$Canvas$zoomCanvas, delta, model.lF))),
 						model));
 			case 58:
 				var id = msg.a;
@@ -42649,12 +42611,12 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 					A2(
 						$author$project$Services$Lenses$setModal,
 						$elm$core$Maybe$Just(
-							{cX: content, H: $author$project$Conf$ids.k8}),
+							{cX: content, H: $author$project$Conf$ids.k9}),
 						model),
 					A2(
 						$author$project$Libs$Task$sendAfter,
 						1,
-						$author$project$PagesComponents$Organization_$Project_$Models$ModalOpen($author$project$Conf$ids.k8)));
+						$author$project$PagesComponents$Organization_$Project_$Models$ModalOpen($author$project$Conf$ids.k9)));
 			case 72:
 				return _Utils_Tuple2(
 					A2($author$project$Services$Lenses$setModal, $elm$core$Maybe$Nothing, model),
@@ -42665,12 +42627,12 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 					A2(
 						$author$project$Services$Lenses$setConfirm,
 						$elm$core$Maybe$Just(
-							{cX: confirm, H: $author$project$Conf$ids.k0}),
+							{cX: confirm, H: $author$project$Conf$ids.k1}),
 						model),
 					A2(
 						$author$project$Libs$Task$sendAfter,
 						1,
-						$author$project$PagesComponents$Organization_$Project_$Models$ModalOpen($author$project$Conf$ids.k0)));
+						$author$project$PagesComponents$Organization_$Project_$Models$ModalOpen($author$project$Conf$ids.k1)));
 			case 74:
 				var answer = msg.a;
 				var cmd = msg.b;
@@ -42720,7 +42682,7 @@ var $author$project$PagesComponents$Organization_$Project_$Updates$update = F8(
 						$author$project$Services$Lenses$mapOpenedDialogs,
 						$elm$core$List$drop(1),
 						model),
-					A2($author$project$Libs$Task$sendAfter, $author$project$Conf$ui.kZ, message));
+					A2($author$project$Libs$Task$sendAfter, $author$project$Conf$ui.k_, message));
 			case 80:
 				var message = msg.a;
 				return A4($author$project$PagesComponents$Organization_$Project_$Updates$handleJsMessage, now, currentLayout, message, model);
@@ -42792,7 +42754,7 @@ var $elm$url$Url$addPrefixed = F3(
 	});
 var $elm$url$Url$toString = function (url) {
 	var http = function () {
-		var _v0 = url.jA;
+		var _v0 = url.jB;
 		if (!_v0) {
 			return 'http://';
 		} else {
@@ -42810,7 +42772,7 @@ var $elm$url$Url$toString = function (url) {
 			_Utils_ap(
 				A2(
 					$elm$url$Url$addPort,
-					url.jv,
+					url.jw,
 					_Utils_ap(http, url.iK)),
 				url.aA)));
 };
@@ -43594,7 +43556,7 @@ var $author$project$PagesComponents$Organization_$Project_$Models$OnWheel = func
 };
 var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$ColumnInfo = F3(
 	function (table, index, highlighted) {
-		return {az: highlighted, l6: index, aq: table};
+		return {az: highlighted, l7: index, aq: table};
 	});
 var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$findColumn = F2(
 	function (column, columns) {
@@ -43667,15 +43629,15 @@ var $author$project$PagesComponents$Organization_$Project_$Models$DragStart = F2
 	});
 var $author$project$PagesComponents$Organization_$Project_$Views$Erd$handleErdPointerDown = F3(
 	function (conf, cursorMode, e) {
-		if (e.kN === 1) {
+		if (e.kO === 1) {
 			if (!cursorMode) {
-				return conf.jb ? A2($author$project$PagesComponents$Organization_$Project_$Models$DragStart, $author$project$Conf$ids.lD, e.h3) : $author$project$PagesComponents$Organization_$Project_$Models$Noop('No erd drag');
+				return conf.jb ? A2($author$project$PagesComponents$Organization_$Project_$Models$DragStart, $author$project$Conf$ids.lE, e.h3) : $author$project$PagesComponents$Organization_$Project_$Models$Noop('No erd drag');
 			} else {
 				return conf.fe ? A2($author$project$PagesComponents$Organization_$Project_$Models$DragStart, $author$project$Conf$ids.op, e.h3) : $author$project$PagesComponents$Organization_$Project_$Models$Noop('No selection box');
 			}
 		} else {
-			if (e.kN === 2) {
-				return conf.jb ? A2($author$project$PagesComponents$Organization_$Project_$Models$DragStart, $author$project$Conf$ids.lD, e.h3) : $author$project$PagesComponents$Organization_$Project_$Models$Noop('No middle button erd drag');
+			if (e.kO === 2) {
+				return conf.jb ? A2($author$project$PagesComponents$Organization_$Project_$Models$DragStart, $author$project$Conf$ids.lE, e.h3) : $author$project$PagesComponents$Organization_$Project_$Models$Noop('No middle button erd drag');
 			} else {
 				return $author$project$PagesComponents$Organization_$Project_$Models$Noop('No match on erd pointer down');
 			}
@@ -43694,7 +43656,7 @@ var $elm$html$Html$Events$custom = F2(
 var $author$project$Libs$Models$Platform$Mac = 1;
 var $author$project$Libs$Html$Events$PointerEvent = F7(
 	function (clientPos, pagePos, ctrl, alt, shift, meta, button) {
-		return {fA: alt, kN: button, h3: clientPos, at: ctrl, i7: meta, js: pagePos, hp: shift};
+		return {fA: alt, kO: button, h3: clientPos, at: ctrl, i7: meta, js: pagePos, hp: shift};
 	});
 var $author$project$Libs$Html$Events$buttonFromId = function (id) {
 	switch (id) {
@@ -43753,7 +43715,7 @@ var $author$project$Libs$Html$Events$onContextMenu = F2(
 				function (e) {
 					return {
 						cq: msg(e),
-						jx: true,
+						jy: true,
 						hw: true
 					};
 				},
@@ -43771,7 +43733,7 @@ var $author$project$Libs$Html$Events$onDblClick = F2(
 	});
 var $author$project$Libs$Html$Events$WheelEvent = F7(
 	function (clientPos, pagePos, delta, ctrl, alt, shift, meta) {
-		return {fA: alt, h3: clientPos, at: ctrl, lj: delta, i7: meta, js: pagePos, hp: shift};
+		return {fA: alt, h3: clientPos, at: ctrl, lk: delta, i7: meta, js: pagePos, hp: shift};
 	});
 var $author$project$Libs$Models$Delta$decodeEvent = A3(
 	$elm$json$Json$Decode$map2,
@@ -43796,7 +43758,7 @@ var $author$project$Libs$Html$Events$wheelDecoder = function (platform) {
 var $author$project$Libs$Html$Events$onWheel = F2(
 	function (platform, callback) {
 		var preventDefaultAndStopPropagation = function (msg) {
-			return {cq: msg, jx: true, hw: true};
+			return {cq: msg, jy: true, hw: true};
 		};
 		return A2(
 			$elm$html$Html$Events$custom,
@@ -44280,7 +44242,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$viewEmptySt
 											$elm$html$Html$text('If you ❤️ Azimutt, '),
 											A3(
 											$author$project$Libs$Html$sendTweet,
-											$author$project$Conf$constants.kY,
+											$author$project$Conf$constants.kZ,
 											_List_fromArray(
 												[
 													$elm$html$Html$Attributes$class('link')
@@ -44292,7 +44254,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$viewEmptySt
 											$elm$html$Html$text('. We are eager to learn how you use it and for what. We also love '),
 											A3(
 											$author$project$Libs$Html$extLink,
-											$author$project$Conf$constants.kB,
+											$author$project$Conf$constants.kC,
 											_List_fromArray(
 												[
 													$elm$html$Html$Attributes$class('link')
@@ -44339,7 +44301,7 @@ var $author$project$Libs$Tailwind$bg_200 = function (_v0) {
 };
 var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Memo$handleMemoPointerDown = F2(
 	function (htmlId, e) {
-		return (e.kN === 1) ? A2($author$project$PagesComponents$Organization_$Project_$Models$DragStart, htmlId, e.h3) : ((e.kN === 2) ? A2($author$project$PagesComponents$Organization_$Project_$Models$DragStart, $author$project$Conf$ids.lD, e.h3) : $author$project$PagesComponents$Organization_$Project_$Models$Noop('No match on memo pointer down'));
+		return (e.kO === 1) ? A2($author$project$PagesComponents$Organization_$Project_$Models$DragStart, htmlId, e.h3) : ((e.kO === 2) ? A2($author$project$PagesComponents$Organization_$Project_$Models$DragStart, $author$project$Conf$ids.lE, e.h3) : $author$project$PagesComponents$Organization_$Project_$Models$Noop('No match on memo pointer down'));
 	});
 var $author$project$Libs$Html$Events$stopDoubleClick = function (m) {
 	return A2(
@@ -44590,9 +44552,9 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$MemoCont
 var $author$project$Components$Atoms$Markdown$defaultOptions = {
 	$8: $elm$core$Maybe$Nothing,
 	iF: $elm$core$Maybe$Just(
-		{kM: true, oM: true}),
+		{kN: true, oM: true}),
 	hm: true,
-	jX: true
+	jY: true
 };
 var $elm_explorations$markdown$Markdown$toHtmlWith = _Markdown_toHtml;
 var $author$project$Components$Atoms$Markdown$render = F3(
@@ -44874,7 +44836,7 @@ var $author$project$Components$Organisms$Relation$buildSvg = F2(
 	function (_v0, svgContent) {
 		var src = _v0.ht;
 		var ref = _v0.dG;
-		var nullable = _v0.ne;
+		var nullable = _v0.nf;
 		var color = _v0.A;
 		var label = _v0.cn;
 		var padding = _v0.dC;
@@ -45102,7 +45064,7 @@ var $author$project$Components$Organisms$Relation$bezier = F7(
 		var refDir = _v1.b;
 		return A2(
 			$author$project$Components$Organisms$Relation$buildSvg,
-			{A: color, cn: label, ne: nullable, dC: 50, dG: ref, ht: src},
+			{A: color, cn: label, nf: nullable, dC: 50, dG: ref, ht: src},
 			function (origin) {
 				return A4(
 					$author$project$Components$Organisms$Relation$drawCurve,
@@ -45312,7 +45274,7 @@ var $author$project$Components$Organisms$Relation$steps = F7(
 		var refDir = _v1.b;
 		return A2(
 			$author$project$Components$Organisms$Relation$buildSvg,
-			{A: color, cn: label, ne: nullable, dC: 50, dG: ref, ht: src},
+			{A: color, cn: label, nf: nullable, dC: 50, dG: ref, ht: src},
 			function (origin) {
 				return A4(
 					$author$project$Components$Organisms$Relation$drawSteps,
@@ -45376,7 +45338,7 @@ var $author$project$Components$Organisms$Relation$straight = F7(
 		var ref = _v1.a;
 		return A2(
 			$author$project$Components$Organisms$Relation$buildSvg,
-			{A: color, cn: label, ne: nullable, dC: 12, dG: ref, ht: src},
+			{A: color, cn: label, nf: nullable, dC: 12, dG: ref, ht: src},
 			function (origin) {
 				return A4(
 					$author$project$Components$Organisms$Relation$drawLine,
@@ -45441,7 +45403,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$vi
 								refPos),
 							1),
 						_Utils_Tuple2(refPos, 0),
-						relation.ht.ne,
+						relation.ht.nf,
 						color,
 						label,
 						onHover);
@@ -45450,7 +45412,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$vi
 						$author$project$Models$Position$moveCanvas,
 						{
 							aY: 0,
-							aZ: A2($author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$deltaTop, r.l6, r.aq.cS)
+							aZ: A2($author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$deltaTop, r.l7, r.aq.cS)
 						},
 						$author$project$Models$Area$topLeftCanvasGrid(r.aq)));
 			}
@@ -45469,7 +45431,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$vi
 								{aY: 20, aZ: 0},
 								srcPos),
 							0),
-						relation.ht.ne,
+						relation.ht.nf,
 						color,
 						label,
 						onHover);
@@ -45478,7 +45440,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$vi
 						$author$project$Models$Position$moveCanvas,
 						{
 							aY: 0,
-							aZ: A2($author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$deltaTop, s.l6, s.aq.cS)
+							aZ: A2($author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$deltaTop, s.l7, s.aq.cS)
 						},
 						$author$project$Models$Area$topRightCanvasGrid(s.aq)));
 			} else {
@@ -45497,8 +45459,8 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$vi
 				var sPos = _v9.a;
 				var rPos = _v9.b;
 				var _v10 = _Utils_Tuple2(
-					sPos.ad + A2($author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$deltaTop, s.l6, s.aq.cS),
-					rPos.ad + A2($author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$deltaTop, r.l6, r.aq.cS));
+					sPos.ad + A2($author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$deltaTop, s.l7, s.aq.cS),
+					rPos.ad + A2($author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$deltaTop, r.l7, r.aq.cS));
 				var srcY = _v10.a;
 				var refY = _v10.b;
 				return A8(
@@ -45513,7 +45475,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$vi
 						$author$project$Models$Position$canvas(
 							{C: refX, ad: refY}),
 						refDir),
-					relation.ht.ne,
+					relation.ht.nf,
 					color,
 					label,
 					onHover);
@@ -45720,7 +45682,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Table$build
 	function (layout, relation) {
 		return {
 			bH: {bH: relation.bH, aI: relation.aq.a, aq: relation.aq.b},
-			ne: relation.ne,
+			nf: relation.nf,
 			cE: A3(
 				$author$project$Libs$Maybe$mapOrElse,
 				function ($) {
@@ -45772,12 +45734,12 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Table$build
 					return $.fp;
 				},
 				column.h4),
-			le: column.ig,
+			lf: column.ig,
 			iO: A2(
 				$elm$core$List$map,
 				$author$project$PagesComponents$Organization_$Project_$Views$Erd$Table$buildColumnRelation(layout),
 				column.iO),
-			l6: column.l6,
+			l7: column.l7,
 			dg: A2(
 				$elm$core$List$map,
 				function (i) {
@@ -45800,7 +45762,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Table$build
 				},
 				column.ie),
 			bP: A2($author$project$Models$Project$ColumnPath$get, column.aA, notes.M),
-			ne: column.ne,
+			nf: column.nf,
 			jr: A2(
 				$elm$core$List$map,
 				$author$project$PagesComponents$Organization_$Project_$Views$Erd$Table$buildColumnRelation(layout),
@@ -45816,7 +45778,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Table$build
 	});
 var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Table$handleTablePointerDown = F2(
 	function (htmlId, e) {
-		return (e.kN === 1) ? A2($author$project$PagesComponents$Organization_$Project_$Models$DragStart, htmlId, e.h3) : ((e.kN === 2) ? A2($author$project$PagesComponents$Organization_$Project_$Models$DragStart, $author$project$Conf$ids.lD, e.h3) : $author$project$PagesComponents$Organization_$Project_$Models$Noop('No match on table pointer down'));
+		return (e.kO === 1) ? A2($author$project$PagesComponents$Organization_$Project_$Models$DragStart, htmlId, e.h3) : ((e.kO === 2) ? A2($author$project$PagesComponents$Organization_$Project_$Models$DragStart, $author$project$Conf$ids.lE, e.h3) : $author$project$PagesComponents$Organization_$Project_$Models$Noop('No match on table pointer down'));
 	});
 var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Table$stringToArgs = function (args) {
 	var _v0 = A2($elm$core$String$split, '~', args);
@@ -45861,7 +45823,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Table$strin
 				_Utils_Tuple2(virtualRelation === 'Y', useBasicTypes === 'Y')));
 	} else {
 		return _Utils_Tuple3(
-			_Utils_Tuple3(0, 0, $author$project$Conf$schema.lB),
+			_Utils_Tuple3(0, 0, $author$project$Conf$schema.lC),
 			_Utils_Tuple2(
 				_Utils_Tuple3('', '', 0),
 				''),
@@ -45918,10 +45880,10 @@ var $author$project$Libs$Tailwind$text_500 = function (_v0) {
 	var color = _v0;
 	return 'text-' + (color + '-500');
 };
-var $author$project$Components$Atoms$Icons$columns = {kX: 42, lP: 97, l6: 188, m0: 50, m1: 48, nL: 122, o$: 103};
+var $author$project$Components$Atoms$Icons$columns = {kY: 42, lQ: 97, l7: 188, m1: 50, m2: 48, nL: 122, o$: 103};
 var $author$project$Components$Organisms$Table$showColumnRef = F2(
 	function (defaultSchema, ref) {
-		return (_Utils_eq(ref.aI, defaultSchema) || _Utils_eq(ref.aI, $author$project$Conf$schema.lB)) ? (ref.aq + ('.' + $author$project$Models$Project$ColumnPath$show(ref.bH))) : (ref.aI + ('.' + (ref.aq + ('.' + $author$project$Models$Project$ColumnPath$show(ref.bH)))));
+		return (_Utils_eq(ref.aI, defaultSchema) || _Utils_eq(ref.aI, $author$project$Conf$schema.lC)) ? (ref.aq + ('.' + $author$project$Models$Project$ColumnPath$show(ref.bH))) : (ref.aI + ('.' + (ref.aq + ('.' + $author$project$Models$Project$ColumnPath$show(ref.bH)))));
 	});
 var $author$project$Components$Organisms$Table$viewColumnIcon = F2(
 	function (model, column) {
@@ -46007,7 +45969,7 @@ var $author$project$Components$Organisms$Table$viewColumnIcon = F2(
 					A2(
 					$author$project$Components$Molecules$Tooltip$t,
 					tooltip,
-					A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$columns.lP, 'w-4 h-4'))
+					A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$columns.lQ, 'w-4 h-4'))
 				])) : A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -46026,7 +45988,7 @@ var $author$project$Components$Organisms$Table$viewColumnIcon = F2(
 					A2(
 					$author$project$Components$Molecules$Tooltip$t,
 					tooltip,
-					A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$columns.lP, 'w-4 h-4'))
+					A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$columns.lQ, 'w-4 h-4'))
 				]))) : (column.iV ? A2(
 			$elm$html$Html$div,
 			_List_Nil,
@@ -46056,7 +46018,7 @@ var $author$project$Components$Organisms$Table$viewColumnIcon = F2(
 					A2(
 					$author$project$Components$Molecules$Tooltip$t,
 					tooltip,
-					A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$columns.m0, 'w-4 h-4'))
+					A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$columns.m1, 'w-4 h-4'))
 				])) : A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -46070,7 +46032,7 @@ var $author$project$Components$Organisms$Table$viewColumnIcon = F2(
 					A2(
 					$author$project$Components$Molecules$Tooltip$t,
 					tooltip,
-					A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$columns.m1, 'w-4 h-4'))
+					A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$columns.m2, 'w-4 h-4'))
 				]))) : ($author$project$Libs$List$nonEmpty(column.d5) ? A2(
 			$elm$html$Html$div,
 			_List_Nil,
@@ -46088,7 +46050,7 @@ var $author$project$Components$Organisms$Table$viewColumnIcon = F2(
 					A2(
 					$author$project$Components$Molecules$Tooltip$t,
 					tooltip,
-					A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$columns.l6, 'w-4 h-4'))
+					A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$columns.l7, 'w-4 h-4'))
 				])) : ($author$project$Libs$List$nonEmpty(column.cQ) ? A2(
 			$elm$html$Html$div,
 			_List_Nil,
@@ -46097,7 +46059,7 @@ var $author$project$Components$Organisms$Table$viewColumnIcon = F2(
 					A2(
 					$author$project$Components$Molecules$Tooltip$t,
 					tooltip,
-					A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$columns.kX, 'w-4 h-4'))
+					A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$columns.kY, 'w-4 h-4'))
 				])) : A2(
 			$elm$html$Html$div,
 			_List_Nil,
@@ -46146,7 +46108,7 @@ var $author$project$Libs$String$pluralizeL = F2(
 	});
 var $author$project$Components$Organisms$Table$showTableRef = F2(
 	function (defaultSchema, ref) {
-		return (_Utils_eq(ref.aI, defaultSchema) || _Utils_eq(ref.aI, $author$project$Conf$schema.lB)) ? ref.aq : (ref.aI + ('.' + ref.aq));
+		return (_Utils_eq(ref.aI, defaultSchema) || _Utils_eq(ref.aI, $author$project$Conf$schema.lC)) ? ref.aq : (ref.aI + ('.' + ref.aq));
 	});
 var $author$project$Components$Organisms$Table$viewColumnIconDropdownItem = F2(
 	function (message, content) {
@@ -46245,7 +46207,7 @@ var $author$project$Components$Organisms$Table$viewColumnIconDropdown = F3(
 							function (rels) {
 								var content = _List_fromArray(
 									[
-										A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$columns.lP, 'inline'),
+										A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$columns.lQ, 'inline'),
 										$author$project$Libs$Html$bText(
 										A2(
 											$author$project$Components$Organisms$Table$showTableRef,
@@ -46260,7 +46222,7 @@ var $author$project$Components$Organisms$Table$viewColumnIconDropdown = F3(
 												function (r) {
 													return _Utils_ap(
 														$author$project$Models$Project$ColumnPath$show(r.bH.bH),
-														A3($author$project$Libs$Bool$cond, r.ne, '?', ''));
+														A3($author$project$Libs$Bool$cond, r.nf, '?', ''));
 												},
 												$author$project$Libs$Nel$toList(rels))))
 									]);
@@ -46327,7 +46289,7 @@ var $author$project$Components$Organisms$Table$viewColumnKind = F2(
 							function (_default) {
 								return 'Default value: ' + _default;
 							},
-							column.le)
+							column.lf)
 						]))));
 		var opacity = A3(
 			$author$project$Libs$Bool$cond,
@@ -46364,7 +46326,7 @@ var $author$project$Components$Organisms$Table$viewColumnKind = F2(
 						$elm$html$Html$text(column.gi)
 					])),
 			tooltip);
-		var nullable = column.ne ? _List_fromArray(
+		var nullable = column.nf ? _List_fromArray(
 			[
 				A2(
 				$author$project$Components$Molecules$Tooltip$t,
@@ -46508,7 +46470,7 @@ var $author$project$Components$Organisms$Table$viewColumn = F5(
 				_List_fromArray(
 					[
 						$elm$html$Html$Attributes$title(
-						$author$project$Models$Project$ColumnPath$name(column.aA) + (' (' + (column.gi + (A3($author$project$Libs$Bool$cond, column.ne, '?', '') + ')')))),
+						$author$project$Models$Project$ColumnPath$name(column.aA) + (' (' + (column.gi + (A3($author$project$Libs$Bool$cond, column.nf, '?', '') + ')')))),
 						$author$project$Libs$Html$Attributes$css(
 						_List_fromArray(
 							[
@@ -47448,7 +47410,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Table$viewT
 							ew: function (e) {
 								return A3(
 									$author$project$Libs$Bool$cond,
-									e.kN === 1,
+									e.kO === 1,
 									A2($author$project$PagesComponents$Organization_$Project_$Models$SelectTable, table.H, e.at || e.hp),
 									$author$project$PagesComponents$Organization_$Project_$Models$Noop('non-main-button-table-header-click'));
 							},
@@ -47533,7 +47495,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Table$viewT
 						ay: A2(
 							$elm$core$List$sortBy,
 							function ($) {
-								return $.l6;
+								return $.l7;
 							},
 							hiddenColumns),
 						H: table.iL,
@@ -47690,14 +47652,14 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$vi
 						$author$project$Models$Position$moveCanvas,
 						{
 							aY: A3($author$project$Libs$Bool$cond, isRight, tableSize.bB, 0),
-							aZ: A2($author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$deltaTop, props.l6, props.aq.cS)
+							aZ: A2($author$project$PagesComponents$Organization_$Project_$Views$Erd$Relation$deltaTop, props.l7, props.aq.cS)
 						},
 						$author$project$Models$Position$offGrid(props.aq.e$)),
 					A3($author$project$Libs$Bool$cond, isRight, 0, 1)),
 				_Utils_Tuple2(
 					position,
 					A3($author$project$Libs$Bool$cond, isRight, 1, 0)),
-				column.ne,
+				column.nf,
 				$elm$core$Maybe$Just(props.aq.A),
 				'virtual relation',
 				function (_v4) {
@@ -47723,7 +47685,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$viewErd = F
 			A2(
 				$author$project$Libs$Maybe$filter,
 				function (d) {
-					return _Utils_eq(d.H, $author$project$Conf$ids.lD);
+					return _Utils_eq(d.H, $author$project$Conf$ids.lE);
 				},
 				dragging));
 		var memos = A3(
@@ -47750,7 +47712,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$viewErd = F
 			A2(
 				$author$project$Libs$Maybe$filter,
 				function (d) {
-					return !_Utils_eq(d.H, $author$project$Conf$ids.lD);
+					return !_Utils_eq(d.H, $author$project$Conf$ids.lE);
 				},
 				dragging));
 		var displayedTables = A2(
@@ -47800,7 +47762,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$viewErd = F
 												src.aq,
 												tableProps)),
 										ref),
-									A3($author$project$PagesComponents$Organization_$Project_$Models$Erd$viewportToCanvas, erdElem, canvas, vr.mT));
+									A3($author$project$PagesComponents$Organization_$Project_$Models$Erd$viewportToCanvas, erdElem, canvas, vr.mU));
 							},
 							A2($author$project$PagesComponents$Organization_$Project_$Models$Erd$getColumn, src, erd));
 					},
@@ -47821,7 +47783,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Erd$viewErd = F
 			_Utils_ap(
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$id($author$project$Conf$ids.lD),
+						$elm$html$Html$Attributes$id($author$project$Conf$ids.lE),
 						$elm$html$Html$Attributes$class('az-erd h-full bg-gray-100 overflow-hidden'),
 						$elm$html$Html$Attributes$classList(
 						_List_fromArray(
@@ -48223,7 +48185,7 @@ var $author$project$Components$Organisms$Details$viewColumnConstraints = F2(
 								function (i) {
 									return _Utils_Tuple3(
 										'Index',
-										$author$project$Components$Atoms$Icons$columns.l6,
+										$author$project$Components$Atoms$Icons$columns.l7,
 										A2($author$project$Components$Organisms$Details$viewColumnIndex, table.dg, i));
 								},
 								$elm$core$List$sort(column.dg)),
@@ -48232,7 +48194,7 @@ var $author$project$Components$Organisms$Details$viewColumnConstraints = F2(
 								function (c) {
 									return _Utils_Tuple3(
 										'Check',
-										$author$project$Components$Atoms$Icons$columns.kX,
+										$author$project$Components$Atoms$Icons$columns.kY,
 										A2($author$project$Components$Organisms$Details$viewColumnCheck, table.cQ, c));
 								},
 								$elm$core$List$sort(column.cQ)))))));
@@ -48478,7 +48440,7 @@ var $author$project$Components$Organisms$Details$viewColumnStats = F2(
 											_List_fromArray(
 												[
 													$elm$html$Html$text(
-													'Cardinality: ' + $elm$core$String$fromInt(s.kR))
+													'Cardinality: ' + $elm$core$String$fromInt(s.kS))
 												])),
 											A2(
 											$author$project$Components$Molecules$Tooltip$t,
@@ -48641,7 +48603,7 @@ var $author$project$Components$Organisms$Details$viewNotes = function (model) {
 };
 var $author$project$Models$Project$SchemaName$show = F2(
 	function (defaultSchema, schema) {
-		return (!_Utils_eq(schema, $author$project$Conf$schema.lB)) ? schema : ((!_Utils_eq(defaultSchema, $author$project$Conf$schema.lB)) ? defaultSchema : 'default');
+		return (!_Utils_eq(schema, $author$project$Conf$schema.lC)) ? schema : ((!_Utils_eq(defaultSchema, $author$project$Conf$schema.lC)) ? defaultSchema : 'default');
 	});
 var $author$project$Components$Organisms$Details$viewSchemaHeading = F4(
 	function (goToList, goToSchema, defaultSchema, model) {
@@ -48763,7 +48725,7 @@ var $author$project$Components$Organisms$Details$viewSchemaHeading = F4(
 						]))
 				]));
 	});
-var $author$project$Components$Atoms$Icons$sources = {kp: 212, lb: 75, lB: 79, mg: 61, nN: 108, n1: 59, od: 111, oD: 86};
+var $author$project$Components$Atoms$Icons$sources = {kq: 212, lc: 75, lC: 79, mh: 61, nN: 108, n1: 59, od: 111, oD: 86};
 var $author$project$Components$Organisms$Details$viewSource = F2(
 	function (rows, _v0) {
 		var source = _v0.b;
@@ -48782,7 +48744,7 @@ var $author$project$Components$Organisms$Details$viewSource = F2(
 							return A2(
 								$author$project$Components$Molecules$Tooltip$r,
 								'Database source',
-								A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$sources.lb, 'w-4 opacity-50 mr-1'));
+								A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$sources.lc, 'w-4 opacity-50 mr-1'));
 						case 1:
 							return A2(
 								$author$project$Components$Molecules$Tooltip$r,
@@ -48797,17 +48759,17 @@ var $author$project$Components$Organisms$Details$viewSource = F2(
 							return A2(
 								$author$project$Components$Molecules$Tooltip$r,
 								'JSON source',
-								A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$sources.mg, 'w-4 opacity-50 mr-1'));
+								A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$sources.mh, 'w-4 opacity-50 mr-1'));
 						case 4:
 							return A2(
 								$author$project$Components$Molecules$Tooltip$r,
 								'JSON source',
-								A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$sources.mg, 'w-4 opacity-50 mr-1'));
+								A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$sources.mh, 'w-4 opacity-50 mr-1'));
 						default:
 							return A2(
 								$author$project$Components$Molecules$Tooltip$r,
 								'AML source',
-								A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$sources.kp, 'w-4 opacity-50 mr-1'));
+								A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$sources.kq, 'w-4 opacity-50 mr-1'));
 					}
 				}(),
 					$elm$html$Html$text(
@@ -48986,7 +48948,7 @@ var $author$project$Components$Organisms$Details$viewColumn = function (goToList
 																		_List_fromArray(
 																			[
 																				$author$project$Components$Organisms$Details$viewTitle(
-																				$elm$core$String$fromInt(column.f.l6) + ('. ' + $author$project$Models$Project$ColumnPath$show(column.f.aA))),
+																				$elm$core$String$fromInt(column.f.l7) + ('. ' + $author$project$Models$Project$ColumnPath$show(column.f.aA))),
 																				A2(
 																				$elm$html$Html$div,
 																				_List_fromArray(
@@ -49020,7 +48982,7 @@ var $author$project$Components$Organisms$Details$viewColumn = function (goToList
 																								$elm$core$Maybe$Just(
 																								A3(
 																									$author$project$Libs$Bool$cond,
-																									column.f.ne,
+																									column.f.nf,
 																									_Utils_Tuple2(184, 'Nullable'),
 																									_Utils_Tuple2(183, 'NOT NULL'))),
 																								A2(
@@ -49028,7 +48990,7 @@ var $author$project$Components$Organisms$Details$viewColumn = function (goToList
 																								function (v) {
 																									return _Utils_Tuple2(160, 'Default: ' + v);
 																								},
-																								column.f.le)
+																								column.f.lf)
 																							])))),
 																				A3(
 																				$author$project$Libs$Maybe$mapOrElse,
@@ -49467,7 +49429,7 @@ var $author$project$Components$Organisms$Details$viewTableConstraints = function
 							function (i) {
 								return _Utils_Tuple3(
 									'Index',
-									$author$project$Components$Atoms$Icons$columns.l6,
+									$author$project$Components$Atoms$Icons$columns.l7,
 									$author$project$Components$Organisms$Details$viewTableIndex(i));
 							},
 							A2(
@@ -49481,7 +49443,7 @@ var $author$project$Components$Organisms$Details$viewTableConstraints = function
 							function (c) {
 								return _Utils_Tuple3(
 									'Check',
-									$author$project$Components$Atoms$Icons$columns.kX,
+									$author$project$Components$Atoms$Icons$columns.kY,
 									$author$project$Components$Organisms$Details$viewTableCheck(c));
 							},
 							A2(
@@ -49557,7 +49519,7 @@ var $author$project$Components$Organisms$Details$viewTable = function (goToList)
 															F2(
 																function (_v3, acc) {
 																	var s = _v3.b;
-																	return A2($elm$core$Dict$union, s.jJ, acc);
+																	return A2($elm$core$Dict$union, s.jK, acc);
 																}),
 															$elm$core$Dict$empty,
 															$elm$core$Dict$toList(stats));
@@ -49770,7 +49732,7 @@ var $author$project$Components$Organisms$Details$viewTable = function (goToList)
 																						A2(
 																							$elm$core$List$sortBy,
 																							function ($) {
-																								return $.l6;
+																								return $.l7;
 																							},
 																							$elm$core$Dict$values(table.f.M))))
 																				]))
@@ -50351,9 +50313,9 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewLeftSidebar
 			$author$project$PagesComponents$Organization_$Project_$Models$HideColumn,
 			A2($elm$core$Basics$composeR, $author$project$PagesComponents$Organization_$Project_$Models$LLoad, $author$project$PagesComponents$Organization_$Project_$Models$LayoutMsg),
 			model.oL,
-			model.k_),
-		model.lD,
-		model.lp);
+			model.k$),
+		model.lE,
+		model.lq);
 	return A2(
 		$elm$html$Html$aside,
 		_List_fromArray(
@@ -50468,7 +50430,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Navbar$navbarMo
 					]))
 			]));
 };
-var $author$project$Libs$Url$empty = {iA: $elm$core$Maybe$Nothing, iK: '', aA: '', jv: $elm$core$Maybe$Nothing, jA: 1, e1: $elm$core$Maybe$Nothing};
+var $author$project$Libs$Url$empty = {iA: $elm$core$Maybe$Nothing, iK: '', aA: '', jw: $elm$core$Maybe$Nothing, jB: 1, e1: $elm$core$Maybe$Nothing};
 var $author$project$PagesComponents$Organization_$Project_$Views$Navbar$stringToArgs = function (args) {
 	var _v0 = A2($elm$core$String$split, '~', args);
 	if ((((((_v0.b && _v0.b.b) && _v0.b.b.b) && _v0.b.b.b.b) && _v0.b.b.b.b.b) && _v0.b.b.b.b.b.b) && (!_v0.b.b.b.b.b.b.b)) {
@@ -50874,7 +50836,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Navbar$Search$c
 			notes) || (A2($author$project$PagesComponents$Organization_$Project_$Views$Navbar$Search$match, lQuery, column.gi) || A2(
 			$author$project$Libs$Maybe$any,
 			$author$project$PagesComponents$Organization_$Project_$Views$Navbar$Search$match(lQuery),
-			column.le)))) ? $elm$core$Maybe$Just(
+			column.lf)))) ? $elm$core$Maybe$Just(
 			_Utils_Tuple2(
 				0.5,
 				A2($author$project$PagesComponents$Organization_$Project_$Views$Navbar$Search$FoundColumn, table, column))) : ((A2(
@@ -51232,7 +51194,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Navbar$Search$v
 					viewItem,
 					'relation',
 					relation.ht.aq,
-					$author$project$Components$Atoms$Icons$columns.lP,
+					$author$project$Components$Atoms$Icons$columns.lQ,
 					_List_fromArray(
 						[
 							$elm$html$Html$text(relation.eS)
@@ -51247,7 +51209,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Navbar$Search$v
 					viewItem,
 					'relation',
 					relation.dG.aq,
-					$author$project$Components$Atoms$Icons$columns.lP,
+					$author$project$Components$Atoms$Icons$columns.lQ,
 					_List_fromArray(
 						[
 							$elm$html$Html$text(relation.eS)
@@ -51256,7 +51218,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Navbar$Search$v
 					viewItem,
 					'relation',
 					relation.ht.aq,
-					$author$project$Components$Atoms$Icons$columns.lP,
+					$author$project$Components$Atoms$Icons$columns.lQ,
 					_List_fromArray(
 						[
 							$elm$html$Html$text(relation.eS)
@@ -51403,7 +51365,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Navbar$Search$v
 													$elm$html$Html$text('), columns ('),
 													A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$column, ''),
 													$elm$html$Html$text(') and relations ('),
-													A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$columns.lP, ''),
+													A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$columns.lQ, ''),
 													$elm$html$Html$text(')')
 												])),
 											A2(
@@ -51532,7 +51494,7 @@ var $author$project$Models$ProjectInfo$icon = function (project) {
 			function ($) {
 				return $.gb;
 			},
-			project.nw),
+			project.nx),
 		$elm$core$Maybe$Nothing)) ? 165 : 58));
 };
 var $elm$virtual_dom$VirtualDom$lazy7 = _VirtualDom_lazy7;
@@ -51563,7 +51525,7 @@ var $author$project$Models$ProjectInfo$title = function (project) {
 			function ($) {
 				return $.gb;
 			},
-			project.nw),
+			project.nx),
 		$elm$core$Maybe$Nothing)) ? 'Heroku Add-on project' : 'Remote project'));
 };
 var $author$project$Components$Atoms$Icon$slash = function (styles) {
@@ -51817,7 +51779,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Navbar$Title$vi
 	});
 var $author$project$PagesComponents$Organization_$Project_$Views$Navbar$Title$viewLayoutsMaybe = F6(
 	function (platform, conf, currentLayout, layouts, htmlId, openedDropdown) {
-		return conf.mp ? _List_fromArray(
+		return conf.mq ? _List_fromArray(
 			[
 				$author$project$Components$Atoms$Icon$slash('text-primary-300'),
 				A6($elm$html$Html$Lazy$lazy5, $author$project$PagesComponents$Organization_$Project_$Views$Navbar$Title$viewLayouts, platform, currentLayout, layouts, htmlId, openedDropdown)
@@ -51888,7 +51850,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Navbar$Title$vi
 				A2(
 					$elm$core$List$filterMap,
 					function ($) {
-						return $.nw;
+						return $.nx;
 					},
 					projects)));
 		return A3(
@@ -52031,7 +51993,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Navbar$Title$vi
 													$author$project$Gen$Route$toHref(
 														$author$project$Gen$Route$Organization___Project_(
 															{
-																nw: $author$project$Models$ProjectInfo$organizationId(p),
+																nx: $author$project$Models$ProjectInfo$organizationId(p),
 																nN: p.H
 															})),
 													_List_fromArray(
@@ -52063,7 +52025,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Navbar$Title$vi
 																		$author$project$Models$ProjectInfo$icon(p),
 																		'mr-2');
 																},
-																p.nw)),
+																p.nx)),
 															$elm$html$Html$text(p.eS)
 														]));
 											},
@@ -52239,7 +52201,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Navbar$viewNavb
 														function ($) {
 															return $.H;
 														},
-														erd.nN.nw))),
+														erd.nN.nx))),
 											eConf),
 											A9(
 											$elm$html$Html$Lazy$lazy8,
@@ -52277,7 +52239,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Navbar$viewNavb
 												htmlId + '-title',
 												A2($author$project$Libs$String$filterStartsWith, htmlId + '-title', openedDropdown)))
 										])),
-									$author$project$PagesComponents$Organization_$Project_$Views$Navbar$navbarMobileButton(model.mQ),
+									$author$project$PagesComponents$Organization_$Project_$Views$Navbar$navbarMobileButton(model.mR),
 									A2(
 									$elm$html$Html$div,
 									_List_fromArray(
@@ -52312,7 +52274,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Navbar$viewNavb
 										]))
 								]))
 						])),
-					A3($elm$html$Html$Lazy$lazy2, $author$project$PagesComponents$Organization_$Project_$Views$Navbar$viewNavbarMobileMenu, features, model.mQ)
+					A3($elm$html$Html$Lazy$lazy2, $author$project$PagesComponents$Organization_$Project_$Views$Navbar$viewNavbarMobileMenu, features, model.mR)
 				]));
 	});
 var $author$project$PagesComponents$Organization_$Project_$Models$AChangeSource = function (a) {
@@ -52656,7 +52618,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar
 						$author$project$PagesComponents$Organization_$Project_$Models$AmlSidebarMsg),
 					'Write your schema using AML syntax\n\nEx:\n\nusers\n  id uuid pk\n  first_name varchar(128)\n  last_name varchar(128)\n  email varchar(128) nullable\n\ncredentials | used to authenticate users\n  user_id pk fk users.id\n  login varchar(128) unique\n  password varchar(128) nullable\n  role varchar(10)=guest index | possible values: admin or guest\n  created_at timestamp\n\nroles\n  slug varchar(10)\n\n# define a standalone relation\nfk credentials.role -> roles.slug',
 					30,
-					$author$project$Libs$List$nonEmpty(model.lF)),
+					$author$project$Libs$List$nonEmpty(model.lG)),
 					$author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar$viewErrors(
 					$author$project$Libs$List$unique(
 						A2(
@@ -52664,7 +52626,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar
 							function (err) {
 								return err.hc + (' at line ' + ($elm$core$String$fromInt(err.hl) + (', column ' + $elm$core$String$fromInt(err.fO))));
 							},
-							model.lF))),
+							model.lG))),
 					$author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar$viewWarnings(
 					$author$project$Libs$List$unique(warnings)),
 					$author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar$viewHelp
@@ -52708,11 +52670,11 @@ var $author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar
 					} else {
 						var _v2 = _v1.a;
 						return $elm$core$Maybe$Just(
-							'Column \'' + (column + ('\' not found in table \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lB, table) + '\''))));
+							'Column \'' + (column + ('\' not found in table \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lC, table) + '\''))));
 					}
 				} else {
 					return $elm$core$Maybe$Just(
-						'Table \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lB, table) + '\' not found'));
+						'Table \'' + (A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lC, table) + '\' not found'));
 				}
 			},
 			$author$project$Libs$List$unique(
@@ -52756,7 +52718,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar
 				]));
 	});
 var $author$project$PagesComponents$Organization_$Project_$Views$viewRightSidebar = function (model) {
-	var content = A3($elm$core$Maybe$map2, $author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar$view, model.lD, model.kq);
+	var content = A3($elm$core$Maybe$map2, $author$project$PagesComponents$Organization_$Project_$Components$AmlSidebar$view, model.lE, model.kr);
 	return A2(
 		$elm$html$Html$aside,
 		_List_fromArray(
@@ -52801,7 +52763,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Watermark$viewW
 		[
 			A3(
 			$author$project$Libs$Html$extLink,
-			$author$project$Conf$constants.kG,
+			$author$project$Conf$constants.kH,
 			_List_fromArray(
 				[
 					$elm$html$Html$Attributes$class('flex justify-start items-center flex-shrink-0 grayscale opacity-50 hover:opacity-100')
@@ -52829,16 +52791,16 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewApp = F6(
 				]),
 			_List_fromArray(
 				[
-					model.Z.jV ? A9(
+					model.Z.jW ? A9(
 					$elm$html$Html$Lazy$lazy8,
 					$author$project$PagesComponents$Organization_$Project_$Views$Navbar$viewNavbar,
 					shared.Z,
-					shared.kb,
+					shared.kc,
 					model.Z,
 					model.o4,
 					erd,
 					shared.nQ,
-					model.m_,
+					model.m$,
 					A6(
 						$author$project$PagesComponents$Organization_$Project_$Views$Navbar$argsToString,
 						currentUrl,
@@ -52848,10 +52810,10 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewApp = F6(
 							function ($) {
 								return $.H;
 							},
-							shared.nx),
+							shared.ny),
 						htmlId + '-nav',
 						A2($author$project$Libs$String$filterStartsWith, htmlId + '-nav', model.jo),
-						model.lr)) : A2($elm$html$Html$div, _List_Nil, _List_Nil),
+						model.ls)) : A2($elm$html$Html$div, _List_Nil, _List_Nil),
 					A2(
 					$elm$html$Html$main_,
 					_List_fromArray(
@@ -52862,9 +52824,9 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewApp = F6(
 							'height',
 							A3(
 								$author$project$Libs$Bool$cond,
-								model.Z.jV,
+								model.Z.jW,
 								'calc(100% - ' + ($elm$core$String$fromFloat(
-									$author$project$Models$Position$extractViewport(model.lE.e$).ad) + 'px)'),
+									$author$project$Models$Position$extractViewport(model.lF.e$).ad) + 'px)'),
 								'100%'))
 						]),
 					_List_fromArray(
@@ -52881,19 +52843,19 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewApp = F6(
 									$elm$html$Html$Lazy$lazy8,
 									$author$project$PagesComponents$Organization_$Project_$Views$Erd$viewErd,
 									model.Z,
-									model.lE,
+									model.lF,
 									erd,
 									model.op,
 									model.o4,
-									model.lv,
+									model.lw,
 									A6(
 										$author$project$PagesComponents$Organization_$Project_$Views$Erd$argsToString,
 										shared.Z.e_,
-										model.k7,
-										model.l1,
+										model.k8,
+										model.l2,
 										model.jo,
 										model.eX,
-										A3($author$project$Libs$Maybe$mapOrElse, $author$project$PagesComponents$Organization_$Project_$Components$DetailsSidebar$selected, '', model.lp)),
+										A3($author$project$Libs$Maybe$mapOrElse, $author$project$PagesComponents$Organization_$Project_$Components$DetailsSidebar$selected, '', model.lq)),
 									model.ep),
 									function () {
 									if (model.Z.f3 || model.Z.jb) {
@@ -52902,18 +52864,18 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewApp = F6(
 											$elm$html$Html$Lazy$lazy8,
 											$author$project$PagesComponents$Organization_$Project_$Views$Commands$viewCommands,
 											model.Z,
-											model.k7,
+											model.k8,
 											layout.fJ.hU,
 											htmlId + '-commands',
 											!$elm$core$List$isEmpty(layout.oM),
 											A2($author$project$Libs$String$filterStartsWith, htmlId + '-commands', model.jo),
-											!_Utils_eq(model.kq, $elm$core$Maybe$Nothing),
-											!_Utils_eq(model.lp, $elm$core$Maybe$Nothing));
+											!_Utils_eq(model.kr, $elm$core$Maybe$Nothing),
+											!_Utils_eq(model.lq, $elm$core$Maybe$Nothing));
 									} else {
 										return A2($elm$html$Html$div, _List_Nil, _List_Nil);
 									}
 								}(),
-									(!model.Z.jV) ? $author$project$PagesComponents$Organization_$Project_$Views$Watermark$viewWatermark : A2($elm$html$Html$div, _List_Nil, _List_Nil)
+									(!model.Z.jW) ? $author$project$PagesComponents$Organization_$Project_$Views$Watermark$viewWatermark : A2($elm$html$Html$div, _List_Nil, _List_Nil)
 								])),
 							$author$project$PagesComponents$Organization_$Project_$Views$viewLeftSidebar(model),
 							$author$project$PagesComponents$Organization_$Project_$Views$viewRightSidebar(model)
@@ -53310,7 +53272,7 @@ var $author$project$Services$SourceLogs$viewParsedSchema = F3(
 												_List_fromArray(
 													[
 														$elm$html$Html$text(
-														A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lB, id) + (' (' + (A2($author$project$Libs$String$pluralizeL, 'column', t.M) + ')')))
+														A2($author$project$Models$Project$TableId$show, $author$project$Conf$schema.lC, id) + (' (' + (A2($author$project$Libs$String$pluralizeL, 'column', t.M) + ')')))
 													]))
 											]));
 								}),
@@ -53436,7 +53398,7 @@ var $author$project$Services$DatabaseSource$viewParsing = F2(
 												function (_v2) {
 													return 'Parsing...';
 												},
-												model.mu),
+												model.mv),
 											A2(
 												$author$project$Libs$Maybe$orElse,
 												A2(
@@ -53463,7 +53425,7 @@ var $author$project$Services$DatabaseSource$viewParsing = F2(
 										$author$project$Services$DatabaseSource$UiToggle,
 										model.ov,
 										dbName,
-										A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.mu))),
+										A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.mv))),
 									A3(
 									$author$project$Libs$Maybe$mapOrElse,
 									A2(
@@ -53471,7 +53433,7 @@ var $author$project$Services$DatabaseSource$viewParsing = F2(
 										$elm$core$Result$mapError($author$project$Services$Backend$errorToString),
 										$author$project$Services$SourceLogs$viewError),
 									A2($elm$html$Html$div, _List_Nil, _List_Nil),
-									model.mu),
+									model.mv),
 									A2(
 									$elm$html$Html$map,
 									wrap,
@@ -53562,7 +53524,7 @@ var $author$project$Services$JsonSource$viewParsing = F2(
 												function (_v2) {
 													return 'Parsing...';
 												},
-												model.mu),
+												model.mv),
 											A2(
 												$author$project$Libs$Maybe$orElse,
 												A2(
@@ -53589,7 +53551,7 @@ var $author$project$Services$JsonSource$viewParsing = F2(
 										$author$project$Services$JsonSource$UiToggle,
 										model.ov,
 										fileName,
-										A2($elm$core$Maybe$map, $elm$core$Tuple$second, model.mu))),
+										A2($elm$core$Maybe$map, $elm$core$Tuple$second, model.mv))),
 									A2(
 									$elm$html$Html$map,
 									wrap,
@@ -53619,13 +53581,13 @@ var $author$project$Services$JsonSource$viewParsing = F2(
 					function (u) {
 						return u + ' file';
 					},
-					A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.jT)),
+					A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.jU)),
 				A2(
 					$elm$core$Maybe$map,
 					function (f) {
 						return f.eS + ' file';
 					},
-					model.jS)));
+					model.jT)));
 	});
 var $author$project$PagesComponents$Organization_$Project_$Components$EmbedSourceParsingDialog$viewJsonSourceParsing = F4(
 	function (wrap, sourceParsed, modalClose, model) {
@@ -53641,13 +53603,13 @@ var $author$project$PagesComponents$Organization_$Project_$Components$EmbedSourc
 					A2(
 						$elm$core$Maybe$map,
 						$author$project$Libs$Models$FileUrl$filename,
-						A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.jT)),
+						A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.jU)),
 					A2(
 						$elm$core$Maybe$map,
 						function ($) {
 							return $.eS;
 						},
-						model.jS))),
+						model.jT))),
 			A2(
 				$author$project$Services$JsonSource$viewParsing,
 				A2($elm$core$Basics$composeR, $author$project$PagesComponents$Organization_$Project_$Components$EmbedSourceParsingDialog$EmbedJsonSource, wrap),
@@ -53680,7 +53642,7 @@ var $author$project$Components$Atoms$Link$light2 = A2($author$project$Components
 var $author$project$Services$SqlSource$sendErrorReport = F2(
 	function (parseErrors, schemaErrors) {
 		var subject = '[Azimutt] SQL Parser error report';
-		var email = $author$project$Conf$constants.kA;
+		var email = $author$project$Conf$constants.kB;
 		var body = 'Hi Azimutt team!\nGot some errors using the Azimutt SQL parser.\nHere are the details...' + (($elm$core$List$isEmpty(parseErrors) ? '' : ('\n\n\n------------------------------------------------------------- Parsing errors -------------------------------------------------------------\n\n' + A2(
 			$elm$core$String$join,
 			'\n\n',
@@ -53825,7 +53787,7 @@ var $author$project$Services$SqlSource$viewErrorAlert = function (model) {
 	var schemaErrors = A3(
 		$author$project$Libs$Maybe$mapOrElse,
 		function ($) {
-			return $.lF;
+			return $.lG;
 		},
 		_List_Nil,
 		A2(
@@ -53969,7 +53931,7 @@ var $author$project$Services$SqlSource$viewParseError = F2(
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							'Parsing error line ' + ($elm$core$String$fromInt(1 + statement.ev.l6) + ':'))
+							'Parsing error line ' + ($elm$core$String$fromInt(1 + statement.ev.l7) + ':'))
 						])),
 				A2(
 					$elm$core$List$map,
@@ -54171,7 +54133,7 @@ var $author$project$Services$SqlSource$viewLogsLines = F2(
 										_List_fromArray(
 											[
 												$elm$html$Html$text(
-												pad(line.l6 + 1) + '. ')
+												pad(line.l7 + 1) + '. ')
 											])),
 										A2(
 										$elm$html$Html$pre,
@@ -54329,7 +54291,7 @@ var $author$project$Services$SqlSource$viewLogs = F2(
 					A3(
 						$author$project$Libs$Maybe$mapOrElse,
 						function ($) {
-							return $.lF;
+							return $.lG;
 						},
 						_List_Nil,
 						A2(
@@ -54398,7 +54360,7 @@ var $author$project$Services$SqlSource$viewParsing = F2(
 													function (_v2) {
 														return 'Parsing...';
 													},
-													model.mt),
+													model.mu),
 												A2(
 													$author$project$Libs$Maybe$orElse,
 													A2(
@@ -54428,13 +54390,13 @@ var $author$project$Services$SqlSource$viewParsing = F2(
 						function (u) {
 							return u + ' file';
 						},
-						A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.jT)),
+						A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.jU)),
 					A2(
 						$elm$core$Maybe$map,
 						function (f) {
 							return f.eS + ' file';
 						},
-						model.jS))));
+						model.jT))));
 	});
 var $author$project$PagesComponents$Organization_$Project_$Components$EmbedSourceParsingDialog$viewSqlSourceParsing = F4(
 	function (wrap, sourceParsed, modalClose, model) {
@@ -54450,13 +54412,13 @@ var $author$project$PagesComponents$Organization_$Project_$Components$EmbedSourc
 					A2(
 						$elm$core$Maybe$map,
 						$author$project$Libs$Models$FileUrl$filename,
-						A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.jT)),
+						A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.jU)),
 					A2(
 						$elm$core$Maybe$map,
 						function ($) {
 							return $.eS;
 						},
-						model.jS))),
+						model.jT))),
 			A2(
 				$author$project$Services$SqlSource$viewParsing,
 				A2($elm$core$Basics$composeR, $author$project$PagesComponents$Organization_$Project_$Components$EmbedSourceParsingDialog$EmbedSqlSource, wrap),
@@ -54881,7 +54843,7 @@ var $author$project$Components$Slices$ProjectSaveDialogBody$selectSave = F7(
 															return $.H;
 														},
 														'',
-														model.nw),
+														model.nx),
 													function (orgId) {
 														return wrap(
 															$author$project$Components$Slices$ProjectSaveDialogBody$UpdateOrganization(
@@ -54968,7 +54930,7 @@ var $author$project$Components$Slices$ProjectSaveDialogBody$selectSave = F7(
 											return A3(save, name, orga, model.cD);
 										}),
 									$author$project$Libs$String$nonEmptyMaybe(model.eS),
-									model.nw)))
+									model.nx)))
 						]))
 				]));
 	});
@@ -55148,7 +55110,7 @@ var $author$project$Libs$Url$addPort = F2(
 	});
 var $author$project$Libs$Url$domain = function (url) {
 	var http = function () {
-		var _v0 = url.jA;
+		var _v0 = url.jB;
 		if (!_v0) {
 			return 'http://';
 		} else {
@@ -55157,7 +55119,7 @@ var $author$project$Libs$Url$domain = function (url) {
 	}();
 	return A2(
 		$author$project$Libs$Url$addPort,
-		url.jv,
+		url.jw,
 		_Utils_ap(http, url.iK));
 };
 var $author$project$PagesComponents$Organization_$Project_$Models$EmbedKind$value = function (kind) {
@@ -55572,14 +55534,14 @@ var $author$project$Models$Project$downloadContent = function (value) {
 					A3(
 						$author$project$Libs$Json$Encode$withDefaultDeep,
 						$author$project$Models$Project$ProjectSettings$encode,
-						$author$project$Models$Project$ProjectSettings$init($author$project$Conf$schema.lB),
+						$author$project$Models$Project$ProjectSettings$init($author$project$Conf$schema.lC),
 						value.dM)),
 					_Utils_Tuple2(
 					'createdAt',
 					$author$project$Libs$Time$encode(value.ic)),
 					_Utils_Tuple2(
 					'updatedAt',
-					$author$project$Libs$Time$encode(value.ka)),
+					$author$project$Libs$Time$encode(value.kb)),
 					_Utils_Tuple2(
 					'version',
 					$elm$json$Json$Encode$int($author$project$Models$Project$ProjectEncodingVersion$current))
@@ -55724,7 +55686,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$ProjectSha
 			$author$project$Libs$Url$domain(currentUrl) + ($author$project$Gen$Route$toHref(
 				$author$project$Gen$Route$Organization___Project_(
 					{
-						nw: $author$project$Models$ProjectInfo$organizationId(project),
+						nx: $author$project$Models$ProjectInfo$organizationId(project),
 						nN: content
 					})) + ('?' + $author$project$Libs$Url$buildQueryString(
 				A2(
@@ -55958,7 +55920,7 @@ var $author$project$Libs$Models$DateTime$buildDateTime = F2(
 			$7: $author$project$Libs$Models$DateTime$formatMonth(
 				A2($elm$time$Time$toMonth, zone, date)),
 			hn: A2($elm$time$Time$toSecond, zone, date),
-			kg: $author$project$Libs$Models$DateTime$formatWeekday(
+			kh: $author$project$Libs$Models$DateTime$formatWeekday(
 				A2($elm$time$Time$toWeekday, zone, date)),
 			fy: A2($elm$time$Time$toYear, zone, date)
 		};
@@ -56070,14 +56032,14 @@ var $author$project$PagesComponents$Organization_$Project_$Components$ProjectSha
 			chosen);
 		var labelId = inputId + ('-' + ($elm$core$String$fromInt(i) + '-label'));
 		var _v0 = _Utils_Tuple2(
-			'Created by ' + (token.k6.eS + (' on ' + A2($author$project$Libs$Models$DateTime$formatDatetime, zone, token.ic))),
-			$elm$core$String$fromInt(token.m$) + (' access since creation' + A3(
+			'Created by ' + (token.k7.eS + (' on ' + A2($author$project$Libs$Models$DateTime$formatDatetime, zone, token.ic))),
+			$elm$core$String$fromInt(token.m0) + (' access since creation' + A3(
 				$author$project$Libs$Maybe$mapOrElse,
 				function (t) {
 					return ' (last one on ' + (A2($author$project$Libs$Models$DateTime$formatDatetime, zone, t) + ')');
 				},
 				'',
-				token.mk)));
+				token.ml)));
 		var created = _v0.a;
 		var accessed = _v0.b;
 		return A2(
@@ -56157,7 +56119,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$ProjectSha
 															return ' (expire on ' + (A2($author$project$Libs$Models$DateTime$formatDatetime, zone, t) + ')');
 														},
 														' (does not expire)',
-														token.lJ)))
+														token.lK)))
 											])))
 								]))
 						])),
@@ -56566,7 +56528,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$ProjectSha
 					A3(
 					$author$project$Libs$Maybe$mapOrElse,
 					function (f) {
-						return organization.nD.nM ? A2(
+						return organization.jv.nM ? A2(
 							$elm$html$Html$div,
 							_List_fromArray(
 								[
@@ -57638,7 +57600,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$SourceUpda
 		A2($elm$html$Html$div, _List_Nil, _List_Nil),
 		A3(
 			$elm$core$Maybe$map2,
-			$author$project$Services$SourceDiff$view($author$project$Conf$schema.lB),
+			$author$project$Services$SourceDiff$view($author$project$Conf$schema.lC),
 			A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.g8),
 			model.fj));
 };
@@ -57678,7 +57640,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$SourceUpda
 									]),
 								_List_fromArray(
 									[
-										A4($author$project$PagesComponents$Organization_$Project_$Components$SourceUpdateDialog$remoteFileInfo, zone, now, url, source.ka)
+										A4($author$project$PagesComponents$Organization_$Project_$Components$SourceUpdateDialog$remoteFileInfo, zone, now, url, source.kb)
 									]))
 							])),
 						A2(
@@ -57844,7 +57806,7 @@ var $mpizenberg$elm_file$FileValue$loadFile = function (msgTag) {
 			function (file) {
 				return {
 					cq: msgTag(file),
-					jx: true,
+					jy: true,
 					hw: true
 				};
 			},
@@ -57888,7 +57850,7 @@ var $mpizenberg$elm_file$FileValue$dynamicListOf = function (itemDecoder) {
 		A2($elm$json$Json$Decode$field, 'length', $elm$json$Json$Decode$int));
 };
 var $mpizenberg$elm_file$FileValue$errorFile = {
-	mn: $elm$time$Time$millisToPosix(0),
+	mo: $elm$time$Time$millisToPosix(0),
 	i8: 'text/plain',
 	eS: 'If you see this file, please report an error at https://github.com/mpizenberg/elm-files/issues',
 	ox: 0,
@@ -57920,7 +57882,7 @@ var $mpizenberg$elm_file$FileValue$filesOn = F2(
 					var list = _v0.b;
 					return {
 						cq: A2(msgTag, file, list),
-						jx: true,
+						jy: true,
 						hw: true
 					};
 				},
@@ -57938,7 +57900,7 @@ var $mpizenberg$elm_file$FileValue$onWithId = F3(
 			A2(
 				$elm$json$Json$Decode$map,
 				function (message) {
-					return {cq: message, jx: true, hw: true};
+					return {cq: message, jy: true, hw: true};
 				},
 				A2(
 					$elm$json$Json$Decode$andThen,
@@ -57964,7 +57926,7 @@ var $mpizenberg$elm_file$FileValue$onDrop = function (config) {
 					return _List_Nil;
 				} else {
 					var id = _v0.a.H;
-					var msg = _v0.a.mV;
+					var msg = _v0.a.mW;
 					return _List_fromArray(
 						[
 							$elm$html$Html$Attributes$id(id),
@@ -58134,7 +58096,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$SourceUpda
 																			var src = _v1.a;
 																			return src.gi;
 																		},
-																		model.mu));
+																		model.mv));
 																if (((_v0.a.$ === 3) && (!_v0.b.$)) && (_v0.b.a.$ === 3)) {
 																	var _v2 = _v0.a;
 																	var name1 = _v2.a;
@@ -58206,7 +58168,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$SourceUpda
 									]),
 								_List_fromArray(
 									[
-										A4($author$project$PagesComponents$Organization_$Project_$Components$SourceUpdateDialog$remoteFileInfo, zone, now, fileUrl, source.ka)
+										A4($author$project$PagesComponents$Organization_$Project_$Components$SourceUpdateDialog$remoteFileInfo, zone, now, fileUrl, source.kb)
 									]))
 							])),
 						A2(
@@ -58419,14 +58381,14 @@ var $author$project$Services$DatabaseSource$viewInput = F3(
 								_Utils_Tuple2(
 								'oracle',
 								$elm$core$Maybe$Just(
-									A2($author$project$Conf$constants.kD, 'Support oracle database import', ''))),
+									A2($author$project$Conf$constants.kE, 'Support oracle database import', ''))),
 								_Utils_Tuple2(
 								'sql-server',
 								$elm$core$Maybe$Just('https://github.com/azimuttapp/azimutt/issues/113')),
 								_Utils_Tuple2(
 								'mariadb',
 								$elm$core$Maybe$Just(
-									A2($author$project$Conf$constants.kD, 'Support mariadb database import', ''))),
+									A2($author$project$Conf$constants.kE, 'Support mariadb database import', ''))),
 								_Utils_Tuple2(
 								'sqlite',
 								$elm$core$Maybe$Just('https://github.com/azimuttapp/azimutt/issues/115'))
@@ -58463,7 +58425,7 @@ var $author$project$Services$DatabaseSource$viewInput = F3(
 									$elm$html$Html$Attributes$disabled(
 									(!_Utils_eq(
 										A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.oo),
-										$elm$core$Maybe$Nothing)) && _Utils_eq(model.mu, $elm$core$Maybe$Nothing)),
+										$elm$core$Maybe$Nothing)) && _Utils_eq(model.mv, $elm$core$Maybe$Nothing)),
 									$elm$html$Html$Events$onInput(
 									A2($elm$core$Basics$composeR, $author$project$Services$DatabaseSource$UpdateUrl, wrap)),
 									$elm$html$Html$Events$onBlur(
@@ -58629,7 +58591,7 @@ var $author$project$Services$JsonSource$viewInput = F4(
 							wrap,
 							htmlId + '-remote-file',
 							model.o1,
-							A2($elm$core$Maybe$andThen, $author$project$Libs$Result$toError, model.jT))
+							A2($elm$core$Maybe$andThen, $author$project$Libs$Result$toError, model.jU))
 						]))
 				]));
 	});
@@ -58819,7 +58781,7 @@ var $author$project$Services$SqlSource$viewInput = F4(
 							wrap,
 							htmlId + '-remote-file',
 							model.o1,
-							A2($elm$core$Maybe$andThen, $author$project$Libs$Result$toError, model.jT))
+							A2($elm$core$Maybe$andThen, $author$project$Libs$Result$toError, model.jU))
 						]))
 				]));
 	});
@@ -59097,7 +59059,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$SourceUpda
 																			var src = _v1.a;
 																			return src.gi;
 																		},
-																		model.mt));
+																		model.mu));
 																if (((_v0.a.$ === 1) && (!_v0.b.$)) && (_v0.b.a.$ === 1)) {
 																	var _v2 = _v0.a;
 																	var name1 = _v2.a;
@@ -59169,7 +59131,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$SourceUpda
 									]),
 								_List_fromArray(
 									[
-										A4($author$project$PagesComponents$Organization_$Project_$Components$SourceUpdateDialog$remoteFileInfo, zone, now, fileUrl, source.ka)
+										A4($author$project$PagesComponents$Organization_$Project_$Components$SourceUpdateDialog$remoteFileInfo, zone, now, fileUrl, source.kb)
 									]))
 							])),
 						A2(
@@ -59248,7 +59210,7 @@ var $author$project$PagesComponents$Organization_$Project_$Components$SourceUpda
 								$elm$html$Html$text('You should not see this, so if you came here normally, this is a bug. Please help us and '),
 								A3(
 								$author$project$Libs$Html$extLink,
-								$author$project$Conf$constants.kv,
+								$author$project$Conf$constants.kw,
 								_List_fromArray(
 									[
 										$elm$html$Html$Attributes$class('link')
@@ -59339,53 +59301,6 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$NewLayou
 		return {$: 2, a: a, b: b};
 	});
 var $author$project$Components$Slices$NewLayoutBody$UpdateLayoutName = $elm$core$Basics$identity;
-var $author$project$Components$Slices$ProPlan$layoutsWarning = function (organization) {
-	var color = $author$project$Libs$Tailwind$rose;
-	return A2(
-		$author$project$Components$Molecules$Alert$withActions,
-		{
-			fz: _List_fromArray(
-				[
-					A3(
-					$author$project$Components$Atoms$Link$secondary3,
-					color,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$href(
-							A2($author$project$Services$Backend$organizationBillingUrl, organization.H, $author$project$Conf$features.i$.eS + '_warning')),
-							$elm$html$Html$Attributes$target('_blank'),
-							$elm$html$Html$Attributes$rel('noopener')
-						]),
-					_List_fromArray(
-						[
-							A2($author$project$Components$Atoms$Icon$outline, 189, 'mr-1'),
-							$elm$html$Html$text('Upgrade plan')
-						]))
-				]),
-			A: color,
-			aa: 95,
-			a4: 'You\'ve reached plan limit!'
-		},
-		_List_fromArray(
-			[
-				A2(
-				$elm$html$Html$p,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Hey! We are very happy you use and like layouts in Azimutt.')
-					])),
-				A2(
-				$elm$html$Html$p,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text('They are an important feature but also a limited one. You\'ve reached the limits of your current plan and will need to upgrade. We will let you create one last layout so you can keep working but '),
-						$author$project$Libs$Html$bText('please upgrade as soon as possible'),
-						$elm$html$Html$text('.')
-					]))
-			]));
-};
 var $author$project$Components$Slices$NewLayoutBody$view = F7(
 	function (wrap, onCreate, onCancel, titleId, layouts, organization, model) {
 		var inputId = model.H + '-input';
@@ -59469,23 +59384,6 @@ var $author$project$Components$Slices$NewLayoutBody$view = F7(
 												model.bK))
 										])),
 									A2(
-									$author$project$Libs$Maybe$any,
-									function (l) {
-										return _Utils_cmp(
-											$elm$core$List$length(layouts),
-											l) > -1;
-									},
-									organization.nD.i$) ? A2(
-									$elm$html$Html$div,
-									_List_fromArray(
-										[
-											$elm$html$Html$Attributes$class('mt-2')
-										]),
-									_List_fromArray(
-										[
-											$author$project$Components$Slices$ProPlan$layoutsWarning(organization)
-										])) : A2($elm$html$Html$div, _List_Nil, _List_Nil),
-									A2(
 									$elm$html$Html$div,
 									_List_fromArray(
 										[
@@ -59536,32 +59434,7 @@ var $author$project$Components$Slices$NewLayoutBody$view = F7(
 											_List_fromArray(
 												[
 													$elm$html$Html$text('Layout \'' + (model.eS + '\' already exists 😥'))
-												])) : A2($elm$html$Html$p, _List_Nil, _List_Nil),
-											A2(
-											$elm$html$Html$p,
-											_List_fromArray(
-												[
-													$elm$html$Html$Attributes$class('mt-2 text-sm text-gray-500')
-												]),
-											_List_fromArray(
-												[
-													$elm$html$Html$text('Do you like Azimutt? Consider '),
-													A3(
-													$author$project$Libs$Html$sendTweet,
-													$author$project$Conf$constants.kY,
-													_List_fromArray(
-														[
-															$elm$html$Html$Attributes$tabindex(-1),
-															$elm$html$Html$Attributes$class('link')
-														]),
-													_List_fromArray(
-														[
-															$elm$html$Html$text('sending us a tweet')
-														])),
-													$elm$html$Html$text(', it will '),
-													$author$project$Libs$Html$bText('keep our motivation high'),
-													$elm$html$Html$text(' 🥰')
-												]))
+												])) : A2($elm$html$Html$p, _List_Nil, _List_Nil)
 										]))
 								]))
 						])),
@@ -59994,7 +59867,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$EditNote
 													$elm$html$Html$Events$onClick(
 													$author$project$PagesComponents$Organization_$Project_$Models$ModalClose(
 														$author$project$PagesComponents$Organization_$Project_$Models$NotesMsg(
-															A3($author$project$PagesComponents$Organization_$Project_$Models$NotesMsg$NSave, model.dG, model.l7, model.bP)))),
+															A3($author$project$PagesComponents$Organization_$Project_$Models$NotesMsg$NSave, model.dG, model.l8, model.bP)))),
 													$author$project$Libs$Html$Attributes$css(
 													_List_fromArray(
 														[
@@ -60417,7 +60290,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$FindPath
 			var from = _v0.a.a;
 			var to = _v0.b.a;
 			var result = _v0.c.a;
-			return $elm$core$List$isEmpty(result.nC) ? A2(
+			return $elm$core$List$isEmpty(result.nD) ? A2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
@@ -60458,7 +60331,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$FindPath
 						_List_Nil,
 						A3(
 							$author$project$Libs$List$appendIf,
-							$elm$core$List$length(result.nC) > 100,
+							$elm$core$List$length(result.nD) > 100,
 							A2(
 								$elm$html$Html$small,
 								_List_fromArray(
@@ -60473,7 +60346,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$FindPath
 								[
 									$elm$html$Html$text(
 									'Found ' + ($elm$core$String$fromInt(
-										$elm$core$List$length(result.nC)) + ' paths between tables ')),
+										$elm$core$List$length(result.nD)) + ' paths between tables ')),
 									$author$project$Libs$Html$bText(
 									A2($author$project$Models$Project$TableId$show, defaultSchema, from)),
 									$elm$html$Html$text(' and '),
@@ -60491,7 +60364,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$FindPath
 						A2(
 							$elm$core$List$indexedMap,
 							A3($author$project$PagesComponents$Organization_$Project_$Views$Modals$FindPath$viewPath, defaultSchema, result.dy, from),
-							A2($elm$core$List$sortBy, $author$project$Libs$Nel$length, result.nC))),
+							A2($elm$core$List$sortBy, $author$project$Libs$Nel$length, result.nD))),
 						A2(
 						$elm$html$Html$small,
 						_List_fromArray(
@@ -60918,7 +60791,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$tip
 			$elm$html$Html$text('tip')
 		]));
 var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$canvasNavigation = {
-	kL: _List_fromArray(
+	kM: _List_fromArray(
 		[
 			A2(
 			$elm$html$Html$p,
@@ -60959,7 +60832,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$can
 					$elm$html$Html$text(' or the selection box, and then move them all at once. If you have feedback or suggestions to improve this navigation, please '),
 					A3(
 					$author$project$Libs$Html$extLink,
-					$author$project$Conf$constants.kw,
+					$author$project$Conf$constants.kx,
 					_List_fromArray(
 						[
 							$elm$html$Html$Attributes$class('link')
@@ -60982,7 +60855,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$exp
 			$elm$html$Html$text('experimental')
 		]));
 var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$findPath = {
-	kL: _List_fromArray(
+	kM: _List_fromArray(
 		[
 			A2(
 			$elm$html$Html$p,
@@ -60994,7 +60867,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$fin
 					$elm$html$Html$text('We are still figuring out how this could be the most interesting (path algo, heuristics, UX...) so don\'t hesitate to '),
 					A3(
 					$author$project$Libs$Html$extLink,
-					$author$project$Conf$constants.kx,
+					$author$project$Conf$constants.ky,
 					_List_fromArray(
 						[
 							$elm$html$Html$Attributes$class('link')
@@ -61009,14 +60882,14 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$fin
 	a4: 'Find path'
 };
 var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$followRelation = {
-	kL: _List_fromArray(
+	kM: _List_fromArray(
 		[
 			$elm$html$Html$text('Azimutt shows you foreign keys as outgoing relations from a column with a small horizontal link on the right. Just '),
 			$author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$hotkey(
 			_List_fromArray(
 				['click'])),
 			$elm$html$Html$text(' on the column icon ('),
-			A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$columns.lP, 'inline'),
+			A2($author$project$Components$Atoms$Icon$solid, $author$project$Components$Atoms$Icons$columns.lQ, 'inline'),
 			$elm$html$Html$text(') to show the target table. Incoming relations (foreign keys pointing to the table) are shown on the left, '),
 			$author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$hotkey(
 			_List_fromArray(
@@ -61026,14 +60899,14 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$fol
 	a4: 'Follow relation'
 };
 var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$layout = {
-	kL: _List_fromArray(
+	kM: _List_fromArray(
 		[
 			$elm$html$Html$text('If you are using Azimutt, your schema is probably too complex to be seen all at once.\n                  Focusing on specific use cases can be very interesting, showing only the relevant tables, columns and relations.\n                  Layouts allows you to define such use cases and save them so you can come back to them later and easily switch between them.')
 		]),
 	a4: 'Layout'
 };
 var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$partialDisplay = {
-	kL: _List_fromArray(
+	kM: _List_fromArray(
 		[
 			$elm$html$Html$text('Having too much information makes it useless. Azimutt let you select the table you want to see but also the columns. If you '),
 			$author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$hotkey(
@@ -61068,7 +60941,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$soo
 			$elm$html$Html$text('soon')
 		]));
 var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$search = {
-	kL: _List_fromArray(
+	kM: _List_fromArray(
 		[
 			A2(
 			$elm$html$Html$p,
@@ -61112,7 +60985,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$sea
 					$elm$html$Html$text(' We plan to use full-text search to be typo tolerant and have better results, as well as let you import some data to perform search on them. If you need this, please '),
 					A3(
 					$author$project$Libs$Html$extLink,
-					$author$project$Conf$constants.ky,
+					$author$project$Conf$constants.kz,
 					_List_fromArray(
 						[
 							$elm$html$Html$Attributes$class('link')
@@ -61165,11 +61038,11 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$sec
 									A3($author$project$Libs$Bool$cond, isOpen, '', 'hidden')
 								]))
 						]),
-					section.kL)
+					section.kM)
 				]));
 	});
 var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$shortcuts = {
-	kL: _List_fromArray(
+	kM: _List_fromArray(
 		[
 			A2(
 			$elm$html$Html$p,
@@ -61283,7 +61156,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$sho
 					$elm$html$Html$text('If you can think of other or have better suggestion for them, '),
 					A3(
 					$author$project$Libs$Html$extLink,
-					$author$project$Conf$constants.kz,
+					$author$project$Conf$constants.kA,
 					_List_fromArray(
 						[
 							$elm$html$Html$Attributes$class('link')
@@ -61376,7 +61249,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$vie
 								function (s) {
 									return A2(
 										$author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$sectionToAccordionItem,
-										_Utils_eq(s.a4, model.nt),
+										_Utils_eq(s.a4, model.nu),
 										s);
 								},
 								_List_fromArray(
@@ -61392,7 +61265,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$vie
 									$elm$html$Html$text('I hope you find Azimutt as much as useful as I do. The application is quickly evolving and any feedback, feature request or use case description is '),
 									A3(
 									$author$project$Libs$Html$extLink,
-									$author$project$Conf$constants.kz,
+									$author$project$Conf$constants.kA,
 									_List_fromArray(
 										[
 											$elm$html$Html$Attributes$class('link')
@@ -61514,7 +61387,7 @@ var $author$project$Components$Molecules$Slideover$header = F3(
 var $author$project$Components$Molecules$Slideover$slideover = F2(
 	function (model, content) {
 		var labelId = model.H + '-title';
-		var duration = A3($author$project$Libs$Bool$cond, model.bm, $author$project$Conf$ui.nr, $author$project$Conf$ui.kZ);
+		var duration = A3($author$project$Libs$Bool$cond, model.bm, $author$project$Conf$ui.ns, $author$project$Conf$ui.k_);
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -62170,7 +62043,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$ProjectS
 															$elm$html$Html$Attributes$name(fieldIdMax),
 															$elm$html$Html$Attributes$id(fieldIdMax),
 															$elm$html$Html$Attributes$value(
-															$elm$core$String$fromInt(erd.dM.ay.mD)),
+															$elm$core$String$fromInt(erd.dM.ay.mE)),
 															$elm$html$Html$Events$onInput(
 															A2($elm$core$Basics$composeR, $author$project$PagesComponents$Organization_$Project_$Models$PSHiddenColumnsMaxUpdate, $author$project$PagesComponents$Organization_$Project_$Models$ProjectSettingsMsg)),
 															$elm$html$Html$Attributes$placeholder('Max columns to show when adding a table'),
@@ -62665,23 +62538,23 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$ProjectS
 		switch (_v2.$) {
 			case 0:
 				var url = _v2.a;
-				return A4(view, $author$project$Components$Atoms$Icons$sources.lb, 'Last fetched on ', source.ka, 'Database ' + url);
+				return A4(view, $author$project$Components$Atoms$Icons$sources.lc, 'Last fetched on ', source.kb, 'Database ' + url);
 			case 1:
 				var path = _v2.a;
 				var modified = _v2.c;
 				return A4(view, $author$project$Components$Atoms$Icons$sources.oD, 'File last modified on ', modified, path + ' file');
 			case 2:
 				var url = _v2.a;
-				return A4(view, $author$project$Components$Atoms$Icons$sources.n1, 'Last fetched on ', source.ka, 'File from ' + url);
+				return A4(view, $author$project$Components$Atoms$Icons$sources.n1, 'Last fetched on ', source.kb, 'File from ' + url);
 			case 3:
 				var path = _v2.a;
 				var modified = _v2.c;
-				return A4(view, $author$project$Components$Atoms$Icons$sources.mg, 'File last modified on ', modified, path + ' file');
+				return A4(view, $author$project$Components$Atoms$Icons$sources.mh, 'File last modified on ', modified, path + ' file');
 			case 4:
 				var url = _v2.a;
-				return A4(view, $author$project$Components$Atoms$Icons$sources.n1, 'Last fetched on ', source.ka, 'File from ' + url);
+				return A4(view, $author$project$Components$Atoms$Icons$sources.n1, 'Last fetched on ', source.kb, 'File from ' + url);
 			default:
-				return A4(view, $author$project$Components$Atoms$Icons$sources.kp, 'Last edited on ', source.ka, 'Created by you');
+				return A4(view, $author$project$Components$Atoms$Icons$sources.kq, 'Last edited on ', source.kb, 'Created by you');
 		}
 	});
 var $author$project$PagesComponents$Organization_$Project_$Views$Modals$ProjectSettings$viewSourcesSection = F3(
@@ -63161,7 +63034,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$SchemaAn
 };
 var $author$project$Components$Slices$ProPlan$analysisResults = F3(
 	function (organization, items, render) {
-		if (organization.nD.fR || ($elm$core$List$length(items) <= 5)) {
+		if (organization.jv.fR || ($elm$core$List$length(items) <= 9999)) {
 			return A2(
 				$elm$html$Html$div,
 				_List_Nil,
@@ -63816,7 +63689,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$Modals$SchemaAn
 			_List_fromArray(
 				[
 					$author$project$PagesComponents$Organization_$Project_$Views$Modals$SchemaAnalysis$viewHeader(titleId),
-					organization.nD.fR ? A2($elm$html$Html$div, _List_Nil, _List_Nil) : A2($elm$html$Html$div, _List_Nil, _List_Nil),
+					organization.jv.fR ? A2($elm$html$Html$div, _List_Nil, _List_Nil) : A2($elm$html$Html$div, _List_Nil, _List_Nil),
 					A4($author$project$PagesComponents$Organization_$Project_$Views$Modals$SchemaAnalysis$viewAnalysis, organization, model.dy, defaultSchema, tables),
 					$author$project$PagesComponents$Organization_$Project_$Views$Modals$SchemaAnalysis$viewFooter
 				]));
@@ -63837,7 +63710,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewModal = F5(
 					return -A2(
 						$elm$core$Maybe$withDefault,
 						0,
-						A2($author$project$Libs$List$indexOf, id, model.ns));
+						A2($author$project$Libs$List$indexOf, id, model.nt));
 				},
 				A2(
 					$elm$core$List$filterMap,
@@ -63851,10 +63724,10 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewModal = F5(
 									m.H,
 									A2(
 										$author$project$PagesComponents$Organization_$Project_$Views$Modals$Modals$view,
-										A2($elm$core$List$member, m.H, model.ns),
+										A2($elm$core$List$member, m.H, model.nt),
 										m));
 							},
-							model.mR),
+							model.mS),
 							A2(
 							$elm$core$Maybe$map,
 							function (m) {
@@ -63862,7 +63735,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewModal = F5(
 									m.H,
 									A2(
 										$author$project$PagesComponents$Organization_$Project_$Views$Modals$Modals$viewConfirm,
-										A2($elm$core$List$member, m.H, model.ns),
+										A2($elm$core$List$member, m.H, model.nt),
 										m));
 							},
 							model.b8),
@@ -63873,7 +63746,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewModal = F5(
 									m.H,
 									A2(
 										$author$project$PagesComponents$Organization_$Project_$Views$Modals$Modals$viewPrompt,
-										A2($elm$core$List$member, m.H, model.ns),
+										A2($elm$core$List$member, m.H, model.nt),
 										m));
 							},
 							model.nS),
@@ -63889,11 +63762,11 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewModal = F5(
 											$author$project$PagesComponents$Organization_$Project_$Models$ModalClose,
 											A2($author$project$PagesComponents$Organization_$Project_$Models$Erd$getOrganization, urlOrganization, e),
 											$elm$core$Dict$keys(e.i$),
-											A2($elm$core$List$member, m.H, model.ns),
+											A2($elm$core$List$member, m.H, model.nt),
 											m));
 								}),
-							model.lD,
-							model.m2),
+							model.lE,
+							model.m3),
 							A3(
 							$elm$core$Maybe$map2,
 							F2(
@@ -63902,11 +63775,11 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewModal = F5(
 										m.H,
 										A3(
 											$author$project$PagesComponents$Organization_$Project_$Views$Modals$EditNotes$viewEditNotes,
-											A2($elm$core$List$member, m.H, model.ns),
+											A2($elm$core$List$member, m.H, model.nt),
 											e,
 											m));
 								}),
-							model.lD,
+							model.lE,
 							model._),
 							A3(
 							$elm$core$Maybe$map2,
@@ -63916,14 +63789,14 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewModal = F5(
 										m.H,
 										A6(
 											$author$project$PagesComponents$Organization_$Project_$Views$Modals$FindPath$viewFindPath,
-											A2($elm$core$List$member, m.H, model.ns),
+											A2($elm$core$List$member, m.H, model.nt),
 											model.jo,
 											e.dM.cb,
 											e.oM,
 											e.dM.c8,
 											m));
 								}),
-							model.lD,
+							model.lE,
 							model.c8),
 							A3(
 							$elm$core$Maybe$map2,
@@ -63934,12 +63807,12 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewModal = F5(
 										A5(
 											$author$project$PagesComponents$Organization_$Project_$Views$Modals$SchemaAnalysis$viewSchemaAnalysis,
 											A2($author$project$PagesComponents$Organization_$Project_$Models$Erd$getOrganization, urlOrganization, e),
-											A2($elm$core$List$member, m.H, model.ns),
+											A2($elm$core$List$member, m.H, model.nt),
 											e.dM.cb,
 											e.oM,
 											m));
 								}),
-							model.lD,
+							model.lE,
 							model.oi),
 							A3(
 							$elm$core$Maybe$map2,
@@ -63955,11 +63828,11 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewModal = F5(
 											$author$project$PagesComponents$Organization_$Project_$Models$confirmDanger,
 											shared.pj,
 											currentUrl,
-											A2($elm$core$List$member, m.H, model.ns),
+											A2($elm$core$List$member, m.H, model.nt),
 											e,
 											m));
 								}),
-							model.lD,
+							model.lE,
 							model.os),
 							A3(
 							$elm$core$Maybe$map2,
@@ -63973,13 +63846,13 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewModal = F5(
 											$author$project$PagesComponents$Organization_$Project_$Models$ModalClose,
 											$author$project$PagesComponents$Organization_$Project_$Models$CreateProject,
 											currentUrl,
-											shared.kb,
-											shared.nx,
-											A2($elm$core$List$member, m.H, model.ns),
+											shared.kc,
+											shared.ny,
+											A2($elm$core$List$member, m.H, model.nt),
 											e,
 											m));
 								}),
-							model.lD,
+							model.lE,
 							model.fa),
 							A3(
 							$elm$core$Maybe$map2,
@@ -63990,11 +63863,11 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewModal = F5(
 										A4(
 											$author$project$PagesComponents$Organization_$Project_$Views$Modals$ProjectSettings$viewProjectSettings,
 											shared.pj,
-											A2($elm$core$List$member, m.H, model.ns),
+											A2($elm$core$List$member, m.H, model.nt),
 											e,
 											m));
 								}),
-							model.lD,
+							model.lE,
 							model.dM),
 							A2(
 							$elm$core$Maybe$map,
@@ -64008,8 +63881,8 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewModal = F5(
 										$author$project$PagesComponents$Organization_$Project_$Models$ModalClose,
 										$author$project$PagesComponents$Organization_$Project_$Models$Noop,
 										shared.pj,
-										shared.nd,
-										A2($elm$core$List$member, m.H, model.ns),
+										shared.ne,
+										A2($elm$core$List$member, m.H, model.nt),
 										m));
 							},
 							model.oA),
@@ -64024,10 +63897,10 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewModal = F5(
 										$author$project$PagesComponents$Organization_$Project_$Models$SourceParsed,
 										$author$project$PagesComponents$Organization_$Project_$Models$ModalClose,
 										$author$project$PagesComponents$Organization_$Project_$Models$Noop,
-										A2($elm$core$List$member, m.H, model.ns),
+										A2($elm$core$List$member, m.H, model.nt),
 										m));
 							},
-							model.lA),
+							model.lB),
 							A2(
 							$elm$core$Maybe$map,
 							function (m) {
@@ -64035,10 +63908,10 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewModal = F5(
 									m.H,
 									A2(
 										$author$project$PagesComponents$Organization_$Project_$Views$Modals$Help$viewHelp,
-										A2($elm$core$List$member, m.H, model.ns),
+										A2($elm$core$List$member, m.H, model.nt),
 										m));
 							},
-							model.lX)
+							model.lY)
 						]))));
 	});
 var $author$project$PagesComponents$Organization_$Project_$Models$DeleteProject = function (a) {
@@ -64264,7 +64137,7 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewNotFound = 
 															}
 															]) : _List_fromArray(
 															[
-																{fp: 'Visit Azimutt', o1: $author$project$Conf$constants.kG}
+																{fp: 'Visit Azimutt', o1: $author$project$Conf$constants.kH}
 															]),
 														A3(
 															$author$project$Libs$Maybe$mapOrElse,
@@ -64340,8 +64213,8 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewNotFound = 
 									},
 									_List_fromArray(
 										[
-											{fp: 'Contact Support', o1: $author$project$Conf$constants.kz},
-											{fp: 'Twitter', o1: $author$project$Conf$constants.kF},
+											{fp: 'Contact Support', o1: $author$project$Conf$constants.kA},
+											{fp: 'Twitter', o1: $author$project$Conf$constants.kG},
 											{fp: 'Blog', o1: $author$project$Services$Backend$blogUrl}
 										]))))
 						]))
@@ -64351,21 +64224,21 @@ var $author$project$PagesComponents$Organization_$Project_$Views$viewProject = F
 	function (onDelete, currentUrl, urlOrganization, urlProject, shared, model) {
 		return _List_fromArray(
 			[
-				model.ms ? A3(
+				model.mt ? A3(
 				$author$project$Libs$Maybe$mapOrElse,
 				A5($author$project$PagesComponents$Organization_$Project_$Views$viewApp, currentUrl, urlOrganization, shared, model, 'app'),
-				A6($author$project$PagesComponents$Organization_$Project_$Views$viewNotFound, currentUrl, urlOrganization, urlProject, shared.kb, shared.nQ, model.Z),
-				model.lD) : $author$project$Components$Atoms$Loader$fullScreen,
+				A6($author$project$PagesComponents$Organization_$Project_$Views$viewNotFound, currentUrl, urlOrganization, urlProject, shared.kc, shared.nQ, model.Z),
+				model.lE) : $author$project$Components$Atoms$Loader$fullScreen,
 				A6($elm$html$Html$Lazy$lazy5, $author$project$PagesComponents$Organization_$Project_$Views$viewModal, currentUrl, urlOrganization, shared, model, onDelete),
 				A3($elm$html$Html$Lazy$lazy2, $author$project$Services$Toasts$view, $author$project$PagesComponents$Organization_$Project_$Models$Toast, model.bX),
-				A2($elm$html$Html$Lazy$lazy, $author$project$PagesComponents$Organization_$Project_$Views$viewContextMenu, model.k2)
+				A2($elm$html$Html$Lazy$lazy, $author$project$PagesComponents$Organization_$Project_$Views$viewContextMenu, model.k3)
 			]);
 	});
 var $author$project$PagesComponents$Organization_$Project_$Views$view = F6(
 	function (onDelete, currentUrl, urlOrganization, urlProject, shared, model) {
 		return {
-			kL: A6($author$project$PagesComponents$Organization_$Project_$Views$viewProject, onDelete, currentUrl, urlOrganization, urlProject, shared, model),
-			a4: $author$project$PagesComponents$Organization_$Project_$Views$title(model.lD)
+			kM: A6($author$project$PagesComponents$Organization_$Project_$Views$viewProject, onDelete, currentUrl, urlOrganization, urlProject, shared, model),
+			a4: $author$project$PagesComponents$Organization_$Project_$Views$title(model.lE)
 		};
 	});
 var $author$project$Pages$Embed$page = F2(
@@ -64378,7 +64251,7 @@ var $author$project$Pages$Embed$page = F2(
 			{
 				bl: $author$project$Pages$Embed$init(query),
 				by: $author$project$PagesComponents$Organization_$Project_$Subscriptions$subscriptions,
-				fv: A6($author$project$PagesComponents$Organization_$Project_$Updates$update, query.aM, shared.pj, shared.nd, urlOrganization, shared.nx, shared.nQ),
+				fv: A6($author$project$PagesComponents$Organization_$Project_$Updates$update, query.aM, shared.pj, shared.ne, urlOrganization, shared.ny, shared.nQ),
 				o3: A5(
 					$author$project$PagesComponents$Organization_$Project_$Views$view,
 					A2($author$project$Request$pushRoute, $author$project$Gen$Route$NotFound, req),
@@ -64454,39 +64327,39 @@ var $author$project$Services$Backend$decodeSample = A8(
 var $author$project$Services$Backend$getSamples = function (toMsg) {
 	return $author$project$Services$Backend$riskyGet(
 		{
-			lH: A2(
+			lI: A2(
 				$author$project$Services$Backend$expectJson,
 				toMsg,
 				$elm$json$Json$Decode$list($author$project$Services$Backend$decodeSample)),
 			o1: '/api/v1/gallery'
 		});
 };
-var $author$project$PagesComponents$New$Views$title = $author$project$Conf$constants.lh;
+var $author$project$PagesComponents$New$Views$title = $author$project$Conf$constants.li;
 var $author$project$PagesComponents$New$Init$init = F2(
 	function (urlOrganization, query) {
 		return _Utils_Tuple2(
-			{b8: $elm$core$Maybe$Nothing, ca: $elm$core$Maybe$Nothing, cm: $elm$core$Maybe$Nothing, mQ: false, bt: '', ns: _List_Nil, jo: '', nO: $elm$core$Maybe$Nothing, oe: $elm$core$Maybe$Nothing, of: _List_Nil, fg: 'New project', on: 0, cA: $elm$core$Maybe$Nothing, bX: $author$project$Services$Toasts$init},
+			{b8: $elm$core$Maybe$Nothing, ca: $elm$core$Maybe$Nothing, cm: $elm$core$Maybe$Nothing, mR: false, bt: '', nt: _List_Nil, jo: '', nO: $elm$core$Maybe$Nothing, oe: $elm$core$Maybe$Nothing, of: _List_Nil, fg: 'New project', on: 0, cA: $elm$core$Maybe$Nothing, bX: $author$project$Services$Toasts$init},
 			$elm$core$Platform$Cmd$batch(
 				_Utils_ap(
 					_List_fromArray(
 						[
 							$author$project$Ports$setMeta(
 							{
-								kL: $elm$core$Maybe$Just('h-full'),
-								kP: $elm$core$Maybe$Just(
+								kM: $elm$core$Maybe$Just('h-full'),
+								kQ: $elm$core$Maybe$Just(
 									{
 										e1: $elm$core$Dict$empty,
 										hk: A3(
 											$author$project$Libs$Maybe$mapOrElse,
 											function (id) {
 												return $author$project$Gen$Route$Organization___New(
-													{nw: id});
+													{nx: id});
 											},
 											$author$project$Gen$Route$New,
 											urlOrganization)
 									}),
-								bf: $elm$core$Maybe$Just($author$project$Conf$constants.lf),
-								l3: $elm$core$Maybe$Just('h-full bg-gray-100'),
+								bf: $elm$core$Maybe$Just($author$project$Conf$constants.lg),
+								l4: $elm$core$Maybe$Just('h-full bg-gray-100'),
 								a4: $elm$core$Maybe$Just($author$project$PagesComponents$New$Views$title)
 							}),
 							$author$project$Services$Backend$getSamples($author$project$PagesComponents$New$Models$GotSamples),
@@ -64691,7 +64564,7 @@ var $author$project$PagesComponents$New$Updates$handleJsMessage = F5(
 					A2(
 						$elm$core$Maybe$andThen,
 						function ($) {
-							return $.nB;
+							return $.nC;
 						},
 						model.oe),
 					$elm$core$Maybe$Nothing))) ? _Utils_Tuple2(
@@ -64700,7 +64573,7 @@ var $author$project$PagesComponents$New$Updates$handleJsMessage = F5(
 						$author$project$Request$pushRoute,
 						$author$project$Gen$Route$Organization___Project_(
 							{
-								nw: A2($elm$core$Maybe$withDefault, $author$project$Models$OrganizationId$zero, urlOrganization),
+								nx: A2($elm$core$Maybe$withDefault, $author$project$Models$OrganizationId$zero, urlOrganization),
 								nN: $author$project$Models$Project$ProjectId$zero
 							}),
 						req)) : _Utils_Tuple2(
@@ -64744,8 +64617,8 @@ var $author$project$PagesComponents$New$Updates$handleJsMessage = F5(
 								$author$project$Ports$unhandledJsMsgError(msg)))));
 		}
 	});
-var $author$project$Services$ProjectSource$init = {bo: $elm$core$Maybe$Nothing, nB: $elm$core$Maybe$Nothing, nN: $elm$core$Maybe$Nothing, jS: $elm$core$Maybe$Nothing, jT: $elm$core$Maybe$Nothing, ov: ''};
-var $author$project$Services$SampleSource$init = {nB: $elm$core$Maybe$Nothing, nN: $elm$core$Maybe$Nothing, om: $elm$core$Maybe$Nothing};
+var $author$project$Services$ProjectSource$init = {bo: $elm$core$Maybe$Nothing, nC: $elm$core$Maybe$Nothing, nN: $elm$core$Maybe$Nothing, jT: $elm$core$Maybe$Nothing, jU: $elm$core$Maybe$Nothing, ov: ''};
+var $author$project$Services$SampleSource$init = {nC: $elm$core$Maybe$Nothing, nN: $elm$core$Maybe$Nothing, om: $elm$core$Maybe$Nothing};
 var $author$project$Services$Lenses$setProjectSource = A2(
 	$author$project$Services$Lenses$set_,
 	function ($) {
@@ -64794,7 +64667,7 @@ var $author$project$Services$ProjectSource$update = F3(
 						return _Utils_update(
 							m,
 							{
-								jS: $elm$core$Maybe$Just(file)
+								jT: $elm$core$Maybe$Just(file)
 							});
 					}($author$project$Services$ProjectSource$init),
 					A2($author$project$Ports$readLocalFile, $author$project$Services$ProjectSource$kind, file));
@@ -64805,12 +64678,12 @@ var $author$project$Services$ProjectSource$update = F3(
 						return _Utils_update(
 							m,
 							{
-								jT: $elm$core$Maybe$Just(url)
+								jU: $elm$core$Maybe$Just(url)
 							});
 					}($author$project$Services$ProjectSource$init),
 					$elm$http$Http$get(
 						{
-							lH: $elm$http$Http$expectString(
+							lI: $elm$http$Http$expectString(
 								A2($elm$core$Basics$composeR, $author$project$Services$ProjectSource$GotRemoteFile, wrap)),
 							o1: url
 						}));
@@ -64864,7 +64737,7 @@ var $author$project$Services$ProjectSource$update = F3(
 									_Utils_update(
 										model,
 										{
-											nB: $elm$core$Maybe$Just(
+											nC: $elm$core$Maybe$Just(
 												$elm$core$Result$Ok(project))
 										}),
 									$author$project$Libs$Task$send(
@@ -64880,7 +64753,7 @@ var $author$project$Services$ProjectSource$update = F3(
 										_Utils_update(
 											model,
 											{
-												nB: $elm$core$Maybe$Just(
+												nC: $elm$core$Maybe$Just(
 													$elm$core$Result$Err(err))
 											})),
 									$elm$core$Platform$Cmd$none);
@@ -64902,7 +64775,7 @@ var $author$project$Services$ProjectSource$update = F3(
 									model),
 								$author$project$Ports$createProjectTmp(parsedProject));
 						},
-						A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.nB)));
+						A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.nC)));
 			default:
 				var htmlId = msg.a;
 				return _Utils_Tuple2(
@@ -64939,7 +64812,7 @@ var $author$project$Services$SampleSource$update = F3(
 					_Utils_update(
 						model,
 						{
-							nB: $elm$core$Maybe$Just(
+							nC: $elm$core$Maybe$Just(
 								A2(
 									$elm$core$Maybe$withDefault,
 									$elm$core$Result$Err(
@@ -64963,7 +64836,7 @@ var $author$project$Services$SampleSource$update = F3(
 									model),
 								$elm$core$Platform$Cmd$none);
 						},
-						A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.nB)));
+						A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.nC)));
 		}
 	});
 var $author$project$PagesComponents$New$Updates$update = F6(
@@ -65228,12 +65101,12 @@ var $author$project$PagesComponents$New$Updates$update = F6(
 					A2(
 						$author$project$Services$Lenses$setConfirm,
 						$elm$core$Maybe$Just(
-							{cX: confirm, H: $author$project$Conf$ids.k0}),
+							{cX: confirm, H: $author$project$Conf$ids.k1}),
 						model),
 					A2(
 						$author$project$Libs$Task$sendAfter,
 						1,
-						$author$project$PagesComponents$New$Models$ModalOpen($author$project$Conf$ids.k0)));
+						$author$project$PagesComponents$New$Models$ModalOpen($author$project$Conf$ids.k1)));
 			case 14:
 				var answer = msg.a;
 				var cmd = msg.b;
@@ -65257,7 +65130,7 @@ var $author$project$PagesComponents$New$Updates$update = F6(
 						$author$project$Services$Lenses$mapOpenedDialogs,
 						$elm$core$List$drop(1),
 						model),
-					A2($author$project$Libs$Task$sendAfter, $author$project$Conf$ui.kZ, message));
+					A2($author$project$Libs$Task$sendAfter, $author$project$Conf$ui.k_, message));
 			case 17:
 				var message = msg.a;
 				return A5($author$project$PagesComponents$New$Updates$handleJsMessage, req, now, urlOrganization, message, model);
@@ -65629,7 +65502,7 @@ var $author$project$PagesComponents$Helpers$viewFooter = A2(
 									$elm$html$Html$text('Azimutt is an '),
 									A3(
 									$author$project$Libs$Html$extLink,
-									$author$project$Conf$constants.kC,
+									$author$project$Conf$constants.kD,
 									_List_fromArray(
 										[
 											$author$project$Libs$Html$Attributes$css(
@@ -65657,7 +65530,7 @@ var $author$project$PagesComponents$Helpers$viewFooter = A2(
 									$elm$html$Html$text('. We always look for '),
 									A3(
 									$author$project$Libs$Html$extLink,
-									$author$project$Conf$constants.kB,
+									$author$project$Conf$constants.kC,
 									_List_fromArray(
 										[
 											$author$project$Libs$Html$Attributes$css(
@@ -66087,7 +65960,7 @@ var $author$project$PagesComponents$New$Views$viewDataPrivacyCollapse = F2(
 									$elm$html$Html$a,
 									_List_fromArray(
 										[
-											$elm$html$Html$Attributes$href('mailto:' + $author$project$Conf$constants.kA),
+											$elm$html$Html$Attributes$href('mailto:' + $author$project$Conf$constants.kB),
 											$elm$html$Html$Attributes$target('_blank'),
 											$elm$html$Html$Attributes$rel('noopener'),
 											$elm$html$Html$Attributes$class('link')
@@ -66306,7 +66179,7 @@ var $author$project$PagesComponents$New$Views$viewEmptyProjectTab = A2(
 							_List_fromArray(
 								[
 									$elm$html$Html$Events$onClick(
-									$author$project$PagesComponents$New$Models$CreateEmptyProject($author$project$Conf$constants.m3)),
+									$author$project$PagesComponents$New$Models$CreateEmptyProject($author$project$Conf$constants.m4)),
 									$elm$html$Html$Attributes$id('create-project-btn'),
 									$author$project$Libs$Html$Attributes$css(
 									_List_fromArray(
@@ -66575,7 +66448,7 @@ var $author$project$Services$ProjectSource$viewDiffAlert = F3(
 									_List_fromArray(
 										[
 											$elm$html$Html$text(
-											'Existing project has been last modified on ' + (A2($author$project$Libs$Models$DateTime$formatDate, zone, old.ka) + (' while imported one was updated on ' + A2($author$project$Libs$Models$DateTime$formatDate, zone, _new.ka))))
+											'Existing project has been last modified on ' + (A2($author$project$Libs$Models$DateTime$formatDate, zone, old.kb) + (' while imported one was updated on ' + A2($author$project$Libs$Models$DateTime$formatDate, zone, _new.kb))))
 										])),
 									A2(
 									$elm$html$Html$li,
@@ -66629,7 +66502,7 @@ var $author$project$Services$ProjectSource$viewLogsError = function (error) {
 						$elm$html$Html$text('This is quite sad, you can try to fix the format yourself or '),
 						A3(
 						$author$project$Libs$Html$extLink,
-						$author$project$Conf$constants.kv,
+						$author$project$Conf$constants.kw,
 						_List_fromArray(
 							[
 								$elm$html$Html$Attributes$class('link')
@@ -66662,7 +66535,7 @@ var $author$project$Services$ProjectSource$viewLogsProject = F2(
 					_List_fromArray(
 						[
 							$elm$html$Html$text(
-							'It was created on ' + (A2($author$project$Libs$Models$DateTime$formatDate, zone, project.ic) + (' and last modified on ' + (A2($author$project$Libs$Models$DateTime$formatDate, zone, project.ka) + '.'))))
+							'It was created on ' + (A2($author$project$Libs$Models$DateTime$formatDate, zone, project.ic) + (' and last modified on ' + (A2($author$project$Libs$Models$DateTime$formatDate, zone, project.kb) + '.'))))
 						])),
 					A2(
 					$elm$html$Html$div,
@@ -66711,7 +66584,7 @@ var $author$project$Services$ProjectSource$viewParsing = F4(
 													function (_v1) {
 														return 'Building...';
 													},
-													model.nB),
+													model.nC),
 												A2(
 													$elm$core$Maybe$map,
 													function (_v0) {
@@ -66746,7 +66619,7 @@ var $author$project$Services$ProjectSource$viewParsing = F4(
 										$author$project$Services$ProjectSource$viewLogsError,
 										$author$project$Services$ProjectSource$viewLogsProject(zone)),
 									A2($elm$html$Html$div, _List_Nil, _List_Nil),
-									model.nB),
+									model.nC),
 									A3(
 									$author$project$Libs$Maybe$mapOrElse,
 									$author$project$Services$SourceLogs$viewResult,
@@ -66766,7 +66639,7 @@ var $author$project$Services$ProjectSource$viewParsing = F4(
 										},
 										currentProject);
 								},
-								A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.nB)))
+								A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.nC)))
 						]));
 			},
 			A2($elm$html$Html$div, _List_Nil, _List_Nil),
@@ -66777,13 +66650,13 @@ var $author$project$Services$ProjectSource$viewParsing = F4(
 					function (url) {
 						return url + ' file';
 					},
-					model.jT),
+					model.jU),
 				A2(
 					$elm$core$Maybe$map,
 					function (f) {
 						return f.eS + ' file';
 					},
-					model.jS)));
+					model.jT)));
 	});
 var $author$project$PagesComponents$New$Views$viewProjectSourceTab = F4(
 	function (htmlId, zone, projects, model) {
@@ -66932,8 +66805,15 @@ var $author$project$PagesComponents$New$Views$viewProjectSourceTab = F4(
 														projects)))))
 									]));
 						},
-						A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.nB)))
+						A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.nC)))
 				]));
+	});
+var $author$project$Libs$Maybe$all = F2(
+	function (predicate, maybe) {
+		return A2(
+			$elm$core$Maybe$withDefault,
+			true,
+			A2($elm$core$Maybe$map, predicate, maybe));
 	});
 var $author$project$Services$SampleSource$viewParsing = function (model) {
 	return A2(
@@ -67212,7 +67092,7 @@ var $author$project$PagesComponents$New$Views$viewSampleSourceTab = F4(
 																		$author$project$Gen$Route$toHref(
 																			$author$project$Gen$Route$Organization___Project_(
 																				{
-																					nw: A2(
+																					nx: A2(
 																						$elm$core$Maybe$withDefault,
 																						$author$project$Models$ProjectInfo$organizationId(p),
 																						urlOrganization),
@@ -67237,7 +67117,7 @@ var $author$project$PagesComponents$New$Views$viewSampleSourceTab = F4(
 														projects)))))
 									]));
 						},
-						A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.nB)))
+						A2($elm$core$Maybe$andThen, $elm$core$Result$toMaybe, model.nC)))
 				]));
 	});
 var $author$project$PagesComponents$New$Views$viewHowToGetSchemaCollapse = F2(
@@ -67538,7 +67418,7 @@ var $author$project$PagesComponents$New$Views$viewModal = function (model) {
 				return -A2(
 					$elm$core$Maybe$withDefault,
 					0,
-					A2($author$project$Libs$List$indexOf, id, model.ns));
+					A2($author$project$Libs$List$indexOf, id, model.nt));
 			},
 			A2(
 				$elm$core$List$filterMap,
@@ -67552,7 +67432,7 @@ var $author$project$PagesComponents$New$Views$viewModal = function (model) {
 								m.H,
 								A2(
 									$author$project$PagesComponents$New$Views$viewConfirm,
-									A2($elm$core$List$member, m.H, model.ns),
+									A2($elm$core$List$member, m.H, model.nt),
 									m));
 						},
 						model.b8)
@@ -67566,12 +67446,12 @@ var $author$project$PagesComponents$New$Views$viewNewProject = F4(
 				return $author$project$Services$Backend$organizationUrl(urlOrganization);
 			},
 			$author$project$Services$Backend$homeUrl,
-			shared.kb);
+			shared.kc);
 		return A9(
 			$author$project$PagesComponents$Helpers$appShell,
 			currentUrl,
 			urlOrganization,
-			shared.kb,
+			shared.kc,
 			function (link) {
 				return $author$project$PagesComponents$New$Models$SelectMenu(link.fp);
 			},
@@ -67620,7 +67500,7 @@ var $author$project$PagesComponents$New$Views$viewNewProject = F4(
 												$elm$html$Html$text('New')
 											]))
 									]),
-								aa: $author$project$Components$Atoms$Icons$sources.lb,
+								aa: $author$project$Components$Atoms$Icons$sources.lc,
 								a3: 0
 							},
 								{
@@ -67636,7 +67516,7 @@ var $author$project$PagesComponents$New$Views$viewNewProject = F4(
 									[
 										$elm$html$Html$text('From JSON')
 									]),
-								aa: $author$project$Components$Atoms$Icons$sources.mg,
+								aa: $author$project$Components$Atoms$Icons$sources.mh,
 								a3: 2
 							},
 								{
@@ -67644,7 +67524,7 @@ var $author$project$PagesComponents$New$Views$viewNewProject = F4(
 									[
 										$elm$html$Html$text('Empty project')
 									]),
-								aa: $author$project$Components$Atoms$Icons$sources.lB,
+								aa: $author$project$Components$Atoms$Icons$sources.lC,
 								a3: 3
 							},
 								{
@@ -67675,7 +67555,7 @@ var $author$project$PagesComponents$New$Views$viewNewProject = F4(
 var $author$project$PagesComponents$New$Views$view = F4(
 	function (shared, currentUrl, urlOrganization, model) {
 		return {
-			kL: A4($author$project$PagesComponents$New$Views$viewNewProject, shared, currentUrl, urlOrganization, model),
+			kM: A4($author$project$PagesComponents$New$Views$viewNewProject, shared, currentUrl, urlOrganization, model),
 			a4: $author$project$PagesComponents$New$Views$title
 		};
 	});
@@ -67686,7 +67566,7 @@ var $author$project$Pages$New$page = F2(
 			{
 				bl: A2($author$project$PagesComponents$New$Init$init, urlOrganization, req.e1),
 				by: $author$project$PagesComponents$New$Subscriptions$subscriptions,
-				fv: A4($author$project$PagesComponents$New$Updates$update, req, shared.nd, shared.nQ, urlOrganization),
+				fv: A4($author$project$PagesComponents$New$Updates$update, req, shared.ne, shared.nQ, urlOrganization),
 				o3: A3($author$project$PagesComponents$New$Views$view, shared, req.o1, urlOrganization)
 			});
 	});
@@ -67727,11 +67607,11 @@ var $author$project$Pages$NotFound$init = function (req) {
 				[
 					$author$project$Ports$setMeta(
 					{
-						kL: $elm$core$Maybe$Just('h-full'),
-						kP: $elm$core$Maybe$Just(
+						kM: $elm$core$Maybe$Just('h-full'),
+						kQ: $elm$core$Maybe$Just(
 							{e1: $elm$core$Dict$empty, hk: $author$project$Gen$Route$NotFound}),
-						bf: $elm$core$Maybe$Just($author$project$Conf$constants.lf),
-						l3: $elm$core$Maybe$Just('h-full'),
+						bf: $elm$core$Maybe$Just($author$project$Conf$constants.lg),
+						l4: $elm$core$Maybe$Just('h-full'),
 						a4: $elm$core$Maybe$Just($author$project$Pages$NotFound$title)
 					}),
 					$author$project$Ports$track(
@@ -68012,8 +67892,8 @@ var $author$project$Pages$NotFound$viewNotFound = function (model) {
 				},
 				f0: _List_fromArray(
 					[
-						{fp: 'Contact Support', o1: $author$project$Conf$constants.kz},
-						{fp: 'Twitter', o1: $author$project$Conf$constants.kF},
+						{fp: 'Contact Support', o1: $author$project$Conf$constants.kA},
+						{fp: 'Twitter', o1: $author$project$Conf$constants.kG},
 						{fp: 'Blog', o1: $author$project$Services$Backend$blogUrl}
 					]),
 				f8: '404 error',
@@ -68029,7 +67909,7 @@ var $author$project$Pages$NotFound$viewNotFound = function (model) {
 };
 var $author$project$Pages$NotFound$view = function (model) {
 	return {
-		kL: $author$project$Pages$NotFound$viewNotFound(model),
+		kM: $author$project$Pages$NotFound$viewNotFound(model),
 		a4: $author$project$Pages$NotFound$title
 	};
 };
@@ -68045,23 +67925,23 @@ var $author$project$Pages$NotFound$page = F2(
 	});
 var $author$project$Pages$Organization_$Create$page = F2(
 	function (shared, req) {
-		var urlOrganization = $elm$core$Maybe$Just(req.nA.nw);
+		var urlOrganization = $elm$core$Maybe$Just(req.nB.nx);
 		return $author$project$Page$element(
 			{
 				bl: $author$project$PagesComponents$Create$Init$init(urlOrganization),
 				by: $author$project$PagesComponents$Create$Subscriptions$subscriptions,
-				fv: A5($author$project$PagesComponents$Create$Updates$update, req, shared.nd, shared.nQ, shared.nR, urlOrganization),
+				fv: A5($author$project$PagesComponents$Create$Updates$update, req, shared.ne, shared.nQ, shared.nR, urlOrganization),
 				o3: $author$project$PagesComponents$Create$Views$view
 			});
 	});
 var $author$project$Pages$Organization_$New$page = F2(
 	function (shared, req) {
-		var urlOrganization = $elm$core$Maybe$Just(req.nA.nw);
+		var urlOrganization = $elm$core$Maybe$Just(req.nB.nx);
 		return $author$project$Page$element(
 			{
 				bl: A2($author$project$PagesComponents$New$Init$init, urlOrganization, req.e1),
 				by: $author$project$PagesComponents$New$Subscriptions$subscriptions,
-				fv: A4($author$project$PagesComponents$New$Updates$update, req, shared.nd, shared.nQ, urlOrganization),
+				fv: A4($author$project$PagesComponents$New$Updates$update, req, shared.ne, shared.nQ, urlOrganization),
 				o3: A3($author$project$PagesComponents$New$Views$view, shared, req.o1, urlOrganization)
 			});
 	});
@@ -68073,13 +67953,13 @@ var $author$project$PagesComponents$Organization_$Project_$Models$ErdConf$projec
 		f3: false,
 		bk: true,
 		aM: true,
-		mp: true,
+		mq: true,
 		jb: true,
 		hd: true,
 		fa: _Utils_eq(token, $elm$core$Maybe$Nothing),
 		fe: true,
 		os: _Utils_eq(token, $elm$core$Maybe$Nothing),
-		jV: true,
+		jW: true,
 		fv: true
 	};
 };
@@ -68087,32 +67967,32 @@ var $author$project$Pages$Organization_$Project_$init = F3(
 	function (params, token, save) {
 		return _Utils_Tuple2(
 			{
-				kq: $elm$core$Maybe$Nothing,
-				k_: $elm$core$Dict$empty,
+				kr: $elm$core$Maybe$Nothing,
+				k$: $elm$core$Dict$empty,
 				Z: $author$project$PagesComponents$Organization_$Project_$Models$ErdConf$project(token),
 				b8: $elm$core$Maybe$Nothing,
-				k2: $elm$core$Maybe$Nothing,
-				k7: 1,
-				lp: $elm$core$Maybe$Nothing,
-				lr: false,
+				k3: $elm$core$Maybe$Nothing,
+				k8: 1,
+				lq: $elm$core$Maybe$Nothing,
+				ls: false,
 				ep: $elm$core$Maybe$Nothing,
-				lv: $elm$core$Maybe$Nothing,
+				lw: $elm$core$Maybe$Nothing,
 				_: $elm$core$Maybe$Nothing,
-				lA: $elm$core$Maybe$Nothing,
-				lD: $elm$core$Maybe$Nothing,
-				lE: $author$project$Models$ErdProps$zero,
+				lB: $elm$core$Maybe$Nothing,
+				lE: $elm$core$Maybe$Nothing,
+				lF: $author$project$Models$ErdProps$zero,
 				c8: $elm$core$Maybe$Nothing,
-				lX: $elm$core$Maybe$Nothing,
-				l0: $elm$core$Maybe$Nothing,
+				lY: $elm$core$Maybe$Nothing,
 				l1: $elm$core$Maybe$Nothing,
-				ms: false,
-				mR: $elm$core$Maybe$Nothing,
-				m_: {
-					mQ: false,
+				l2: $elm$core$Maybe$Nothing,
+				mt: false,
+				mS: $elm$core$Maybe$Nothing,
+				m$: {
+					mR: false,
 					fb: {bb: 0, fp: ''}
 				},
-				m2: $elm$core$Maybe$Nothing,
-				ns: _List_Nil,
+				m3: $elm$core$Maybe$Nothing,
+				nt: _List_Nil,
 				jo: '',
 				eX: '',
 				nS: $elm$core$Maybe$Nothing,
@@ -68131,19 +68011,19 @@ var $author$project$Pages$Organization_$Project_$init = F3(
 					[
 						$author$project$Ports$setMeta(
 						{
-							kL: $elm$core$Maybe$Just('h-full overflow-hidden'),
-							kP: $elm$core$Maybe$Just(
+							kM: $elm$core$Maybe$Just('h-full overflow-hidden'),
+							kQ: $elm$core$Maybe$Just(
 								{
 									e1: $elm$core$Dict$empty,
 									hk: $author$project$Gen$Route$Organization___Project_(params)
 								}),
-							bf: $elm$core$Maybe$Just($author$project$Conf$constants.lf),
-							l3: $elm$core$Maybe$Just('h-full'),
+							bf: $elm$core$Maybe$Just($author$project$Conf$constants.lg),
+							l4: $elm$core$Maybe$Just('h-full'),
 							a4: $elm$core$Maybe$Just(
 								$author$project$PagesComponents$Organization_$Project_$Views$title($elm$core$Maybe$Nothing))
 						}),
 						$author$project$Ports$listenHotkeys($author$project$Conf$hotkeys),
-						A3($author$project$Ports$getProject, params.nw, params.nN, token),
+						A3($author$project$Ports$getProject, params.nx, params.nN, token),
 						A3(
 						$author$project$Libs$Bool$cond,
 						save,
@@ -68162,15 +68042,15 @@ var $author$project$Pages$Organization_$Project_$page = F2(
 		var urlToken = _v0.b;
 		var urlSave = _v0.c;
 		var _v1 = _Utils_Tuple2(
-			$elm$core$Maybe$Just(req.nA.nw),
-			$elm$core$Maybe$Just(req.nA.nN));
+			$elm$core$Maybe$Just(req.nB.nx),
+			$elm$core$Maybe$Just(req.nB.nN));
 		var urlOrganization = _v1.a;
 		var urlProject = _v1.b;
 		return $author$project$Page$element(
 			{
-				bl: A3($author$project$Pages$Organization_$Project_$init, req.nA, urlToken, urlSave),
+				bl: A3($author$project$Pages$Organization_$Project_$init, req.nB, urlToken, urlSave),
 				by: $author$project$PagesComponents$Organization_$Project_$Subscriptions$subscriptions,
-				fv: A6($author$project$PagesComponents$Organization_$Project_$Updates$update, urlLayout, shared.pj, shared.nd, urlOrganization, shared.nx, shared.nQ),
+				fv: A6($author$project$PagesComponents$Organization_$Project_$Updates$update, urlLayout, shared.pj, shared.ne, urlOrganization, shared.ny, shared.nQ),
 				o3: A5(
 					$author$project$PagesComponents$Organization_$Project_$Views$view,
 					$elm$browser$Browser$Navigation$load(
@@ -68232,18 +68112,18 @@ var $author$project$Libs$Models$Env$fromString = function (value) {
 var $elm$time$Time$here = _Time_here(0);
 var $author$project$Shared$init = F2(
 	function (_v0, flags) {
-		var env = $author$project$Libs$Models$Env$fromString(flags.Z.lC);
+		var env = $author$project$Libs$Models$Env$fromString(flags.Z.lD);
 		return _Utils_Tuple2(
 			{
 				Z: {
-					lC: env,
+					lD: env,
 					e_: $author$project$Libs$Models$Platform$fromString(flags.Z.e_)
 				},
-				nd: $elm$time$Time$millisToPosix(flags.nd),
-				nx: _List_Nil,
+				ne: $elm$time$Time$millisToPosix(flags.ne),
+				ny: _List_Nil,
 				nQ: _List_Nil,
 				nR: false,
-				kb: $elm$core$Maybe$Nothing,
+				kc: $elm$core$Maybe$Nothing,
 				fx: false,
 				pj: $elm$time$Time$utc
 			},
@@ -68357,7 +68237,7 @@ var $elm$time$Time$Every = F2(
 	});
 var $elm$time$Time$State = F2(
 	function (taggers, processes) {
-		return {jz: processes, j1: taggers};
+		return {jA: processes, j2: taggers};
 	});
 var $elm$time$Time$init = $elm$core$Task$succeed(
 	A2($elm$time$Time$State, $elm$core$Dict$empty, $elm$core$Dict$empty));
@@ -68407,7 +68287,7 @@ var $elm$time$Time$spawnHelp = F3(
 	});
 var $elm$time$Time$onEffects = F3(
 	function (router, subs, _v0) {
-		var processes = _v0.jz;
+		var processes = _v0.jA;
 		var rightStep = F3(
 			function (_v6, id, _v7) {
 				var spawns = _v7.a;
@@ -68473,7 +68353,7 @@ var $elm$time$Time$onEffects = F3(
 	});
 var $elm$time$Time$onSelfMsg = F3(
 	function (router, interval, state) {
-		var _v0 = A2($elm$core$Dict$get, interval, state.j1);
+		var _v0 = A2($elm$core$Dict$get, interval, state.j2);
 		if (_v0.$ === 1) {
 			return $elm$core$Task$succeed(state);
 		} else {
@@ -68530,7 +68410,7 @@ var $author$project$Main$subscriptions = function (model) {
 				A2(
 				$elm$core$Platform$Sub$map,
 				$author$project$Main$Page,
-				A4($author$project$Gen$Pages$subscriptions, model.nz, model.a1, model.o1, model.dk)),
+				A4($author$project$Gen$Pages$subscriptions, model.nA, model.a1, model.o1, model.dk)),
 				A2(
 				$elm$core$Platform$Sub$map,
 				$author$project$Main$Shared,
@@ -68653,7 +68533,7 @@ var $author$project$Services$Backend$errorStatus = function (_v0) {
 };
 var $author$project$Services$Backend$OrgaWithProjects = F9(
 	function (id, slug, name, plan, logo, location, description, heroku, projects) {
-		return {bf: description, gb: heroku, H: id, gu: location, gv: logo, eS: name, nD: plan, nQ: projects, hr: slug};
+		return {bf: description, gb: heroku, H: id, gu: location, gv: logo, eS: name, jv: plan, nQ: projects, hr: slug};
 	});
 var $author$project$Services$Backend$OrgaProject = function (id) {
 	return function (slug) {
@@ -68674,7 +68554,7 @@ var $author$project$Services$Backend$OrgaProject = function (id) {
 																return function (createdAt) {
 																	return function (updatedAt) {
 																		return function (archivedAt) {
-																			return {ks: archivedAt, ic: createdAt, bf: description, iq: encodingVersion, H: id, eS: name, gG: nbColumns, gH: nbComments, gI: nbLayouts, gJ: nbMemos, gK: nbNotes, gL: nbRelations, gM: nbSources, gN: nbTables, gO: nbTypes, hr: slug, cD: storage, ka: updatedAt, hQ: visibility};
+																			return {kt: archivedAt, ic: createdAt, bf: description, iq: encodingVersion, H: id, eS: name, gG: nbColumns, gH: nbComments, gI: nbLayouts, gJ: nbMemos, gK: nbNotes, gL: nbRelations, gM: nbSources, gN: nbTables, gO: nbTypes, hr: slug, cD: storage, kb: updatedAt, hQ: visibility};
 																		};
 																	};
 																};
@@ -68841,7 +68721,7 @@ var $author$project$Services$Backend$decodeOrga = $author$project$Libs$Json$Deco
 		'projects',
 		$elm$json$Json$Decode$list($author$project$Services$Backend$decodeProject)));
 var $author$project$Services$Backend$buildOrganization = function (o) {
-	return {bf: o.bf, gb: o.gb, H: o.H, gu: o.gu, gv: o.gv, eS: o.eS, nD: o.nD, hr: o.hr};
+	return {bf: o.bf, gb: o.gb, H: o.H, gu: o.gu, gv: o.gv, eS: o.eS, jv: o.jv, hr: o.hr};
 };
 var $author$project$Services$Backend$formatOrgasAndProjects = function (orgas) {
 	return _Utils_Tuple2(
@@ -68866,12 +68746,12 @@ var $author$project$Services$Backend$formatOrgasAndProjects = function (orgas) {
 							gM: p.gM,
 							gN: p.gN,
 							gO: p.gO,
-							nw: $elm$core$Maybe$Just(
+							nx: $elm$core$Maybe$Just(
 								$author$project$Services$Backend$buildOrganization(o)),
 							hr: p.hr,
 							cD: p.cD,
-							ka: p.ka,
-							kc: p.iq,
+							kb: p.kb,
+							kd: p.iq,
 							hQ: p.hQ
 						};
 					},
@@ -68882,7 +68762,7 @@ var $author$project$Services$Backend$formatOrgasAndProjects = function (orgas) {
 var $author$project$Services$Backend$getOrganizationsAndProjects = function (toMsg) {
 	return $author$project$Services$Backend$riskyGet(
 		{
-			lH: A2(
+			lI: A2(
 				$author$project$Services$Backend$expectJson,
 				A2(
 					$elm$core$Basics$composeR,
@@ -68896,7 +68776,7 @@ var $author$project$Services$Sort$lastUpdatedFirst = function (projects) {
 	return A2(
 		$elm$core$List$sortBy,
 		function (p) {
-			return -$elm$time$Time$posixToMillis(p.ka);
+			return -$elm$time$Time$posixToMillis(p.kb);
 		},
 		projects);
 };
@@ -68924,7 +68804,7 @@ var $author$project$Shared$update = F3(
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{nd: time}),
+						{ne: time}),
 					$elm$core$Platform$Cmd$none);
 			case 2:
 				var result = msg.a;
@@ -68944,7 +68824,7 @@ var $author$project$Shared$update = F3(
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
-								{kb: user, fx: true}),
+								{kc: user, fx: true}),
 							$elm$core$Platform$Cmd$none);
 					},
 					result);
@@ -68973,7 +68853,7 @@ var $author$project$Shared$update = F3(
 							_Utils_update(
 								model,
 								{
-									nx: orgas,
+									ny: orgas,
 									nQ: $author$project$Services$Sort$lastUpdatedFirst(projects),
 									nR: true
 								}),
@@ -69036,7 +68916,7 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{nz: page, o1: url}),
+							{nA: page, o1: url}),
 						A2(
 							$author$project$Effect$toCmd,
 							_Utils_Tuple2($author$project$Main$Shared, $author$project$Main$Page),
@@ -69068,7 +68948,7 @@ var $author$project$Main$update = F2(
 				return _Utils_eq(page, $author$project$Gen$Model$Redirecting_) ? _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{nz: page, a1: shared}),
+						{nA: page, a1: shared}),
 					$elm$core$Platform$Cmd$batch(
 						_List_fromArray(
 							[
@@ -69084,13 +68964,13 @@ var $author$project$Main$update = F2(
 					A2($elm$core$Platform$Cmd$map, $author$project$Main$Shared, sharedCmd));
 			default:
 				var pageMsg = msg.a;
-				var _v4 = A5($author$project$Gen$Pages$update, pageMsg, model.nz, model.a1, model.o1, model.dk);
+				var _v4 = A5($author$project$Gen$Pages$update, pageMsg, model.nA, model.a1, model.o1, model.dk);
 				var page = _v4.a;
 				var effect = _v4.b;
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
-						{nz: page}),
+						{nA: page}),
 					A2(
 						$author$project$Effect$toCmd,
 						_Utils_Tuple2($author$project$Main$Shared, $author$project$Main$Page),
@@ -69098,7 +68978,7 @@ var $author$project$Main$update = F2(
 		}
 	});
 var $author$project$View$toBrowserDocument = function (view) {
-	return {kL: view.kL, a4: view.a4};
+	return {kM: view.kM, a4: view.a4};
 };
 var $author$project$Gen$Pages$view = function (model_) {
 	switch (model_.$) {
@@ -69142,10 +69022,10 @@ var $author$project$Main$view = function (model) {
 		A2(
 			$author$project$View$map,
 			$author$project$Main$Page,
-			A4($author$project$Gen$Pages$view, model.nz, model.a1, model.o1, model.dk)));
+			A4($author$project$Gen$Pages$view, model.nA, model.a1, model.o1, model.dk)));
 };
 var $author$project$Main$main = $elm$browser$Browser$application(
-	{bl: $author$project$Main$init, no: $author$project$Main$ChangedUrl, np: $author$project$Main$ClickedLink, by: $author$project$Main$subscriptions, fv: $author$project$Main$update, o3: $author$project$Main$view});
+	{bl: $author$project$Main$init, np: $author$project$Main$ChangedUrl, nq: $author$project$Main$ClickedLink, by: $author$project$Main$subscriptions, fv: $author$project$Main$update, o3: $author$project$Main$view});
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	A2(
 		$elm$json$Json$Decode$andThen,
@@ -69154,7 +69034,7 @@ _Platform_export({'Main':{'init':$author$project$Main$main(
 				$elm$json$Json$Decode$andThen,
 				function (conf) {
 					return $elm$json$Json$Decode$succeed(
-						{Z: conf, nd: now});
+						{Z: conf, ne: now});
 				},
 				A2(
 					$elm$json$Json$Decode$field,
@@ -69166,7 +69046,7 @@ _Platform_export({'Main':{'init':$author$project$Main$main(
 								$elm$json$Json$Decode$andThen,
 								function (env) {
 									return $elm$json$Json$Decode$succeed(
-										{lC: env, e_: platform});
+										{lD: env, e_: platform});
 								},
 								A2($elm$json$Json$Decode$field, 'env', $elm$json$Json$Decode$string));
 						},
