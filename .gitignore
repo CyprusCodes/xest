@@ -110,3 +110,6 @@ dist
 .docusaurus
 .vscode
 .DS_Store
+
+# add diagram front-end assets
+!cli/commands/diagram/static/**

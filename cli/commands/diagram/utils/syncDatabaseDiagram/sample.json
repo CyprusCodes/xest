@@ -1,0 +1,42 @@
+{
+  "id": "00000000-0000-0000-0000-000000000000",
+  "name": "database.json",
+  "sources": [
+    {
+      "id": "98006620-7170-46c5-8740-3c9d395729a5",
+      "name": "database.json",
+      "kind": {
+        "kind": "JsonLocalFile",
+        "name": "database.json",
+        "size": 4777,
+        "modified": 1678724688831
+      },
+      "content": [],
+      "tables": [],
+      "relations": [],
+      "createdAt": 1678741101893,
+      "updatedAt": 1678741101893
+    }
+  ],
+  "usedLayout": "initial layout",
+  "layouts": {
+    "initial layout": {
+      "canvas": {
+        "position": {
+          "left": -30.53125,
+          "top": -1.515625
+        },
+        "zoom": 1
+      },
+      "tables": [],
+      "createdAt": 1678741101893,
+      "updatedAt": 1678741806926
+    }
+  },
+  "settings": {
+    "defaultSchema": "public"
+  },
+  "createdAt": 1678741616995,
+  "updatedAt": 1678741616995,
+  "version": 2
+}

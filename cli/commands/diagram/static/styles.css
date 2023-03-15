@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .link {
+        @apply underline cursor-pointer;
+    }
+}
+
+.cursor-grab-all, .cursor-grab-all * { cursor: grab; }
+.cursor-grabbing-all, .cursor-grabbing-all * { cursor: grabbing; }
+.cursor-crosshair-all, .cursor-crosshair-all * { cursor: crosshair; }
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+    display: none;
+}
+
+/* home page */
+
+.img-swipe { display: inline-block; }
+.img-swipe .img-default { display: initial; }
+.img-swipe .img-hover { display: none; }
+.img-swipe:hover .img-default { display: none; }
+.img-swipe:hover .img-hover { display: initial; }
+
+/* blog */
+
+.blog-article img {
+    width: 100%;
+    border-radius: .5rem;
+}
+
+.blog-article img + em, .blog-article img + br + em {
+    display: block;
+    margin-top: -32px;
+    font-size: .8888889em;
+    text-align: center;
+}
+
+.blog-article img + br + em {
+    margin-top: -64px;
+}
+
+/* animations */
+
+/* from https://codepen.io/chrislang/pen/pvPpQb */
+.hover\:animate-flip-h, .hover\:animate-flip-v {
+    transition: .6s;
+    transform-style: preserve-3d;
+}
+.hover\:animate-flip-h:hover {
+    transform: rotateY(180deg);
+}
+.hover\:animate-flip-v:hover {
+    transform: rotateX(180deg);
+}
+
+/* from https://webcode.tools/generators/css/keyframe-animation */
+.hover\:animate-wobble-t:hover {
+    animation: wobble-t 2s ease 0s 1 normal forwards;
+}
+@keyframes wobble-t {
+    0%,
+    100% {
+        transform: translateX(0%);
+        transform-origin: 50% 50%;
+    }
+    15% { transform: translateX(-5px) rotate(6deg); }
+    30% { transform: translateX(2px) rotate(-6deg); }
+    45% { transform: translateX(-2px) rotate(3.6deg); }
+    60% { transform: translateX(1px) rotate(-2.4deg); }
+    75% { transform: translateX(-1px) rotate(1.2deg); }
+}
+
+.hover\:animate-jello-h:hover {
+    animation: jello-h 2s ease 0s 1 normal forwards;
+}
+@keyframes jello-h {
+    0% { transform: scale3d(1, 1, 1); }
+    30% { transform: scale3d(1.25, 0.75, 1); }
+    40% { transform: scale3d(0.75, 1.25, 1); }
+    50% { transform: scale3d(1.15, 0.85, 1); }
+    65% { transform: scale3d(0.95, 1.05, 1); }
+    75% { transform: scale3d(1.05, 0.95, 1); }
+    100% { transform: scale3d(1, 1, 1); }
+}
