@@ -1,4 +1,5 @@
 const chalk = require("chalk");
+const inquirer = require("inquirer");
 const findProjectRoot = require("../../utils/findProjectRoot");
 const { getInitialPrompt } = require("./prompts/index");
 const { Configuration, OpenAIApi } = require("openai");
@@ -7,6 +8,31 @@ const configuration = new Configuration({
   apiKey: process.env.XEST_GPT_KEY,
 });
 const openai = new OpenAIApi(configuration);
+
+const getTotalComputationCost = ({
+  totalPromptToken = 0,
+  totalCompletionTokens = 0,
+}) => {
+  // https://openai.com/pricing
+  // gpt-3.5-turbo -> $0.002 / 1K tokens
+  const gptTurboCost = 0.002;
+
+  const cost =
+    ((totalPromptToken + totalCompletionTokens) / 1000) * gptTurboCost;
+  console.log({ totalPromptToken, totalCompletionTokens });
+  console.log(`Total cost: ${cost}`);
+  return cost;
+};
+
+// limit ai usage so we don't hit out quota with a single query
+const MAX_COST = 0.001;
+
+const commandsList = `
+getListOfDatabaseTables
+getListOfCodebaseFiles
+readFileContents <pathToTheFile>
+getListOfApiEndpoints
+`;
 
 const ai = async () => {
   const projectDetails = findProjectRoot();
@@ -19,46 +45,40 @@ const ai = async () => {
 
   console.log("Welcome to XestGPT\n");
 
-  const completion = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: [
-      { role: "system", content: getInitialPrompt() },
-      {
-        role: "user",
-        content: "do we have an api endpoint that takes payments",
-        // content: "do we have an endpoint for managing payments",
-      },
-      /*
-      {
-        role: "assistant",
-        content: "I'm not sure, would you like me to check for you?",
-      },
-      {
-        role: "user",
-        content: "yes",
-      },
-      {
-        role: 'assistant',
-        content: 'To check if there is an API endpoint that takes payments, I need to know the list of API endpoints. Please run the command `getListOfApiEndpoints` and provide me with the output.'
-      },
-      {
-        role: "system",
-        content: `getListOfApiEndpoints output 
-      getListOfApiEndpoints
-      GET /api/v1/carriers-services
-      POST /api/v1/shipments
-      POST /api/v1/tracking`,
-      },
-      */
-    ],
-    max_tokens: 100,
-    temperature: 0,
+  let answered = false;
+  let totalPromptTokens = 0;
+  let totalCompletionTokens = 0;
+  let messages = [
+    { role: "system", content: getInitialPrompt({ commandsList }) },
+  ];
+  const answer = await inquirer.prompt({
+    type: "input",
+    name: "qry",
+    message: "Welcome to XestGPT. What would you like help with today?\n",
   });
+  messages.push({ role: "user", content: answer.qry });
 
-  const { prompt_tokens, completion_tokens, total_tokens } =
-    completion.data.usage;
-  console.log({ prompt_tokens, completion_tokens, total_tokens });
-  console.log(completion.data.choices);
+  while (
+    !answered &&
+    getTotalComputationCost({ totalPromptTokens, totalCompletionTokens }) <
+      0.001
+  ) {
+    const completion = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages,
+      max_tokens: 100,
+      temperature: 0,
+    });
+
+    const { prompt_tokens, completion_tokens, total_tokens } =
+      completion.data.usage;
+    totalPromptTokens += prompt_tokens;
+    totalCompletionTokens += completion_tokens;
+
+    answered = true;
+    console.log({ prompt_tokens, completion_tokens, total_tokens });
+    console.log(completion.data.choices);
+  }
 };
 
 module.exports = {
