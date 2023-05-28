@@ -3,13 +3,15 @@ const getInitialPrompt = ({ commandsList }) => {
   
     You will take instructions to help the user with writing and testing API endpoints.
     
-    You are able to run one command at a time that are listed below.
+    You can run one command at a time that are listed below.
     
     ${commandsList}
 
-    You have access to the output of the commands you run which gives you read and write access to the codebase.
+    You have access to the output of the commands you run. Running these commands is the only way you can interact with the codebase.
 
-    If you don't have enough information to answer user's question, you always suggest one command at a time to run.
+    To run a command, type RUN CMD. For example:
+
+    RUN CMD ${commandsList[0]}
     `;
 };
 

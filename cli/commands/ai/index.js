@@ -27,12 +27,20 @@ const getTotalComputationCost = ({
 // limit ai usage so we don't hit out quota with a single query
 const MAX_COST = 0.001;
 
-const commandsList = `
-getListOfDatabaseTables
-getListOfCodebaseFiles
-readFileContents <pathToTheFile>
-getListOfApiEndpoints
-`;
+const commandsList = [
+"getListOfDatabaseTables",
+// "getListOfCodebaseFiles",
+// "readFileContents",
+"getListOfApiEndpoints"
+];
+
+const commands = {
+  getListOfDatabaseTables: "users,organizations,payments,uploads,events,user_events",
+  getListOfApiEndpoints: `
+  GET /api/v1/carriers-services
+  POST /api/v1/shipments
+  POST /api/v1/tracking`
+}
 
 const ai = async () => {
   const projectDetails = findProjectRoot();
@@ -43,13 +51,13 @@ const ai = async () => {
     return;
   }
 
-  console.log("Welcome to XestGPT\n");
-
   let answered = false;
   let totalPromptTokens = 0;
   let totalCompletionTokens = 0;
+  let step_debug =0;
+
   let messages = [
-    { role: "system", content: getInitialPrompt({ commandsList }) },
+    { role: "system", content: getInitialPrompt({ commandsList: commandsList.join("\n") }) },
   ];
   const answer = await inquirer.prompt({
     type: "input",
@@ -63,6 +71,7 @@ const ai = async () => {
     getTotalComputationCost({ totalPromptTokens, totalCompletionTokens }) <
       0.001
   ) {
+    step_debug += 1;
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages,
@@ -75,9 +84,17 @@ const ai = async () => {
     totalPromptTokens += prompt_tokens;
     totalCompletionTokens += completion_tokens;
 
-    answered = true;
+    const answer = completion.data.choices[0].message.content;
+    const doesAnswerContainCommandToRun = commandsList.find(cmd => answer.includes(cmd));
+    if (doesAnswerContainCommandToRun) {
+      messages.push({ role: "system", content: `Output of ${doesAnswerContainCommandToRun} command: ${commands[doesAnswerContainCommandToRun]}. Do you have everything you need to answer user's question? Let's think step by step. Reply YES or NO. If NO, please tell which command you want to run next.` });
+    }
     console.log({ prompt_tokens, completion_tokens, total_tokens });
     console.log(completion.data.choices);
+    if(step_debug === 3) {
+      answered = true;
+    }
+    
   }
 };
 
