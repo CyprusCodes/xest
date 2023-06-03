@@ -3,6 +3,7 @@ const inquirer = require("inquirer");
 const findProjectRoot = require("../../utils/findProjectRoot");
 const { getInitialPrompt } = require("./prompts/index");
 const { Configuration, OpenAIApi } = require("openai");
+const sleep = require("../../utils/sleep");
 
 const configuration = new Configuration({
   apiKey: process.env.XEST_GPT_KEY,
@@ -10,7 +11,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 const getTotalComputationCost = ({
-  totalPromptToken = 0,
+  totalPromptTokens = 0,
   totalCompletionTokens = 0,
 }) => {
   // https://openai.com/pricing
@@ -18,9 +19,7 @@ const getTotalComputationCost = ({
   const gptTurboCost = 0.002;
 
   const cost =
-    ((totalPromptToken + totalCompletionTokens) / 1000) * gptTurboCost;
-  console.log({ totalPromptToken, totalCompletionTokens });
-  console.log(`Total cost: ${cost}`);
+    ((totalPromptTokens + totalCompletionTokens) / 1000) * gptTurboCost;
   return cost;
 };
 
@@ -31,7 +30,8 @@ const commandsList = [
 "getListOfDatabaseTables",
 // "getListOfCodebaseFiles",
 // "readFileContents",
-"getListOfApiEndpoints"
+"getListOfApiEndpoints",
+"askUserForClarification"
 ];
 
 const commands = {
@@ -55,6 +55,7 @@ const ai = async () => {
   let totalPromptTokens = 0;
   let totalCompletionTokens = 0;
   let step_debug =0;
+  let commandsRunBefore = [];
 
   let messages = [
     { role: "system", content: getInitialPrompt({ commandsList: commandsList.join("\n") }) },
@@ -72,6 +73,11 @@ const ai = async () => {
       0.001
   ) {
     step_debug += 1;
+    if(step_debug > 1) {
+      // pace it out for subsequent requests, so we don't get rate limited
+      await sleep(100);
+    }
+    
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages,
@@ -85,17 +91,32 @@ const ai = async () => {
     totalCompletionTokens += completion_tokens;
 
     const answer = completion.data.choices[0].message.content;
-    const doesAnswerContainCommandToRun = commandsList.find(cmd => answer.includes(cmd));
-    if (doesAnswerContainCommandToRun) {
-      messages.push({ role: "system", content: `Output of ${doesAnswerContainCommandToRun} command: ${commands[doesAnswerContainCommandToRun]}. Do you have everything you need to answer user's question? Let's think step by step. Reply YES or NO. If NO, please tell which command you want to run next.` });
+    // keep assistant history
+    messages.push(completion.data.choices[0].message);
+    const doesAnswerContainCommandToRun = commandsList.filter(cmd => answer.includes(cmd));
+    const newCommandsToRun = doesAnswerContainCommandToRun.filter(cmd => !commandsRunBefore.includes(cmd));
+
+    newCommandsToRun.forEach(newCmd => {
+      commandsRunBefore.push(doesAnswerContainCommandToRun);
+      messages.push({ role: "system", content: `Output of ${doesAnswerContainCommandToRun} command: ${commands[doesAnswerContainCommandToRun]}. Do you have everything you need to answer user's question? Let's think step by step. If you want to run another command to check say the name of the command. Don't forget you can only run the commands from the list. You can't ask anything else. If you are ready to answer REPLY with BINGO.` });
+    });
+
+    if(!newCommandsToRun.length) {
+      // ai didn't ask for a new command to run, so we can assume it has finished
+      answered = true;
+
+      // console.log("log of messages", messages);
+      console.log(`LATEST ANSWER:`, completion.data.choices);
     }
-    console.log({ prompt_tokens, completion_tokens, total_tokens });
-    console.log(completion.data.choices);
-    if(step_debug === 3) {
+
+
+    // stop ai from going wild
+    if(step_debug === 5) {
       answered = true;
     }
-    
   }
+  console.log(messages)
+  console.log(`total cost`, getTotalComputationCost({ totalPromptTokens, totalCompletionTokens }));
 };
 
 module.exports = {
