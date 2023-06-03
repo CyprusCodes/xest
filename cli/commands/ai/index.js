@@ -1,9 +1,11 @@
 const chalk = require("chalk");
 const inquirer = require("inquirer");
 const findProjectRoot = require("../../utils/findProjectRoot");
-const { getInitialPrompt } = require("./prompts/index");
+const { getInitialPrompt, getAvailableCommandDescriptions } = require("./prompts/index");
 const { Configuration, OpenAIApi } = require("openai");
 const sleep = require("../../utils/sleep");
+const commandsList = require("./cmd/index");
+const getListOfAvailableCommands = require("./utils/getListOfAvailableCommands");
 
 const configuration = new Configuration({
   apiKey: process.env.XEST_GPT_KEY,
@@ -26,21 +28,7 @@ const getTotalComputationCost = ({
 // limit ai usage so we don't hit out quota with a single query
 const MAX_COST = 0.001;
 
-const commandsList = [
-"getListOfDatabaseTables",
-// "getListOfCodebaseFiles",
-// "readFileContents",
-"getListOfApiEndpoints",
-"askUserForClarification"
-];
-
-const commands = {
-  getListOfDatabaseTables: "users,organizations,payments,uploads,events,user_events",
-  getListOfApiEndpoints: `
-  GET /api/v1/carriers-services
-  POST /api/v1/shipments
-  POST /api/v1/tracking`
-}
+const listOfCommandNames = commandsList.map(c => c.name);
 
 const ai = async () => {
   const projectDetails = findProjectRoot();
@@ -55,10 +43,10 @@ const ai = async () => {
   let totalPromptTokens = 0;
   let totalCompletionTokens = 0;
   let step_debug =0;
-  let commandsRunBefore = [];
+  let callHistory = [];
 
   let messages = [
-    { role: "system", content: getInitialPrompt({ commandsList: commandsList.join("\n") }) },
+    { role: "system", content: getInitialPrompt() },
   ];
   const answer = await inquirer.prompt({
     type: "input",
@@ -66,11 +54,20 @@ const ai = async () => {
     message: "Welcome to XestGPT. What would you like help with today?\n",
   });
   messages.push({ role: "user", content: answer.qry });
+  messages.push({ role: "system", content: `You can run one command at a time that are listed below.
+
+  START LIST OF AVAILABLE COMMANDS
+  ${getAvailableCommandDescriptions(getListOfAvailableCommands({ commandsList, callHistory }))}
+  END LIST OF AVAILABLE COMMANDS
+
+  You can only run one of the commands to run.
+
+  Think step by step and decide which command to run.` });
 
   while (
     !answered &&
     getTotalComputationCost({ totalPromptTokens, totalCompletionTokens }) <
-      0.001
+      0.002
   ) {
     step_debug += 1;
     if(step_debug > 1) {
@@ -93,12 +90,24 @@ const ai = async () => {
     const answer = completion.data.choices[0].message.content;
     // keep assistant history
     messages.push(completion.data.choices[0].message);
-    const doesAnswerContainCommandToRun = commandsList.filter(cmd => answer.includes(cmd));
+
+    // todo: list of command names should only
+    // contain re-runnable commands that we haven't run before
+
+    /*
+    const doesAnswerContainCommandToRun = listOfCommandNames.filter(cmd => answer.includes(cmd));
     const newCommandsToRun = doesAnswerContainCommandToRun.filter(cmd => !commandsRunBefore.includes(cmd));
 
     newCommandsToRun.forEach(newCmd => {
-      commandsRunBefore.push(doesAnswerContainCommandToRun);
-      messages.push({ role: "system", content: `Output of ${doesAnswerContainCommandToRun} command: ${commands[doesAnswerContainCommandToRun]}. Do you have everything you need to answer user's question? Let's think step by step. If you want to run another command to check say the name of the command. Don't forget you can only run the commands from the list. You can't ask anything else. If you are ready to answer REPLY with BINGO.` });
+      const commandToRun = commandsList.find(cmd => cmd.name === newCmd);
+      console.log(commandToRun, "CommandToRun");
+
+      if(newCmd === 'getDatabaseTableSchema') {
+        messages.push({ role: "system", content: `You need to provide a tableName parameter to getDatabaseTableSchema command. You can run getListOfDatabaseTables command to find table names. Can you provide the parameter please?` });
+      } else {
+        commandsRunBefore.push(newCmd);
+        messages.push({ role: "system", content: `Output of ${doesAnswerContainCommandToRun} command: ${commands[newCmd]}. Do you have everything you need to answer user's question? Let's think step by step. If you want to run another command to check say the name of the command. Don't forget you can only run the commands from the list. You can't ask anything else. If you are ready to answer REPLY with BINGO.` });
+      }
     });
 
     if(!newCommandsToRun.length) {
@@ -108,10 +117,10 @@ const ai = async () => {
       // console.log("log of messages", messages);
       console.log(`LATEST ANSWER:`, completion.data.choices);
     }
-
+  */
 
     // stop ai from going wild
-    if(step_debug === 5) {
+    if(step_debug === 1) {
       answered = true;
     }
   }
