@@ -9,10 +9,42 @@
     },
     {
       "role": "system",
-      "content": "START COMMAND LIST\n  getListOfDatabaseTables\n  END COMMAND LIST\n\n"
+      "content": "START COMMAND LIST\n  getListOfDatabaseTables\n  END COMMAND LIST"
+    },
+    {
+      "role": "system",
+      "content": "Investigate the COMMAND LIST available. Think in steps and pick a command from the COMMAND LIST to run."
+    },
+    {
+      "role": "assistant",
+      "content": "We can start by running the `getListOfDatabaseTables` command to see if there is a table with an email column that has a unique key."
+    },
+    {
+      "role": "system",
+      "content": "Command: getListOfDatabaseTables\n Command Description: returns the full list of all tables in the MySQL database for the project OUTPUT: blog_categories,blog_comment_replies,blog_comments,blog_status,blog_tags,blogs,chapters,code_katas,cohorts,kata_progress,migrations,module_dates,module_definitions,module_instructors,modules,page_assets,page_feedback,page_questions,page_quiz,pages,password_recovery_requests,programs,subscriptions,tags,user_ledgers,user_modules,user_pageviews,user_payments,user_progress,user_quiz_attempts,user_types,users."
+    },
+    {
+      "role": "system",
+      "content": "Investigate the output of getListOfDatabaseTables. Do you think you have enough information to respond back to user's query. Reply with Yes or No."
+    },
+    {
+      "role": "assistant",
+      "content": "No, the output of `getListOfDatabaseTables` does not provide information about the columns in each table. We need to investigate further."
+    },
+    {
+      "role": "system",
+      "content": "START COMMAND LIST\n      getTableSchema\n      END COMMAND LIST"
+    },
+    {
+      "role": "system",
+      "content": "Investigate the COMMAND LIST available. Think in steps and pick a command from the COMMAND LIST to run."
+    },
+    {
+      "role": "assistant",
+      "content": "We can use the `getTableSchema` command to get the schema of the table that contains the email column."
     },
     {
         "role": "system",
-        "content": "Investigate the list of commands available to you. Think in steps and pick a command to run."
-      }
+        "content": "You need to pick a table from getListOfDatabaseTables command output to investigate getTableSchema."
+    }
   ]

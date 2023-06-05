@@ -1,5 +1,60 @@
+const openai = require("../utils/openai");
+const fs = require("fs");
+const { getSchema } = require("../../../utils/getSchema");
+
 let GET_LIST_OF_DATABASE_TABLES;
 let GET_DATABASE_TABLE_SCHEMA;
+
+const tryExtractTableName = async ({
+  prompt,
+  parameters,
+  commandName,
+  tableNames,
+}) => {
+  const parametizationPrompt = `${commandName} command takes parameters named below
+
+  ${parameters.map(
+    (param) =>
+      `${param.name} ${param.type} ${
+        param.required ? "required" : "optional"
+      }: ${param.description}`
+  )}
+  
+  convert below sentence into a list of comma seperated arguments in the format ${commandName}(${parameters
+    .map((p) => p.name)
+    .join(",")})
+
+  pay attention to types of arguments, enclose strings in double quotes
+
+  sentence: ${prompt}
+  output:`;
+
+  const response = await openai.createCompletion({
+    model: "text-curie-001",
+    prompt: parametizationPrompt,
+    temperature: 0,
+    max_tokens: 256,
+    temperature: 0,
+    top_p: 1,
+    frequency_penalty: 0,
+    presence_penalty: 0,
+    best_of: 1,
+  });
+
+  console.log({parametizationPrompt})
+  const sentence = response.data.choices[0].text || "";
+  const regex = /\((.*?)\)/;
+  const match = sentence.match(regex);
+  const arg1 = match ? match[1].replace(/['"]+/g, '') : null;
+
+  
+  console.log({arg1, sentence})
+  if (!tableNames.includes(arg1)) {
+    return false;
+  } else {
+    return arg1;
+  }
+};
 
 GET_LIST_OF_DATABASE_TABLES = {
   name: "getListOfDatabaseTables",
@@ -19,13 +74,9 @@ GET_LIST_OF_DATABASE_TABLES = {
   parameters: [],
   rerun: false,
   rerunWithDifferentParameters: false,
-  runCmd: () => {
-    return `users
-            organizations
-            payments
-            uploads
-            events
-            user_events`;
+  runCmd: async function () {
+    const schema = await getSchema();
+    return Object.keys(schema).join(",");
   },
 };
 
@@ -39,45 +90,68 @@ GET_DATABASE_TABLE_SCHEMA = {
       description: `each table can be investigate further with getTableSchema command`,
     },
   ],
-  parameterize: () => {
-    return ``;
+  parameterize: async function ({ answer, messages, callHistory }) {
+    const schema = await getSchema();
+    const tableNames = Object.keys(schema);
+    let step = 0;
+
+    const tableName = await tryExtractTableName({
+      prompt: answer,
+      tableNames,
+      commandName: this.name,
+      parameters: this.parameters,
+    });
+
+    let paramFound = Boolean(tableName);
+    while (!paramFound && step < 2) {
+      const newMessages = [...messages];
+      newMessages.push({
+        role: "system",
+        content:
+          "You need to pick a table from getListOfDatabaseTables command output to investigate getTableSchema.",
+      });
+
+      const completion = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: newMessages,
+        max_tokens: 100,
+        temperature: 0,
+      });
+
+      const newAnswer = completion.data.choices[0].message.content;
+      console.log(newAnswer, "????")
+      const tableName = await tryExtractTableName({
+        prompt: newAnswer,
+        tableNames,
+        commandName: this.name,
+        parameters: this.parameters,
+      });
+      console.log(tableName)
+
+      if (Boolean(tableName)) {
+        return tableName;
+      } else {
+        throw new Error("failed to find table name");
+      }
+    }
+
+    throw new Error("failed to find table name");
   },
-  parameters: [{
-    name: "tableName",
-    required: true,
-    description: "name of the database table",
-    type: "string"
-  }],
+  parameters: [
+    {
+      name: "tableName",
+      required: true,
+      description: "name of the database table",
+      type: "string",
+    },
+  ],
   rerun: false,
   rerunWithDifferentParameters: false,
-  runCmd: () => {
-    return `CREATE TABLE users (
-        user_id int(11) NOT NULL AUTO_INCREMENT,
-        first_name varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-        last_name varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-        date_of_birth date DEFAULT NULL,
-        email varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-        password varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-        address varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-        address_line_1 varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-        address_line_2 varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-        postcode varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-        city varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-        town varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-        state varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-        country varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-        phone_number varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-        emergency_contact_name varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-        contact_number varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-        user_type_id int(11) NOT NULL,
-        github_profile varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-        codewars_profile varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-        image varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-        PRIMARY KEY (user_id),
-        UNIQUE KEY email (email),
-        KEY user_type_id (user_type_id),
-        CONSTRAINT users_ibfk_1 FOREIGN KEY (user_type_id) REFERENCES user_types (user_type_id)
-      ) ENGINE=InnoDB AUTO_INCREMENT=192 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`;
+  runCmd: async (tableName) => {
+    const schema = await getSchema();
+    const table = schema[tableName];
+    console.log(table);
+    return JSON.stringify(table);
   },
 };
 
