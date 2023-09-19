@@ -112,10 +112,9 @@ const enrichEngine = (engine) => {
       return "";
     }
     let fieldList = uniq(fields);
-
     return `WHERE ${fieldList
-      .map((v) => `${v} = \${${camelCase(v.split(".")[1])}\}`)
-      .join(",")}`;
+      .map((v) => `${v.split(".")[1]} = \${${camelCase(v.split(".")[1])}}`)
+      .join(" AND ")}`;
   });
 
   engine.registerFilter("sqlVariables", (fields) => {
@@ -137,12 +136,13 @@ const enrichEngine = (engine) => {
     if (!fields.length) {
       return "";
     }
+
     let fieldList = uniq(fields);
-    const isUsingDotNotation = fields[0].includes(".");
+    const isUsingDotNotation = fields.find((field) => field.includes(".")) 
 
     if (isUsingDotNotation) {
       return `${fieldList
-        .map((v) => `${v} = \${${camelCase(v.split(".")[1])}\}`)
+        .map((v) => `${v.split(".")[1]} = \${${camelCase(v.split(".")[1])}}`)
         .join(",")}`;
     }
     return `${fieldList.map((v) => `${v} = \${${camelCase(v)}\}`).join(",")}`;

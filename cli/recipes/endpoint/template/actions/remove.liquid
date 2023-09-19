@@ -1,0 +1,7 @@
+import delete{{ entityName | toPascalCase }} from './queries/delete{{ entityName | toPascalCase }}';
+
+const remove{{entityName | toPascalCase}} = async ({{ filterColumns | functionParameters }}) => {
+    await delete{{ entityName | toPascalCase }}({{ filterColumns | functionParameters }});
+}
+
+module.exports = remove{{entityName | toPascalCase}};

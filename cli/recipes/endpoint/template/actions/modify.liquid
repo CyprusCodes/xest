@@ -1,0 +1,7 @@
+import update{{ entityName | toPascalCase }} from './queries/update{{ entityName | toPascalCase }}';
+
+const modify{{entityName | toPascalCase}} = async ({{ includeColumns | functionParameters }}) => {
+    await update{{ entityName | toPascalCase }}({{ includeColumns | functionParameters }});
+}
+
+module.exports = modify{{entityName | toPascalCase}};

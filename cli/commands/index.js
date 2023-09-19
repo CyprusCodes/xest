@@ -3,5 +3,5 @@ module.exports = {
   ...require("./run"),
   ...require("./fresh"),
   ...require("./new"), // applyRecipe
-  ...require("./diagram") // applyRecipe
+  ...require("./diagram"), // applyRecipe
 };

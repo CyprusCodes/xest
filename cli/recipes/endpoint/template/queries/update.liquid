@@ -1,0 +1,13 @@
+const { submitQuery } = require("~root/lib/database");
+
+const update{{entityName | toPascalCase}} = ({{ argsColumns | functionParameters }}) => submitQuery`
+{% sql %}
+UPDATE
+{{ entityName | toSnakeCase }}
+SET
+{{ includeColumns | sqlUpdateParams }}
+{{ filterColumns | sqlFilters }}
+{% endsql %}
+`;
+
+module.exports = update{{ entityName | toPascalCase }};
