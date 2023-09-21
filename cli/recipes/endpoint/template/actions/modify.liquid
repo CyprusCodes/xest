@@ -1,4 +1,4 @@
-import update{{ entityName | toPascalCase }} from './queries/update{{ entityName | toPascalCase }}';
+const update{{ entityName | toPascalCase }} = require('./queries/update{{ entityName | toPascalCase }}');
 
 const modify{{entityName | toPascalCase}} = async ({{ includeColumns | functionParameters }}) => {
     await update{{ entityName | toPascalCase }}({{ includeColumns | functionParameters }});

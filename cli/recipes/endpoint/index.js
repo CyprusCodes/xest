@@ -81,22 +81,23 @@ module.exports = {
             const { endpointTypes, entityName } = values;
             const { POST } = ENDPOINT_TYPES;
 
-            if (!endpointTypes.includes(POST)) {
-                const tablesSelected = entityName;
-                const columns = flatten(tablesSelected.map((table) => schema[table]));
-                const defaultColumns = columns
-                    .filter((c) => c.columnKey === "PRI")
-                    .map((c) => `${c.table}.${c.column}`);
-
-                return ColumnSelector({
-                    columns,
-                    default: [defaultColumns[0]],
-                    message: "Select columns to filter",
-                    name: "filterColumns",
-                });
+            if (endpointTypes.length === 1 && endpointTypes.includes(POST)) {
+                values.filterColumns = [];
+                return;
             }
 
-            values.filterColumns = [];
+            const tablesSelected = entityName;
+            const columns = flatten(tablesSelected.map((table) => schema[table]));
+            const defaultColumns = columns
+                .filter((c) => c.columnKey === "PRI")
+                .map((c) => `${c.table}.${c.column}`);
+
+            return ColumnSelector({
+                columns,
+                default: [defaultColumns[0]],
+                message: "Select columns to filter",
+                name: "filterColumns",
+            });
         });
 
         addField((values) => {
