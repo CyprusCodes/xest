@@ -364,12 +364,13 @@ module.exports = {
                         });
                     }
                     if (endpoint === PUT || endpoint === DELETE) {
-                        const argsColumns = [...filterColumns, ...includeColumns];
+                        const argsColumns = uniqBy([...filterColumns, ...includeColumns]);
+                        const columnsToUpdate = includeColumns.map((c) => c.split(".")[1]);
                         renderedTemplate = await render(templateFile, {
                             entityName,
                             filterColumns,
-                            includeColumns,
-                            argsColumns
+                            argsColumns,
+                            columnsToUpdate
                         });
                     }
 
