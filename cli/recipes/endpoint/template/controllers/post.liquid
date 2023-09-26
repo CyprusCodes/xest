@@ -5,9 +5,9 @@ const post{{entityName | toPascalCase}} = async (req, res) => {
   const {{ includeColumns | functionParameters }} = req.body;
 
   try {
-    const { inserted{{entityName | toCamelCase}} } = await create{{entityName | toPascalCase}}({{ includeColumns | functionParameters }});
+    const { inserted{{ entityName | toPascalCase | singular }}Id } = await create{{entityName | toPascalCase}}({{ includeColumns | functionParameters }});
 
-    res.status(200).send({ inserted{{entityName | toCamelCase}} });
+    res.status(200).send({ inserted{{ entityName | toPascalCase | singular }}Id });
   } catch (err) {
     handleAPIError(res, err);
   }

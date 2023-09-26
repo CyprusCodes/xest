@@ -7,7 +7,7 @@ const get{{entityName | toPascalCase}} = async (req, res) => {
   {% endif %}
 
   try {
-    const {{entityName | toCamelCase}} = await fetch{{entityName | toPascalCase}}({{ filterColumns | functionParameters }});
+    const { {{entityName | toCamelCase}} } = await fetch{{entityName | toPascalCase}}({{ filterColumns | functionParameters }});
 
     res.status(200).send({ {{entityName | toCamelCase}} });
   } catch (err) {

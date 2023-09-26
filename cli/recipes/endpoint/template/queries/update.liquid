@@ -1,26 +1,22 @@
 const { submitQuery, sql, sqlReduce } = require("~root/lib/database");
 
 const update{{entityName | toPascalCase}} = ({{ argsColumns | functionParameters }}) => {
-    const updates = [];
-    
-    {% for column in columnsToUpdate %}
-    if ({{ column | toCamelCase }}) {
-        updates.push(sql`{{ column | toSnakeCase }} = ${ {{ column | toCamelCase }} }`);
-    }
-    {% endfor %}
-    
-    if (updates.length !== 0) {
-        return submitQuery`
-        UPDATE
-            {{ entityName | toSnakeCase }}
-        SET
-            ${updates.reduce(sqlReduce)}
-        WHERE
-            {{ filterColumns | sqlFilters }}
-        `;
-    }
+const updates = [];
 
-    return Promise.resolve();
+{% for column in columnsToUpdate %}
+if ({{ column | toCamelCase }}) {
+updates.push(sql`{{ column | toSnakeCase }} = ${ {{ column | toCamelCase }} }`);
+}
+{% endfor %}
+
+if (updates.length !== 0) {
+return submitQuery`
+{% sql %}
+UPDATE {{ entityName | toSnakeCase }} SET ${updates.reduce(sqlReduce)} {{ filterColumns | sqlFilters }} `;
+{% endsql %}
+}
+
+return Promise.resolve();
 };
 
 module.exports = update{{ entityName | toPascalCase }};

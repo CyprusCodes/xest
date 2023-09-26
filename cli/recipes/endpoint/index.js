@@ -182,7 +182,7 @@ module.exports = {
             targetFileWriter: async ({ userVariables, sourceFileRelative, sourceFilePath, targetFilePath }) => {
                 const { endpointTypes, filterColumns, entityName, includeColumns } = userVariables;
                 const { GET, POST, PUT, DELETE } = ENDPOINT_TYPES;
-                endpointTypes.map(async (endpoint, index) => {
+                return Promise.all(endpointTypes.map(async (endpoint, index) => {
                     const filePath = targetFilePath[index];
                     const templateFile = fs.readFileSync(filePath.templatePath, "utf-8");
                     let renderedTemplate;
@@ -200,18 +200,19 @@ module.exports = {
                         });
                     }
                     if (endpoint === PUT || endpoint === DELETE) {
+                        const argsColumns = [...filterColumns, ...includeColumns];
                         renderedTemplate = await render(templateFile, {
                             entityName,
                             filterColumns,
-                            includeColumns
+                            includeColumns,
+                            argsColumns
                         });
                     }
 
                     await writeFile(filePath.path, renderedTemplate);
                     await prettifyFile(filePath.path);
-                    console.log(chalk.green`Succesfully generated. Happy hacking !`);
-                })
-            }
+                }))
+            },
         },
         {
             source: "controllers",
@@ -258,7 +259,7 @@ module.exports = {
                 const { endpointTypes, filterColumns, entityName, includeColumns } = userVariables;
                 const { GET, POST, PUT, DELETE } = ENDPOINT_TYPES;
 
-                endpointTypes.map(async (endpoint, index) => {
+                return Promise.all(endpointTypes.map(async (endpoint, index) => {
                     const filePath = targetFilePath[index];
                     const templateFile = fs.readFileSync(filePath.templatePath, "utf-8");
                     let renderedTemplate;
@@ -291,9 +292,8 @@ module.exports = {
 
                     await writeFile(filePath.path, renderedTemplate);
                     await prettifyFile(filePath.path);
-                    console.log(chalk.green`Succesfully generated. Happy hacking !`);
-                });
-            }
+                }));
+            },
         },
         {
             source: "queries",
@@ -339,7 +339,7 @@ module.exports = {
                 const { endpointTypes, filterColumns, entityName, includeColumns } = userVariables;
                 const { GET, POST, PUT, DELETE } = ENDPOINT_TYPES;
 
-                endpointTypes.map(async (endpoint, index) => {
+                return Promise.all(endpointTypes.map(async (endpoint, index) => {
                     const filePath = targetFilePath[index];
                     const templateFile = fs.readFileSync(filePath.templatePath, "utf-8");
                     let renderedTemplate;
@@ -377,9 +377,11 @@ module.exports = {
 
                     await writeFile(filePath.path, renderedTemplate);
                     await prettifyFile(filePath.path);
-                    console.log(chalk.green`Succesfully generated. Happy hacking !`);
-                });
-            }
+                }));
+            },
         }
-    ]
+    ],
+    postGeneration: async () => {
+        console.log(chalk.green`Succesfully generated. Happy hacking!`);
+    }
 };
