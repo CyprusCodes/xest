@@ -1,0 +1,10 @@
+const { submitQuery } = require("~root/lib/database");
+
+const delete{{entityName | toPascalCase}} = ({{ filterColumns | functionParameters }}) => submitQuery`
+{% sql %}
+DELETE FROM {{ entityName | toSnakeCase }}
+{{ filterColumns | sqlFilters }}
+{% endsql %}
+`;
+
+module.exports = delete{{ entityName | toPascalCase }};

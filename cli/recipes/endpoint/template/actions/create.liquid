@@ -1,0 +1,9 @@
+const insert{{ entityName | toPascalCase }} = require('./queries/insert{{ entityName | toPascalCase }}');
+
+const create{{entityName | toPascalCase}} = async ({{ tableFields | functionParameters }}) => {
+    const inserted{{ entityName | toPascalCase | singular }}Id = await insert{{ entityName | toPascalCase }}({{ tableFields | functionParameters }});
+    
+    return { inserted{{ entityName | toPascalCase | singular }}Id };
+}
+
+module.exports = create{{entityName | toPascalCase}};
