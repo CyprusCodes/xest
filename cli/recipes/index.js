@@ -1,7 +1,7 @@
 // register recipes for use here
+const endpointRecipe = require("./endpoint");
 const queryRecipe = require("./query");
 const migrationRecipe = require("./migration");
 const seedRecipe = require("./seed");
-const endpointRecipe = require("./endpoint");
 
-module.exports = [queryRecipe, migrationRecipe, seedRecipe, endpointRecipe];
+module.exports = [endpointRecipe, migrationRecipe, seedRecipe, queryRecipe];
