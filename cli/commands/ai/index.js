@@ -37,6 +37,7 @@ const getTotalComputationTime = (startDate, endDate) => {
 // limit ai usage so we don't hit out quota with a single query
 const MAX_COST = 0.001;
 
+/*
 const ai = async () => {
   const projectDetails = findProjectRoot();
   if (!projectDetails) {
@@ -72,7 +73,7 @@ const ai = async () => {
   messages.push({
     role: "system",
     content:
-    "Investigate the COMMAND LIST available. Think in steps and pick a command from the COMMAND LIST to run.",
+      "Investigate the COMMAND LIST available. Think in steps and pick a command from the COMMAND LIST to run.",
   });
 
   while (
@@ -102,19 +103,51 @@ const ai = async () => {
     // keep assistant history
     messages.push(completion.data.choices[0].message);
 
-    const listOfCommandNames = getListOfAvailableCommands({ commandsList, callHistory }).map(c => c.name);
+    const listOfCommandNames = getListOfAvailableCommands({
+      commandsList,
+      callHistory,
+    }).map((c) => c.name);
     const doesAnswerContainCommandToRun = listOfCommandNames.filter((cmd) =>
       answer.includes(cmd)
     );
-    const newCommandsToRun = doesAnswerContainCommandToRun.filter(
-      (cmd) => !callHistory.map((call) => call.name).includes(cmd)
-    );
 
-    
     const notReadyToAnswer = answer
       .toLowerCase()
       .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
       .includes("no ");
+
+    if (!doesAnswerContainCommandToRun.length) {
+      // sometimes AI makes up command names to run
+      // but they don't exist in our command list
+      // we need to extract command name from the output
+      const payload = {
+        model: "text-curie-001",
+        prompt: `Extract command name from the sentence below. If there is no command respond with NOCOMMAND.\n\nsentence: "${answer}"\n\noutput:`,
+        max_tokens: 256,
+        temperature: 0,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+        best_of: 1,
+      };
+      const response = await openai.createCompletion(payload);
+
+      const sentence = response.data.choices[0].text;
+      console.log(sentence, "what the fuck");
+      if (!sentence.includes("NOCOMMAND")) {
+        const bogusCommand = sentence;
+        messages.push({
+          role: "system",
+          content: `START COMMAND LIST
+        ${getAvailableCommandDescriptions(
+          getListOfAvailableCommands({ commandsList, callHistory })
+        )}
+        notReadyToAnswer = true;
+      }
+    }
+    const newCommandsToRun = doesAnswerContainCommandToRun.filter(
+      (cmd) => !callHistory.map((call) => call.name).includes(cmd)
+    );
 
     if (notReadyToAnswer) {
       messages.push({
@@ -150,7 +183,9 @@ const ai = async () => {
       callHistory.push(commandToRun);
       messages.push({
         role: "system",
-        content: `Command: ${commandToRun.name}(${JSON.stringify(parameters)})\n Command Description: ${
+        content: `Command: ${commandToRun.name}(${JSON.stringify(
+          parameters
+        )})\n Command Description: ${
           commandToRun.description
         } OUTPUT: ${cmdOutput}.`,
       });
@@ -162,12 +197,12 @@ const ai = async () => {
 
     if (!newCommandsToRun.length && !notReadyToAnswer) {
       // if (step_debug ) {
-        // ai didn't ask for a new command to run, so we can assume it has finished
-        answered = true;
+      // ai didn't ask for a new command to run, so we can assume it has finished
+      answered = true;
 
-        // console.log("log of messages", messages);
-        console.log(`LATEST ANSWER:`, completion.data.choices[0].message.content);
-//      }
+      // console.log("log of messages", messages);
+      console.log(`LATEST ANSWER:`, completion.data.choices[0].message.content);
+      //      }
     }
 
     // stop ai from going wild
@@ -186,6 +221,7 @@ const ai = async () => {
     getTotalComputationCost({ totalPromptTokens, totalCompletionTokens })
   );
 };
+*/
 
 const aiReplay = async () => {
   const completion = await openai.createChatCompletion({
@@ -195,8 +231,14 @@ const aiReplay = async () => {
     temperature: 0,
   });
   console.log(`LATEST ANSWER:`, completion.data.choices);
+  const { prompt_tokens, completion_tokens, total_tokens } =
+    completion.data.usage;
+  const totalPromptTokens = prompt_tokens;
+  const totalCompletionTokens = completion_tokens;
+  console.log(sample)
+  console.log("total cost $", getTotalComputationCost({totalPromptTokens, totalCompletionTokens}));
 };
 
 module.exports = {
-  ai: ai,
+  ai: aiReplay,
 };
