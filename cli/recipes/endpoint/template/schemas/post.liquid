@@ -1,0 +1,79 @@
+const yup = require('yup');
+{{schemaColumns | schemaImports}}
+
+const newPost{{entityName | toPascalCase}}Schema = yup.object().shape({
+{% for column in schemaColumns %}
+    {{column.column | toCamelCase}}: yup.{% if column.nullable %}
+        {% if column.columnKey == 'MUL' %}
+            {% if column.dataType == 'int' %}
+                number().integer().nullable().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number').test(
+                    'doesExist',
+                    'The {{column.column | toCamelCase}} field must be a valid {{column.column | toCamelCase}}',
+                    async function test({{column.column | toCamelCase}}) {
+                        if (!{{column.column | toCamelCase}}) {
+                            return true;
+                        }
+
+                        const {{column.column | toCamelCase}}Counts = await select{{column.foreignKeyTo.targetTable | toPascalCase}}ById({{column.column | toCamelCase}});
+                        if ({{column.column | toCamelCase}}Counts === 0) {
+                            throw new yup.ValidationError(
+                                'The {{column.column | toCamelCase}} field must be a valid {{column.column | toCamelCase}}',
+                                null,
+                                '{{column.column | toCamelCase}}'
+                            )
+                        }
+                        return true;
+                    }),
+            {% endif %}
+        {% endif %}
+        {% if column.dataType == 'varchar' %}
+            string().max({{column.columnnType | varcharSize}}).nullable().label('{{column.column | toCamelCase}}'),
+        {% elsif column.dataType == 'int' %}
+            number().integer().nullable().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
+        {% elsif column.dataType == 'json' %}
+            mixed().nullable().label('{{column.column | toCamelCase}}'),
+        {% elsif column.dataType == 'boolean' %}
+            boolean().nullable().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a boolean'),
+        {% endif %}
+    {% else %}
+        {% if column.columnKey == 'MUL' %}
+            {% if column.dataType == 'int' %}
+                number().integer().required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number').test(
+                    'doesExist',
+                    'The {{column.column | toCamelCase}} field must be a valid {{column.column | toCamelCase}}',
+                    async function test({{column.column | toCamelCase}}) {
+                        if (!{{column.column | toCamelCase}}) {
+                            throw new yup.ValidationError(
+                                'The {{column.column | toCamelCase}} field must be a valid {{column.column | toCamelCase}}',
+                                null,
+                                '{{column.column | toCamelCase}}'
+                            )
+                        }
+
+                        const {{column.column | toCamelCase}}Counts = await select{{column.foreignKeyTo.targetTable | toPascalCase}}ById({{column.column | toCamelCase}});
+                        if ({{column.column | toCamelCase}}Counts === 0) {
+                            throw new yup.ValidationError(
+                                'The {{column.column | toCamelCase}} field must be a valid {{column.column | toCamelCase}}',
+                                null,
+                                '{{column.column | toCamelCase}}'
+                            )
+                        }
+                        return true;
+                    }),
+            {% endif %}
+        {% else %}
+            {% if column.dataType == 'varchar' %}
+                string().min(1).max({{column.columnnType | varcharSize}}).required().label('{{column.column | toCamelCase}}'),
+            {% elsif column.dataType == 'int' %}
+                number().integer().required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
+            {% elsif column.dataType == 'json' %}
+                mixed().required().label('{{column.column | toCamelCase}}'),
+            {% elsif column.dataType == 'boolean' %}
+                boolean().required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a boolean'),
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endfor %}
+});
+
+module.exports = newPost{{entityName | toPascalCase}}Schema;

@@ -1,0 +1,11 @@
+const { submitQuery, getFirst } = require("~root/lib/database");
+
+const select{{targetTable | toPascalCase}}ById = ({ {{targetColumn | toCamelCase }} }) => submitQuery`
+{% sql %}
+    SELECT COUNT(*) AS count
+    FROM {{targetTable}}
+    WHERE {{targetColumn}} = ${ {{targetColumn | toCamelCase }} }
+{% endsql %}
+`;
+
+module.exports = getFirst(select{{targetTable | toPascalCase}}ById, "count");

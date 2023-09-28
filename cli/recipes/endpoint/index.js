@@ -379,7 +379,105 @@ module.exports = {
                     await prettifyFile(filePath.path);
                 }));
             },
-        }
+        },
+        {
+            source: "schemas",
+            targetFileNameMapper: async ({
+                projectRootPath,
+                userVariables
+            }) => {
+                const { endpointTypes, entityName } = userVariables;
+                const { GET, POST, PUT, DELETE } = ENDPOINT_TYPES;
+
+
+                const filePathsToGenerate = endpointTypes.map((endpoint) => {
+                    let filePaths = [];
+                    if (endpoint === GET) {
+                        filePaths.push({
+                            path: path.join(projectRootPath, "src", "app", "controllers", camelCase(entityName), `get${toPascalCase(entityName)}`, 'schema', `newGet${toPascalCase(entityName)}Schema.js`),
+                            templatePath: path.join(__dirname, "template", "schemas", "get.liquid"),
+                        })
+                    }
+                    if (endpoint === POST) {
+                        filePaths.push({
+                            path: path.join(projectRootPath, "src", "app", "controllers", camelCase(entityName), `post${toPascalCase(entityName)}`, 'schema', `newPost${toPascalCase(entityName)}Schema.js`),
+                            templatePath: path.join(__dirname, "template", "schemas", "post.liquid"),
+                            queriesPath: path.join(projectRootPath, "src", "app", "controllers", camelCase(entityName), `post${toPascalCase(entityName)}`, 'schema', 'queries'),
+                            queriesTemplatePath: path.join(__dirname, "template", "schemas", "queries", "select.liquid"),
+                        })
+                    }
+                    if (endpoint === PUT) {
+                        filePaths.push({
+                            path: path.join(projectRootPath, "src", "app", "controllers", camelCase(entityName), `put${toPascalCase(entityName)}`, 'schema', `newPut${toPascalCase(entityName)}Schema.js`),
+                            templatePath: path.join(__dirname, "template", "schemas", "put.liquid"),
+                            queriesPath: path.join(projectRootPath, "src", "app", "controllers", camelCase(entityName), `put${toPascalCase(entityName)}`, 'schema', 'queries'),
+                            queriesTemplatePath: path.join(__dirname, "template", "schemas", "queries", "select.liquid"),
+                        })
+                    }
+                    if (endpoint === DELETE) {
+                        filePaths.push({
+                            path: path.join(projectRootPath, "src", "app", "controllers", camelCase(entityName), `delete${toPascalCase(entityName)}`, 'schema', `newDelete${toPascalCase(entityName)}Schema.js`),
+                            templatePath: path.join(__dirname, "template", "schemas", "delete.liquid"),
+                        })
+                    }
+                    return filePaths;
+                });
+
+                return filePathsToGenerate.flat();
+            },
+            targetFileWriter: async ({ userVariables, sourceFileRelative, sourceFilePath, targetFilePath }) => {
+                const { endpointTypes, filterColumns, entityName, includeColumns } = userVariables;
+                const { GET, POST, PUT, DELETE } = ENDPOINT_TYPES;
+
+                return Promise.all(endpointTypes.map(async (endpoint, index) => {
+                    const filePath = targetFilePath[index];
+                    const templateFile = fs.readFileSync(filePath.templatePath, "utf-8");
+                    let renderedTemplate;
+
+                    if (endpoint === GET) {
+                    }
+                    if (endpoint === POST) {
+                        const columns = flatten(schema[entityName]);
+                        const schemaColumns = columns.filter((c) => {
+                            return includeColumns.includes(`${c.table}.${c.column}`);
+                        });
+
+                        renderedTemplate = await render(templateFile, {
+                            entityName,
+                            schemaColumns
+                        });
+
+                        const filteredSchema = schemaColumns.filter((c) => c.columnKey === 'MUL' && c.dataType === 'int');
+                        const uniqueTargetTableObjectsMap = new Map();
+
+                        Promise.all(filteredSchema.map(item => {
+                            const targetTable = item.foreignKeyTo.targetTable;
+                            if (!uniqueTargetTableObjectsMap.has(targetTable)) {
+                                uniqueTargetTableObjectsMap.set(targetTable, item);
+                            }
+                        }));
+                        const uniqueTargetTableObjects = Array.from(uniqueTargetTableObjectsMap.values());
+
+                        Promise.all(uniqueTargetTableObjects.map(async (t) => {
+                            const queriesFilePath = path.join(filePath.queriesPath, `select${toPascalCase(t.foreignKeyTo.targetTable)}ById.js`);
+                            const queriesTemplateFile = fs.readFileSync(filePath.queriesTemplatePath, "utf-8");
+
+                            const renderedQueriesTemplate = await render(queriesTemplateFile, {
+                                targetTable: t.foreignKeyTo.targetTable,
+                                targetColumn: t.foreignKeyTo.targetColumn,
+                            });
+
+                            await writeFile(queriesFilePath, renderedQueriesTemplate);
+                            await prettifyFile(queriesFilePath);
+                        }
+                        ));
+                    }
+
+                    await writeFile(filePath.path, renderedTemplate);
+                    await prettifyFile(filePath.path);
+                }));
+            },
+        },
     ],
     postGeneration: async () => {
         console.log(chalk.green`Succesfully generated. Happy hacking!`);

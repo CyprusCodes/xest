@@ -10,6 +10,7 @@ const {
   get,
 } = require("lodash");
 const { singular, plural } = require("pluralize");
+const toPascalCase = require("../../toPascalCase");
 
 const enrichEngine = (engine) => {
   engine.registerFilter("toCamelCase", (v) => camelCase(v));
@@ -28,6 +29,20 @@ const enrichEngine = (engine) => {
   engine.registerFilter("toSentenceCase", (v) => upperFirst(lowerCase(str)));
   engine.registerFilter("singular", (v) => singular(v));
   engine.registerFilter("plural", (v) => plural(v));
+  engine.registerFilter("varcharSize", (v) => {
+    const size = v.split("(")[1].split(")")[0];
+    return size;
+  });
+  engine.registerFilter("schemaImports", (v) => {
+    let imports = [];
+    const filteredSchema = v.filter((c) => c.columnKey === 'MUL' && c.dataType === 'int');
+    const uniqueTargetTables = [...new Set(filteredSchema.map((c) => c.foreignKeyTo.targetTable))];
+    Promise.all(uniqueTargetTables.map(async (table) => {
+      imports.push(`const select${toPascalCase(table)}ById = require('./queries/select${toPascalCase(table)}ById');`);
+    }));
+
+    return imports.join("\n");
+  });
   engine.registerFilter("functionParameters", (args) => {
     // assume we are passing an object parameter {}
     if (!args.length) {
@@ -138,7 +153,7 @@ const enrichEngine = (engine) => {
     }
 
     let fieldList = uniq(fields);
-    const isUsingDotNotation = fields.find((field) => field.includes(".")) 
+    const isUsingDotNotation = fields.find((field) => field.includes("."))
 
     if (isUsingDotNotation) {
       return `${fieldList
