@@ -1,0 +1,56 @@
+const yup = require('yup');
+{{importsColumns | schemaImports}}
+
+const newPut{{entityName | toPascalCase}}Schema = yup.object().shape({
+{% for column in filteredFinalColumns %}
+    {{column.column | toCamelCase}}: yup.
+        number().integer().required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number').test(
+        'doesExist',
+        'The {{column.column | toCamelCase}} field must be a valid {{column.column | toCamelCase}}',
+        async function test({{column.column | toCamelCase}}) {
+            if (!{{column.column | toCamelCase}}) {
+                return false;
+            }
+
+            const {{column.column | toCamelCase}}Count = await select{{column.foreignKeyTo.targetTable | toPascalCase}}ById({{column.column | toCamelCase}});
+            if ({{column.column | toCamelCase}}Count === 0) {
+                return false;
+            }
+            return true;
+        }),
+{% endfor %}
+{% for column in uniqueSchemaColumns %}
+    {{column.column | toCamelCase}}: yup.
+    {% if column.columnKey == 'MUL' %}
+        {% if column.dataType == 'int' %}
+            number().integer().nullable().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number').test(
+                'doesExist',
+                'The {{column.column | toCamelCase}} field must be a valid {{column.column | toCamelCase}}',
+                async function test({{column.column | toCamelCase}}) {
+                    if (!{{column.column | toCamelCase}}) {
+                        return true;
+                    }
+
+                    const {{column.column | toCamelCase}}Count = await select{{column.foreignKeyTo.targetTable | toPascalCase}}ById({{column.column | toCamelCase}});
+                    if ({{column.column | toCamelCase}}Count === 0) {
+                        return false;
+                    }
+                    return true;
+                }),
+        {% endif %}
+    {% endif %}
+    {% if column.columnKey != 'MUL' %}
+        {% if column.dataType == 'varchar' %}
+            string().min(1).max({{column.columnnType | varcharSize}}).required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a string'),
+        {% elsif column.dataType == 'int' %}
+            number().integer().required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number').typeError('The {{column.column | toCamelCase}} field must be a number'),
+        {% elsif column.dataType == 'json' %}
+            json().required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a json'),
+        {% elsif column.dataType == 'boolean' %}
+            boolean().required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a boolean').typeError('The {{column.column | toCamelCase}} field must be a boolean'),
+        {% endif %}
+    {% endif %}
+{% endfor %}
+});
+
+module.exports = newPut{{entityName | toPascalCase}}Schema;

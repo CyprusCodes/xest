@@ -1,15 +1,18 @@
 const handleAPIError = require("~root/utils/handleAPIError");
 const modify{{entityName | toPascalCase}} = require("~root/actions/{{entityName | toCamelCase}}/modify{{entityName | toPascalCase}}");
+const newPut{{entityName | toPascalCase}}Schema = require("./schema/newPut{{entityName | toPascalCase}}Schema");
 
 const put{{entityName | toPascalCase}} = async (req, res) => {
   {% if filterColumns.length > 0 %}
   const {{ filterColumns | functionParameters }} = req.params;
   {% endif %}
-  {% if includeColumns.length > 0 %}
-  const {{ includeColumns | functionParameters }} = req.body;
+  {% if uniqueIncludeColumns.length > 0 %}
+  const {{ uniqueIncludeColumns | functionParameters }} = req.body;
   {% endif %}
 
   try {
+    await newPut{{entityName | toPascalCase}}Schema.validate({{ argsColumns | functionParameters }}, { abortEarly: false });
+
     await modify{{entityName | toPascalCase}}({{ argsColumns | functionParameters }});
 
     res.status(200).send({ success: true });
