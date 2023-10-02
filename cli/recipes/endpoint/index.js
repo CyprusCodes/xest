@@ -200,7 +200,7 @@ module.exports = {
                         });
                     }
                     if (endpoint === PUT || endpoint === DELETE) {
-                        const argsColumns = [...filterColumns, ...includeColumns];
+                        const argsColumns = uniqBy([...filterColumns, ...includeColumns]);
                         renderedTemplate = await render(templateFile, {
                             entityName,
                             filterColumns,
@@ -281,11 +281,12 @@ module.exports = {
                         });
                     }
                     if (endpoint === PUT || endpoint === DELETE) {
-                        const argsColumns = [...filterColumns, ...includeColumns];
+                        const argsColumns = uniqBy([...filterColumns, ...includeColumns]);
+                        const uniqueIncludeColumns = includeColumns.filter((c) => !filterColumns.includes(c));
                         renderedTemplate = await render(templateFile, {
                             entityName,
                             filterColumns,
-                            includeColumns,
+                            uniqueIncludeColumns,
                             argsColumns
                         });
                     }
@@ -396,6 +397,8 @@ module.exports = {
                         filePaths.push({
                             path: path.join(projectRootPath, "src", "app", "controllers", camelCase(entityName), `get${toPascalCase(entityName)}`, 'schema', `newGet${toPascalCase(entityName)}Schema.js`),
                             templatePath: path.join(__dirname, "template", "schemas", "get.liquid"),
+                            queriesPath: path.join(projectRootPath, "src", "app", "controllers", camelCase(entityName), `get${toPascalCase(entityName)}`, 'schema', 'queries'),
+                            queriesTemplatePath: path.join(__dirname, "template", "schemas", "queries", "select.liquid"),
                         })
                     }
                     if (endpoint === POST) {
@@ -418,6 +421,8 @@ module.exports = {
                         filePaths.push({
                             path: path.join(projectRootPath, "src", "app", "controllers", camelCase(entityName), `delete${toPascalCase(entityName)}`, 'schema', `newDelete${toPascalCase(entityName)}Schema.js`),
                             templatePath: path.join(__dirname, "template", "schemas", "delete.liquid"),
+                            queriesPath: path.join(projectRootPath, "src", "app", "controllers", camelCase(entityName), `delete${toPascalCase(entityName)}`, 'schema', 'queries'),
+                            queriesTemplatePath: path.join(__dirname, "template", "schemas", "queries", "select.liquid"),
                         })
                     }
                     return filePaths;
@@ -434,14 +439,110 @@ module.exports = {
                     const templateFile = fs.readFileSync(filePath.templatePath, "utf-8");
                     let renderedTemplate;
 
-                    if (endpoint === GET) {
-                    }
-                    if (endpoint === POST) {
-                        const columns = flatten(schema[entityName]);
-                        const schemaColumns = columns.filter((c) => {
-                            return includeColumns.includes(`${c.table}.${c.column}`);
+                    const columns = flatten(schema[entityName]);
+                    const schemaColumns = columns.filter((c) => {
+                        return includeColumns.includes(`${c.table}.${c.column}`);
+                    });
+
+                    if (endpoint === GET || endpoint === DELETE) {
+                        const filteredSchemaColumns = columns.filter((c) => {
+                            return filterColumns.includes(`${c.table}.${c.column}`);
                         });
 
+                        const filteredFinalColumns = [];
+                        Promise.all(filteredSchemaColumns.map((c) => {
+                            if (c.columnKey === 'PRI') {
+                                filteredFinalColumns.push({
+                                    ...c,
+                                    foreignKeyTo: {
+                                        targetTable: c.table,
+                                        targetColumn: c.column
+                                    }
+                                })
+                            } else {
+                                filteredFinalColumns.push(c);
+                            }
+                        }));
+
+                        renderedTemplate = await render(templateFile, {
+                            entityName,
+                            filteredFinalColumns
+                        });
+
+                        Promise.all(filteredFinalColumns.map(async (t) => {
+                            const queriesFilePath = path.join(filePath.queriesPath, `select${toPascalCase(t.foreignKeyTo.targetTable)}ById.js`);
+                            const queriesTemplateFile = fs.readFileSync(filePath.queriesTemplatePath, "utf-8");
+
+                            const renderedQueriesTemplate = await render(queriesTemplateFile, {
+                                targetTable: t.foreignKeyTo.targetTable,
+                                targetColumn: t.foreignKeyTo.targetColumn,
+                            });
+
+                            await writeFile(queriesFilePath, renderedQueriesTemplate);
+                            await prettifyFile(queriesFilePath);
+                        }
+                        ));
+                    }
+                    if (endpoint === PUT) {
+                        const filteredSchemaColumns = columns.filter((c) => {
+                            return filterColumns.includes(`${c.table}.${c.column}`);
+                        });
+
+                        const filteredFinalColumns = [];
+                        Promise.all(filteredSchemaColumns.map((c) => {
+                            if (c.columnKey === 'PRI') {
+                                filteredFinalColumns.push({
+                                    ...c,
+                                    foreignKeyTo: {
+                                        targetTable: c.table,
+                                        targetColumn: c.column
+                                    }
+                                })
+                            } else {
+                                filteredFinalColumns.push(c);
+                            }
+                        }));
+
+                        const importsColumns = uniqBy([...schemaColumns, ...filteredFinalColumns]);
+                        const uniqueSchemaColumns = schemaColumns.filter((c) => {
+                            return !filterColumns.includes(`${c.table}.${c.column}`);
+                        });
+
+                        renderedTemplate = await render(templateFile, {
+                            entityName,
+                            uniqueSchemaColumns,
+                            filteredFinalColumns,
+                            importsColumns
+                        });
+
+                        const filteredSchema = schemaColumns.filter((c) => c.columnKey === 'MUL' && c.dataType === 'int');
+                        const finalFilteredSchemaColumns = [...filteredFinalColumns, ...filteredSchema];
+
+                        const uniqueTargetTableObjectsMap = new Map();
+
+                        Promise.all(finalFilteredSchemaColumns.map(item => {
+                            const targetTable = item.foreignKeyTo.targetTable;
+                            if (!uniqueTargetTableObjectsMap.has(targetTable)) {
+                                uniqueTargetTableObjectsMap.set(targetTable, item);
+                            }
+                        }));
+
+                        const uniqueTargetTableObjects = Array.from(uniqueTargetTableObjectsMap.values());
+                        Promise.all(uniqueTargetTableObjects.map(async (t) => {
+                            const queriesFilePath = path.join(filePath.queriesPath, `select${toPascalCase(t.foreignKeyTo.targetTable)}ById.js`);
+                            const queriesTemplateFile = fs.readFileSync(filePath.queriesTemplatePath, "utf-8");
+
+                            const renderedQueriesTemplate = await render(queriesTemplateFile, {
+                                targetTable: t.foreignKeyTo.targetTable,
+                                targetColumn: t.foreignKeyTo.targetColumn,
+                            });
+
+                            await writeFile(queriesFilePath, renderedQueriesTemplate);
+                            await prettifyFile(queriesFilePath);
+                        }
+                        ));
+                    }
+                    if (endpoint === POST) {
                         renderedTemplate = await render(templateFile, {
                             entityName,
                             schemaColumns

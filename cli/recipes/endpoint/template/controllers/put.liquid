@@ -5,8 +5,8 @@ const put{{entityName | toPascalCase}} = async (req, res) => {
   {% if filterColumns.length > 0 %}
   const {{ filterColumns | functionParameters }} = req.params;
   {% endif %}
-  {% if includeColumns.length > 0 %}
-  const {{ includeColumns | functionParameters }} = req.body;
+  {% if uniqueIncludeColumns.length > 0 %}
+  const {{ uniqueIncludeColumns | functionParameters }} = req.body;
   {% endif %}
 
   try {

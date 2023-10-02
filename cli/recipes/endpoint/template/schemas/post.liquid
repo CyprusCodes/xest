@@ -28,7 +28,7 @@ const newPost{{entityName | toPascalCase}}Schema = yup.object().shape({
         {% endif %}
         {% if column.dataType == 'varchar' %}
             string().max({{column.columnnType | varcharSize}}).nullable().label('{{column.column | toCamelCase}}'),
-        {% elsif column.dataType == 'int' %}
+        {% elsif column.dataType == 'int' and column.columnKey != 'MUL' %}
             number().integer().nullable().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
         {% elsif column.dataType == 'json' %}
             mixed().nullable().label('{{column.column | toCamelCase}}'),
@@ -64,7 +64,7 @@ const newPost{{entityName | toPascalCase}}Schema = yup.object().shape({
         {% else %}
             {% if column.dataType == 'varchar' %}
                 string().min(1).max({{column.columnnType | varcharSize}}).required().label('{{column.column | toCamelCase}}'),
-            {% elsif column.dataType == 'int' %}
+            {% elsif column.dataType == 'int' and column.columnKey != 'MUL' %}
                 number().integer().required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
             {% elsif column.dataType == 'json' %}
                 mixed().required().label('{{column.column | toCamelCase}}'),

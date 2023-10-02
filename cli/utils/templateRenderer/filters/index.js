@@ -35,7 +35,7 @@ const enrichEngine = (engine) => {
   });
   engine.registerFilter("schemaImports", (v) => {
     let imports = [];
-    const filteredSchema = v.filter((c) => c.columnKey === 'MUL' && c.dataType === 'int');
+    const filteredSchema = v.filter((c) => (c.columnKey === 'MUL' || c.columnKey === 'PRI') && c.dataType === 'int');
     const uniqueTargetTables = [...new Set(filteredSchema.map((c) => c.foreignKeyTo.targetTable))];
     Promise.all(uniqueTargetTables.map(async (table) => {
       imports.push(`const select${toPascalCase(table)}ById = require('./queries/select${toPascalCase(table)}ById');`);
