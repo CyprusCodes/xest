@@ -1,5 +1,6 @@
 const handleAPIError = require("~root/utils/handleAPIError");
 const remove{{entityName | toPascalCase}} = require("~root/actions/{{entityName | toCamelCase}}/remove{{entityName | toPascalCase}}");
+const newDelete{{entityName | toPascalCase}}Schema = require("./schema/newDelete{{entityName | toPascalCase}}Schema");
 
 const delete{{entityName | toPascalCase}} = async (req, res) => {
   {% if filterColumns.length > 0 %}
@@ -7,9 +8,11 @@ const delete{{entityName | toPascalCase}} = async (req, res) => {
   {% endif %}
 
   try {
+    await newDelete{{entityName | toPascalCase}}Schema.validate({{ filterColumns | functionParameters }}, { abortEarly: false });
+
     await remove{{entityName | toPascalCase}}({{ filterColumns | functionParameters }});
 
-    res.status(200).send({ success: true });
+    res.status(204).send({ success: true });
   } catch (err) {
     handleAPIError(res, err);
   }

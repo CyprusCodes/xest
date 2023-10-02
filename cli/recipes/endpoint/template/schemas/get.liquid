@@ -9,16 +9,12 @@ const newGet{{entityName | toPascalCase}}Schema = yup.object().shape({
         'The {{column.column | toCamelCase}} field must be a valid {{column.column | toCamelCase}}',
         async function test({{column.column | toCamelCase}}) {
             if (!{{column.column | toCamelCase}}) {
-                return true;
+                return false;
             }
 
-            const {{column.column | toCamelCase}}Counts = await select{{column.foreignKeyTo.targetTable | toPascalCase}}ById({{column.column | toCamelCase}});
-            if ({{column.column | toCamelCase}}Counts === 0) {
-                throw new yup.ValidationError(
-                    'The {{column.column | toCamelCase}} field must be a valid {{column.column | toCamelCase}}',
-                    null,
-                    '{{column.column | toCamelCase}}'
-                )
+            const {{column.column | toCamelCase}}Count = await select{{column.foreignKeyTo.targetTable | toPascalCase}}ById({{column.column | toCamelCase}});
+            if ({{column.column | toCamelCase}}Count === 0) {
+                return false;
             }
             return true;
         }),

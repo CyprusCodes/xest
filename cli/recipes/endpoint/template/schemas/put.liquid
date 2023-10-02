@@ -9,16 +9,12 @@ const newPut{{entityName | toPascalCase}}Schema = yup.object().shape({
         'The {{column.column | toCamelCase}} field must be a valid {{column.column | toCamelCase}}',
         async function test({{column.column | toCamelCase}}) {
             if (!{{column.column | toCamelCase}}) {
-                return true;
+                return false;
             }
 
-            const {{column.column | toCamelCase}}Counts = await select{{column.foreignKeyTo.targetTable | toPascalCase}}ById({{column.column | toCamelCase}});
-            if ({{column.column | toCamelCase}}Counts === 0) {
-                throw new yup.ValidationError(
-                    'The {{column.column | toCamelCase}} field must be a valid {{column.column | toCamelCase}}',
-                    null,
-                    '{{column.column | toCamelCase}}'
-                )
+            const {{column.column | toCamelCase}}Count = await select{{column.foreignKeyTo.targetTable | toPascalCase}}ById({{column.column | toCamelCase}});
+            if ({{column.column | toCamelCase}}Count === 0) {
+                return false;
             }
             return true;
         }),
@@ -32,20 +28,12 @@ const newPut{{entityName | toPascalCase}}Schema = yup.object().shape({
                 'The {{column.column | toCamelCase}} field must be a valid {{column.column | toCamelCase}}',
                 async function test({{column.column | toCamelCase}}) {
                     if (!{{column.column | toCamelCase}}) {
-                        throw new yup.ValidationError(
-                            'The {{column.column | toCamelCase}} field must be a valid {{column.column | toCamelCase}}',
-                            null,
-                            '{{column.column | toCamelCase}}'
-                        )
+                        return true;
                     }
 
-                    const {{column.column | toCamelCase}}Counts = await select{{column.foreignKeyTo.targetTable | toPascalCase}}ById({{column.column | toCamelCase}});
-                    if ({{column.column | toCamelCase}}Counts === 0) {
-                        throw new yup.ValidationError(
-                            'The {{column.column | toCamelCase}} field must be a valid {{column.column | toCamelCase}}',
-                            null,
-                            '{{column.column | toCamelCase}}'
-                        )
+                    const {{column.column | toCamelCase}}Count = await select{{column.foreignKeyTo.targetTable | toPascalCase}}ById({{column.column | toCamelCase}});
+                    if ({{column.column | toCamelCase}}Count === 0) {
+                        return false;
                     }
                     return true;
                 }),
@@ -53,13 +41,13 @@ const newPut{{entityName | toPascalCase}}Schema = yup.object().shape({
     {% endif %}
     {% if column.columnKey != 'MUL' %}
         {% if column.dataType == 'varchar' %}
-            string().min(1).max({{column.columnnType | varcharSize}}).required().label('{{column.column | toCamelCase}}'),
+            string().min(1).max({{column.columnnType | varcharSize}}).required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a string'),
         {% elsif column.dataType == 'int' %}
-            number().integer().required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
+            number().integer().required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number').typeError('The {{column.column | toCamelCase}} field must be a number'),
         {% elsif column.dataType == 'json' %}
-            mixed().required().label('{{column.column | toCamelCase}}'),
+            json().required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a json'),
         {% elsif column.dataType == 'boolean' %}
-            boolean().required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a boolean'),
+            boolean().required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a boolean').typeError('The {{column.column | toCamelCase}} field must be a boolean'),
         {% endif %}
     {% endif %}
 {% endfor %}
