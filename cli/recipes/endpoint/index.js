@@ -467,7 +467,7 @@ module.exports = {
                         });
 
                         const filteredFinalColumns = [];
-                        Promise.all(filteredSchemaColumns.map((c) => {
+                        filteredSchemaColumns.map((c) => {
                             if (c.columnKey === 'PRI') {
                                 filteredFinalColumns.push({
                                     ...c,
@@ -479,14 +479,14 @@ module.exports = {
                             } else {
                                 filteredFinalColumns.push(c);
                             }
-                        }));
+                        });
 
                         renderedTemplate = await render(templateFile, {
                             entityName,
                             filteredFinalColumns
                         });
 
-                        Promise.all(filteredFinalColumns.map(async (t) => {
+                        await Promise.all(filteredFinalColumns.map(async (t) => {
                             const queriesFilePath = path.join(filePath.queriesPath, `select${toPascalCase(t.foreignKeyTo.targetTable)}ById.js`);
                             const queriesTemplateFile = fs.readFileSync(filePath.queriesTemplatePath, "utf-8");
 
@@ -506,7 +506,7 @@ module.exports = {
                         });
 
                         const filteredFinalColumns = [];
-                        Promise.all(filteredSchemaColumns.map((c) => {
+                        filteredSchemaColumns.map((c) => {
                             if (c.columnKey === 'PRI') {
                                 filteredFinalColumns.push({
                                     ...c,
@@ -518,7 +518,7 @@ module.exports = {
                             } else {
                                 filteredFinalColumns.push(c);
                             }
-                        }));
+                        });
 
                         const importsColumns = uniqBy([...schemaColumns, ...filteredFinalColumns]);
                         const uniqueSchemaColumns = schemaColumns.filter((c) => {
@@ -537,15 +537,15 @@ module.exports = {
 
                         const uniqueTargetTableObjectsMap = new Map();
 
-                        Promise.all(finalFilteredSchemaColumns.map(item => {
+                        finalFilteredSchemaColumns.map(item => {
                             const targetTable = item.foreignKeyTo.targetTable;
                             if (!uniqueTargetTableObjectsMap.has(targetTable)) {
                                 uniqueTargetTableObjectsMap.set(targetTable, item);
                             }
-                        }));
+                        });
 
                         const uniqueTargetTableObjects = Array.from(uniqueTargetTableObjectsMap.values());
-                        Promise.all(uniqueTargetTableObjects.map(async (t) => {
+                        await Promise.all(uniqueTargetTableObjects.map(async (t) => {
                             const queriesFilePath = path.join(filePath.queriesPath, `select${toPascalCase(t.foreignKeyTo.targetTable)}ById.js`);
                             const queriesTemplateFile = fs.readFileSync(filePath.queriesTemplatePath, "utf-8");
 
@@ -568,15 +568,15 @@ module.exports = {
                         const filteredSchema = schemaColumns.filter((c) => c.columnKey === 'MUL' && c.dataType === 'int');
                         const uniqueTargetTableObjectsMap = new Map();
 
-                        Promise.all(filteredSchema.map(item => {
+                        filteredSchema.map(item => {
                             const targetTable = item.foreignKeyTo.targetTable;
                             if (!uniqueTargetTableObjectsMap.has(targetTable)) {
                                 uniqueTargetTableObjectsMap.set(targetTable, item);
                             }
-                        }));
+                        });
                         const uniqueTargetTableObjects = Array.from(uniqueTargetTableObjectsMap.values());
 
-                        Promise.all(uniqueTargetTableObjects.map(async (t) => {
+                        await Promise.all(uniqueTargetTableObjects.map(async (t) => {
                             const queriesFilePath = path.join(filePath.queriesPath, `select${toPascalCase(t.foreignKeyTo.targetTable)}ById.js`);
                             const queriesTemplateFile = fs.readFileSync(filePath.queriesTemplatePath, "utf-8");
 
@@ -598,6 +598,6 @@ module.exports = {
         },
     ],
     postGeneration: async () => {
-        console.log(chalk.green`Succesfully generated. Happy hacking!`);
+        console.log(chalk.green`Succesfully generated. Happy developing!`);
     }
 };
