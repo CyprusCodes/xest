@@ -1,22 +1,41 @@
-const { submitQuery, sql, sqlReduce } = require("~root/lib/database");
+{{ defaultImport }}
 
-const update{{entityName | toPascalCase}} = ({{ argsColumns | functionParameters }}) => {
-const updates = [];
+const NO_UPDATE = Symbol("NO_UPDATE");
 
-{% for column in columnsToUpdate %}
-if ({{ column | toCamelCase }}) {
-updates.push(sql`{{ column | toSnakeCase }} = ${ {{ column | toCamelCase }} }`);
-}
-{% endfor %}
+const update{{entityName | toPascalCase}} = (
+    {%- for column in defaultFilterColumns -%}
+    {{ column | toCamelCase }},
+    {%- endfor -%}
+    {%- for column in uniqueSchemaColumns -%}
+    {{ column.column | toCamelCase }} = NO_UPDATE,
+    {%- endfor -%}
+) => {
+    const updates = [];
+    {%- for column in uniqueSchemaColumns -%}
 
-if (updates.length !== 0) {
-return submitQuery`
-{% sql %}
-UPDATE {{ entityName | toSnakeCase }} SET ${updates.reduce(sqlReduce)} {{ filterColumns | sqlFilters }} `;
-{% endsql %}
-}
+    if ({{ column.column | toCamelCase }} !== NO_UPDATE) {
+        updates.push(
+            sql`{{column.column}} = {%- if column.nullable -%} ${sqlValueOrNull({{ column.column | toCamelCase }})}
+            {%- else -%} ${sql`{{ column.column | toCamelCase }}`} {%- endif -%}`
+        );
+    }
 
-return Promise.resolve();
+    {% endfor %}
+
+   if (updates.length !== 0) {
+    return submitQuery`
+        UPDATE 
+          {{ entityName | toSnakeCase }} 
+        SET 
+          ${updates.reduce(sqlReduce)} 
+        WHERE 
+          {% for column in defaultFilterColumns -%}
+        {{ column | toSnakeCase }} = ${ {{ column | toCamelCase }} } {% if forloop.last %}{% else %} AND {% endif %}
+        {%- endfor -%}`
+    }
+
+
+    return Promise.resolve();
 };
 
 module.exports = update{{ entityName | toPascalCase }};
