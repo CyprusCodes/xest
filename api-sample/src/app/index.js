@@ -6,6 +6,7 @@ const rateLimit = require("express-rate-limit");
 const compression = require("compression");
 const morgan = require("morgan");
 const monitoring = require("~root/utils/monitoring");
+const qs = require("qs");
 // prevent running against production database by mistake
 require("~root/utils/exitIfProductionDatabase")();
 
@@ -13,6 +14,12 @@ const port = process.env.PORT || 3001;
 const app = express();
 // see https://expressjs.com/en/guide/behind-proxies.html
 app.set("trust proxy", 1);
+app.set("query parser", function parseQueryString(str) {
+  return qs.parse(str, {
+    arrayLimit: 50,
+    depth: 20
+  });
+});
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
