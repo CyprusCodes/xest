@@ -12,9 +12,17 @@ INSERT INTO (
 ) VALUES (
 {% for column in schemaColumns %}
     {% if column.nullable %}
-        ${sqlValueOrNull({{ column.column | toCamelCase}})}
+        {% if column.dataType == 'json'%}
+            ${sqlValueOrNull(JSON.stringify({{ column.column | toCamelCase}}))}
+        {% else %}
+            ${sqlValueOrNull({{ column.column | toCamelCase}})}
+        {% endif %}
     {% else %}
-        ${ {{ column.column | toCamelCase}} }
+        {% if column.dataType == 'json'%}
+            ${JSON.stringify({{ column.column | toCamelCase}})}
+        {% else %}
+            ${ {{ column.column | toCamelCase}} }
+        {% endif %}
     {% endif %}
     {% if forloop.last %}{% else %},{% endif %}
 {% endfor %}
