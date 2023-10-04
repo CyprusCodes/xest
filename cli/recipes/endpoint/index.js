@@ -4,7 +4,8 @@ inquirer.registerPrompt("file-tree-selection", inquirerFileTreeSelection);
 const chalk = require("chalk");
 const { getSchema, } = require("../../utils/getSchema");
 const useForm = require("../../components/Form");
-const { flatten } = require("lodash");
+const { flatten, toLower, lowerCase } = require("lodash");
+const asyncSeries = require("../../utils/asyncSeries");
 const fs = require("fs");
 const path = require("path");
 const camelCase = require("lodash/camelCase");
@@ -447,15 +448,17 @@ module.exports = {
 
                 return filePathsToGenerate.flat();
             },
-            targetFileWriter: async ({ userVariables, targetFilePath }) => {
+            targetFileWriter: async ({ projectRootPath, userVariables, targetFilePath }) => {
                 const { endpointTypes, filterColumns, entityName, includeColumns } = userVariables;
                 const { GET, POST, PUT, DELETE } = ENDPOINT_TYPES;
+                let index = 0;
 
-                return Promise.all(endpointTypes.map(async (endpoint, index) => {
+                return asyncSeries(endpointTypes, async (endpoint) => {
                     const filePath = targetFilePath[index];
                     const templateFile = fs.readFileSync(filePath.templatePath, "utf-8");
                     let renderedTemplate;
 
+                    const routesFilePath = path.join(projectRootPath, "src", "app", "routes.js");
                     const columns = flatten(schema[entityName]);
                     const schemaColumns = columns.filter((c) => {
                         return includeColumns.includes(`${c.table}.${c.column}`);
@@ -499,6 +502,8 @@ module.exports = {
                             await prettifyFile(queriesFilePath);
                         }
                         ));
+
+                        await importControllerAsARoute(routesFilePath, endpoint, entityName);
                     }
                     if (endpoint === PUT) {
                         const filteredSchemaColumns = columns.filter((c) => {
@@ -558,6 +563,8 @@ module.exports = {
                             await prettifyFile(queriesFilePath);
                         }
                         ));
+
+                        await importControllerAsARoute(routesFilePath, endpoint, entityName);
                     }
                     if (endpoint === POST) {
                         renderedTemplate = await render(templateFile, {
@@ -589,11 +596,15 @@ module.exports = {
                             await prettifyFile(queriesFilePath);
                         }
                         ));
+
+                        await importControllerAsARoute(routesFilePath, endpoint, entityName);
                     }
 
+                    // write schema file
                     await writeFile(filePath.path, renderedTemplate);
                     await prettifyFile(filePath.path);
-                }));
+                    index = index + 1;
+                });
             },
         },
     ],
@@ -601,3 +612,27 @@ module.exports = {
         console.log(chalk.green`Succesfully generated. Happy developing!`);
     }
 };
+
+async function importControllerAsARoute(routesFilePath, endpoint, entityName) {
+    const routesFileContent = fs.readFileSync(routesFilePath, 'utf8');
+    const routesContent = `router.${toLower(endpoint)}("/${camelCase(entityName)}", /*- TODO: auth middleware -*/ ${toLower(endpoint)}${toPascalCase(entityName)})\n`;
+    const targetLine = 'module.exports = router;';
+    const position = routesFileContent.indexOf(targetLine);
+
+    const newRoutesFileContent = routesFileContent.slice(0, position) + routesContent + routesFileContent.slice(position);
+    await fs.writeFileSync(routesFilePath, newRoutesFileContent);
+    await prettifyFile(routesFilePath);
+
+    const requiredFileContent = fs.readFileSync(routesFilePath, 'utf8');
+    const requiredContent = `const ${toLower(endpoint)}${toPascalCase(entityName)} = require("./controllers/${camelCase(entityName)}/${toLower(endpoint)}${toPascalCase(entityName)}");\n`;
+
+    const lastRequireIndex = requiredFileContent.lastIndexOf("require(");
+    const lastRequireLineStart = requiredFileContent.indexOf(";", lastRequireIndex);
+    const beforeLastRequire = requiredFileContent.slice(0, lastRequireLineStart + 1);
+    const afterLastRequire = requiredFileContent.slice(lastRequireLineStart + 1);
+
+    const modifiedContent = beforeLastRequire + requiredContent + afterLastRequire;
+
+    await fs.writeFileSync(routesFilePath, modifiedContent);
+    await prettifyFile(routesFilePath);
+}
