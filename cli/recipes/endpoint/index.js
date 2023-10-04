@@ -1,25 +1,20 @@
 const inquirer = require("inquirer");
-const kebabCase = require("lodash/kebabCase");
-
-const { execSync } = require("child_process");
 const inquirerFileTreeSelection = require("inquirer-file-tree-selection-prompt");
 inquirer.registerPrompt("file-tree-selection", inquirerFileTreeSelection);
 const chalk = require("chalk");
-const { getSchema, getPrimaryKey, getForeignKeys, } = require("../../utils/getSchema");
+const { getSchema, } = require("../../utils/getSchema");
 const useForm = require("../../components/Form");
-const { flatten } = require("lodash");
+const { flatten, toLower, lowerCase } = require("lodash");
+const asyncSeries = require("../../utils/asyncSeries");
 const fs = require("fs");
 const path = require("path");
-const startCase = require("lodash/startCase");
 const camelCase = require("lodash/camelCase");
 const uniqBy = require("lodash/uniqBy");
-const TableSelector = require("../../components/TableSelector");
 const ColumnSelector = require("../../components/ColumnSelector");
 const { writeFile } = require("../../utils/createFile");
 const render = require("../../utils/templateRenderer");
 const toPascalCase = require("../../utils/toPascalCase");
 const prettifyFile = require("../../utils/prettifyFile");
-const { command } = require("execa");
 
 let schema;
 const ENDPOINT_TYPES = {
@@ -32,7 +27,7 @@ const ENDPOINT_TYPES = {
 
 module.exports = {
     name: "endpoint",
-    userPrompt: async (projectRootPath) => {
+    userPrompt: async () => {
         schema = getSchema();
         if (!schema) {
             return;
@@ -179,7 +174,7 @@ module.exports = {
                 });
                 return filePathsToGenerate.flat();
             },
-            targetFileWriter: async ({ userVariables, sourceFileRelative, sourceFilePath, targetFilePath }) => {
+            targetFileWriter: async ({ userVariables, targetFilePath }) => {
                 const { endpointTypes, filterColumns, entityName, includeColumns } = userVariables;
                 const { GET, POST, PUT, DELETE } = ENDPOINT_TYPES;
                 return Promise.all(endpointTypes.map(async (endpoint, index) => {
@@ -255,7 +250,7 @@ module.exports = {
 
                 return filePathsToGenerate.flat();
             },
-            targetFileWriter: async ({ userVariables, sourceFileRelative, sourceFilePath, targetFilePath }) => {
+            targetFileWriter: async ({ userVariables, targetFilePath }) => {
                 const { endpointTypes, filterColumns, entityName, includeColumns } = userVariables;
                 const { GET, POST, PUT, DELETE } = ENDPOINT_TYPES;
 
@@ -303,7 +298,7 @@ module.exports = {
                 userVariables
             }) => {
                 const { endpointTypes, entityName } = userVariables;
-                const { GET, POST, PUT, DELETE, ALL } = ENDPOINT_TYPES;
+                const { GET, POST, PUT, DELETE } = ENDPOINT_TYPES;
 
                 const filePathsToGenerate = endpointTypes.map((endpoint) => {
                     let filePaths = [];
@@ -336,7 +331,7 @@ module.exports = {
 
                 return filePathsToGenerate.flat();
             },
-            targetFileWriter: async ({ userVariables, sourceFileRelative, sourceFilePath, targetFilePath }) => {
+            targetFileWriter: async ({ userVariables, targetFilePath }) => {
                 const { endpointTypes, filterColumns, entityName, includeColumns } = userVariables;
                 const { GET, POST, PUT, DELETE } = ENDPOINT_TYPES;
 
@@ -355,24 +350,47 @@ module.exports = {
                             selectableColumns
                         });
                     }
+
+                    const columns = flatten(schema[entityName]);
+                    const schemaColumns = columns.filter((c) => {
+                        return includeColumns.includes(`${c.table}.${c.column}`);
+                    });
+
                     if (endpoint === POST) {
                         const tableFields = includeColumns.map((c) => c.split(".")[1]);
-                        const insertParameters = includeColumns.map((c) => camelCase(c.split(".")[1]))
+
+                        let defaultImport = '';
+                        defaultImport = 'const { submitQuery, getInsertId } = require("~root/lib/database");'
+                        if (schemaColumns.some((c) => c.nullable)) {
+                            defaultImport = 'const { submitQuery, getInsertId, sqlValueOrNull } = require("~root/lib/database");'
+                        }
 
                         renderedTemplate = await render(templateFile, {
                             entityName,
                             tableFields,
-                            insertParameters
+                            schemaColumns,
+                            defaultImport
                         });
                     }
                     if (endpoint === PUT || endpoint === DELETE) {
-                        const argsColumns = uniqBy([...filterColumns, ...includeColumns]);
-                        const columnsToUpdate = includeColumns.map((c) => c.split(".")[1]);
+                        const defaultFilterColumns = filterColumns.map((c) => c.split(".")[1]);
+
+                        const uniqueSchemaColumns = schemaColumns.filter((c) => {
+                            return !filterColumns.includes(`${c.table}.${c.column}`);
+                        });
+
+                        let defaultImport = '';
+                        defaultImport = 'const { submitQuery, sql, sqlReduce } = require("~root/lib/database");'
+                        if (schemaColumns.some((c) => c.nullable)) {
+                            defaultImport = 'const { submitQuery, sql, sqlReduce, sqlValueOrNull } = require("~root/lib/database");'
+                        }
+
+
                         renderedTemplate = await render(templateFile, {
                             entityName,
-                            filterColumns,
-                            argsColumns,
-                            columnsToUpdate
+                            defaultFilterColumns,
+                            uniqueSchemaColumns,
+                            defaultImport
                         });
                     }
 
@@ -430,15 +448,17 @@ module.exports = {
 
                 return filePathsToGenerate.flat();
             },
-            targetFileWriter: async ({ userVariables, sourceFileRelative, sourceFilePath, targetFilePath }) => {
+            targetFileWriter: async ({ projectRootPath, userVariables, targetFilePath }) => {
                 const { endpointTypes, filterColumns, entityName, includeColumns } = userVariables;
                 const { GET, POST, PUT, DELETE } = ENDPOINT_TYPES;
+                let index = 0;
 
-                return Promise.all(endpointTypes.map(async (endpoint, index) => {
+                return asyncSeries(endpointTypes, async (endpoint) => {
                     const filePath = targetFilePath[index];
                     const templateFile = fs.readFileSync(filePath.templatePath, "utf-8");
                     let renderedTemplate;
 
+                    const routesFilePath = path.join(projectRootPath, "src", "app", "routes.js");
                     const columns = flatten(schema[entityName]);
                     const schemaColumns = columns.filter((c) => {
                         return includeColumns.includes(`${c.table}.${c.column}`);
@@ -450,7 +470,7 @@ module.exports = {
                         });
 
                         const filteredFinalColumns = [];
-                        Promise.all(filteredSchemaColumns.map((c) => {
+                        filteredSchemaColumns.map((c) => {
                             if (c.columnKey === 'PRI') {
                                 filteredFinalColumns.push({
                                     ...c,
@@ -462,14 +482,14 @@ module.exports = {
                             } else {
                                 filteredFinalColumns.push(c);
                             }
-                        }));
+                        });
 
                         renderedTemplate = await render(templateFile, {
                             entityName,
                             filteredFinalColumns
                         });
 
-                        Promise.all(filteredFinalColumns.map(async (t) => {
+                        await Promise.all(filteredFinalColumns.map(async (t) => {
                             const queriesFilePath = path.join(filePath.queriesPath, `select${toPascalCase(t.foreignKeyTo.targetTable)}ById.js`);
                             const queriesTemplateFile = fs.readFileSync(filePath.queriesTemplatePath, "utf-8");
 
@@ -482,6 +502,8 @@ module.exports = {
                             await prettifyFile(queriesFilePath);
                         }
                         ));
+
+                        await importControllerAsARoute(routesFilePath, endpoint, entityName);
                     }
                     if (endpoint === PUT) {
                         const filteredSchemaColumns = columns.filter((c) => {
@@ -489,7 +511,7 @@ module.exports = {
                         });
 
                         const filteredFinalColumns = [];
-                        Promise.all(filteredSchemaColumns.map((c) => {
+                        filteredSchemaColumns.map((c) => {
                             if (c.columnKey === 'PRI') {
                                 filteredFinalColumns.push({
                                     ...c,
@@ -501,7 +523,7 @@ module.exports = {
                             } else {
                                 filteredFinalColumns.push(c);
                             }
-                        }));
+                        });
 
                         const importsColumns = uniqBy([...schemaColumns, ...filteredFinalColumns]);
                         const uniqueSchemaColumns = schemaColumns.filter((c) => {
@@ -520,15 +542,15 @@ module.exports = {
 
                         const uniqueTargetTableObjectsMap = new Map();
 
-                        Promise.all(finalFilteredSchemaColumns.map(item => {
+                        finalFilteredSchemaColumns.map(item => {
                             const targetTable = item.foreignKeyTo.targetTable;
                             if (!uniqueTargetTableObjectsMap.has(targetTable)) {
                                 uniqueTargetTableObjectsMap.set(targetTable, item);
                             }
-                        }));
+                        });
 
                         const uniqueTargetTableObjects = Array.from(uniqueTargetTableObjectsMap.values());
-                        Promise.all(uniqueTargetTableObjects.map(async (t) => {
+                        await Promise.all(uniqueTargetTableObjects.map(async (t) => {
                             const queriesFilePath = path.join(filePath.queriesPath, `select${toPascalCase(t.foreignKeyTo.targetTable)}ById.js`);
                             const queriesTemplateFile = fs.readFileSync(filePath.queriesTemplatePath, "utf-8");
 
@@ -541,6 +563,8 @@ module.exports = {
                             await prettifyFile(queriesFilePath);
                         }
                         ));
+
+                        await importControllerAsARoute(routesFilePath, endpoint, entityName);
                     }
                     if (endpoint === POST) {
                         renderedTemplate = await render(templateFile, {
@@ -551,15 +575,15 @@ module.exports = {
                         const filteredSchema = schemaColumns.filter((c) => c.columnKey === 'MUL' && c.dataType === 'int');
                         const uniqueTargetTableObjectsMap = new Map();
 
-                        Promise.all(filteredSchema.map(item => {
+                        filteredSchema.map(item => {
                             const targetTable = item.foreignKeyTo.targetTable;
                             if (!uniqueTargetTableObjectsMap.has(targetTable)) {
                                 uniqueTargetTableObjectsMap.set(targetTable, item);
                             }
-                        }));
+                        });
                         const uniqueTargetTableObjects = Array.from(uniqueTargetTableObjectsMap.values());
 
-                        Promise.all(uniqueTargetTableObjects.map(async (t) => {
+                        await Promise.all(uniqueTargetTableObjects.map(async (t) => {
                             const queriesFilePath = path.join(filePath.queriesPath, `select${toPascalCase(t.foreignKeyTo.targetTable)}ById.js`);
                             const queriesTemplateFile = fs.readFileSync(filePath.queriesTemplatePath, "utf-8");
 
@@ -572,15 +596,43 @@ module.exports = {
                             await prettifyFile(queriesFilePath);
                         }
                         ));
+
+                        await importControllerAsARoute(routesFilePath, endpoint, entityName);
                     }
 
+                    // write schema file
                     await writeFile(filePath.path, renderedTemplate);
                     await prettifyFile(filePath.path);
-                }));
+                    index = index + 1;
+                });
             },
         },
     ],
     postGeneration: async () => {
-        console.log(chalk.green`Succesfully generated. Happy hacking!`);
+        console.log(chalk.green`Succesfully generated. Happy developing!`);
     }
 };
+
+async function importControllerAsARoute(routesFilePath, endpoint, entityName) {
+    const routesFileContent = fs.readFileSync(routesFilePath, 'utf8');
+    const routesContent = `router.${toLower(endpoint)}("/${camelCase(entityName)}", /*- TODO: auth middleware -*/ ${toLower(endpoint)}${toPascalCase(entityName)})\n`;
+    const targetLine = 'module.exports = router;';
+    const position = routesFileContent.indexOf(targetLine);
+
+    const newRoutesFileContent = routesFileContent.slice(0, position) + routesContent + routesFileContent.slice(position);
+    await fs.writeFileSync(routesFilePath, newRoutesFileContent);
+    await prettifyFile(routesFilePath);
+
+    const requiredFileContent = fs.readFileSync(routesFilePath, 'utf8');
+    const requiredContent = `const ${toLower(endpoint)}${toPascalCase(entityName)} = require("./controllers/${camelCase(entityName)}/${toLower(endpoint)}${toPascalCase(entityName)}");\n`;
+
+    const lastRequireIndex = requiredFileContent.lastIndexOf("require(");
+    const lastRequireLineStart = requiredFileContent.indexOf(";", lastRequireIndex);
+    const beforeLastRequire = requiredFileContent.slice(0, lastRequireLineStart + 1);
+    const afterLastRequire = requiredFileContent.slice(lastRequireLineStart + 1);
+
+    const modifiedContent = beforeLastRequire + requiredContent + afterLastRequire;
+
+    await fs.writeFileSync(routesFilePath, modifiedContent);
+    await prettifyFile(routesFilePath);
+}
