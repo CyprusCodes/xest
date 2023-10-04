@@ -207,7 +207,6 @@ module.exports = {
         let renderedTemplate;
 
         if (crudType === "SELECT") {
-          console.log(table , "table name si here to join");
           renderedTemplate = await render(templateFile, {
             entityName,
             primaryField: getPrimaryKey(table[0]).column,
