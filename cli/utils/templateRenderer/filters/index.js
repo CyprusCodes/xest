@@ -192,6 +192,35 @@ const enrichEngine = (engine) => {
     });
     return joins;
   });
+  engine.registerFilter("paginatedJoinGenerator", (tables, schema) => {
+    if (tables.length <= 1) {
+      return ``;
+    }
+    const joinedSoFar = [tables[0]]; // first table is used by the FROM
+    const joinSQL = (sourceTable, targetTable, sourceColumn, targetColumn) =>
+      `LEFT JOIN ${targetTable} ON ${sourceTable}.${sourceColumn} = ${targetTable}.${targetColumn}`;
+    let joins = [];
+    const tablesToJoin = tables.slice(1);
+    tablesToJoin.forEach((targetTable) => {
+      joinedSoFar.forEach((joinedTable) => {
+        const targetColumn = schema[joinedTable].find(
+          (column) => get(column, "foreignKeyTo.targetTable") === targetTable
+        );
+        if (targetColumn) {
+          const joinStatement = joinSQL(
+            joinedTable,
+            targetColumn.foreignKeyTo.targetTable,
+            targetColumn.column,
+            targetColumn.foreignKeyTo.targetColumn
+          );
+          joins.push(`"${joinStatement}"`);
+          joinedSoFar.push(targetColumn.foreignKeyTo.targetTable);
+        }
+      });
+    });
+    return joins.join(", ");
+  });
+  
 };
 
 module.exports = enrichEngine;
