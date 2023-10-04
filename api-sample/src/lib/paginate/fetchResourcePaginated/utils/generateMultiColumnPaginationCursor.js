@@ -6,7 +6,10 @@ const getComparisonSign = (paginationDirection, columnSortDirection) => {
   let comparisonSign = sql`>`;
   let comparisonSignStr = ">";
 
-  if (columnSortDirection === "DESC" || columnSortDirection === "desc") {
+  if (
+    columnSortDirection.toString() === "DESC" ||
+    columnSortDirection.toString() === "desc"
+  ) {
     // If the column is sorted in descending order, switch to '<'
     comparisonSign = sql`<`;
     comparisonSignStr = "<";
