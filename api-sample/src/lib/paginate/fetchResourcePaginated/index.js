@@ -21,7 +21,8 @@ const fetchResources = async ({
   cursorValues: encodedCursorValues,
   basePath,
   onRowReady,
-  onPageResultsReady
+  onPageResultsReady,
+  mandatoryFilter
 }) => {
   let cursorValues = [];
   if (encodedCursorValues) {
@@ -80,7 +81,8 @@ const fetchResources = async ({
     direction,
     filters,
     cursorValues,
-    filterableAttributes
+    filterableAttributes,
+    mandatoryFilter
   });
   const numberOfRecordSelected = records.length;
 
@@ -89,7 +91,8 @@ const fetchResources = async ({
     joinStatements,
     filters,
     filterableAttributes,
-    groupBy
+    groupBy,
+    mandatoryFilter
   });
 
   const totalUnlimitedRecordCount = await countUnlimited({
@@ -101,7 +104,8 @@ const fetchResources = async ({
     direction,
     filters,
     cursorValues,
-    filterableAttributes
+    filterableAttributes,
+    mandatoryFilter
   });
 
   let recordsSelected = [];

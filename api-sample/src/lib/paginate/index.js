@@ -16,7 +16,8 @@ const paginate = ({
   onRowReady,
   onPageResultsReady,
   filters,
-  cursorValues
+  cursorValues,
+  mandatoryFilter
 }) => {
   return fetchResources({
     baseTable,
@@ -33,7 +34,8 @@ const paginate = ({
     cursorValues,
     basePath,
     onRowReady,
-    onPageResultsReady
+    onPageResultsReady,
+    mandatoryFilter
   });
 };
 

@@ -1,7 +1,8 @@
 const { paginate, FILTERS } = require("~root/lib/paginate");
 
 const get{{entityName | toPascalCase}} = async (req, res) => {
-    const resultset = await paginate({  
+    const resultset = await paginate({
+        basePath: req.path,  
         baseTable: "{{entityName | toSnakeCase}}",
         selectFields : [
             {%- for col in defaultIncludedColumns -%}

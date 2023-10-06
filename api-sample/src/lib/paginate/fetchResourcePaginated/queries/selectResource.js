@@ -1,4 +1,4 @@
-const { submitQuery, sql, sqlId, sqlReduce } = require("~root/lib/database");
+const { submitQuery, sql, sqlId, sqlReduce, camelKeys } = require("~root/lib/database");
 const unlimitedQuery = require("./unlimitedQuery");
 
 const selectResource = ({
@@ -12,7 +12,8 @@ const selectResource = ({
   filters,
   cursorValues,
   limit,
-  filterableAttributes
+  filterableAttributes,
+  mandatoryFilter
 }) => {
   const query = sql`
     SELECT
@@ -37,7 +38,8 @@ const selectResource = ({
         direction,
         filters,
         cursorValues,
-        filterableAttributes
+        filterableAttributes,
+        mandatoryFilter
       })}
       LIMIT ${Number(limit)}
       `;
@@ -52,4 +54,4 @@ const selectResource = ({
     .reduce(sqlReduce)}`;
 };
 
-module.exports = selectResource;
+module.exports = camelKeys(selectResource);
