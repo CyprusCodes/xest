@@ -12,7 +12,8 @@ const countTotal = ({
   joinStatements,
   filters,
   filterableAttributes,
-  groupBy
+  groupBy,
+  mandatoryFilter
 }) => submitQuery`
 SELECT
   COUNT(*) AS total_count
@@ -24,7 +25,8 @@ FROM(
     ${joinStatements.length ? sql`${joinStatements.reduce(sqlReduce)}` : sql``}
   ${baseQuery({
     filters,
-    filterableAttributes
+    filterableAttributes,
+    mandatoryFilter
   })}
   ${
     groupBy.length

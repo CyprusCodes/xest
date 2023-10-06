@@ -16,7 +16,8 @@ const countUnlimited = ({
   direction,
   filters,
   cursorValues,
-  filterableAttributes
+  filterableAttributes,
+  mandatoryFilter
 }) => submitQuery`
   SELECT
     COUNT(*) AS count_unlimited_rows
@@ -35,7 +36,8 @@ const countUnlimited = ({
       direction,
       filters,
       cursorValues,
-      filterableAttributes
+      filterableAttributes,
+      mandatoryFilter
     })}
   ) AS unlimited_query
 `;

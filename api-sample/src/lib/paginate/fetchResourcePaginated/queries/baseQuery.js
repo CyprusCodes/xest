@@ -131,13 +131,15 @@ function filterData({ query = [], filterableAttributes }) {
   return sql``;
 }
 
-const baseQuery = ({ filters, filterableAttributes }) => {
+const baseQuery = ({ filters, filterableAttributes, mandatoryFilter }) => {
   const filterConditions = filterData({ query: filters, filterableAttributes });
   if (filterConditions.length > 1) {
-    return sql`WHERE 1 = 1 AND ${filterConditions}`;
+    return sql`WHERE 1 = 1 AND ${filterConditions} ${
+      mandatoryFilter ? sql`${mandatoryFilter}` : sql``
+    }`;
   }
 
-  return sql`WHERE 1 = 1`;
+  return sql`WHERE 1 = 1 ${mandatoryFilter ? sql`${mandatoryFilter}` : sql``}`;
 };
 
 module.exports = baseQuery;

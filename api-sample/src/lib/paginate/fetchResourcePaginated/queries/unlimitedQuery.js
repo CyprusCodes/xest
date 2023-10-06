@@ -10,11 +10,13 @@ const unlimitedQuery = ({
   direction,
   filters,
   cursorValues,
-  filterableAttributes
+  filterableAttributes,
+  mandatoryFilter
 }) => {
   let query = baseQuery({
     filters,
-    filterableAttributes
+    filterableAttributes,
+    mandatoryFilter
   });
 
   if (page === "last") {

@@ -12,7 +12,8 @@ const selectResource = ({
   filters,
   cursorValues,
   limit,
-  filterableAttributes
+  filterableAttributes,
+  mandatoryFilter
 }) => {
   const query = sql`
     SELECT
@@ -37,7 +38,8 @@ const selectResource = ({
         direction,
         filters,
         cursorValues,
-        filterableAttributes
+        filterableAttributes,
+        mandatoryFilter
       })}
       LIMIT ${Number(limit)}
       `;
