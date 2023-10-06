@@ -1,4 +1,4 @@
-const { submitQuery, sql, sqlId, sqlReduce, camelKeys } = require("~root/lib/database");
+const { submitQuery, sql, sqlId, sqlReduce } = require("~root/lib/database");
 const unlimitedQuery = require("./unlimitedQuery");
 
 const selectResource = ({
@@ -54,4 +54,4 @@ const selectResource = ({
     .reduce(sqlReduce)}`;
 };
 
-module.exports = camelKeys(selectResource);
+module.exports = selectResource;
