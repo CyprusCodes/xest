@@ -1,3 +1,4 @@
+/* eslint-disable prefer-template */
 const { sql, sqlId, sqlReduce } = require("~root/lib/database");
 const FILTERS = require("../constants/filtersList");
 
@@ -46,23 +47,22 @@ function filterData({ query = [], filterableAttributes }) {
           query.values[1]
         }`;
       case FILTERS.contains.operator:
-        return sql`${sqlId(query.column)} LIKE %${query.values[0]}%`;
+        return sql`${sqlId(query.column)} LIKE ${"%" + query.values[0] + "%"}`;
       case FILTERS.startsWith.operator:
-        return sql`${sqlId(query.column)} LIKE ${query.values[0]}%`;
+        return sql`${sqlId(query.column)} LIKE ${query.values[0] + "%"}`;
       case FILTERS.endsWith.operator:
-        return sql`${sqlId(query.column)} LIKE %${query.values[0]}`;
+        return sql`${sqlId(query.column)} LIKE ${"%" + query.values[0]}`;
       case FILTERS.containsIgnoreCase.operator:
-        return sql`LOWER(${sqlId(
-          query.column
-        )}) LIKE %${query.values[0].toLowerCase()}%`;
+        return sql`LOWER(${sqlId(query.column)}) LIKE ${"%" +
+          query.values[0].toLowerCase() +
+          "%"}`;
       case FILTERS.startsWithIgnoreCase.operator:
         return sql`LOWER(${sqlId(
           query.column
-        )}) LIKE ${query.values[0].toLowerCase()}%`;
+        )}) LIKE ${query.values[0].toLowerCase() + "%"}`;
       case FILTERS.endsWithIgnoreCase.operator:
-        return sql`LOWER(${sqlId(
-          query.column
-        )}) LIKE %${query.values[0].toLowerCase()}`;
+        return sql`LOWER(${sqlId(query.column)}) LIKE ${"%" +
+          query.values[0].toLowerCase()}`;
       case FILTERS.matchesRegExp.operator:
         return sql`${sqlId(query.column)} REGEXP ${query.values[0]}`;
       default: {
