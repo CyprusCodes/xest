@@ -1,10 +1,4 @@
-const {
-  submitQuery,
-  sqlId,
-  sql,
-  sqlReduce,
-  getFirst
-} = require("~root/lib/database");
+const { submitQuery, sqlId, sql, getFirst } = require("~root/lib/database");
 const unlimitedQuery = require("./unlimitedQuery");
 
 const countUnlimited = ({
@@ -27,7 +21,9 @@ const countUnlimited = ({
     FROM
       ${sqlId(baseTable)}
       ${
-        joinStatements.length ? sql`${joinStatements.reduce(sqlReduce)}` : sql``
+        joinStatements.length
+          ? sql`${joinStatements.reduce((a, c) => sql`${a} ${c}`)}`
+          : sql``
       }
     ${unlimitedQuery({
       groupBy,

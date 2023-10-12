@@ -22,7 +22,11 @@ FROM(
     1
   FROM
     ${sqlId(baseTable)}
-    ${joinStatements.length ? sql`${joinStatements.reduce(sqlReduce)}` : sql``}
+    ${
+      joinStatements.length
+        ? sql`${joinStatements.reduce((a, c) => sql`${a} ${c}`)}`
+        : sql``
+    }
   ${baseQuery({
     filters,
     filterableAttributes,
