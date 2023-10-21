@@ -75,7 +75,7 @@ function filterData({ query = [], filterableAttributes }) {
             op => op.operator === query.operation
           );
           if (operationToApply && operationToApply.filterFn) {
-            return operationToApply.filterFn(query.values);
+            return sql`(${operationToApply.filterFn(query.values)})`;
           }
         }
 
