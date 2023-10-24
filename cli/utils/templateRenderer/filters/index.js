@@ -213,7 +213,7 @@ const enrichEngine = (engine) => {
             targetColumn.column,
             targetColumn.foreignKeyTo.targetColumn
           );
-          joins.push(`"${joinStatement}"`);
+          joins.push(`sql\`${joinStatement}\``);
           joinedSoFar.push(targetColumn.foreignKeyTo.targetTable);
         }
       });

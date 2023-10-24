@@ -28,8 +28,10 @@ const newPost{{entityName | toPascalCase}}Schema = yup.object().shape({
             number().integer().nullable().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number').typeError('The {{column.column | toCamelCase}} field must be a number'),
         {% elsif column.dataType == 'json' %}
             json().nullable().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a json'),
-        {% elsif column.dataType == 'boolean' %}
+        {% elsif column.dataType == 'tinyint' %}
             boolean().nullable().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a boolean').typeError('The {{column.column | toCamelCase}} field must be a boolean'),
+        {% elsif column.dataType == 'datetime' %}
+            date().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a date').typeError('The {{column.column | toCamelCase}} field must be a date'),
         {% endif %}
     {% else %}
         {% if column.columnKey == 'MUL' %}
@@ -56,8 +58,10 @@ const newPost{{entityName | toPascalCase}}Schema = yup.object().shape({
                 number().integer().required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number').typeError('The {{column.column | toCamelCase}} field must be a number'),
             {% elsif column.dataType == 'json' %}
                 json().required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a json'),
-            {% elsif column.dataType == 'boolean' %}
+            {% elsif column.dataType == 'tinyint' %}
                 boolean().required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a boolean').typeError('The {{column.column | toCamelCase}} field must be a boolean'),
+            {% elsif column.dataType == 'datetime' %}
+                date().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a date').typeError('The {{column.column | toCamelCase}} field must be a date'),
             {% endif %}
         {% endif %}
     {% endif %}
