@@ -17,7 +17,7 @@ const countUnlimited = ({
     COUNT(*) AS count_unlimited_rows
   FROM(
     SELECT 
-      ${sqlId(baseTable)}.*
+      1
     FROM
       ${sqlId(baseTable)}
       ${
