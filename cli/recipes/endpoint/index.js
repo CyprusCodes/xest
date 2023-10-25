@@ -273,14 +273,14 @@ module.exports = {
                 return filePathsToGenerate.flat();
             },
             targetFileWriter: async ({ userVariables, targetFilePath }) => {
-                const { endpointTypes, filterColumns, entityName, includeColumns } = userVariables;
+                const { endpointTypes, filterColumns, entityName, includeColumns, isPaginated } = userVariables;
                 const { GET, POST, PUT, DELETE } = ENDPOINT_TYPES;
                 return Promise.all(endpointTypes.map(async (endpoint, index) => {
                     const filePath = targetFilePath[index];
                     const templateFile = fs.readFileSync(filePath.templatePath, "utf-8");
-                    let renderedTemplate;
+                    let renderedTemplate = "";
 
-                    if (endpoint === GET) {
+                    if (endpoint === GET && isPaginated == 'No') {
                         renderedTemplate = await render(templateFile, {
                             entityName,
                             filterColumns
@@ -302,8 +302,10 @@ module.exports = {
                         });
                     }
 
-                    await writeFile(filePath.path, renderedTemplate);
-                    await prettifyFile(filePath.path);
+                    if (renderedTemplate) {
+                        await writeFile(filePath.path, renderedTemplate);
+                        await prettifyFile(filePath.path);
+                    }
                 }))
             },
         },
@@ -367,9 +369,8 @@ module.exports = {
                             const defaultIncludedColumns = includeColumns
                                 .filter((c) => !filterColumns.includes(c))
 
-                            const defaultSortColumns = sortColumns
-                                .filter((c) => !filterColumns.includes(c))
-                                .map((c) => c.split(".")[1]);
+                            const defaultSortColumns = sortColumns.map((c) => c.split(".")[1]);
+                            
                             const defaultFilterColumns = columns.filter((c) => {
                                 return filterColumns.includes(`${c.table}.${c.column}`);
                             });
@@ -460,15 +461,15 @@ module.exports = {
                 return filePathsToGenerate.flat();
             },
             targetFileWriter: async ({ userVariables, targetFilePath }) => {
-                const { endpointTypes, filterColumns, entityName, includeColumns } = userVariables;
+                const { endpointTypes, filterColumns, entityName, includeColumns, isPaginated } = userVariables;
                 const { GET, POST, PUT, DELETE } = ENDPOINT_TYPES;
 
                 return Promise.all(endpointTypes.map(async (endpoint, index) => {
                     const filePath = targetFilePath[index];
                     const templateFile = fs.readFileSync(filePath.templatePath, "utf-8");
-                    let renderedTemplate;
+                    let renderedTemplate = "";
 
-                    if (endpoint === GET) {
+                    if (endpoint === GET && isPaginated == 'No') {
                         const selectableColumns = includeColumns
                             .filter((c) => !filterColumns.includes(c))
                             .map((c) => c.split(".")[1]);
@@ -521,9 +522,10 @@ module.exports = {
                             defaultImport
                         });
                     }
-
-                    await writeFile(filePath.path, renderedTemplate);
-                    await prettifyFile(filePath.path);
+                    if (renderedTemplate) {
+                        await writeFile(filePath.path, renderedTemplate);
+                        await prettifyFile(filePath.path);
+                    }
                 }));
             },
         },

@@ -2,14 +2,14 @@
 
 const NO_UPDATE = Symbol("NO_UPDATE");
 
-const update{{entityName | toPascalCase}} = (
+const update{{entityName | toPascalCase}} = ({
     {%- for column in defaultFilterColumns -%}
     {{ column | toCamelCase }},
     {%- endfor -%}
     {%- for column in uniqueSchemaColumns -%}
     {{ column.column | toCamelCase }} = NO_UPDATE,
     {%- endfor -%}
-) => {
+}) => {
     const updates = [];
     {%- for column in uniqueSchemaColumns -%}
 
