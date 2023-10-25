@@ -43,16 +43,61 @@ const newPut{{entityName | toPascalCase}}Schema = yup.object().shape({
         {% if column.dataType == 'varchar' %}
             string().min(1).max({{column.columnnType | varcharSize}}).label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a string'),
         {% elsif column.dataType == 'int' %}
-            number().integer().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number').typeError('The {{column.column | toCamelCase}} field must be a number'),
+            number().integer().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
         {% elsif column.dataType == 'json' %}
             json().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a json'),
         {% elsif column.dataType == 'tinyint' %}
-            boolean().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a boolean').typeError('The {{column.column | toCamelCase}} field must be a boolean'),
+            boolean().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a boolean'),
         {% elsif column.dataType == 'datetime' %}
-            date().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a date').typeError('The {{column.column | toCamelCase}} field must be a date'),
+            date().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a date'),
+        {% elsif column.dataType == 'date' %}
+            date().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a date'),
+        {% elsif column.dataType == 'char' %}
+            string().min(1).max({{column.columnnType | varcharSize}}).label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a string'),
+        {% elsif column.dataType == 'year' %}
+            string().min(1).max(4).label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a valid year string'),
+        {% elsif column.dataType == 'text' %}
+            string().min(1).max({{column.columnnType | varcharSize}}).label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a string'),
+        {% elsif column.dataType == 'mediumtext' %}
+            string().min(1).max({{column.columnnType | varcharSize}}).label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a string'),
+        {% elsif column.dataType == 'longtext' %}
+            string().min(1).max({{column.columnnType | varcharSize}}).label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a string'),
+        {% elsif column.dataType == 'tinytext' %}
+            string().min(1).max({{column.columnnType | varcharSize}}).label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a string'),
+        {% elsif column.dataType == 'binary' %}
+            string().min(1).max({{column.columnnType | varcharSize}}).label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a string'),
+        {% elsif column.dataType == 'varbinary' %}
+            string().min(1).max({{column.columnnType | varcharSize}}).label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a string'),
+        {% elsif column.dataType == 'bit' %}
+            boolean().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a boolean'),
+        {% elsif column.dataType == 'boolean' %}
+            boolean().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a boolean'),
+        {% elsif column.dataType == 'tinyint' %}
+            boolean().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a boolean'),
+        {% elsif column.dataType == 'smallint' %}
+            number().integer().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
+        {% elsif column.dataType == 'mediumint' %}
+            number().integer().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
+        {% elsif column.dataType == 'bigint' %}
+            number().integer().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
+        {% elsif column.dataType == 'decimal' %}
+            number().integer().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
+        {% elsif column.dataType == 'float' %}
+            number().integer().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
+        {% elsif column.dataType == 'double' %}
+            number().integer().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
+        {% elsif column.dataType == 'blob'%}
+            mixed().required().test('is-blob', 'Binary data required', value => {return value instanceof Buffer || value instanceof Uint8Array || false;}),
+        {% elsif column.dataType == 'mediumblob'%}
+            mixed().required().test('is-blob', 'Binary data required', value => {return value instanceof Buffer || value instanceof Uint8Array || false;}),
+        {% elsif column.dataType == 'longblob'%}
+            mixed().required().test('is-blob', 'Binary data required', value => {return value instanceof Buffer || value instanceof Uint8Array || false;}),
+        {% elsif column.dataType == 'tinyblob'%}
+            mixed().required().test('is-blob', 'Binary data required', value => {return value instanceof Buffer || value instanceof Uint8Array || false;}),
         {% endif %}
     {% endif %}
 {% endfor %}
 });
 
 module.exports = newPut{{entityName | toPascalCase}}Schema;
+
