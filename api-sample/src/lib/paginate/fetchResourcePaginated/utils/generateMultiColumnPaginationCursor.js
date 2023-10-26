@@ -41,9 +41,9 @@ const generateMultiColumnPaginationCursor = ({
 
   cursorValuesSortedBySortOrder.forEach((cursor, index) => {
     if (index === 0) {
-      query = sql`${query}AND (${sqlId(cursor.column)} ${
-        cursor.comparisonSign
-      } ${cursor.value}) `;
+      query = sql`${query} (${sqlId(cursor.column)} ${cursor.comparisonSign} ${
+        cursor.value
+      }) `;
     } else {
       query = sql`${query}OR (`;
       for (let i = 0; i <= index; i += 1) {
@@ -61,7 +61,7 @@ const generateMultiColumnPaginationCursor = ({
     }
   });
 
-  return query;
+  return sql`AND (${query})`;
 };
 
 module.exports = generateMultiColumnPaginationCursor;
