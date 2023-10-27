@@ -87,13 +87,13 @@ const newPut{{entityName | toPascalCase}}Schema = yup.object().shape({
         {% elsif column.dataType == 'double' %}
             number().integer().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
         {% elsif column.dataType == 'blob'%}
-            mixed().required().test('is-blob', 'Binary data required', value => {return value instanceof Buffer || value instanceof Uint8Array || false;}),
+            mixed().test('is-blob', 'Binary data', value => {return value instanceof Buffer || value instanceof Uint8Array || false;}),
         {% elsif column.dataType == 'mediumblob'%}
-            mixed().required().test('is-blob', 'Binary data required', value => {return value instanceof Buffer || value instanceof Uint8Array || false;}),
+            mixed().test('is-blob', 'Binary data', value => {return value instanceof Buffer || value instanceof Uint8Array || false;}),
         {% elsif column.dataType == 'longblob'%}
-            mixed().required().test('is-blob', 'Binary data required', value => {return value instanceof Buffer || value instanceof Uint8Array || false;}),
+            mixed().test('is-blob', 'Binary data', value => {return value instanceof Buffer || value instanceof Uint8Array || false;}),
         {% elsif column.dataType == 'tinyblob'%}
-            mixed().required().test('is-blob', 'Binary data required', value => {return value instanceof Buffer || value instanceof Uint8Array || false;}),
+            mixed().test('is-blob', 'Binary data', value => {return value instanceof Buffer || value instanceof Uint8Array || false;}),
         {% endif %}
     {% endif %}
 {% endfor %}
