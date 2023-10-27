@@ -189,7 +189,7 @@ module.exports = {
             return ColumnSelector({
                 columns,
                 default: [defaultColumns[0]],
-                message: "Select columns to filter",
+                message: "Select columns to filter (Must be atleast one filter for GET, PUT, DELETE)",
                 name: "filterColumns",
             });
         });
@@ -280,10 +280,18 @@ module.exports = {
                     const templateFile = fs.readFileSync(filePath.templatePath, "utf-8");
                     let renderedTemplate = "";
 
+                    let filteredColumns = [...filterColumns]
+                    if (filterColumns.length === 0) {
+                        const columns = flatten(schema[entityName]);
+                        filteredColumns = columns
+                            .filter((c) => c.columnKey === "PRI")
+                            .map((c) => `${c.table}.${c.column}`);
+                    }
+
                     if (endpoint === GET && isPaginated == 'No') {
                         renderedTemplate = await render(templateFile, {
                             entityName,
-                            filterColumns
+                            filteredColumns
                         });
                     }
                     if (endpoint === POST) {
@@ -293,10 +301,10 @@ module.exports = {
                         });
                     }
                     if (endpoint === PUT || endpoint === DELETE) {
-                        const argsColumns = uniqBy([...filterColumns, ...includeColumns]);
+                        const argsColumns = uniqBy([...filteredColumns, ...includeColumns]);
                         renderedTemplate = await render(templateFile, {
                             entityName,
-                            filterColumns,
+                            filteredColumns,
                             includeColumns,
                             argsColumns
                         });
@@ -355,6 +363,14 @@ module.exports = {
                 const { endpointTypes, filterColumns, entityName, includeColumns, sortColumns, isPaginated, table } = userVariables;
                 const { GET, POST, PUT, DELETE } = ENDPOINT_TYPES;
 
+                let filteredColumns = [...filterColumns]
+                if (filterColumns.length === 0) {
+                    const columns = flatten(schema[entityName]);
+                    filteredColumns = columns
+                        .filter((c) => c.columnKey === "PRI")
+                        .map((c) => `${c.table}.${c.column}`);
+                }
+
                 return Promise.all(endpointTypes.map(async (endpoint, index) => {
                     const filePath = targetFilePath[index];
                     const templateFile = fs.readFileSync(filePath.templatePath, "utf-8");
@@ -367,12 +383,12 @@ module.exports = {
                         if (isPaginated == 'Yes') {
                             const paginatedTemplate = fs.readFileSync(filePath.paginatedTemplatePath, "utf-8");
                             const defaultIncludedColumns = includeColumns
-                                .filter((c) => !filterColumns.includes(c))
+                                .filter((c) => !filteredColumns.includes(c))
 
                             const defaultSortColumns = sortColumns.map((c) => c.split(".")[1]);
-                            
+
                             const defaultFilterColumns = columns.filter((c) => {
-                                return filterColumns.includes(`${c.table}.${c.column}`);
+                                return filteredColumns.includes(`${c.table}.${c.column}`);
                             });
 
                             const filtersToAssign = defaultFilterColumns.map((c) => {
@@ -380,7 +396,7 @@ module.exports = {
                                 const applicableFilters = getApplicableFilterForDataType(c.dataType, c.nullable);
                                 return `{ column: "${columnName}", operations: [${applicableFilters.map(f => `FILTERS.${f.operator}`).join(",")}]}`
                             })
-                            
+
                             renderedTemplate = await render(paginatedTemplate, {
                                 entityName,
                                 filtersToAssign,
@@ -389,11 +405,11 @@ module.exports = {
                                 defaultIncludedColumns,
                                 schema
                             });
-                            
+
                         } else {
                             renderedTemplate = await render(templateFile, {
                                 entityName,
-                                filterColumns
+                                filteredColumns
                             });
                         }
                     }
@@ -405,11 +421,11 @@ module.exports = {
                         });
                     }
                     if (endpoint === PUT || endpoint === DELETE) {
-                        const argsColumns = uniqBy([...filterColumns, ...includeColumns]);
-                        const uniqueIncludeColumns = includeColumns.filter((c) => !filterColumns.includes(c));
+                        const argsColumns = uniqBy([...filteredColumns, ...includeColumns]);
+                        const uniqueIncludeColumns = includeColumns.filter((c) => !filteredColumns.includes(c));
                         renderedTemplate = await render(templateFile, {
                             entityName,
-                            filterColumns,
+                            filteredColumns,
                             uniqueIncludeColumns,
                             argsColumns
                         });
@@ -464,6 +480,14 @@ module.exports = {
                 const { endpointTypes, filterColumns, entityName, includeColumns, isPaginated } = userVariables;
                 const { GET, POST, PUT, DELETE } = ENDPOINT_TYPES;
 
+                let filteredColumns = [...filterColumns]
+                if (filterColumns.length === 0) {
+                    const columns = flatten(schema[entityName]);
+                    filteredColumns = columns
+                        .filter((c) => c.columnKey === "PRI")
+                        .map((c) => `${c.table}.${c.column}`);
+                }
+
                 return Promise.all(endpointTypes.map(async (endpoint, index) => {
                     const filePath = targetFilePath[index];
                     const templateFile = fs.readFileSync(filePath.templatePath, "utf-8");
@@ -471,11 +495,11 @@ module.exports = {
 
                     if (endpoint === GET && isPaginated == 'No') {
                         const selectableColumns = includeColumns
-                            .filter((c) => !filterColumns.includes(c))
+                            .filter((c) => !filteredColumns.includes(c))
                             .map((c) => c.split(".")[1]);
                         renderedTemplate = await render(templateFile, {
                             entityName,
-                            filterColumns,
+                            filteredColumns,
                             selectableColumns
                         });
                     }
@@ -502,10 +526,10 @@ module.exports = {
                         });
                     }
                     if (endpoint === PUT || endpoint === DELETE) {
-                        const defaultFilterColumns = filterColumns.map((c) => c.split(".")[1]);
+                        const defaultFilterColumns = filteredColumns.map((c) => c.split(".")[1]);
 
                         const uniqueSchemaColumns = schemaColumns.filter((c) => {
-                            return !filterColumns.includes(`${c.table}.${c.column}`);
+                            return !filteredColumns.includes(`${c.table}.${c.column}`);
                         });
 
                         let defaultImport = '';
@@ -583,6 +607,14 @@ module.exports = {
                 const { GET, POST, PUT, DELETE } = ENDPOINT_TYPES;
                 let index = 0;
 
+                let filteredColumns = [...filterColumns]
+                if (filterColumns.length === 0) {
+                    const columns = flatten(schema[entityName]);
+                    filteredColumns = columns
+                        .filter((c) => c.columnKey === "PRI")
+                        .map((c) => `${c.table}.${c.column}`);
+                }
+
                 return asyncSeries(endpointTypes, async (endpoint) => {
                     const filePath = targetFilePath[index];
 
@@ -598,7 +630,7 @@ module.exports = {
                     if (endpoint === GET || endpoint === DELETE) {
                         if (isPaginated == 'No') {
                             const filteredSchemaColumns = columns.filter((c) => {
-                                return filterColumns.includes(`${c.table}.${c.column}`);
+                                return filteredColumns.includes(`${c.table}.${c.column}`);
                             });
 
                             const filteredFinalColumns = [];
@@ -636,12 +668,12 @@ module.exports = {
                                 }
                             }
                             ));
-                        } 
+                        }
                         await importControllerAsARoute(routesFilePath, endpoint, entityName);
                     }
                     if (endpoint === PUT) {
                         const filteredSchemaColumns = columns.filter((c) => {
-                            return filterColumns.includes(`${c.table}.${c.column}`);
+                            return filteredColumns.includes(`${c.table}.${c.column}`);
                         });
 
                         const filteredFinalColumns = [];
@@ -661,7 +693,7 @@ module.exports = {
 
                         const importsColumns = uniqBy([...schemaColumns, ...filteredFinalColumns]);
                         const uniqueSchemaColumns = schemaColumns.filter((c) => {
-                            return !filterColumns.includes(`${c.table}.${c.column}`);
+                            return !filteredColumns.includes(`${c.table}.${c.column}`);
                         });
 
                         renderedTemplate = await render(templateFile, {

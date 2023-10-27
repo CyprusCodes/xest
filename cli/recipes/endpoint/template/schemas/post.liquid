@@ -14,7 +14,7 @@ const newPost{{entityName | toPascalCase}}Schema = yup.object().shape({
                             return true;
                         }
 
-                        const {{column.column | toCamelCase}}Count = await select{{column.foreignKeyTo.targetTable | toPascalCase}}ById({{column.column | toCamelCase}});
+                        const {{column.column | toCamelCase}}Count = await select{{column.foreignKeyTo.targetTable | toPascalCase}}ById({ {{column.column | toCamelCase}} });
                         if ({{column.column | toCamelCase}}Count === 0) {
                             return false;
                         }
@@ -27,7 +27,7 @@ const newPost{{entityName | toPascalCase}}Schema = yup.object().shape({
         {% elsif column.dataType == 'int' and column.columnKey != 'MUL' %}
             number().integer().nullable().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
         {% elsif column.dataType == 'json' %}
-            json().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a json'),
+            object().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a json'),
         {% elsif column.dataType == 'tinyint' %}
             boolean().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a boolean'),
         {% elsif column.dataType == 'datetime' %}
@@ -88,7 +88,7 @@ const newPost{{entityName | toPascalCase}}Schema = yup.object().shape({
                             return false;
                         }
 
-                        const {{column.column | toCamelCase}}Count = await select{{column.foreignKeyTo.targetTable | toPascalCase}}ById({{column.column | toCamelCase}});
+                        const {{column.column | toCamelCase}}Count = await select{{column.foreignKeyTo.targetTable | toPascalCase}}ById({ {{column.column | toCamelCase}} });
                         if ({{column.column | toCamelCase}}Count === 0) {
                             return false;
                         }
@@ -101,7 +101,7 @@ const newPost{{entityName | toPascalCase}}Schema = yup.object().shape({
             {% elsif column.dataType == 'int' and column.columnKey != 'MUL' %}
                 number().integer().required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
             {% elsif column.dataType == 'json' %}
-                json().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a json'),
+                object().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a json'),
             {% elsif column.dataType == 'tinyint' %}
                 boolean().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a boolean'),
             {% elsif column.dataType == 'datetime' %}

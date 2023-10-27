@@ -3,14 +3,14 @@ const fetch{{entityName | toPascalCase}} = require("~root/actions/{{entityName |
 const newGet{{entityName | toPascalCase}}Schema = require("./schema/newGet{{entityName | toPascalCase}}Schema");
 
 const get{{entityName | toPascalCase}} = async (req, res) => {
-  {% if filterColumns.length > 0 %}
-  const {{ filterColumns | functionParameters }} = req.params;
+  {% if filteredColumns.length > 0 %}
+  const {{ filteredColumns | functionParameters }} = req.params;
   {% endif %}
 
   try {
-    await newGet{{entityName | toPascalCase}}Schema.validate({{ filterColumns | functionParameters }}, { abortEarly: false });
+    await newGet{{entityName | toPascalCase}}Schema.validate({{ filteredColumns | functionParameters }}, { abortEarly: false });
 
-    const { {{entityName | toCamelCase}} } = await fetch{{entityName | toPascalCase}}({{ filterColumns | functionParameters }});
+    const { {{entityName | toCamelCase}} } = await fetch{{entityName | toPascalCase}}({{ filteredColumns | functionParameters }});
 
     res.status(200).send({ {{entityName | toCamelCase}} });
   } catch (err) {
