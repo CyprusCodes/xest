@@ -13,7 +13,13 @@ const newGet{{entityName | toPascalCase}}Schema = yup.object().shape({
                     return false;
                 }
 
-                const {{column.column | toCamelCase}}Count = await select{{column.foreignKeyTo.targetTable | toPascalCase}}ById({{column.column | toCamelCase}});
+                const {{column.column | toCamelCase}}Count = await select{{column.foreignKeyTo.targetTable | toPascalCase}}ById({ 
+                    {% if column.column != column.foreignKeyTo.targetColumn %}
+                        {{column.foreignKeyTo.targetColumn | toCamelCase}}: {{column.column | toCamelCase}},
+                    {% else %}
+                        {{column.column | toCamelCase}},
+                    {% endif %}
+                 });
                 if ({{column.column | toCamelCase}}Count === 0) {
                     return false;
                 }

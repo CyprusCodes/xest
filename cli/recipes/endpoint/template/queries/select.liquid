@@ -1,10 +1,10 @@
 const { submitQuery, camelKeys } = require("~root/lib/database");
 
-const select{{entityName | toPascalCase}} = ({{ filterColumns | functionParameters }}) => submitQuery`
+const select{{entityName | toPascalCase}} = ({{ filteredColumns | functionParameters }}) => submitQuery`
 {% sql %}
 SELECT {{ selectableColumns | sqlColumns: schema }} 
         FROM {{ entityName | toSnakeCase }}
-        {{ filterColumns | sqlFilters  }} 
+        {{ filteredColumns | sqlFilters  }} 
 {% endsql %}
 `;
 

@@ -1,7 +1,7 @@
 const select{{ entityName | toPascalCase }} = require('./queries/select{{ entityName | toPascalCase }}');
 
-const fetch{{entityName | toPascalCase}} = async ({{ filterColumns | functionParameters }}) => {
-    const {{ entityName | toCamelCase }} = await select{{ entityName | toPascalCase }}({{ filterColumns | functionParameters }});
+const fetch{{entityName | toPascalCase}} = async ({{ filteredColumns | functionParameters }}) => {
+    const {{ entityName | toCamelCase }} = await select{{ entityName | toPascalCase }}({{ filteredColumns | functionParameters }});
     
     return { {{ entityName | toCamelCase }} };
 }

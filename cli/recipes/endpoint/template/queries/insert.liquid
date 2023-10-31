@@ -4,7 +4,7 @@ const insert{{entityName | toPascalCase}} = (
     {{ tableFields | functionParameters }}
 ) => submitQuery`
 {% sql %}
-INSERT INTO (
+INSERT INTO {{entityName}} (
 {% for column in schemaColumns %}
     {{ column.column }}
     {% if forloop.last %}{% else %},{% endif %}
