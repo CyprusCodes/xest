@@ -382,10 +382,6 @@ module.exports = {
                     if (endpoint === GET) {
                         if (isPaginated == 'Yes') {
                             const paginatedTemplate = fs.readFileSync(filePath.paginatedTemplatePath, "utf-8");
-                            const defaultIncludedColumns = includeColumns
-                                .filter((c) => !filteredColumns.includes(c))
-
-                            const defaultSortColumns = sortColumns.map((c) => c.split(".")[1]);
 
                             const defaultFilterColumns = columns.filter((c) => {
                                 return filteredColumns.includes(`${c.table}.${c.column}`);
@@ -397,12 +393,14 @@ module.exports = {
                                 return `{ column: "${columnName}", operations: [${applicableFilters.map(f => `FILTERS.${f.operator}`).join(",")}]}`
                             })
 
+                            const selectableColumns = uniqBy([...sortColumns, ...includeColumns])
+
                             renderedTemplate = await render(paginatedTemplate, {
                                 entityName,
                                 filtersToAssign,
-                                defaultSortColumns,
+                                sortColumns,
                                 tablesToJoin: table,
-                                defaultIncludedColumns,
+                                selectableColumns,
                                 schema
                             });
 

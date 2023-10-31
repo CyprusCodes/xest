@@ -6,14 +6,14 @@ const get{{entityName | toPascalCase}} = async (req, res) => {
         basePath: req.path,  
         baseTable: "{{entityName | toSnakeCase}}",
         selectFields : [
-            {%- for col in defaultIncludedColumns -%}
+            {%- for col in selectableColumns -%}
             "{{col}}"
             {%- if forloop.last -%}{%- else -%},{%- endif -%}
             {%- endfor -%}
         ],
         joinStatements : [{{ tablesToJoin | paginatedJoinGenerator: schema }}],
         sortableAttributes : [
-            {%- for col in defaultSortColumns -%}
+            {%- for col in sortColumns -%}
             "{{col}}"
             {%- if forloop.last -%}{%- else -%},{%- endif -%}
             {%- endfor -%}
