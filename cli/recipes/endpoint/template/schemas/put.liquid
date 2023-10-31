@@ -83,7 +83,7 @@ const newPut{{entityName | toPascalCase}}Schema = yup.object().shape({
         {% elsif column.dataType == 'decimal' %}
             number().integer().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
         {% elsif column.dataType == 'float' %}
-            number().integer().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
+            number().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
         {% elsif column.dataType == 'double' %}
             number().integer().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number'),
         {% elsif column.dataType == 'blob'%}

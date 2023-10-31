@@ -1,9 +1,9 @@
 const { submitQuery } = require("~root/lib/database");
 
-const delete{{entityName | toPascalCase}} = (
+const delete{{entityName | toPascalCase}} = ({
     {%- for column in defaultFilterColumns -%}
     {{ column | toCamelCase }},
-    {%- endfor -%}) => submitQuery`
+    {%- endfor -%} }) => submitQuery`
 {% sql %}
 DELETE 
 FROM {{ entityName | toSnakeCase }}
