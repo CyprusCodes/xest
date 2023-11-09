@@ -3,17 +3,20 @@ const program = require("commander");
 const chalk = require("chalk");
 const { description, version } = require("./package.json");
 
-const { generate, run, fresh, applyRecipe, diagram } = require("./cli/commands/index");
+const {
+  generate,
+  run,
+  fresh,
+  applyRecipe,
+  diagram,
+} = require("./cli/commands/index");
 
 program
   .command("start [appname]", { isDefault: true })
   .description("scaffold a new Xest API project")
   .action(generate(program));
 
-program
-  .command("run")
-  .description("run your Xest project")
-  .action(run);
+program.command("run").description("run your Xest project").action(run);
 
 program
   .command("fresh")
@@ -32,7 +35,7 @@ program
   .description("Create new resources with Xest interactive wizard.")
   .action(applyRecipe);
 
- program
+program
   .command("diagram")
   .description("View your database diagram in your web browser")
   .action(diagram);
