@@ -32,7 +32,7 @@ program
   .description("Create new resources with Xest interactive wizard.")
   .action(applyRecipe);
 
- program
+program
   .command("diagram")
   .description("View your database diagram in your web browser")
   .action(diagram);
