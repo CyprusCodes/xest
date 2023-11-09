@@ -13,15 +13,15 @@ const insertUser = ({
     last_name,
     email,
     password,
-    user_type_id,
+    user_type_id
   )
   VALUES
   (
     ${firstName},
     ${lastName},
     ${email},
-    sha2(concat(${password},${process.env.password_salt}), 224),
-    ${userTypeId},
+    SHA2(CONCAT(${password},${process.env.PASSWORD_SALT}), 224),
+    ${userTypeId}
   )
 `;
 
