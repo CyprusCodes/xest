@@ -36,3 +36,15 @@ CREATE TABLE users(
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_type_id) REFERENCES user_types(user_type_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+
+DROP TABLE IF EXISTS password_recovery_requests;
+CREATE TABLE password_recovery_requests(
+	password_recovery_request_id int AUTO_INCREMENT PRIMARY KEY,
+  requested_email VARCHAR(150) NOT NULL,
+	shortcode VARCHAR(11) NOT NULL UNIQUE,
+  recovered_at DATETIME,
+  expiry_date DATETIME NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (requested_email) REFERENCES users(email)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;

@@ -22,4 +22,5 @@ router.put("/edit/user", authentication, putUserDetails);
 
 router.get("/user-types", getUserTypes);
 
+router.put("/update-password/:shortcode", putPassword);
 module.exports = router;
