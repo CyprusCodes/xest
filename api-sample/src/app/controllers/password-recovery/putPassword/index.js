@@ -1,8 +1,8 @@
-const modifyPassword = require("~root/actions/recovery/modifyPassword");
+const modifyPassword = require("~root/actions/password-recovery/modifyPassword");
 const handleApiError = require("~root/utils/handleAPIError");
 const putPasswordSchema = require("./schemas/putPasswordSchema");
-const modifyRecoveryDate = require("~root/actions/recovery/modifyRecoveryDate");
-const fetchRecoveryRequest = require("~root/actions/recovery/fetchRecoveryRequest");
+const modifyRecoveryDate = require("~root/actions/password-recovery/modifyRecoveryDate");
+const fetchRecoveryRequest = require("~root/actions/password-recovery/fetchRecoveryRequest");
 
 const putPassword = async (req, res) => {
   const { email, password, confirmPassword } = req.body;
