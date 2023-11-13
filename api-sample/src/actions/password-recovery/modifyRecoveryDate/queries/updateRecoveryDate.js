@@ -4,7 +4,7 @@ const updateRecoveryDate = ({ email }) => submitQuery`
 
   UPDATE password_recovery_requests
   SET recovered_at = CURRENT_TIMESTAMP
-  WHERE  requested_email = ${email};
+  WHERE requested_email = ${email};
 
   `;
 
