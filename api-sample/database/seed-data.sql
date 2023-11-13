@@ -1,4 +1,5 @@
-/* Initialize DB with some seed data */ USE `asdasd_db`;
+/* Initialize DB with some seed data */
+USE `{{PROJECT_NAME_SNAKECASE}}_db`;
 
 -- DONT MODIFY THIS MIGRATION
 -- it is used by Xest local development pipeline
