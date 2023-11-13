@@ -16,6 +16,8 @@ PASSWORD_SALT=SECRET_SALT
 // MINIO_HOST=minio.yourdomain.com
 // MINIO_ACCESS_KEY=
 // MINIO_SECRET_KEY=
+// Mailgun - for sending emails
+// MAILGUN_API_KEY= get from mailgun
 `;
   const filePath = path.join(projectRoot, "./.env");
   const doesItExist = fs.ensureFileSync(filePath);

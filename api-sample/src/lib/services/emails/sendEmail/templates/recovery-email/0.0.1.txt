@@ -1,0 +1,11 @@
+Dear {{name}},
+
+We noticed that you requested to reset your password for your account with Ontheguestlist. Please use the link below to reset your password:
+
+{{recoveryUrl}} (Link nota  button)
+
+If you did not make this request, please ignore this email and your password will remain unchanged.
+
+For security reasons, the password reset link will expire in 8 hours, so please make sure to reset your password as soon as possible.
+
+In case you have any questions, feel free to get in touch at {{replyToEmail}}.

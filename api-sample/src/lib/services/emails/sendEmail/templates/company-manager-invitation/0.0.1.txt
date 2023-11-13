@@ -1,0 +1,7 @@
+{{userRole}} Invitation
+
+{{sender}} invited you to become a {{userRole}} for {{organizationName}}
+
+{{senderMessage}}
+
+View Invitation

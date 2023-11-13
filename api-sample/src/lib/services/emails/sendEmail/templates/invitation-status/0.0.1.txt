@@ -1,0 +1,7 @@
+{{userRole}} Invitation Accepted
+
+{{sender}} {{invitationStatus}} your invite to become
+
+{{userRole}} for {{organizationName}}
+
+View Invitation

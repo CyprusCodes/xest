@@ -1,0 +1,101 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-text align="left" color="#000000" />
+      <mj-class
+        name="sign-up-btn"
+        align="left"
+        font-size="15px"
+        font-weight="bold"
+        background-color="#1a5b99"
+        border-radius="4px"
+        padding-top="25px"
+        padding-bottom="25px"
+      />
+      <mj-class name="jf-logo" align="left" padding="0px" />
+      <mj-all font-family="open Sans Helvetica, Arial, sans-serif" />
+    </mj-attributes>
+    <mj-style inline="inline">
+      .no-link-decoration { color: #ffffff; text-decoration: none }
+    </mj-style>
+  </mj-head>
+  <mj-body background-color="#ffffff" font-size="13px">
+    <mj-section
+      background-color="#ffffff"
+      padding-bottom="15px"
+      padding-top="20px"
+    >
+    </mj-section>
+    <mj-section
+      background-color="#ffffff"
+      vertical-align="top"
+      padding-bottom="0px"
+      padding-top="0"
+    >
+      <mj-column vertical-align="top" width="100%">
+        <mj-text
+          font-size="40px"
+          font-weight="600"
+          padding-left="25px"
+          padding-right="25px"
+          padding-bottom="0px"
+          padding-top="20px"
+          color="#232323"
+        >
+          Password Recovery</mj-text
+        >
+      </mj-column>
+    </mj-section>
+    <mj-section
+      background-color="#ffffff"
+      padding-bottom="20px"
+      padding-top="20px"
+    >
+      <mj-column vertical-align="middle" width="100%">
+        <mj-text
+          font-size="17px"
+          padding-left="25px"
+          padding-right="25px"
+          line-height="22px"
+        >
+          Dear {{name}},
+        </mj-text>
+        <mj-text
+          font-size="17px"
+          padding-left="25px"
+          padding-right="25px"
+          line-height="22px"
+          >We noticed that you requested to reset your password for your account
+          with Ontheguestlist. Please use the link below to reset your password:
+        </mj-text>
+        <mj-text
+          font-size="17px"
+          padding-left="25px"
+          padding-right="25px"
+          line-height="22px"
+        >
+          <a href="{{recoveryUrl}}">
+            Reset Password
+          </a>
+        </mj-text>
+
+        <mj-text
+          line-height="22px"
+          font-size="16px"
+          padding-left="25px"
+          padding-right="25px"
+          >If you did not make this request, please ignore this email and your
+          password will remain unchanged.
+        </mj-text>
+        <mj-text
+          line-height="22px"
+          font-size="16px"
+          padding-left="25px"
+          padding-right="25px"
+          >For security reasons, the password reset link will expire in 8 hours,
+          so please make sure to reset your password as soon as possible.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
