@@ -42,7 +42,7 @@ DROP TABLE IF EXISTS password_recovery_requests;
 CREATE TABLE password_recovery_requests(
 	password_recovery_request_id int AUTO_INCREMENT PRIMARY KEY,
   requested_email VARCHAR(150) NOT NULL,
-	shortcode VARCHAR(11) NOT NULL UNIQUE,
+	shortcode VARCHAR(40) NOT NULL UNIQUE,
   recovered_at DATETIME,
   expiry_date DATETIME NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

@@ -25,4 +25,4 @@ INSERT INTO users (user_id, first_name, last_name, email, password, user_type_id
 VALUES (3, "Jim", "Bloggs" , "jimbloggs@yahoo.com", SHA2(CONCAT("password","SECRET_SALT"), 224), 2, "2020-11-20 12:00:00");
 
 INSERT INTO password_recovery_requests(shortcode,requested_email,expiry_date,created_at)
-VALUES ("321321","ahmet.akinsel@gmail.com","2020-09-20 12:30:00","2022-01-03 12:30:00");
+VALUES ("321","ahmet@akinsql.com","2020-09-20 12:30:00","2022-01-03 12:30:00");
