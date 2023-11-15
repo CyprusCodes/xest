@@ -1,0 +1,144 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-text align="center" color="#000000" />
+      <mj-class
+        name="sign-up-btn"
+        align="center"
+        font-size="15px"
+        font-weight="bold"
+        background-color="#1a5b99"
+        border-radius="4px"
+        padding-top="25px"
+        padding-bottom="25px"
+      />
+      <mj-class name="jf-logo" align="center" padding="0px" />
+      <mj-all font-family="open Sans Helvetica, Arial, sans-serif" />
+    </mj-attributes>
+    <mj-style inline="inline">
+      .no-link-decoration { color: #ffffff; text-decoration: none }
+    </mj-style>
+  </mj-head>
+  <mj-body background-color="#ffffff" font-size="13px">
+    <mj-section
+      background-color="#ffffff"
+      padding-bottom="15px"
+      padding-top="20px"
+    >
+      <mj-column width="100%">
+        <mj-image
+          src="https://minio.cypruscodes.com/productive-machines/PM-logo.png"
+          width="200px"
+          alt="Productive Machines logo"
+          mj-class="jf-logo"
+        ></mj-image>
+      </mj-column>
+    </mj-section>
+    <mj-section
+      background-color="#ffffff"
+      vertical-align="top"
+      padding-bottom="0px"
+      padding-top="0"
+    >
+      <mj-column vertical-align="top" width="100%">
+        <mj-text
+          font-size="40px"
+          font-weight="600"
+          padding-left="25px"
+          padding-right="25px"
+          padding-bottom="0px"
+          padding-top="20px"
+          color="#1a5b99"
+        >
+          Password Recovery</mj-text
+        >
+      </mj-column>
+    </mj-section>
+    <mj-section
+      background-color="#ffffff"
+      padding-bottom="20px"
+      padding-top="20px"
+    >
+      <mj-column vertical-align="middle" width="100%">
+        <mj-text
+          font-size="17px"
+          padding-left="25px"
+          padding-right="25px"
+          line-height="22px"
+        >
+          This email is in response to your recent request to recover a
+          forgotten password.
+        </mj-text>
+        <mj-text
+          font-size="17px"
+          padding-left="25px"
+          padding-right="25px"
+          line-height="22px"
+          >To reset your password, please click the link below and follow the
+          instructions provided.
+        </mj-text>
+        <mj-button mj-class="sign-up-btn" background-color="#189b39">
+          <a class="no-link-decoration" href="{{recoveryUrl}}">
+            Recover Password
+          </a>
+        </mj-button>
+        <mj-text
+          line-height="22px"
+          font-size="16px"
+          padding-left="25px"
+          padding-right="25px"
+          >The above button will remain active for the next 8 hours. In case you
+          have any questions, feel free to get in touch via
+          <strong
+            ><a href="mailto:hello@productivemachines.co.uk" target="_top"
+              >hello@productivemachines.co.uk</a
+            ></strong
+          >.</mj-text
+        >
+        <mj-text font-size="16px" padding-left="25px" padding-right="25px"
+          >Best regards, <br />
+          <br />
+          Productive Machines Team</mj-text
+        >
+      </mj-column>
+    </mj-section>
+    <mj-section
+      background-color="#189b39"
+      padding-bottom="20px"
+      padding-top="20px"
+    >
+      <mj-column vertical-align="middle" width="50%">
+        <mj-text
+          line-height="20px"
+          color="#ffffff"
+          align="left"
+          font-size="15px"
+          padding-left="25px"
+          padding-right="25px"
+        >
+          Productive Machines Ltd.<br />
+          Rotherham, S60 5WG, UK<br />
+        </mj-text>
+      </mj-column>
+      <mj-column vertical-align="top" width="50%">
+        <mj-text
+          line-height="20px"
+          color="#ffffff"
+          align="left"
+          font-size="15px"
+          padding-left="25px"
+          padding-right="25px"
+        >
+          Email:
+          <a
+            href="mailto:{{replyToEmail}}"
+            target="_top"
+            class="no-link-decoration"
+            style="color: #fff;"
+            >{{replyToEmail}}</a
+          >
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

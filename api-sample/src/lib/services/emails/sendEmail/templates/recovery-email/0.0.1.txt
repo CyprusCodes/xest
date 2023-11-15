@@ -1,0 +1,11 @@
+This e-mail is in response to your recent request to recover a forgotten password. This link will remain active for the next 8 hours to reset your password.
+
+Please click the link below and follow the instructions provided.
+Recover Password
+{{recoveryUrl}}
+
+In case you have any questions, feel free to get in touch at {{replyToEmail}}.
+
+Best Regards,
+The Productive Machines Team
+-https://productivemachines.co.uk/

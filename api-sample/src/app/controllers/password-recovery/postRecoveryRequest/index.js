@@ -2,7 +2,7 @@ const { nanoid } = require("nanoid");
 const createRecoveryRequest = require("~root/actions/password-recovery/createRecoveryRequest");
 const handleApiError = require("~root/utils/handleAPIError");
 const postRecoverRequestSchema = require("./schemas/postRecoveryRequestSchema");
-const sendEmail = require("~root/services/sendEmail");
+const sendEmail = require("~root/lib/services/emails/sendEmail");
 
 const postRecoveryRequest = async (req, res) => {
   const { requestedEmail } = req.body;
