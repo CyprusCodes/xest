@@ -76,7 +76,8 @@
           </a>
         </mj-button>
 
-        <mj-text font-size="16px" padding-left="25px" padding-right="25px"
+        <mj-text font-size="16px"
+       padding-left="25px" padding-right="25px"
           >Best regards <br />
           <br />
           Xest.js</mj-text
