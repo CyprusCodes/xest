@@ -7,7 +7,8 @@ const insertRecoveryRequest = ({ requestedEmail, URLshortcode }) => submitQuery`
       shortcode,
       expiry_date
     )VALUES (
-      ${requestedEmail},${URLshortcode},
+      ${requestedEmail},
+      ${URLshortcode},
       TIMESTAMPADD(HOUR, 8, CURRENT_TIMESTAMP)
     )
 `;

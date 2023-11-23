@@ -1,5 +1,5 @@
-const { v4: uuidv4 } = require("uuid");const 
-createRecoveryRequest = require("~root/actions/password-recovery/createRecoveryRequest");
+const { v4: uuidv4 } = require("uuid");
+const createRecoveryRequest = require("~root/actions/password-recovery/createRecoveryRequest");
 const handleApiError = require("~root/utils/handleAPIError");
 const postRecoverRequestSchema = require("./schemas/postRecoveryRequestSchema");
 const sendEmail = require("~root/lib/services/emails/sendEmail");

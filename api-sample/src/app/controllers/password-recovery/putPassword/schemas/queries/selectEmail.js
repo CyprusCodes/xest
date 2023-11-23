@@ -6,4 +6,4 @@ const selectEmail = ({ email }) => submitQuery`
     WHERE email = ${email} 
 `;
 
-module.exports = getFirst(selectEmail);
+module.exports = getFirst(selectEmail,"email");

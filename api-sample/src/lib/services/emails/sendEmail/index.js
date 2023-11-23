@@ -9,9 +9,8 @@ const Mailgun = require("mailgun.js");
 const mailgun = new Mailgun(formData);
 const mg = mailgun.client({
   username: "api",
-  // TODO: api key
   key: process.env.MAILGUN_API_KEY,
-  url: "https://api.eu.mailgun.net"
+  url: process.env.MAILGUN_API_BASE_URL
 });
 
 /**
@@ -28,7 +27,6 @@ const sendMail = async ({
   attachment = null
 }) => {
   const metadataEnriched = {
-    // TODO: change email
     replyToEmail: "your@email.com",
     contactNumber: "0000 00 00",
     ...metadata
@@ -55,15 +53,16 @@ const sendMail = async ({
   const emailTemplate = hogan.compile(htmlOutput.html);
   const emailBody = emailTemplate.render(metadataEnriched);
 
+  let fromEmail;
+
   const messageParams = {
-    // TODO: change email
-    from: "name <your@email.com>",
+    from: fromEmail,
     to,
     bcc,
     subject: subjectLine,
     text: textBody,
     html: emailBody,
-    // TODO: change email
+
     "h:Reply-To": "your@email.com",
     attachment: attachment
       ? [
@@ -74,11 +73,10 @@ const sendMail = async ({
         ]
       : null
   };
-  // TODO: change email
+
   try {
     const result = await mg.messages.create(
-      // TODO: your domain name from mailgun
-      "your.domain.com",
+      process.env.MAILGUN_DOMAIN,
       messageParams
     );
     return result;
