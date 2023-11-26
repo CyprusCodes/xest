@@ -1,43 +1,20 @@
 const chalk = require("chalk");
 const inquirer = require("inquirer");
 const findProjectRoot = require("../../utils/findProjectRoot");
-const {
-  getInitialPrompt,
-  getAvailableCommandDescriptions,
-} = require("./prompts/index");
+const { getInitialPrompt } = require("./prompts/index");
 const sleep = require("../../utils/sleep");
 const commandsList = require("./cmd/index");
 const getListOfAvailableCommands = require("./utils/getListOfAvailableCommands");
 const fs = require("fs");
 const sample = require("./sample.json");
-const asyncSeries = require("../../utils/asyncSeries");
 const openai = require("./utils/openai");
-
-const getTotalComputationCost = ({
-  totalPromptTokens = 0,
-  totalCompletionTokens = 0,
-}) => {
-  // https://openai.com/pricing
-  // gpt-3.5-turbo -> $0.002 / 1K tokens
-  const gptTurboCost = 0.002;
-
-  const cost =
-    ((totalPromptTokens + totalCompletionTokens) / 1000) * gptTurboCost;
-  return cost;
-};
-
-const getTotalComputationTime = (startDate, endDate) => {
-  const dif = startDate.getTime() - endDate.getTime();
-
-  const Seconds_from_T1_to_T2 = dif / 1000;
-  const Seconds_Between_Dates = Math.abs(Seconds_from_T1_to_T2);
-  return Seconds_Between_Dates;
-};
+const getComputationCost = require("./utils/getComputationCost");
+const getComputationTime = require("./utils/getComputationTime");
 
 // limit ai usage so we don't hit out quota with a single query
-const MAX_COST = 0.001;
+const MAX_COST = 1;
+const OPENAI_MODEL = "gpt-3.5-turbo-1106"; //"gpt-4-1106-preview";
 
-/*
 const ai = async () => {
   const projectDetails = findProjectRoot();
   if (!projectDetails) {
@@ -54,32 +31,22 @@ const ai = async () => {
   let callHistory = [];
 
   let messages = [{ role: "system", content: getInitialPrompt() }];
-  const answer = await inquirer.prompt({
+  const userQuery = await inquirer.prompt({
     type: "input",
     name: "qry",
     message: "Welcome to XestGPT. What would you like help with today?\n",
   });
 
   let computationStartTime = new Date();
-  messages.push({ role: "user", content: answer.qry });
-  messages.push({
-    role: "system",
-    content: `START COMMAND LIST
-  ${getAvailableCommandDescriptions(
-    getListOfAvailableCommands({ commandsList, callHistory })
-  )}
-  END COMMAND LIST`,
-  });
-  messages.push({
-    role: "system",
-    content:
-      "Investigate the COMMAND LIST available. Think in steps and pick a command from the COMMAND LIST to run.",
-  });
+  messages.push({ role: "user", content: userQuery.qry });
 
   while (
     !answered &&
-    getTotalComputationCost({ totalPromptTokens, totalCompletionTokens }) <
-      0.002
+    getComputationCost({
+      totalPromptTokens,
+      totalCompletionTokens,
+      model: OPENAI_MODEL,
+    }) < MAX_COST
   ) {
     step_debug += 1;
     if (step_debug > 1) {
@@ -87,158 +54,131 @@ const ai = async () => {
       await sleep(100);
     }
 
-    const completion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
+    const availableFunctions = getListOfAvailableCommands({
+      commandsList,
+      callHistory,
+    });
+    console.log(
+      availableFunctions.map((fn) => fn.name),
+      "availableFns"
+    );
+
+    const completion = await openai.chat.completions.create({
+      model: OPENAI_MODEL,
       messages,
+      ...(availableFunctions.length
+        ? {
+            functions: availableFunctions.map((f) => {
+              return {
+                name: f.name,
+                description: f.description,
+                parameters: f.parameters,
+              };
+            }),
+          }
+        : {}),
       max_tokens: 100,
       temperature: 0,
     });
 
-    const { prompt_tokens, completion_tokens, total_tokens } =
-      completion.data.usage;
+    const { prompt_tokens, completion_tokens } = completion.usage;
     totalPromptTokens += prompt_tokens;
     totalCompletionTokens += completion_tokens;
 
-    const answer = completion.data.choices[0].message.content;
+    const answer = completion.choices[0].message.content;
     // keep assistant history
-    messages.push(completion.data.choices[0].message);
+    messages.push(completion.choices[0].message);
 
-    const listOfCommandNames = getListOfAvailableCommands({
-      commandsList,
-      callHistory,
-    }).map((c) => c.name);
-    const doesAnswerContainCommandToRun = listOfCommandNames.filter((cmd) =>
-      answer.includes(cmd)
-    );
+    const functionToCall = completion.choices[0].message.function_call;
+    if (functionToCall) {
+      const cmdToRun = commandsList.find(
+        (fn) => fn.name === functionToCall.name
+      );
 
-    const notReadyToAnswer = answer
-      .toLowerCase()
-      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
-      .includes("no ");
-
-    if (!doesAnswerContainCommandToRun.length) {
-      // sometimes AI makes up command names to run
-      // but they don't exist in our command list
-      // we need to extract command name from the output
-      const payload = {
-        model: "text-curie-001",
-        prompt: `Extract command name from the sentence below. If there is no command respond with NOCOMMAND.\n\nsentence: "${answer}"\n\noutput:`,
-        max_tokens: 256,
-        temperature: 0,
-        top_p: 1,
-        frequency_penalty: 0,
-        presence_penalty: 0,
-        best_of: 1,
-      };
-      const response = await openai.createCompletion(payload);
-
-      const sentence = response.data.choices[0].text;
-      console.log(sentence, "what the fuck");
-      if (!sentence.includes("NOCOMMAND")) {
-        const bogusCommand = sentence;
-        messages.push({
-          role: "system",
-          content: `START COMMAND LIST
-        ${getAvailableCommandDescriptions(
-          getListOfAvailableCommands({ commandsList, callHistory })
-        )}
-        notReadyToAnswer = true;
-      }
-    }
-    const newCommandsToRun = doesAnswerContainCommandToRun.filter(
-      (cmd) => !callHistory.map((call) => call.name).includes(cmd)
-    );
-
-    if (notReadyToAnswer) {
-      messages.push({
-        role: "system",
-        content: `START COMMAND LIST
-      ${getAvailableCommandDescriptions(
-        getListOfAvailableCommands({ commandsList, callHistory })
-      )}
-      END COMMAND LIST`,
-      });
-      messages.push({
-        role: "system",
-        content:
-          "Investigate the COMMAND LIST available. Think in steps and pick a command from the COMMAND LIST to run.",
-      });
-    }
-
-    await asyncSeries(newCommandsToRun, async (newCmd) => {
-      const commandToRun = commandsList.find((cmd) => cmd.name === newCmd);
-
-      let parameters;
-      // command expects parameters
-      // we need to run parameterize
-      if (commandToRun.parameters.length) {
-        parameters = await commandToRun.parameterize({
-          answer,
+      try {
+        const params = await cmdToRun.parameterize({
+          arguments: functionToCall.arguments,
           messages,
           callHistory,
         });
+        callHistory.push({
+          name: functionToCall.name,
+          content: functionToCall.arguments,
+        });
+        console.log(
+          `Running ${functionToCall.name}, with ${functionToCall.arguments}`
+        );
+        console.log(params);
+        const results = await cmdToRun.runCmd(params);
+        messages.push({
+          role: "function",
+          name: functionToCall.name,
+          content: JSON.stringify(results),
+        });
+        messages.push({
+          role: "system",
+          content: `Consider the output of the ${functionToCall.name}. Does this give you enough information to answer user's ${userQuery.qry}? Think step by step. Run functions if necessary, using the previous information collected where applicable.`,
+        });
+      } catch (error) {
+        messages.push({
+          role: "function",
+          name: functionToCall.name,
+          content: error.message,
+        });
       }
+    }
 
-      const cmdOutput = await commandToRun.runCmd(parameters);
-      callHistory.push(commandToRun);
-      messages.push({
-        role: "system",
-        content: `Command: ${commandToRun.name}(${JSON.stringify(
-          parameters
-        )})\n Command Description: ${
-          commandToRun.description
-        } OUTPUT: ${cmdOutput}.`,
-      });
-      messages.push({
-        role: "system",
-        content: `Investigate the output of ${commandToRun.name}. Do you think you have enough information to respond back to user's query. Reply with Yes or No.`,
-      });
-    });
-
-    if (!newCommandsToRun.length && !notReadyToAnswer) {
-      // if (step_debug ) {
-      // ai didn't ask for a new command to run, so we can assume it has finished
+    const assistantReply = completion.choices[0].message.content;
+    if (assistantReply) {
+      console.log("replied?");
+      console.log(assistantReply);
       answered = true;
-
-      // console.log("log of messages", messages);
-      console.log(`LATEST ANSWER:`, completion.data.choices[0].message.content);
-      //      }
     }
 
     // stop ai from going wild
-    if (step_debug === 8) {
+    if (step_debug === 15) {
+      console.log(step_debug, "Steps");
       answered = true;
     }
   }
   fs.writeFileSync("./sample.json", JSON.stringify(messages, null, 2));
   console.log(
     `total computation time `,
-    getTotalComputationTime(computationStartTime, new Date()),
+    getComputationTime(computationStartTime, new Date()),
     " seconds"
   );
   console.log(
     `total computation cost $`,
-    getTotalComputationCost({ totalPromptTokens, totalCompletionTokens })
+    getComputationCost({
+      totalPromptTokens,
+      totalCompletionTokens,
+      model: OPENAI_MODEL,
+    })
   );
 };
-*/
 
 const aiReplay = async () => {
   const completion = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
+    model: OPENAI_MODEL,
     messages: sample,
     max_tokens: 100,
     temperature: 0,
   });
-  console.log(`LATEST ANSWER:`, completion.data.choices);
-  const { prompt_tokens, completion_tokens, total_tokens } =
-    completion.data.usage;
+  console.log(`LATEST ANSWER:`, completion.choices);
+  const { prompt_tokens, completion_tokens, total_tokens } = completion.usage;
   const totalPromptTokens = prompt_tokens;
   const totalCompletionTokens = completion_tokens;
-  console.log(sample)
-  console.log("total cost $", getTotalComputationCost({totalPromptTokens, totalCompletionTokens}));
+  console.log(sample);
+  console.log(
+    "total cost $",
+    getComputationCost({
+      totalPromptTokens,
+      totalCompletionTokens,
+      model: OPENAI_MODEL,
+    })
+  );
 };
 
 module.exports = {
-  ai: aiReplay,
+  ai,
 };
