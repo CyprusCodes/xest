@@ -86,50 +86,60 @@ const ai = async () => {
     totalCompletionTokens += completion_tokens;
 
     const answer = completion.choices[0].message.content;
+    
+    // todo: keep assistant history only if they're not hallunicating or relevant to the task at hand
     // keep assistant history
     messages.push(completion.choices[0].message);
 
     const functionToCall = completion.choices[0].message.function_call;
+    const assistantReply = completion.choices[0].message.content;
+
     if (functionToCall) {
       const cmdToRun = commandsList.find(
         (fn) => fn.name === functionToCall.name
       );
 
-      try {
-        const params = await cmdToRun.parameterize({
+      const { parsedArgumentsSuccesfully, message, parsedArguments } =
+        await cmdToRun.parameterize({
           arguments: functionToCall.arguments,
           messages,
           callHistory,
+          functionName: functionToCall.name,
         });
+
+      if (parsedArgumentsSuccesfully) {
         callHistory.push({
           name: functionToCall.name,
           content: functionToCall.arguments,
         });
+
         console.log(
-          `Running ${functionToCall.name}, with ${functionToCall.arguments}`
+          `Running tool: ${functionToCall.name}(${JSON.stringify(
+            parsedArguments,
+            null,
+            2
+          )})`
         );
-        console.log(params);
-        const results = await cmdToRun.runCmd(params);
+
+        const results = await cmdToRun.runCmd(parsedArguments);
+
         messages.push({
           role: "function",
           name: functionToCall.name,
           content: JSON.stringify(results),
         });
-        messages.push({
-          role: "system",
-          content: `Consider the output of the ${functionToCall.name}. Does this give you enough information to answer user's ${userQuery.qry}? Think step by step. Run functions if necessary, using the previous information collected where applicable.`,
-        });
-      } catch (error) {
-        messages.push({
-          role: "function",
-          name: functionToCall.name,
-          content: error.message,
-        });
-      }
-    }
 
-    const assistantReply = completion.choices[0].message.content;
-    if (assistantReply) {
+        messages.push({
+          role: "user",
+          content: `Consider the output of the ${functionToCall.name}. Does this give you enough information to answer my query: ${userQuery.qry}? Think step by step. Run functions if necessary, using the previous information collected where applicable.`,
+        });
+      } else {
+        messages.push({
+          role: "user",
+          content: message
+        })
+      }
+    } else if (assistantReply) {
       console.log("replied?");
       console.log(assistantReply);
       answered = true;
