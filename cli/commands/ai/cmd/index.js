@@ -183,24 +183,25 @@ FIND_FILES_BY_KEYWORD = {
   },
 };
 
+// searchStringInFiles
+// searchPatternInFiles
 // listDirectoryContents
 // readFile
-// listAPIEndpoints
-
+// listAPIEndpoints -- AST parser integration
+// parseModuleDependencies -- chipper integration
+// findUsagesOfModule
 // showControllerForApiEndpoint
 // showQueryFilesForApiEndpoint
 // showYupSchemaForApiEndpoint
 // searchCodebaseByApiEndpoint
-
-// parseModuleDependencies
-// findUsagesOfModule
-
-// get a list of dependent files
-// find usages of javascript module
+// callApiEndpoint
+// getTestAuthToken
 
 // writeFile
 // createAPIEndpoint
 // createDatabaseMigration
+// runDatabaseQuery (potentially dangerous)
+// runTerminalCommand
 
 // showDependenciesFromPackageJSONFile
 // showDevelopmentDependenciesFromPackageJSONFile
