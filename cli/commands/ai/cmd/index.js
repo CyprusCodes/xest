@@ -1,9 +1,11 @@
 const yup = require("yup");
 const { extendSchema } = require("@sodaru/yup-to-json-schema");
-const { glob } = require("glob");
+const { globSync } = require("glob");
+const { dirname } = require("path");
 const { getSchema } = require("../../../utils/getSchema");
 const validateArguments = require("../utils/validateArguments");
 const yupToJsonSchema = require("../utils/yupToJsonSchema");
+const findProjectRoot = require("../../../utils/findProjectRoot");
 
 extendSchema({ addMethod: yup.addMethod, Schema: yup.Schema });
 
@@ -31,7 +33,7 @@ GET_LIST_OF_DATABASE_TABLES = {
   rerunWithDifferentParameters: false,
   runCmd: async function () {
     const schema = await getSchema();
-    return Object.keys(schema).join(",");
+    return Object.keys(schema).join("\n");
   },
 };
 
@@ -66,18 +68,19 @@ GET_DATABASE_TABLE_SCHEMA = {
   parameters: yupToJsonSchema(getDatabaseTableParametersSchema),
   rerun: false,
   rerunWithDifferentParameters: true,
-  runCmd: async (tableName) => {
+  runCmd: async ({ tableName }) => {
     const schema = await getSchema();
     const table = schema[tableName];
+    // todo: pretty print this in a nicer way, using less chars
     return JSON.stringify(table);
   },
 };
 
-const findFilesByNameParametersSchema = yup.object({
-  searchString: yup
+const findFilesByGlobPatternParametersSchema = yup.object({
+  globPattern: yup
     .string()
-    .required("Search String is required")
-    .description("The string to search for in the codebase."),
+    .required("Glob pattern is required")
+    .description("The glob pattern to search for in the codebase."),
   matchCase: yup
     .boolean()
     .default(false)
@@ -86,22 +89,42 @@ const findFilesByNameParametersSchema = yup.object({
     ),
 });
 
-FIND_FILES_BY_NAME = {
-  name: "FIND_FILES_BY_NAME",
+FIND_FILES_BY_GLOB_PATTERN = {
+  name: "FIND_FILES_BY_GLOB_PATTERN",
   description:
-    "Locate JavaScript modules based on their names within the codebase",
+    "Search files by glob pattern within the codebase",
   associatedCommands: [],
   prerequisites: [],
-  parameterize: validateArguments(findFilesByNameParametersSchema),
-  parameters: yupToJsonSchema(findFilesByNameParametersSchema),
+  parameterize: validateArguments(findFilesByGlobPatternParametersSchema),
+  parameters: yupToJsonSchema(findFilesByGlobPatternParametersSchema),
   rerun: true,
   rerunWithDifferentParameters: true,
-  runCmd: async ({ searchString, matchCase }) => {
-    const files = await glob(searchString, {
-      ignore: ["node_modules/**", ".xest/**", "migrations/**/*.js"],
+  runCmd: async ({ globPattern, matchCase }) => {
+    const projectRootPackageJSON = await findProjectRoot();
+    const { filename } = projectRootPackageJSON;
+    const projectRootPath = dirname(filename);
+
+    if(!globPattern.startsWith("**/")) {
+      globPattern = `**/${globPattern}`
+    }
+
+    const files = await globSync(globPattern, {
+      cwd: projectRootPath,
+      ignore: [
+        "node_modules/**",
+        ".xest/**",
+        "migrations/**/*.js",
+        "**/*.md",
+        "**/*.snap",
+      ],
       nocase: !matchCase,
     });
-    console.log(files);
+
+    if (!files.length) {
+      return `No files found containg ${globPattern}`;
+    }
+
+    return files.join("\n");
   },
 };
 
@@ -206,5 +229,6 @@ FIND_FILES_BY_NAME = {
 module.exports = [
   GET_LIST_OF_DATABASE_TABLES,
   GET_DATABASE_TABLE_SCHEMA,
-  FIND_FILES_BY_NAME,
+  FIND_FILES_BY_GLOB_PATTERN,
+  // FIND_FILES_BY_KEYWORD
 ];

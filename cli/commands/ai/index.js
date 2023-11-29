@@ -6,7 +6,6 @@ const sleep = require("../../utils/sleep");
 const commandsList = require("./cmd/index");
 const getListOfAvailableCommands = require("./utils/getListOfAvailableCommands");
 const fs = require("fs");
-const sample = require("./sample.json");
 const openai = require("./utils/openai");
 const getComputationCost = require("./utils/getComputationCost");
 const getComputationTime = require("./utils/getComputationTime");
@@ -99,6 +98,7 @@ const ai = async () => {
         (fn) => fn.name === functionToCall.name
       );
 
+      console.log(functionToCall, "huh???")
       const { parsedArgumentsSuccesfully, message, parsedArguments } =
         await cmdToRun.parameterize({
           arguments: functionToCall.arguments,
@@ -122,6 +122,7 @@ const ai = async () => {
         );
 
         const results = await cmdToRun.runCmd(parsedArguments);
+        console.log(results);
 
         messages.push({
           role: "function",
@@ -170,7 +171,7 @@ const ai = async () => {
 const aiReplay = async () => {
   const completion = await openai.createChatCompletion({
     model: OPENAI_MODEL,
-    messages: sample,
+    // messages: sample,
     max_tokens: 100,
     temperature: 0,
   });
@@ -178,7 +179,7 @@ const aiReplay = async () => {
   const { prompt_tokens, completion_tokens, total_tokens } = completion.usage;
   const totalPromptTokens = prompt_tokens;
   const totalCompletionTokens = completion_tokens;
-  console.log(sample);
+  // console.log(sample);
   console.log(
     "total cost $",
     getComputationCost({
