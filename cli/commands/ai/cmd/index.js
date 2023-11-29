@@ -11,7 +11,8 @@ extendSchema({ addMethod: yup.addMethod, Schema: yup.Schema });
 
 let GET_LIST_OF_DATABASE_TABLES;
 let GET_DATABASE_TABLE_SCHEMA;
-let FIND_FILES_BY_NAME;
+let FIND_FILES_BY_GLOB_PATTERN;
+let FIND_FILES_BY_KEYWORD;
 
 const noParamsSchema = yup.object({});
 
@@ -128,16 +129,79 @@ FIND_FILES_BY_GLOB_PATTERN = {
   },
 };
 
+
+const findFilesByKeywordParametersSchema = yup.object({
+  keyword: yup
+    .string()
+    .required("Keyword is required")
+    .description("The keyword to search for in the codebase."),
+  matchCase: yup
+    .boolean()
+    .default(false)
+    .description(
+      "Specify whether the search should be case-sensitive or case-insensitive."
+    ),
+});
+
+
+FIND_FILES_BY_KEYWORD = {
+  name: "FIND_FILES_BY_KEYWORD",
+  description:
+    "Search files by keyword in their name within the codebase",
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(findFilesByKeywordParametersSchema),
+  parameters: yupToJsonSchema(findFilesByKeywordParametersSchema),
+  rerun: true,
+  rerunWithDifferentParameters: true,
+  runCmd: async ({ keyword, matchCase }) => {
+    const projectRootPackageJSON = await findProjectRoot();
+    const { filename } = projectRootPackageJSON;
+    const projectRootPath = dirname(filename);
+
+    if(!keyword.startsWith("**/")) {
+      keyword = `**/${keyword}`
+    }
+
+    const files = await globSync(keyword, {
+      cwd: projectRootPath,
+      ignore: [
+        "node_modules/**",
+        ".xest/**",
+        "migrations/**/*.js",
+        "**/*.md",
+        "**/*.snap",
+      ],
+      nocase: !matchCase,
+    });
+
+    if (!files.length) {
+      return `No files found containg ${keyword}`;
+    }
+
+    return files.join("\n");
+  },
+};
+
+// listDirectoryContents
+// readFile
 // listAPIEndpoints
-// createAPIEndpoint
-// createDatabaseMigration
+
 // showControllerForApiEndpoint
 // showQueryFilesForApiEndpoint
 // showYupSchemaForApiEndpoint
 // searchCodebaseByApiEndpoint
 
-// readFile
-// listProjectDirectoryContents
+// parseModuleDependencies
+// findUsagesOfModule
+
+// get a list of dependent files
+// find usages of javascript module
+
+// writeFile
+// createAPIEndpoint
+// createDatabaseMigration
+
 // showDependenciesFromPackageJSONFile
 // showDevelopmentDependenciesFromPackageJSONFile
 // showScriptsFromPackageJSONFile
@@ -149,13 +213,8 @@ FIND_FILES_BY_GLOB_PATTERN = {
 // listServerlessFunctions
 // listBackgroundTasks
 // listEmailTemplates
-// parseModuleDependencies
-// findUsagesOfModule
 
-// get a list of dependent files
-// find usages of javascript module
 // lintFile
-// writeFile
 
 // test helpers
 // run unit test
@@ -230,5 +289,5 @@ module.exports = [
   GET_LIST_OF_DATABASE_TABLES,
   GET_DATABASE_TABLE_SCHEMA,
   FIND_FILES_BY_GLOB_PATTERN,
-  // FIND_FILES_BY_KEYWORD
+  FIND_FILES_BY_KEYWORD
 ];
