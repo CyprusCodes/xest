@@ -5,7 +5,7 @@ const mjml2html = require("mjml");
 const path = require("path");
 const formData = require("form-data");
 const Mailgun = require("mailgun.js");
-const fromEmail = require('../../../../constants/emailConstants')
+const {fromEmail,replyToEmail} = require('../../../../constants/emailConstants')
 
 const mailgun = new Mailgun(formData);
 const mg = mailgun.client({
@@ -61,8 +61,7 @@ const sendMail = async ({
     subject: subjectLine,
     text: textBody,
     html: emailBody,
-
-    "h:Reply-To": "your@email.com",
+    replyTo: replyToEmail,
     attachment: attachment
       ? [
           {
