@@ -28,7 +28,7 @@ const sendMail = async ({
   attachment = null
 }) => {
   const metadataEnriched = {
-    replyToEmail: "your@email.com",
+    replyTo: replyToEmail,
     contactNumber: "0000 00 00",
     ...metadata
   };
