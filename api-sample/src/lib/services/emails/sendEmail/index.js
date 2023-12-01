@@ -5,6 +5,7 @@ const mjml2html = require("mjml");
 const path = require("path");
 const formData = require("form-data");
 const Mailgun = require("mailgun.js");
+const fromEmail = require('../../../../constants/emailConstants')
 
 const mailgun = new Mailgun(formData);
 const mg = mailgun.client({
@@ -52,8 +53,6 @@ const sendMail = async ({
   const htmlOutput = mjml2html(templateFile);
   const emailTemplate = hogan.compile(htmlOutput.html);
   const emailBody = emailTemplate.render(metadataEnriched);
-
-  let fromEmail;
 
   const messageParams = {
     from: fromEmail,
