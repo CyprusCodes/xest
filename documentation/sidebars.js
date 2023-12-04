@@ -11,7 +11,14 @@ module.exports = {
       type: "category",
       label: "Overview",
       collapsed: false,
-      items: ["intro", "what-is-xest-why", "installation", "routing", "CRUD"],
+      items: [
+        "intro",
+        "what-is-xest-why",
+        "installation",
+        "routing",
+        "CRUD",
+        "Pagination",
+      ],
     },
     {
       type: "category",
