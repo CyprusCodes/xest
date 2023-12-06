@@ -1,5 +1,6 @@
 const yup = require("yup");
 const { extendSchema } = require("@sodaru/yup-to-json-schema");
+const { fileSearch } = require("search-in-file");
 const { globSync } = require("glob");
 const { dirname } = require("path");
 const { getSchema } = require("../../../utils/getSchema");
@@ -17,7 +18,7 @@ let FIND_FILES_BY_KEYWORD;
 const noParamsSchema = yup.object({});
 
 GET_LIST_OF_DATABASE_TABLES = {
-  name: "getListOfDatabaseTables",
+  name: "get_list_of_database_tables",
   description:
     "returns the full list of all tables in the MySQL database for the project",
   associatedCommands: [
@@ -56,7 +57,7 @@ const getDatabaseTableParametersSchema = yup.object({
 });
 
 GET_DATABASE_TABLE_SCHEMA = {
-  name: "getTableSchema",
+  name: "get_table_schema",
   description: "returns the table schema",
   associatedCommands: [],
   prerequisites: [
@@ -91,9 +92,8 @@ const findFilesByGlobPatternParametersSchema = yup.object({
 });
 
 FIND_FILES_BY_GLOB_PATTERN = {
-  name: "FIND_FILES_BY_GLOB_PATTERN",
-  description:
-    "Search files by glob pattern within the codebase",
+  name: "find_files_by_glob_pattern",
+  description: "Search files by glob pattern within the codebase",
   associatedCommands: [],
   prerequisites: [],
   parameterize: validateArguments(findFilesByGlobPatternParametersSchema),
@@ -105,8 +105,8 @@ FIND_FILES_BY_GLOB_PATTERN = {
     const { filename } = projectRootPackageJSON;
     const projectRootPath = dirname(filename);
 
-    if(!globPattern.startsWith("**/")) {
-      globPattern = `**/${globPattern}`
+    if (!globPattern.startsWith("**/")) {
+      globPattern = `**/${globPattern}`;
     }
 
     const files = await globSync(globPattern, {
@@ -129,7 +129,6 @@ FIND_FILES_BY_GLOB_PATTERN = {
   },
 };
 
-
 const findFilesByKeywordParametersSchema = yup.object({
   keyword: yup
     .string()
@@ -143,11 +142,9 @@ const findFilesByKeywordParametersSchema = yup.object({
     ),
 });
 
-
 FIND_FILES_BY_KEYWORD = {
-  name: "FIND_FILES_BY_KEYWORD",
-  description:
-    "Search files by keyword in their name within the codebase",
+  name: "find_files_by_keyword",
+  description: "Search files by keyword in their name within the codebase",
   associatedCommands: [],
   prerequisites: [],
   parameterize: validateArguments(findFilesByKeywordParametersSchema),
@@ -159,8 +156,8 @@ FIND_FILES_BY_KEYWORD = {
     const { filename } = projectRootPackageJSON;
     const projectRootPath = dirname(filename);
 
-    if(!keyword.startsWith("**/")) {
-      keyword = `**/${keyword}`
+    if (!keyword.startsWith("**/")) {
+      keyword = `**/${keyword}`;
     }
 
     const files = await globSync(keyword, {
@@ -180,6 +177,57 @@ FIND_FILES_BY_KEYWORD = {
     }
 
     return files.join("\n");
+  },
+};
+
+const searchForStringInFilesParametersSchema = yup.object({
+  keyword: yup
+    .string()
+    .required("Keyword is required")
+    .description("The keyword to search for in the codebase."),
+  matchCase: yup
+    .boolean()
+    .default(false)
+    .description(
+      "Specify whether the search should be case-sensitive or case-insensitive."
+    ),
+  matchWholeWord: yup
+    .boolean()
+    .default(false)
+    .description(
+      "Specify whether to match the whole word or allow partial matches."
+    ),
+});
+
+SEARCH_FOR_STRING_IN_FILES = {
+  name: "search_for_string_in_files",
+  description: "Searches for a specified string within files and provides information on matching occurrences and their file paths.",
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(searchForStringInFilesParametersSchema),
+  parameters: yupToJsonSchema(searchForStringInFilesParametersSchema),
+  rerun: true,
+  rerunWithDifferentParameters: true,
+  runCmd: async ({ keyword, matchCase, matchWholeWord }) => {
+    const projectRootPackageJSON = await findProjectRoot();
+    const { filename } = projectRootPackageJSON;
+    const projectRootPath = dirname(filename);
+
+    try {
+      const results = await fileSearch([projectRootPath], keyword, {
+        recursive: true,
+        words: matchWholeWord,
+        ignoreCase: !matchCase,
+        isRegex: false,
+        ignoreDir: [`${projectRootPath}/node_modules`, `${projectRootPath}/.xest`],
+        fileMask: "js",
+      });
+  
+      console.log(results);
+    } catch (err) {
+      console.log(err);
+    }
+    
   },
 };
 
@@ -290,5 +338,6 @@ module.exports = [
   GET_LIST_OF_DATABASE_TABLES,
   GET_DATABASE_TABLE_SCHEMA,
   FIND_FILES_BY_GLOB_PATTERN,
-  FIND_FILES_BY_KEYWORD
+  FIND_FILES_BY_KEYWORD,
+  SEARCH_FOR_STRING_IN_FILES
 ];
