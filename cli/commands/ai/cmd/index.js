@@ -2,7 +2,8 @@ const yup = require("yup");
 const { extendSchema } = require("@sodaru/yup-to-json-schema");
 const { fileSearch } = require("search-in-file");
 const { globSync } = require("glob");
-const { dirname } = require("path");
+const { dirname, join, isAbsolute } = require("path");
+const fs = require("fs").promises;
 const { getSchema } = require("../../../utils/getSchema");
 const validateArguments = require("../utils/validateArguments");
 const yupToJsonSchema = require("../utils/yupToJsonSchema");
@@ -16,6 +17,7 @@ let FIND_FILES_BY_GLOB_PATTERN;
 let FIND_FILES_BY_KEYWORD;
 let SEARCH_FOR_STRING_IN_FILES;
 let SEARCH_FOR_REGEX_PATTERN_IN_FILES;
+let LIST_DIRECTORY_CONTENTS;
 
 const noParamsSchema = yup.object({});
 
@@ -294,8 +296,66 @@ SEARCH_FOR_REGEX_PATTERN_IN_FILES = {
   },
 };
 
-// searchPatternInFiles
-// listDirectoryContents
+const listDirectoryContentsParametersSchema = yup.object({
+  path: yup.string().description("the directory path to show contents"),
+});
+
+LIST_DIRECTORY_CONTENTS = {
+  name: "list_directory_contents",
+  description:
+    "Lists contents of a given directory. It displays project root by default.",
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(listDirectoryContentsParametersSchema),
+  parameters: yupToJsonSchema(listDirectoryContentsParametersSchema),
+  rerun: true,
+  rerunWithDifferentParameters: true,
+  runCmd: async ({ path }) => {
+    const projectRootPackageJSON = await findProjectRoot();
+    const { filename } = projectRootPackageJSON;
+    const projectRootPath = dirname(filename);
+
+    if (!path) {
+      // if there is no path argument, then use project root as default
+      path = projectRootPath;
+    } else {
+      // if there is a path provided, but it's not absolute, then tie it together
+      if (!isAbsolute(path)) {
+        path = join(projectRootPath, path);
+      }
+    }
+
+    try {
+      const files = await fs.readdir(path, { withFileTypes: true });
+      const outputArray = [];
+
+      outputArray.push(
+        "Type  Permissions  Owner  Group  Size  Last Modified           Name\n"
+      );
+
+      for (const file of files) {
+        const filePath = join(path, file.name);
+        const stats = await fs.stat(filePath);
+
+        const permissions = stats.mode.toString(8).slice(-3);
+        const owner = stats.uid;
+        const group = stats.gid;
+        const size = stats.size;
+        const modifiedTime = stats.mtime.toLocaleString();
+        const fileType = file.isDirectory() ? "directory" : "file";
+
+        outputArray.push(
+          `${fileType}      ${permissions}         ${owner}      ${group}      ${size}    ${modifiedTime}     ${file.name}`
+        );
+      }
+
+      return outputArray.join("\n");
+    } catch (err) {
+      return `Error reading directory ${path}: ${err.message}`;
+    }
+  },
+};
+
 // readFile
 // listAPIEndpoints -- AST parser integration
 // parseModuleDependencies -- chipper integration
@@ -403,4 +463,5 @@ module.exports = [
   FIND_FILES_BY_KEYWORD,
   SEARCH_FOR_STRING_IN_FILES,
   SEARCH_FOR_REGEX_PATTERN_IN_FILES,
+  LIST_DIRECTORY_CONTENTS,
 ];
