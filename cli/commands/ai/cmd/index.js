@@ -14,6 +14,7 @@ let GET_LIST_OF_DATABASE_TABLES;
 let GET_DATABASE_TABLE_SCHEMA;
 let FIND_FILES_BY_GLOB_PATTERN;
 let FIND_FILES_BY_KEYWORD;
+let SEARCH_FOR_STRING_IN_FILES;
 
 const noParamsSchema = yup.object({});
 
@@ -201,7 +202,8 @@ const searchForStringInFilesParametersSchema = yup.object({
 
 SEARCH_FOR_STRING_IN_FILES = {
   name: "search_for_string_in_files",
-  description: "Searches for a specified string within files and provides information on matching occurrences and their file paths.",
+  description:
+    "Searches for a specified string within files and provides information on matching occurrences and their file paths.",
   associatedCommands: [],
   prerequisites: [],
   parameterize: validateArguments(searchForStringInFilesParametersSchema),
@@ -219,19 +221,27 @@ SEARCH_FOR_STRING_IN_FILES = {
         words: matchWholeWord,
         ignoreCase: !matchCase,
         isRegex: false,
-        ignoreDir: [`${projectRootPath}/node_modules`, `${projectRootPath}/.xest`],
+        ignoreDir: [
+          `${projectRootPath}/node_modules`,
+          `${projectRootPath}/.xest`,
+        ],
         fileMask: "js",
       });
-  
-      console.log(results);
+
+      if (!results.length) {
+        return `No files found containing the keyword: ${keyword}`;
+      }
+
+      return `${results.length} files found with: ${keyword}\n${results.join(
+        "\n"
+      )}`;
     } catch (err) {
       console.log(err);
+      return `Error happened whilst doing code search. Report this please.`;
     }
-    
   },
 };
 
-// searchStringInFiles
 // searchPatternInFiles
 // listDirectoryContents
 // readFile
@@ -339,5 +349,5 @@ module.exports = [
   GET_DATABASE_TABLE_SCHEMA,
   FIND_FILES_BY_GLOB_PATTERN,
   FIND_FILES_BY_KEYWORD,
-  SEARCH_FOR_STRING_IN_FILES
+  SEARCH_FOR_STRING_IN_FILES,
 ];
