@@ -5,7 +5,7 @@ const mjml2html = require("mjml");
 const path = require("path");
 const formData = require("form-data");
 const Mailgun = require("mailgun.js");
-const {fromEmail,replyToEmail} = require('../../../../constants/emailConstants')
+const { fromEmail, replyToEmail } = require('~root/constants/emailConstants')
 
 const mailgun = new Mailgun(formData);
 const mg = mailgun.client({
@@ -29,7 +29,6 @@ const sendMail = async ({
 }) => {
   const metadataEnriched = {
     replyTo: replyToEmail,
-    contactNumber: "0000 00 00",
     ...metadata
   };
   const textFile = fs.readFileSync(

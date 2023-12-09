@@ -6,4 +6,4 @@ const selectPassword = ({ password, email }) => submitQuery`
     WHERE password = SHA2(CONCAT(${password},${process.env.PASSWORD_SALT}), 224) AND email = ${email}
 `;
 
-module.exports = getFirst(selectPassword);
+module.exports = getFirst(selectPassword, "password");

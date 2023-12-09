@@ -45,8 +45,8 @@ const putPasswordSchema = yup.object().shape({
         return selectPassword({
           email,
           password
-        }).then(DoesPasswordMatch => {
-          if (!DoesPasswordMatch) {
+        }).then(isPasswordTheSameAsBefore => {
+          if (!isPasswordTheSameAsBefore) {
             return true;
           }
           return false;
