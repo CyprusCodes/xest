@@ -366,7 +366,7 @@ const readFileParametersSchema = yup.object({
 
 READ_FILE_AT_PATH = {
   name: "read_file_at_path",
-  description: "Read file content at a given path.",
+  description: "Read file content at a given path",
   associatedCommands: [],
   prerequisites: [],
   parameterize: validateArguments(readFileParametersSchema),
@@ -407,7 +407,9 @@ READ_FILE_AT_PATH = {
 // listAPIEndpoints -- AST parser integration
 // parseModuleDependencies -- chipper integration
 
-// findUsagesOfModule
+// IDENTIFY_DEPENDENT_FILES
+// IDENTIFY_DEPENDENCIES_OF_FILE
+
 // showControllerForApiEndpoint
 // showQueryFilesForApiEndpoint
 // showYupSchemaForApiEndpoint
