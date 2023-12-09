@@ -15,6 +15,7 @@ let GET_DATABASE_TABLE_SCHEMA;
 let FIND_FILES_BY_GLOB_PATTERN;
 let FIND_FILES_BY_KEYWORD;
 let SEARCH_FOR_STRING_IN_FILES;
+let SEARCH_FOR_REGEX_PATTERN_IN_FILES;
 
 const noParamsSchema = yup.object({});
 
@@ -242,6 +243,57 @@ SEARCH_FOR_STRING_IN_FILES = {
   },
 };
 
+const searchForRegexPatternInFilesParametersSchema = yup.object({
+  regexPattern: yup
+    .string()
+    .required("regexPattern is required")
+    .description("The regex pattern to search for in the codebase."),
+});
+
+SEARCH_FOR_REGEX_PATTERN_IN_FILES = {
+  name: "search_for_regex_pattern_in_files",
+  description:
+    "Searches for a regex pattern within files and provides information on matching occurrences and their file paths.",
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(searchForRegexPatternInFilesParametersSchema),
+  parameters: yupToJsonSchema(searchForRegexPatternInFilesParametersSchema),
+  rerun: true,
+  rerunWithDifferentParameters: true,
+  runCmd: async ({ regexPattern }) => {
+    const projectRootPackageJSON = await findProjectRoot();
+    const { filename } = projectRootPackageJSON;
+    const projectRootPath = dirname(filename);
+
+    try {
+      const results = await fileSearch([projectRootPath], regexPattern, {
+        recursive: true,
+        words: false,
+        ignoreCase: false,
+        isRegex: true,
+        ignoreDir: [
+          `${projectRootPath}/node_modules`,
+          `${projectRootPath}/.xest`,
+        ],
+        fileMask: "js",
+      });
+
+      if (!results.length) {
+        return `No files contain the regex pattern: ${regexPattern}`;
+      }
+
+      return `${
+        results.length
+      } files found with the regex pattern: ${regexPattern}\n${results.join(
+        "\n"
+      )}`;
+    } catch (err) {
+      console.log(err);
+      return `Error happened whilst doing code search. Report this please.`;
+    }
+  },
+};
+
 // searchPatternInFiles
 // listDirectoryContents
 // readFile
@@ -350,4 +402,5 @@ module.exports = [
   FIND_FILES_BY_GLOB_PATTERN,
   FIND_FILES_BY_KEYWORD,
   SEARCH_FOR_STRING_IN_FILES,
+  SEARCH_FOR_REGEX_PATTERN_IN_FILES,
 ];
