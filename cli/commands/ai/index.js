@@ -76,7 +76,7 @@ const ai = async () => {
             }),
           }
         : {}),
-      max_tokens: 100,
+      max_tokens: 200,
       temperature: 0,
     });
 
@@ -85,7 +85,7 @@ const ai = async () => {
     totalCompletionTokens += completion_tokens;
 
     const answer = completion.choices[0].message.content;
-    
+
     // todo: keep assistant history only if they're not hallunicating or relevant to the task at hand
     // keep assistant history
     messages.push(completion.choices[0].message);
@@ -98,7 +98,7 @@ const ai = async () => {
         (fn) => fn.name === functionToCall.name
       );
 
-      console.log(functionToCall, "huh???")
+      console.log(functionToCall, "huh???");
       const { parsedArgumentsSuccesfully, message, parsedArguments } =
         await cmdToRun.parameterize({
           arguments: functionToCall.arguments,
@@ -137,13 +137,24 @@ const ai = async () => {
       } else {
         messages.push({
           role: "user",
-          content: message
-        })
+          content: message,
+        });
       }
     } else if (assistantReply) {
-      console.log("replied?");
       console.log(assistantReply);
-      answered = true;
+      const userIntervention = await inquirer.prompt({
+        type: "input",
+        name: "qry",
+        message: "Type EXIT to quit or instruct AI further to continue.\n",
+      });
+
+      if (userIntervention.qry.toLowerCase().includes("exit")) {
+        answered = true;
+      }
+      messages.push({
+        role: "user",
+        content: userIntervention.qry,
+      });
     }
 
     // stop ai from going wild

@@ -18,6 +18,7 @@ let FIND_FILES_BY_KEYWORD;
 let SEARCH_FOR_STRING_IN_FILES;
 let SEARCH_FOR_REGEX_PATTERN_IN_FILES;
 let LIST_DIRECTORY_CONTENTS;
+let READ_FILE_AT_PATH;
 
 const noParamsSchema = yup.object({});
 
@@ -356,9 +357,56 @@ LIST_DIRECTORY_CONTENTS = {
   },
 };
 
-// readFile
+const readFileParametersSchema = yup.object({
+  path: yup
+    .string()
+    .required()
+    .description("the directory path to show contents"),
+});
+
+READ_FILE_AT_PATH = {
+  name: "read_file_at_path",
+  description: "Read file content at a given path.",
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(readFileParametersSchema),
+  parameters: yupToJsonSchema(readFileParametersSchema),
+  rerun: true,
+  rerunWithDifferentParameters: true,
+  runCmd: async ({ path }) => {
+    const projectRootPackageJSON = await findProjectRoot();
+    const { filename } = projectRootPackageJSON;
+    const projectRootPath = dirname(filename);
+
+    if (!isAbsolute(path)) {
+      path = join(projectRootPath, path);
+    }
+
+    try {
+      // Check if the path exists
+      const stats = await fs.stat(path);
+
+      // Check if it's a file
+      if (!stats.isFile()) {
+        return `Path is not a file: ${path}`;
+      }
+
+      // Read the file contents
+      const contents = await fs.readFile(path, "utf-8");
+      return contents;
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        return `File not found: ${path}`;
+      }
+
+      return `Error reading file ${path}: ${err.message}`;
+    }
+  },
+};
+
 // listAPIEndpoints -- AST parser integration
 // parseModuleDependencies -- chipper integration
+
 // findUsagesOfModule
 // showControllerForApiEndpoint
 // showQueryFilesForApiEndpoint
@@ -464,4 +512,5 @@ module.exports = [
   SEARCH_FOR_STRING_IN_FILES,
   SEARCH_FOR_REGEX_PATTERN_IN_FILES,
   LIST_DIRECTORY_CONTENTS,
+  READ_FILE_AT_PATH,
 ];
