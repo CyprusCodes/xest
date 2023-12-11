@@ -145,7 +145,7 @@ const ai = async () => {
       const userIntervention = await inquirer.prompt({
         type: "input",
         name: "qry",
-        message: "Type EXIT to quit or instruct AI further to continue.\n",
+        message: "\nType EXIT to quit or instruct AI further to continue.\n",
       });
 
       if (userIntervention.qry.toLowerCase().includes("exit")) {

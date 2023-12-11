@@ -3,6 +3,8 @@ const { extendSchema } = require("@sodaru/yup-to-json-schema");
 const { fileSearch } = require("search-in-file");
 const { globSync } = require("glob");
 const { dirname, join, isAbsolute } = require("path");
+const acorn = require("acorn");
+const traverse = require("@babel/traverse");
 const fs = require("fs").promises;
 const { getSchema } = require("../../../utils/getSchema");
 const validateArguments = require("../utils/validateArguments");
@@ -19,6 +21,7 @@ let SEARCH_FOR_STRING_IN_FILES;
 let SEARCH_FOR_REGEX_PATTERN_IN_FILES;
 let LIST_DIRECTORY_CONTENTS;
 let READ_FILE_AT_PATH;
+let LIST_API_ENDPOINTS;
 
 const noParamsSchema = yup.object({});
 
@@ -404,7 +407,90 @@ READ_FILE_AT_PATH = {
   },
 };
 
-// listAPIEndpoints -- AST parser integration
+LIST_API_ENDPOINTS = {
+  name: "list_api_endpoints",
+  description: "Shows the list of API endpoints",
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(noParamsSchema),
+  parameters: yupToJsonSchema(noParamsSchema),
+  rerun: false,
+  rerunWithDifferentParameters: false,
+  runCmd: async () => {
+    const projectRootPackageJSON = await findProjectRoot();
+    const { filename } = projectRootPackageJSON;
+    const projectRootPath = dirname(filename);
+
+    const routesFile = join(projectRootPath, "src/app/routes.js");
+
+    try {
+      // Check if the path exists
+      const stats = await fs.stat(routesFile);
+
+      // Read the file contents
+      const contents = await fs.readFile(routesFile, "utf-8");
+
+      // run through acorn
+      const routesFileAST = acorn.parse(contents, { ecmaVersion: "2020" });
+      let routes = [];
+      let controllers = [];
+
+      traverse.default(routesFileAST, {
+        VariableDeclaration(path) {
+          if (
+            path.node.kind === "const" &&
+            path.node.declarations &&
+            path.node.declarations[0] &&
+            path.node.declarations[0].init &&
+            path.node.declarations[0].init.type === "CallExpression" &&
+            path.node.declarations[0].init.callee.name === "require"
+          ) {
+            const functionName = path.node.declarations[0].id.name;
+            const functionPath =
+              path.node.declarations[0].init.arguments[0].value;
+            controllers.push({ functionName, functionPath });
+          }
+        },
+        CallExpression(path) {
+          const { callee, arguments: argsArr } = path.node;
+          if (
+            callee.type === "MemberExpression" &&
+            callee.object &&
+            callee.object.name === "router"
+          ) {
+            const routeMethod = callee.property.name;
+            const route = argsArr[0].value;
+            const functionName = argsArr[argsArr.length - 1].name;
+            const cntrllr = controllers.find(
+              (c) => c.functionName === functionName
+            );
+            routes.push({
+              route,
+              method: routeMethod,
+              controllerName: functionName,
+              controllerPath: cntrllr ? cntrllr.functionPath : "",
+            });
+          }
+        },
+      });
+
+      const routesList = routes
+        .map((r) => `${r.method.toUpperCase()} ${r.route}`)
+        .join("\n");
+
+      return `Here are the REST API endpoints\n\n${routesList}`;
+    } catch (error) {
+      console.log(`Report this error to Xest: ${error.message}`);
+
+      if (error.code === "ENOENT") {
+        return `Could not identify routes within Repo.`;
+      }
+
+      return `Could not identify routes within Repo.`;
+    }
+  },
+};
+
 // parseModuleDependencies -- chipper integration
 
 // IDENTIFY_DEPENDENT_FILES
@@ -515,4 +601,5 @@ module.exports = [
   SEARCH_FOR_REGEX_PATTERN_IN_FILES,
   LIST_DIRECTORY_CONTENTS,
   READ_FILE_AT_PATH,
+  LIST_API_ENDPOINTS,
 ];
