@@ -4,15 +4,13 @@ const createUser = async ({
   firstName,
   lastName,
   email,
-  password,
-  userTypeId
+  password
 }) => {
   const user = await insertUser({
     firstName,
     lastName,
     email,
-    password,
-    userTypeId
+    password
   });
 
   return { user };

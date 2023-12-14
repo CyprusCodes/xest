@@ -1,4 +1,4 @@
-const { nanoid } = require("nanoid");
+// const { nanoid } = require("nanoid");
 const handleAPIError = require("~root/utils/handleAPIError");
 const createOrganizationInvitation = require("~root/actions/invitations/createOrganizationInvitation");
 const asyncParallel = require("~root/utils/asyncParallel");
@@ -8,7 +8,8 @@ const postOrganizationInvitations = async (req, res) => {
   const { userId } = req.user;
   const { orgId } = req.params;
   const { allInvitedUsers } = req.body;
-  const invitationShortcode = nanoid(10);
+  const invitationShortcode = 567890123;
+  // nanoid(10);
 
   try {
     const invitedUsers = [];

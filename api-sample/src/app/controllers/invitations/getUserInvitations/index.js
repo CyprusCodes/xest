@@ -1,23 +1,21 @@
-const fetchUserInvitations = require("~root/actions/invitations/fetchUserInvitations");
+const fetchUserInvitations = require("~root/actions/users/fetchUserInvitations");
 const handleAPIError = require("~root/utils/handleAPIError");
-const getUserInvitationsSchema = require("./schemas/getUserInvitationsSchema");
+const getUserInvitationSchema = require("./schemas/getUserInvitationSchema");
 
 const getUserInvitations = async (req, res) => {
-  const { userId, email } = req.user;
-
+  const { email } = req.user;
   try {
-    await getUserInvitationsSchema.validate(
+    await getUserInvitationSchema.validate(
       {
-        userId,
         email
       },
       {
         abortEarly: false
       }
     );
-    const { userInvitations } = await fetchUserInvitations({ email });
-    res.status(200).send({
-      userInvitations
+    const { invitations } = await fetchUserInvitations({ email });
+    res.status(201).send({
+      invitations
     });
   } catch (err) {
     handleAPIError(res, err);

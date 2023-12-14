@@ -1,8 +1,8 @@
 const { nanoid } = require("nanoid");
 const handleAPIError = require("~root/utils/handleAPIError");
-const createOrganizationInvitation = require("~root/actions/invitations/createOrganizationInvitation");
-const sendEmail = require("~root/lib/services/emails/sendEmail");
-const postOrganizationInvitationSchema = require("./schemas/postOrganizationInvitationSchema");
+const createOrganizationInvitation = require("~root/actions/users/createOrganizationInvitation");
+const sendEmail = require("~root/services/emails/sendEmail");
+const postOrganizationInvitationSchema = require("./schemas/postInvitationSchema");
 const selectUserFullNameById = require("./queries/selectUserFullNameById");
 const selectOrganizationNameById = require("./queries/selectOrganizationNameById");
 const selectUserRoleNameById = require("./queries/selectUserRoleNameById");
@@ -12,6 +12,7 @@ const postOrganizationInvitation = async (req, res) => {
   const { orgId } = req.params;
   const { email, userRoleId, comment } = req.body;
   const invitationShortcode = nanoid(10);
+
   try {
     await postOrganizationInvitationSchema.validate(
       {
@@ -37,7 +38,6 @@ const postOrganizationInvitation = async (req, res) => {
     if (comment) {
       messageTitle = `Below is a message from ${sender} :`;
     }
-
     if (userRole === "representative") {
       newRole = "Rep";
     }
@@ -58,7 +58,7 @@ const postOrganizationInvitation = async (req, res) => {
         organizationName,
         messageTitle,
         senderMessage: comment,
-        notificationsPageUrl: `${process.env.APP_BASE_URL}/authentication/register?email=${email}`
+        notificationsPageUrl: `${process.env.APP_BASE_URL}/auth/jwt/login?email=${email}`
       }
     };
     const { newInvitationId } = await createOrganizationInvitation({

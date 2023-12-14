@@ -21,16 +21,17 @@ VALUES
   );
 
 -- YOU CAN MODIFY BELOW THIS LINE
-DROP TABLE IF EXISTS user_types;
 
-CREATE TABLE
-  user_types (
-    user_type_id int AUTO_INCREMENT PRIMARY KEY,
-    user_type VARCHAR(50) NOT NULL
-  ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- USER_ROLES TABLE START
+DROP TABLE IF EXISTS user_roles;
+CREATE TABLE user_roles(
+  user_role_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  user_role VARCHAR(100) NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- USER_ROLES TABLE END
 
+-- USERS TABLE START
 DROP TABLE IF EXISTS users;
-
 CREATE TABLE
   users (
     user_id int AUTO_INCREMENT PRIMARY KEY,
@@ -43,10 +44,10 @@ CREATE TABLE
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_type_id) REFERENCES user_types (user_type_id)
   ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- USERS TABLE END
 
 -- ORGANIZATIONS TABLE START
 DROP TABLE IF EXISTS organizations;
-
 CREATE TABLE
   organizations (
     organization_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
@@ -54,47 +55,39 @@ CREATE TABLE
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
-
 -- ORGANIZATIONS TABLE END
--- -- USER_ORGANIZATION TABLE START
+
+-- USER_ORGANIZATION TABLE START
 DROP TABLE IF EXISTS user_organizations;
-
-CREATE TABLE
-  user_organizations (
-    user_organization_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    user_id INT NOT NULL,
-    added_by INT NOT NULL,
-    disabled_by INT,
-    disabled_at DATETIME,
-    user_type_id INT NOT NULL,
-    organization_id INT NOT NULL,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users (user_id),
-    FOREIGN KEY (disabled_by) REFERENCES users (user_id),
-    FOREIGN KEY (user_type_id) REFERENCES user_types (user_type_id),
-    FOREIGN KEY (organization_id) REFERENCES organizations (organization_id)
-  ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
-
+CREATE TABLE user_organizations(
+  user_organization_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  user_id INT NOT NULL,
+  user_role_id INT NOT NULL,
+  organization_id INT NOT NULL,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(user_id),
+  FOREIGN KEY (user_role_id) REFERENCES user_roles(user_role_id),
+  FOREIGN KEY (organization_id) REFERENCES organizations(organization_id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
 -- USER_ORGANIZATION TABLE END
+
 -- USER_ORGANIZATION_INVITATIONS TABLE START
 DROP TABLE IF EXISTS user_organization_invitations;
-
-CREATE TABLE
-  user_organization_invitations (
-    user_organization_invitation_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    invitation_shortcode VARCHAR(200) NOT NULL,
-    organization_id INT NOT NULL,
-    email VARCHAR(200) NOT NULL,
-    invited_by INT NOT NULL,
-    user_type_id INT NOT NULL,
-    comment VARCHAR(500),
-    sent_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    accepted_at DATETIME,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_type_id) REFERENCES user_types (user_type_id),
-    FOREIGN KEY (organization_id) REFERENCES organizations (organization_id),
-    FOREIGN KEY (invited_by) REFERENCES users (user_id)
-  ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
-
+CREATE TABLE user_organization_invitations(
+  user_organization_invitation_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  invitation_shortcode VARCHAR(200) NOT NULL,
+  organization_id INT NOT NULL,
+  email VARCHAR (200) NOT NULL,
+  invited_by INT NOT NULL,
+  user_role_id INT NOT NULL,
+  comment VARCHAR(500),
+  sent_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  accepted_at DATETIME,
+  declined_at DATETIME,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_role_id) REFERENCES user_roles(user_role_id),
+  FOREIGN KEY (organization_id) REFERENCES organizations(organization_id),
+  FOREIGN KEY (invited_by) REFERENCES user_organizations(user_id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
 -- USER_ORGANIZATION_INVITATIONS TABLE END

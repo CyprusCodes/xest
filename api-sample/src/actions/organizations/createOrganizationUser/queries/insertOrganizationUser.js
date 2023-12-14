@@ -6,7 +6,7 @@ const insertOrganizationUser = ({
   orgId,
   userId
 }) => submitQuery`
-  INSERT INTO user_organizations  
+  INSERT INTO user_organizations
   (
     user_id,
     user_role_id,

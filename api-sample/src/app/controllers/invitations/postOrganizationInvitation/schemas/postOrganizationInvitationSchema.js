@@ -22,29 +22,23 @@ const postOrganizationInvitationSchema = yup.object().shape({
       "doesEmailExist",
       "User account already exists or Invitation already exist",
       async function test(email) {
-        const { orgId, userRoleId } = this.parent;
-
+        const { orgId, userTypeId } = this.parent;
         const userOrganization = await selectUserOrganizationByEmail({
           email,
           orgId,
-          userRoleId
+          userTypeId
         });
-
         if (userOrganization) {
           return false;
         }
-
-        const invitation = await selectInvitation({ email, orgId, userRoleId });
-
+        const invitation = await selectInvitation({ email, orgId, userTypeId });
         if (invitation) {
           return false;
         }
-
         return true;
       }
     ),
-
-  userRoleId: yup
+  userTypeId: yup
     .number()
     .positive()
     .required()
@@ -53,22 +47,19 @@ const postOrganizationInvitationSchema = yup.object().shape({
     .test(
       "doesUserRoleIdExist",
       "User role Id does not exists.",
-      async function test(userRoleId) {
-        const userRole = await selectUserRole({ userRoleId });
-
+      async function test(userTypeId) {
+        const userRole = await selectUserRole({ userTypeId });
         if (userRole) {
           return true;
         }
         return false;
       }
     ),
-
   orgId: yup
     .number()
     .required()
     .label("Organization ID")
     .typeError("Organization Id must be a number"),
-
   userId: yup
     .number()
     .positive()
@@ -80,14 +71,12 @@ const postOrganizationInvitationSchema = yup.object().shape({
       "The user must belong to the Organization and have the appropriate access (organization admin or event manager) or be a superAdmin",
       async function test(userId) {
         const { orgId } = this.parent;
-
         const isUserSuperAdmin = await selectSuperAdmin({
           userId
         });
         if (isUserSuperAdmin) {
           return true;
         }
-
         const user = await selectOrganizationUser({
           orgId,
           userId
@@ -95,7 +84,6 @@ const postOrganizationInvitationSchema = yup.object().shape({
         if (user) {
           return true;
         }
-
         return false;
       }
     )

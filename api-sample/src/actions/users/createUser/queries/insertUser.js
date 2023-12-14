@@ -4,8 +4,7 @@ const insertUser = ({
   firstName,
   lastName,
   email,
-  password,
-  userTypeId
+  password
 }) => submitQuery`
   INSERT INTO users
   (
@@ -21,7 +20,7 @@ const insertUser = ({
     ${lastName},
     ${email},
     SHA2(CONCAT(${password},${process.env.PASSWORD_SALT}), 224),
-    ${userTypeId}
+    2
   )
 `;
 

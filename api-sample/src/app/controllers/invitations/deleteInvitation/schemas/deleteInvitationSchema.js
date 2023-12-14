@@ -10,8 +10,7 @@ const deleteInvitationSchema = yup.object().shape({
     .typeError("The user id must be a valid number"),
 
   invitationId: yup
-    .number()
-    .positive()
+    .string()
     .label("invitaionId")
     .typeError("The invitation id must be a valid id"),
 
@@ -21,7 +20,7 @@ const deleteInvitationSchema = yup.object().shape({
     .label("email")
     .typeError("The email must be a valid email"),
 
-  shortCode: yup
+  shortcode: yup
     .string()
     .min(1)
     .label("Invitation ShortCode")

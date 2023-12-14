@@ -75,17 +75,16 @@ VALUES
 INSERT INTO
   user_organizations (
     user_id,
-    added_by,
     disabled_by,
     disabled_at,
     user_type_id,
     organization_id
   )
 VALUES
-  (1, 1, 1, '2022-01-01 00:00:00', 1, 1),
-  (2, 2, 2, '2022-01-01 00:00:00', 2, 2),
-  (3, 3, 3, '2022-01-01 00:00:00', 1, 3),
-  (4, 4, 4, '2022-01-01 00:00:00', 2, 4);
+  (1, 1, '2022-01-01 00:00:00', 1, 1),
+  (2, 2, '2022-01-01 00:00:00', 2, 2),
+  (3, 3, '2022-01-01 00:00:00', 1, 3),
+  (4, 4, '2022-01-01 00:00:00', 2, 4);
 
 INSERT INTO
   user_organization_invitations (
@@ -94,7 +93,7 @@ INSERT INTO
     email,
     invited_by,
     user_type_id,
-    comment,
+    message,
     sent_at,
     accepted_at
   )

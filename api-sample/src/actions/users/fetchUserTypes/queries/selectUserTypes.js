@@ -1,7 +1,7 @@
 const { submitQuery, camelKeys } = require("~root/lib/database");
 
 const selectUserTypes = () => submitQuery`
-    SELECT 
+    SELECT
         user_type
     FROM user_types
 `;

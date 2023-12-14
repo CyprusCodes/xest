@@ -1,18 +1,18 @@
-const removeInvitation = require("~root/actions/invitations/removeInvitation");
 const handleAPIError = require("~root/utils/handleAPIError");
+const removeInvitation = require("~root/actions/users/removeInvitation");
 const deleteInvitationSchema = require("./schemas/deleteInvitationSchema");
 
 const deleteInvitation = async (req, res) => {
   const { userId, email } = req.user;
   const { invitationId } = req.params;
-  const { shortCode } = req.body;
+  const { shortcode } = req.body;
 
   try {
     await deleteInvitationSchema.validate(
       {
         userId,
         invitationId,
-        shortCode,
+        shortcode,
         email
       },
       {
