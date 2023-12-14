@@ -24,6 +24,8 @@ const deleteOrganizationInvitation = require("./controllers/organizations/delete
 const getOrganizationUsers = require("./controllers/organizations/getOrganizationUsers");
 const getUserOrganizations = require("./controllers/users/getUserOrganizations");
 const getRequestByShortcode = require("./controllers/users/getRequestByShortcode");
+const putPassword = require("./controllers/password-recovery/putPassword");
+const postRecoveryRequest = require("./controllers/password-recovery/postRecoveryRequest");
 
 const router = express.Router();
 
@@ -37,6 +39,7 @@ router.post(
   postUser
 );
 router.post("/register", postUser);
+
 router.put("/edit/user", authentication, putUserDetails);
 router.get("/user-types", getUserTypes);
 router.post("/organizations/create", authentication, postOrganization);
@@ -105,5 +108,9 @@ router.delete(
   authentication,
   deleteOrganizationUser
 );
+
+router.post("/recovery-request", postRecoveryRequest);
+
+router.put("/update-password/:shortcode", putPassword);
 
 module.exports = router;

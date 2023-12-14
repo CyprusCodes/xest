@@ -136,3 +136,5 @@ VALUES
     '2022-01-04 00:00:00',
     '2022-01-05 00:00:00'
   );
+INSERT INTO password_recovery_requests(shortcode,requested_email,expiry_date,created_at)
+VALUES ("321","ahmet@akinsql.com","2020-09-20 12:30:00","2022-01-03 12:30:00");
