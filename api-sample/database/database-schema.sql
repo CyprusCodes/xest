@@ -39,10 +39,10 @@ CREATE TABLE
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(500) NOT NULL,
-    user_type_id int NOT NULL,
+    user_role_id int NOT NULL,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_type_id) REFERENCES user_types (user_type_id)
+    FOREIGN KEY (user_role_id) REFERENCES user_roles (user_role_id)
   ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
 -- USERS TABLE END
 

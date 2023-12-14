@@ -10,7 +10,7 @@ VALUES
 
 -- YOU CAN MODIFY BELOW THIS LINE
 INSERT INTO
-  user_types (user_type_id, user_type)
+  user_roles (user_role_id, user_role)
 VALUES
   (1, "admin"),
   (2, "user");
@@ -22,7 +22,7 @@ INSERT INTO
     last_name,
     email,
     password,
-    user_type_id,
+    user_role_id,
     created_at
   )
 VALUES
@@ -75,16 +75,14 @@ VALUES
 INSERT INTO
   user_organizations (
     user_id,
-    disabled_by,
-    disabled_at,
-    user_type_id,
+    user_role_id,
     organization_id
   )
 VALUES
-  (1, 1, '2022-01-01 00:00:00', 1, 1),
-  (2, 2, '2022-01-01 00:00:00', 2, 2),
-  (3, 3, '2022-01-01 00:00:00', 1, 3),
-  (4, 4, '2022-01-01 00:00:00', 2, 4);
+  (1, 1, 1),
+  (2, 2, 2),
+  (3, 1, 1),
+  (4, 2, 2);
 
 INSERT INTO
   user_organization_invitations (
@@ -92,8 +90,8 @@ INSERT INTO
     organization_id,
     email,
     invited_by,
-    user_type_id,
-    message,
+    user_role_id,
+    comment,
     sent_at,
     accepted_at
   )
