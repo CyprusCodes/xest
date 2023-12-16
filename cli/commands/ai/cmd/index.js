@@ -4,6 +4,7 @@ const { fileSearch } = require("search-in-file");
 const { globSync } = require("glob");
 const { dirname, join, isAbsolute } = require("path");
 const acorn = require("acorn");
+const chipper = require("chipper/prog");
 const traverse = require("@babel/traverse");
 const fs = require("fs").promises;
 const { getSchema } = require("../../../utils/getSchema");
@@ -22,6 +23,8 @@ let SEARCH_FOR_REGEX_PATTERN_IN_FILES;
 let LIST_DIRECTORY_CONTENTS;
 let READ_FILE_AT_PATH;
 let LIST_API_ENDPOINTS;
+let LIST_DEPENDENT_MODULES;
+let LIST_MODULE_DEPENDENCIES;
 
 const noParamsSchema = yup.object({});
 
@@ -491,10 +494,154 @@ LIST_API_ENDPOINTS = {
   },
 };
 
-// parseModuleDependencies -- chipper integration
+const listDependentModuleSchema = yup.object({
+  path: yup
+    .string()
+    .required()
+    .description(
+      "path to the file to show the list of modules that depend on it"
+    ),
+});
 
-// IDENTIFY_DEPENDENT_FILES
-// IDENTIFY_DEPENDENCIES_OF_FILE
+LIST_DEPENDENT_MODULES = {
+  name: "list_dependent_modules",
+  description:
+    "Show the list of modules that depend on a specified module, which other modules rely on the given one within the dependency structure",
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(listDependentModuleSchema),
+  parameters: yupToJsonSchema(listDependentModuleSchema),
+  rerun: false,
+  rerunWithDifferentParameters: false,
+  runCmd: async ({ path }) => {
+    const projectRootPackageJSON = await findProjectRoot();
+    const { filename } = projectRootPackageJSON;
+    const projectRootPath = dirname(filename);
+
+    if (!isAbsolute(path)) {
+      path = join(projectRootPath, path);
+    }
+
+    try {
+      // Check if the path exists
+      const stats = await fs.stat(path);
+
+      // Check if it's a file
+      if (!stats.isFile()) {
+        return `Path is not a file: ${path}`;
+      }
+
+      const aliases = [
+        `~root:${projectRootPath}/src`,
+        `~test:${projectRootPath}/test`,
+      ];
+
+      // do chipper scan
+      let oldConsole = console;
+      const results = await chipper.exec(["surface", path], {
+        alias: aliases,
+        silenceConsole: true,
+        projectRoot: projectRootPath,
+        outputFormat: "json",
+        rescan: true,
+      });
+      console = oldConsole;
+
+      if (!results.length) {
+        return `No modules depend on ${path}`;
+      }
+
+      return `${results.length} modules depend on ${path}\n\n${results
+        .map((r) => r.sourceFile)
+        .join("\n")}`;
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        return `File not found: ${path}`;
+      }
+
+      return `Error reading file ${path}: ${error.message}`;
+    }
+  },
+};
+
+const listModuleDependenciesSchema = yup.object({
+  path: yup
+    .string()
+    .required()
+    .description(
+      "path to the file to show the list of modules that depend on it"
+    ),
+  dependencyDepth: yup
+    .number()
+    .default(0)
+    .min(0)
+    .description(
+      "the level of dependency retrieval, where 0 represents only direct dependencies, and higher values include deeper levels of transitive dependencies"
+    ),
+});
+
+LIST_MODULE_DEPENDENCIES = {
+  name: "list_module_dependencies",
+  description:
+    "Show the list of modules that are imported or depended upon by a specified module",
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(listModuleDependenciesSchema),
+  parameters: yupToJsonSchema(listModuleDependenciesSchema),
+  rerun: false,
+  rerunWithDifferentParameters: false,
+  runCmd: async ({ path }) => {
+    const projectRootPackageJSON = await findProjectRoot();
+    const { filename } = projectRootPackageJSON;
+    const projectRootPath = dirname(filename);
+
+    if (!isAbsolute(path)) {
+      path = join(projectRootPath, path);
+    }
+
+    try {
+      // Check if the path exists
+      const stats = await fs.stat(path);
+
+      // Check if it's a file
+      if (!stats.isFile()) {
+        return `Path is not a file: ${path}`;
+      }
+
+      const aliases = [
+        `~root:${projectRootPath}/src`,
+        `~test:${projectRootPath}/test`,
+      ];
+
+      // do chipper scan
+      let oldConsole = console;
+      const results = await chipper.exec(["dependencies", path], {
+        alias: aliases,
+        silenceConsole: true,
+        projectRoot: projectRootPath,
+        outputFormat: "json",
+        rescan: true,
+      });
+      console = oldConsole;
+
+      if (!results[0].importedModules.length) {
+        return `${path} doesn't depend on any other modules.`;
+      }
+
+      return `${path} depends on ${
+        results[0].importedModules.length
+      } modules. Here is a list of them:\n\n${results[0].importedModules
+        .map((r) => r.absolute)
+        .join("\n")}`;
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        return `File not found: ${path}`;
+      }
+
+      return `Error reading file ${path}: ${error.message}`;
+    }
+  },
+};
 
 // showControllerForApiEndpoint
 // showQueryFilesForApiEndpoint
@@ -602,4 +749,6 @@ module.exports = [
   LIST_DIRECTORY_CONTENTS,
   READ_FILE_AT_PATH,
   LIST_API_ENDPOINTS,
+  LIST_DEPENDENT_MODULES,
+  LIST_MODULE_DEPENDENCIES,
 ];
