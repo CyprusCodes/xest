@@ -4,7 +4,6 @@ const get = require("lodash/get");
 const fs = require("fs");
 
 const scanDependencies = async (path, depth = 0, maxDepth, chipperOpts) => {
-  console.log(`scanning for ${path}`);
   const results = await chipper.exec(["dependencies", path], chipperOpts);
 
   const dependents = get(results, "[0].importedModules", []);

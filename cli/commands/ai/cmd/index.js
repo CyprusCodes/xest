@@ -3,15 +3,15 @@ const { extendSchema } = require("@sodaru/yup-to-json-schema");
 const { fileSearch } = require("search-in-file");
 const { globSync } = require("glob");
 const { dirname, join, isAbsolute } = require("path");
-const acorn = require("acorn");
 const chipper = require("chipper/prog");
-const traverse = require("@babel/traverse");
 const fs = require("fs").promises;
 const { getSchema } = require("../../../utils/getSchema");
 const validateArguments = require("../utils/validateArguments");
 const yupToJsonSchema = require("../utils/yupToJsonSchema");
 const findProjectRoot = require("../../../utils/findProjectRoot");
 const scanDependencies = require("./tools/scanDependencies");
+const extractEndpointsFromRouteFile = require("./tools/extractEndpointsFromRouteFile");
+const { readFileSync } = require("fs");
 
 extendSchema({ addMethod: yup.addMethod, Schema: yup.Schema });
 
@@ -26,6 +26,7 @@ let READ_FILE_AT_PATH;
 let LIST_API_ENDPOINTS;
 let LIST_DEPENDENT_MODULES;
 let LIST_MODULES_IMPORTED_BY;
+let SHOW_CONTROLLER_FOR_API_ENDPOINT;
 
 const noParamsSchema = yup.object({});
 
@@ -434,49 +435,7 @@ LIST_API_ENDPOINTS = {
       // Read the file contents
       const contents = await fs.readFile(routesFile, "utf-8");
 
-      // run through acorn
-      const routesFileAST = acorn.parse(contents, { ecmaVersion: "2020" });
-      let routes = [];
-      let controllers = [];
-
-      traverse.default(routesFileAST, {
-        VariableDeclaration(path) {
-          if (
-            path.node.kind === "const" &&
-            path.node.declarations &&
-            path.node.declarations[0] &&
-            path.node.declarations[0].init &&
-            path.node.declarations[0].init.type === "CallExpression" &&
-            path.node.declarations[0].init.callee.name === "require"
-          ) {
-            const functionName = path.node.declarations[0].id.name;
-            const functionPath =
-              path.node.declarations[0].init.arguments[0].value;
-            controllers.push({ functionName, functionPath });
-          }
-        },
-        CallExpression(path) {
-          const { callee, arguments: argsArr } = path.node;
-          if (
-            callee.type === "MemberExpression" &&
-            callee.object &&
-            callee.object.name === "router"
-          ) {
-            const routeMethod = callee.property.name;
-            const route = argsArr[0].value;
-            const functionName = argsArr[argsArr.length - 1].name;
-            const cntrllr = controllers.find(
-              (c) => c.functionName === functionName
-            );
-            routes.push({
-              route,
-              method: routeMethod,
-              controllerName: functionName,
-              controllerPath: cntrllr ? cntrllr.functionPath : "",
-            });
-          }
-        },
-      });
+      const routes = extractEndpointsFromRouteFile(contents);
 
       const routesList = routes
         .map((r) => `${r.method.toUpperCase()} ${r.route}`)
@@ -642,22 +601,104 @@ LIST_MODULES_IMPORTED_BY = {
   },
 };
 
+const showControllerForApiEndpointSchema = yup.object({
+  httpMethod: yup
+    .string()
+    .required()
+    .description("The HTTP method associcated with the API endpoint"),
+  resourcePath: yup.string().description("URI associated with the endpoint"),
+});
+
+SHOW_CONTROLLER_FOR_API_ENDPOINT = {
+  name: "SHOW_CONTROLLER_FOR_API_ENDPOINT",
+  description:
+    "show the controller file path and its contents for a given API endpoint",
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(showControllerForApiEndpointSchema),
+  parameters: yupToJsonSchema(showControllerForApiEndpointSchema),
+  rerun: false,
+  rerunWithDifferentParameters: false,
+  runCmd: async ({ httpMethod, resourcePath }) => {
+    const projectRootPackageJSON = await findProjectRoot();
+    const { filename } = projectRootPackageJSON;
+    const projectRootPath = dirname(filename);
+
+    const routesFile = join(projectRootPath, "src/app/routes.js");
+
+    try {
+      // Check if the path exists
+      const stats = await fs.stat(routesFile);
+
+      // Read the file contents
+      const contents = await fs.readFile(routesFile, "utf-8");
+
+      const routes = extractEndpointsFromRouteFile(contents);
+      const endpoint = routes.find((r) => {
+        const httpMethodToSearch = httpMethod.toLowerCase().trim();
+        const resourcePathToSearch = resourcePath.toLowerCase().trim();
+        const endpoint = r.route.toLowerCase().trim();
+        const method = r.method.toLowerCase().trim();
+
+        return (
+          method === httpMethodToSearch && resourcePathToSearch === endpoint
+        );
+      });
+
+      if (!endpoint) {
+        return `There is no such endpoint ${httpMethod} ${resourcePath}. Run ${LIST_API_ENDPOINTS.name} to check list of available endpoints.`
+      }
+
+      const aliases = [
+        `~root:${projectRootPath}/src`,
+        `~test:${projectRootPath}/test`,
+      ];
+
+      // do chipper scan
+      let oldConsole = console;
+      const routesDependencies = await scanDependencies(routesFile, 1, 1, {
+        alias: aliases,
+        silenceConsole: true,
+        projectRoot: projectRootPath,
+        outputFormat: "json",
+        rescan: true,
+      });
+
+      const controllerFilePath = endpoint.controllerPath.replace("./", "").replace("~root", "");
+      const controllerFileAbsolutePath = routesDependencies.find(dependencyPath => {
+        return dependencyPath.includes(controllerFilePath);
+      });
+
+      const controllerFileContents = readFileSync(controllerFileAbsolutePath, "utf-8");
+      console = oldConsole;
+      
+      return `The controller file for ${httpMethod} ${resourcePath} is located at ${controllerFileAbsolutePath}\n\n\nThe contents of the module are as follows:\n${controllerFileContents}`;
+    } catch (error) {
+      console.log(`Report this error to Xest: ${error.message}`);
+
+      if (error.code === "ENOENT") {
+        return `Could not identify routes within Repo.`;
+      }
+
+      return `Could not identify routes within Repo.`;
+    }
+  },
+};
+
 // showControllerForApiEndpoint
 // showQueryFilesForApiEndpoint
-// showYupSchemaForApiEndpoint
-// searchCodebaseByApiEndpoint
+// showRequestDataSchemaForApiEndpoint
 // callApiEndpoint
 // getTestAuthToken
+// showDependenciesFromPackageJSONFile
+// showDevelopmentDependenciesFromPackageJSONFile
+// showScriptsFromPackageJSONFile
 
 // writeFile
 // createAPIEndpoint
 // createDatabaseMigration
 // runDatabaseQuery (potentially dangerous)
 // runTerminalCommand
-
-// showDependenciesFromPackageJSONFile
-// showDevelopmentDependenciesFromPackageJSONFile
-// showScriptsFromPackageJSONFile
 
 // searchWithinDatabaseQueryFiles
 // listEnvironmentVariables
@@ -750,4 +791,5 @@ module.exports = [
   LIST_API_ENDPOINTS,
   LIST_DEPENDENT_MODULES,
   LIST_MODULES_IMPORTED_BY,
+  SHOW_CONTROLLER_FOR_API_ENDPOINT,
 ];
