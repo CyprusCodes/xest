@@ -3,6 +3,12 @@ const flattenDeep = require("lodash/flattenDeep");
 const get = require("lodash/get");
 const fs = require("fs");
 
+function filterNonExistentFilesAndSystemDependencies(filePaths) {
+  const existingFiles = filePaths.filter(filePath => fs.existsSync(filePath));
+
+  return existingFiles;
+}
+
 const scanDependencies = async (path, depth = 0, maxDepth, chipperOpts) => {
   const results = await chipper.exec(["dependencies", path], chipperOpts);
 
@@ -22,7 +28,8 @@ const scanDependencies = async (path, depth = 0, maxDepth, chipperOpts) => {
     ...flattenDeep(fileResults),
   ];
 
-  return Promise.resolve(allResults);
+  const filteredResults = filterNonExistentFilesAndSystemDependencies(allResults);
+  return Promise.resolve(filteredResults);
 };
 
 module.exports = scanDependencies;

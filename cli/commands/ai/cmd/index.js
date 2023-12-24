@@ -27,6 +27,7 @@ let LIST_API_ENDPOINTS;
 let LIST_DEPENDENT_MODULES;
 let LIST_MODULES_IMPORTED_BY;
 let SHOW_CONTROLLER_FOR_API_ENDPOINT;
+let SHOW_REQUEST_DATA_SCHEMA_FOR_API_ENDPOINT;
 
 const noParamsSchema = yup.object({});
 
@@ -610,7 +611,7 @@ const showControllerForApiEndpointSchema = yup.object({
 });
 
 SHOW_CONTROLLER_FOR_API_ENDPOINT = {
-  name: "SHOW_CONTROLLER_FOR_API_ENDPOINT",
+  name: "show_controller_for_api_endpoint",
   description:
     "show the controller file path and its contents for a given API endpoint",
   associatedCommands: [],
@@ -646,7 +647,7 @@ SHOW_CONTROLLER_FOR_API_ENDPOINT = {
       });
 
       if (!endpoint) {
-        return `There is no such endpoint ${httpMethod} ${resourcePath}. Run ${LIST_API_ENDPOINTS.name} to check list of available endpoints.`
+        return `There is no such endpoint ${httpMethod} ${resourcePath}. Run ${LIST_API_ENDPOINTS.name} to check list of available endpoints.`;
       }
 
       const aliases = [
@@ -664,14 +665,21 @@ SHOW_CONTROLLER_FOR_API_ENDPOINT = {
         rescan: true,
       });
 
-      const controllerFilePath = endpoint.controllerPath.replace("./", "").replace("~root", "");
-      const controllerFileAbsolutePath = routesDependencies.find(dependencyPath => {
-        return dependencyPath.includes(controllerFilePath);
-      });
+      const controllerFilePath = endpoint.controllerPath
+        .replace("./", "")
+        .replace("~root", "");
+      const controllerFileAbsolutePath = routesDependencies.find(
+        (dependencyPath) => {
+          return dependencyPath.includes(controllerFilePath);
+        }
+      );
 
-      const controllerFileContents = readFileSync(controllerFileAbsolutePath, "utf-8");
+      const controllerFileContents = readFileSync(
+        controllerFileAbsolutePath,
+        "utf-8"
+      );
       console = oldConsole;
-      
+
       return `The controller file for ${httpMethod} ${resourcePath} is located at ${controllerFileAbsolutePath}\n\n\nThe contents of the module are as follows:\n${controllerFileContents}`;
     } catch (error) {
       console.log(`Report this error to Xest: ${error.message}`);
@@ -685,7 +693,130 @@ SHOW_CONTROLLER_FOR_API_ENDPOINT = {
   },
 };
 
-// showControllerForApiEndpoint
+SHOW_REQUEST_DATA_SCHEMA_FOR_API_ENDPOINT = {
+  name: "show_request_data_schema_for_api_endpoint",
+  description:
+    "display the yup schema utilized for validating incoming request",
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(showControllerForApiEndpointSchema),
+  parameters: yupToJsonSchema(showControllerForApiEndpointSchema),
+  rerun: false,
+  rerunWithDifferentParameters: false,
+  runCmd: async ({ httpMethod, resourcePath }) => {
+    const projectRootPackageJSON = await findProjectRoot();
+    const { filename } = projectRootPackageJSON;
+    const projectRootPath = dirname(filename);
+
+    const routesFile = join(projectRootPath, "src/app/routes.js");
+
+    try {
+      // Check if the path exists
+      const stats = await fs.stat(routesFile);
+
+      // Read the file contents
+      const contents = await fs.readFile(routesFile, "utf-8");
+
+      const routes = extractEndpointsFromRouteFile(contents);
+      const endpoint = routes.find((r) => {
+        const httpMethodToSearch = httpMethod.toLowerCase().trim();
+        const resourcePathToSearch = resourcePath.toLowerCase().trim();
+        const endpoint = r.route.toLowerCase().trim();
+        const method = r.method.toLowerCase().trim();
+
+        return (
+          method === httpMethodToSearch && resourcePathToSearch === endpoint
+        );
+      });
+
+      if (!endpoint) {
+        return `There is no such endpoint ${httpMethod} ${resourcePath}. Run ${LIST_API_ENDPOINTS.name} to check list of available endpoints.`;
+      }
+
+      const aliases = [
+        `~root:${projectRootPath}/src`,
+        `~test:${projectRootPath}/test`,
+      ];
+
+      // do chipper scan
+      let oldConsole = console;
+      const routesDependencies = await scanDependencies(routesFile, 1, 1, {
+        alias: aliases,
+        silenceConsole: true,
+        projectRoot: projectRootPath,
+        outputFormat: "json",
+        rescan: true,
+      });
+
+      const controllerFilePath = endpoint.controllerPath
+        .replace("./", "")
+        .replace("~root", "");
+      const controllerFileAbsolutePath = routesDependencies.find(
+        (dependencyPath) => {
+          return dependencyPath.includes(controllerFilePath);
+        }
+      );
+
+      const controllerDependencies = await scanDependencies(
+        controllerFileAbsolutePath,
+        1,
+        20,
+        {
+          alias: aliases,
+          silenceConsole: true,
+          projectRoot: projectRootPath,
+          outputFormat: "json",
+          rescan: true,
+        }
+      );
+      console = oldConsole;
+
+      if (!controllerDependencies.length) {
+        return `This controller does not have a request body validation logic.`;
+      }
+
+      console.log(controllerDependencies, "???");
+
+      const results = await fileSearch(controllerDependencies, `yup.`, {
+        recursive: true,
+        words: false,
+        ignoreCase: false,
+        isRegex: false,
+        ignoreDir: [
+          `${projectRootPath}/node_modules`,
+          `${projectRootPath}/.xest`,
+        ],
+        fileMask: "js",
+      });
+
+      if (!results.length) {
+        return `This controller does not have a request body validation logic.`;
+      }
+
+      let schemas = [];
+      for (path of results) {
+        const content = readFileSync(path);
+        schemas.push({ path, content });
+      }
+
+      return schemas
+        .map(
+          (s) =>
+            `The request validation schema file is located at ${s.path}\n\nIt contains the following logic:${s.content}`
+        )
+        .join("\n\n");
+    } catch (error) {
+      console.log(`Report this error to Xest: ${error}`);
+
+      if (error.code === "ENOENT") {
+        return `Could not identify routes within Repo.`;
+      }
+
+      return `Could not identify routes within Repo.`;
+    }
+  },
+};
+
 // showQueryFilesForApiEndpoint
 // showRequestDataSchemaForApiEndpoint
 // callApiEndpoint
@@ -792,4 +923,5 @@ module.exports = [
   LIST_DEPENDENT_MODULES,
   LIST_MODULES_IMPORTED_BY,
   SHOW_CONTROLLER_FOR_API_ENDPOINT,
+  SHOW_REQUEST_DATA_SCHEMA_FOR_API_ENDPOINT,
 ];
