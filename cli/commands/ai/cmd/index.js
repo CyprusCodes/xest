@@ -11,6 +11,7 @@ const { getSchema } = require("../../../utils/getSchema");
 const validateArguments = require("../utils/validateArguments");
 const yupToJsonSchema = require("../utils/yupToJsonSchema");
 const findProjectRoot = require("../../../utils/findProjectRoot");
+const scanDependencies = require("./tools/scanDependencies");
 
 extendSchema({ addMethod: yup.addMethod, Schema: yup.Schema });
 
@@ -24,7 +25,7 @@ let LIST_DIRECTORY_CONTENTS;
 let READ_FILE_AT_PATH;
 let LIST_API_ENDPOINTS;
 let LIST_DEPENDENT_MODULES;
-let LIST_MODULE_DEPENDENCIES;
+let LIST_MODULES_IMPORTED_BY;
 
 const noParamsSchema = yup.object({});
 
@@ -573,24 +574,24 @@ const listModuleDependenciesSchema = yup.object({
     ),
   dependencyDepth: yup
     .number()
-    .default(0)
-    .min(0)
+    .default(1)
+    .min(1)
     .description(
-      "the level of dependency retrieval, where 0 represents only direct dependencies, and higher values include deeper levels of transitive dependencies"
+      "the level of dependency retrieval, where 1 represents only direct dependencies, and higher values include deeper levels of dependencies"
     ),
 });
 
-LIST_MODULE_DEPENDENCIES = {
-  name: "list_module_dependencies",
+LIST_MODULES_IMPORTED_BY = {
+  name: "list_modules_imported_by",
   description:
-    "Show the list of modules that are imported or depended upon by a specified module",
+    "Show the list of modules that are imported by a specified module",
   associatedCommands: [],
   prerequisites: [],
   parameterize: validateArguments(listModuleDependenciesSchema),
   parameters: yupToJsonSchema(listModuleDependenciesSchema),
   rerun: false,
   rerunWithDifferentParameters: false,
-  runCmd: async ({ path }) => {
+  runCmd: async ({ path, dependencyDepth = 1 }) => {
     const projectRootPackageJSON = await findProjectRoot();
     const { filename } = projectRootPackageJSON;
     const projectRootPath = dirname(filename);
@@ -615,7 +616,7 @@ LIST_MODULE_DEPENDENCIES = {
 
       // do chipper scan
       let oldConsole = console;
-      const results = await chipper.exec(["dependencies", path], {
+      const results = await scanDependencies(path, 1, dependencyDepth, {
         alias: aliases,
         silenceConsole: true,
         projectRoot: projectRootPath,
@@ -624,15 +625,13 @@ LIST_MODULE_DEPENDENCIES = {
       });
       console = oldConsole;
 
-      if (!results[0].importedModules.length) {
-        return `${path} doesn't depend on any other modules.`;
+      if (!results.length) {
+        return `${path} doesn't import on any other modules.`;
       }
 
-      return `${path} depends on ${
-        results[0].importedModules.length
-      } modules. Here is a list of them:\n\n${results[0].importedModules
-        .map((r) => r.absolute)
-        .join("\n")}`;
+      return `${path} imports ${
+        results.length
+      } modules. Here is a list of them:\n\n${results.join("\n")}`;
     } catch (error) {
       if (error.code === "ENOENT") {
         return `File not found: ${path}`;
@@ -750,5 +749,5 @@ module.exports = [
   READ_FILE_AT_PATH,
   LIST_API_ENDPOINTS,
   LIST_DEPENDENT_MODULES,
-  LIST_MODULE_DEPENDENCIES,
+  LIST_MODULES_IMPORTED_BY,
 ];

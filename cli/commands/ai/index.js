@@ -1,3 +1,4 @@
+const get = require("lodash/get");
 const chalk = require("chalk");
 const inquirer = require("inquirer");
 const findProjectRoot = require("../../utils/findProjectRoot");
@@ -90,15 +91,14 @@ const ai = async () => {
     // keep assistant history
     messages.push(completion.choices[0].message);
 
-    const functionToCall = completion.choices[0].message.function_call;
+    const functionToCall = get(completion, "choices[0].message.function_call");
+    const cmdToRun = commandsList.find(
+      (fn) => fn.name === get(functionToCall, "name")
+    );
     const assistantReply = completion.choices[0].message.content;
 
-    if (functionToCall) {
-      const cmdToRun = commandsList.find(
-        (fn) => fn.name === functionToCall.name
-      );
-
-      console.log(functionToCall, "huh???");
+    
+    if (cmdToRun) {
       const { parsedArgumentsSuccesfully, message, parsedArguments } =
         await cmdToRun.parameterize({
           arguments: functionToCall.arguments,
@@ -140,6 +140,12 @@ const ai = async () => {
           content: message,
         });
       }
+    } else if (functionToCall) {
+      // AI wanted to run a non-existing function
+      messages.push({
+        role: "user",
+        content: `There is no tool available called ${functionToCall}. Try running another tool from the available tools.`,
+      });
     } else if (assistantReply) {
       console.log(assistantReply);
       const userIntervention = await inquirer.prompt({
