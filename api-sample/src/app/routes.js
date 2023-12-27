@@ -7,9 +7,10 @@ const authentication = require("./middlewares/authentication");
 const authorise = require("./middlewares/authorisation");
 const getUserTypes = require("./controllers/users/userTypes");
 const { ADMIN } = require("~root/constants/userTypes");
-const postOrganization = require("./controllers/organizations/postOrganization");
+
+// const postOrganization = require("./controllers/organizations/postOrganization");
 const postOrganizationInvitation = require("./controllers/invitations/postOrganizationInvitation");
-const postOrganizationInvitations = require("./controllers/invitations/postOrganizationInvitations");
+// const postOrganizationInvitations = require("./controllers/invitations/postOrganizationInvitations");
 const patchOrganizationInvitation = require("./controllers/invitations/patchOrganizationInvitation");
 const deleteInvitation = require("./controllers/invitations/deleteInvitation");
 const deleteInvitationByOrgUser = require("./controllers/invitations/deleteInvitationByOrgUser");
@@ -20,9 +21,9 @@ const patchOrganizationUser = require("./controllers/organizations/patchOrganiza
 const deleteOrganizationUser = require("./controllers/organizations/deleteOrganizationUser");
 const patchUserInvitation = require("./controllers/users/patchUserInvitation");
 const getOrganizationInvitations = require("./controllers/organizations/getOrganizationInvitations");
-const deleteOrganizationInvitation = require("./controllers/organizations/deleteOrganizationInvitation");
 const getOrganizationUsers = require("./controllers/organizations/getOrganizationUsers");
 const getUserOrganizations = require("./controllers/users/getUserOrganizations");
+
 const getRequestByShortcode = require("./controllers/users/getRequestByShortcode");
 const putPassword = require("./controllers/password-recovery/putPassword");
 const postRecoveryRequest = require("./controllers/password-recovery/postRecoveryRequest");
@@ -42,7 +43,7 @@ router.post("/register", postUser);
 
 router.put("/edit/user", authentication, putUserDetails);
 router.get("/user-types", getUserTypes);
-router.post("/organizations/create", authentication, postOrganization);
+// router.post("/organizations/create", authentication, postOrganization);
 router.get("/organizations/:orgId/users", authentication, getOrganizationUsers);
 router.get("/users/organizations", authentication, getUserOrganizations);
 router.post(
@@ -52,16 +53,12 @@ router.post(
 );
 router.get("/edit/user/request/shortcode/:shortcode", getRequestByShortcode);
 router.patch("/user/invitation-details", authentication, patchUserInvitation);
-router.post(
-  "/organizations/:orgId/invitations",
-  authentication,
-  postOrganizationInvitations
-);
-router.delete(
-  "/organizations/:orgId/invitations/:invitationId",
-  authentication,
-  deleteOrganizationInvitation
-);
+// router.post(
+//   "/organizations/:orgId/invitations",
+//   authentication,
+//   postOrganizationInvitations
+// );
+
 router.get(
   "/organizations/:orgId/invitations",
   authentication,

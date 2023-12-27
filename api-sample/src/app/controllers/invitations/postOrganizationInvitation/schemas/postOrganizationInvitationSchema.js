@@ -22,23 +22,27 @@ const postOrganizationInvitationSchema = yup.object().shape({
       "doesEmailExist",
       "User account already exists or Invitation already exist",
       async function test(email) {
-        const { orgId, userTypeId } = this.parent;
+        const { orgId, userRoleId } = this.parent;
+
         const userOrganization = await selectUserOrganizationByEmail({
           email,
           orgId,
-          userTypeId
+          userRoleId
         });
         if (userOrganization) {
           return false;
         }
-        const invitation = await selectInvitation({ email, orgId, userTypeId });
+
+        const invitation = await selectInvitation({ email, orgId, userRoleId });
+
         if (invitation) {
           return false;
         }
         return true;
       }
     ),
-  userTypeId: yup
+
+  userRoleId: yup
     .number()
     .positive()
     .required()
@@ -47,8 +51,9 @@ const postOrganizationInvitationSchema = yup.object().shape({
     .test(
       "doesUserRoleIdExist",
       "User role Id does not exists.",
-      async function test(userTypeId) {
-        const userRole = await selectUserRole({ userTypeId });
+      async function test(userRoleId) {
+        const userRole = await selectUserRole({ userRoleId });
+
         if (userRole) {
           return true;
         }
