@@ -1,21 +1,16 @@
+const express = require("express");
 const get = require("lodash/get");
-const chalk = require("chalk");
-const inquirer = require("inquirer");
+const chalk = require("chalk")
+const has = require("lodash/has");
 const findProjectRoot = require("../../utils/findProjectRoot");
-const { getInitialPrompt } = require("./prompts/index");
 const sleep = require("../../utils/sleep");
 const commandsList = require("./cmd/index");
 const getListOfAvailableCommands = require("./utils/getListOfAvailableCommands");
 const fs = require("fs");
-const openai = require("./utils/openai");
-const getComputationCost = require("./utils/getComputationCost");
-const getComputationTime = require("./utils/getComputationTime");
+const generateCompletion = require("./utils/generateCompletion");
 
-// limit ai usage so we don't hit out quota with a single query
-const MAX_COST = 1;
-const OPENAI_MODEL = "gpt-3.5-turbo-1106"; //"gpt-4-1106-preview";
-
-const ai = async () => {
+const ai = () => {
+  // ai only works at Xest project root
   const projectDetails = findProjectRoot();
   if (!projectDetails) {
     console.log(
@@ -24,187 +19,118 @@ const ai = async () => {
     return;
   }
 
-  let answered = false;
-  let totalPromptTokens = 0;
-  let totalCompletionTokens = 0;
-  let step_debug = 0;
-  let callHistory = [];
+  const app = express();
 
-  let messages = [{ role: "system", content: getInitialPrompt() }];
-  const userQuery = await inquirer.prompt({
-    type: "input",
-    name: "qry",
-    message: "Welcome to XestGPT. What would you like help with today?\n",
-  });
+  app.use(express.json({ limit: "100mb" }));
 
-  let computationStartTime = new Date();
-  messages.push({ role: "user", content: userQuery.qry });
+  app.post("/session", async (request, response) => {
+    const model = request.body.model || "gpt-3.5-turbo-1106";
+    const maxTokens = request.body.maxTokens || 200;
+    const temperature = request.body.temperature || 0;
+    const messages = request.body.messages || [];
 
-  while (
-    !answered &&
-    getComputationCost({
-      totalPromptTokens,
-      totalCompletionTokens,
-      model: OPENAI_MODEL,
-    }) < MAX_COST
-  ) {
-    step_debug += 1;
-    if (step_debug > 1) {
-      // pace it out for subsequent requests, so we don't get rate limited
-      await sleep(100);
-    }
+    const callHistory = messages
+      .filter((msg) => get(msg, "tool.name"))
+      .map((msg) => {
+        return { name: msg.tool.name, content: msg.tool.args };
+      });
 
     const availableFunctions = getListOfAvailableCommands({
       commandsList,
       callHistory,
     });
-    console.log(
-      availableFunctions.map((fn) => fn.name),
-      "availableFns"
-    );
 
-    const completion = await openai.chat.completions.create({
-      model: OPENAI_MODEL,
-      messages,
-      ...(availableFunctions.length
-        ? {
-            functions: availableFunctions.map((f) => {
-              return {
-                name: f.name,
-                description: f.description,
-                parameters: f.parameters,
-              };
-            }),
-          }
-        : {}),
-      max_tokens: 200,
-      temperature: 0,
-    });
+    console.log(JSON.stringify(availableFunctions, null, 2), "availableFns");
 
-    const { prompt_tokens, completion_tokens } = completion.usage;
-    totalPromptTokens += prompt_tokens;
-    totalCompletionTokens += completion_tokens;
+    // pace it out for subsequent requests, so we don't get rate limited
+    await sleep(100);
 
-    const answer = completion.choices[0].message.content;
+    const lastMessage = messages[messages.length - 1];
+    const isLastMessageFunctionCall = has(lastMessage, "tool.name");
+    const isLastMessageFromUser = lastMessage.role === "user";
 
-    // todo: keep assistant history only if they're not hallunicating or relevant to the task at hand
-    // keep assistant history
-    messages.push(completion.choices[0].message);
+    // todo: what if function to run is not valid?
+    if (
+      isLastMessageFunctionCall &&
+      lastMessage.tool.confirmed &&
+      !lastMessage.tool.runAt
+    ) {
+      const functionName = lastMessage.tool.name
+      const cmdToRun = commandsList.find(
+        (fn) => fn.name === functionName
+      );
 
-    const functionToCall = get(completion, "choices[0].message.function_call");
-    const cmdToRun = commandsList.find(
-      (fn) => fn.name === get(functionToCall, "name")
-    );
-    const assistantReply = completion.choices[0].message.content;
+      const results = await cmdToRun.runCmd(lastMessage.tool.args);
+      lastMessage.tool.runAt = new Date().toISOString();
+      lastMessage.tool.output = JSON.stringify(results);
 
-    
-    if (cmdToRun) {
-      const { parsedArgumentsSuccesfully, message, parsedArguments } =
-        await cmdToRun.parameterize({
-          arguments: functionToCall.arguments,
-          messages,
-          callHistory,
-          functionName: functionToCall.name,
-        });
-
-      if (parsedArgumentsSuccesfully) {
-        callHistory.push({
-          name: functionToCall.name,
-          content: functionToCall.arguments,
-        });
-
-        console.log(
-          `Running tool: ${functionToCall.name}(${JSON.stringify(
-            parsedArguments,
-            null,
-            2
-          )})`
-        );
-
-        const results = await cmdToRun.runCmd(parsedArguments);
-        console.log(results);
-
-        messages.push({
-          role: "function",
-          name: functionToCall.name,
-          content: JSON.stringify(results),
-        });
-
-        messages.push({
-          role: "user",
-          content: `Consider the output of the ${functionToCall.name}. Does this give you enough information to answer my query: ${userQuery.qry}? Think step by step. Run functions if necessary, using the previous information collected where applicable.`,
-        });
-      } else {
-        messages.push({
-          role: "user",
-          content: message,
-        });
-      }
-    } else if (functionToCall) {
-      // AI wanted to run a non-existing function
+      // todo: this message used to refer to original user intent
       messages.push({
+        unuseful: false,
+        hiddenFromUser: false,
         role: "user",
-        content: `There is no tool available called ${functionToCall}. Try running another tool from the available tools.`,
-      });
-    } else if (assistantReply) {
-      console.log(assistantReply);
-      const userIntervention = await inquirer.prompt({
-        type: "input",
-        name: "qry",
-        message: "\nType EXIT to quit or instruct AI further to continue.\n",
+        message: `Consider the output of the ${functionName}. Does this give you enough information to answer my query? Think step by step. Run tools if necessary, using the previous information collected where applicable.`,
       });
 
-      if (userIntervention.qry.toLowerCase().includes("exit")) {
-        answered = true;
-      }
-      messages.push({
-        role: "user",
-        content: userIntervention.qry,
+      const newMessages = await generateCompletion({
+        messages,
+        model,
+        maxTokens,
+        temperature,
+        availableFunctions,
+        commandsList,
       });
+
+      return response.send({ messages: newMessages });
     }
 
-    // stop ai from going wild
-    if (step_debug === 15) {
-      console.log(step_debug, "Steps");
-      answered = true;
-    }
-  }
-  fs.writeFileSync("./sample.json", JSON.stringify(messages, null, 2));
-  console.log(
-    `total computation time `,
-    getComputationTime(computationStartTime, new Date()),
-    " seconds"
-  );
-  console.log(
-    `total computation cost $`,
-    getComputationCost({
-      totalPromptTokens,
-      totalCompletionTokens,
-      model: OPENAI_MODEL,
-    })
-  );
-};
+    if (isLastMessageFunctionCall && !lastMessage.tool.confirmed) {
+      messages.push({
+        unuseful: false,
+        hiddenFromUser: false,
+        role: "user",
+        message: `User decided running ${functionName} tool is irrelevant. Reconsider the list of available tools, and also the conversation so far to respond back.`,
+      });
 
-const aiReplay = async () => {
-  const completion = await openai.createChatCompletion({
-    model: OPENAI_MODEL,
-    // messages: sample,
-    max_tokens: 100,
-    temperature: 0,
+      const newMessages = await generateCompletion({
+        messages,
+        model,
+        maxTokens,
+        temperature,
+        availableFunctions,
+        commandsList,
+      });
+
+      return response.send({ messages: newMessages });
+    }
+
+    if (isLastMessageFromUser) {
+      const newMessages = await generateCompletion({
+        messages,
+        model,
+        maxTokens,
+        temperature,
+        availableFunctions,
+        commandsList,
+      });
+
+      return response.send({ messages: newMessages });
+    }
+
+    // assistant response, do nothing
+    return response.send({ messages: newMessages });
   });
-  console.log(`LATEST ANSWER:`, completion.choices);
-  const { prompt_tokens, completion_tokens, total_tokens } = completion.usage;
-  const totalPromptTokens = prompt_tokens;
-  const totalCompletionTokens = completion_tokens;
-  // console.log(sample);
-  console.log(
-    "total cost $",
-    getComputationCost({
-      totalPromptTokens,
-      totalCompletionTokens,
-      model: OPENAI_MODEL,
-    })
-  );
+
+  app.listen(1313, () => {
+    console.log(chalk.green`XestGPT is available on http://localhost:1313`);
+    var start =
+      process.platform == "darwin"
+        ? "open"
+        : process.platform == "win32"
+        ? "start"
+        : "xdg-open";
+    // require("child_process").exec(start + " http://localhost:1313");
+  });
 };
 
 module.exports = {
