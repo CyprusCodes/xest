@@ -40,8 +40,7 @@ const ai = () => {
       callHistory,
     });
 
-    console.log(JSON.stringify(availableFunctions, null, 2), "availableFns");
-
+    // todo: find a better mechanism?
     // pace it out for subsequent requests, so we don't get rate limited
     await sleep(100);
 
