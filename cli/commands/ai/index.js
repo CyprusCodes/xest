@@ -66,7 +66,7 @@ const ai = () => {
       // todo: this message used to refer to original user intent
       messages.push({
         unuseful: false,
-        hiddenFromUser: false,
+        hiddenFromUser: true,
         role: "user",
         message: `Consider the output of the ${functionName}. Does this give you enough information to answer my query? Think step by step. Run tools if necessary, using the previous information collected where applicable.`,
       });
@@ -86,7 +86,7 @@ const ai = () => {
     if (isLastMessageFunctionCall && !lastMessage.tool.confirmed) {
       messages.push({
         unuseful: false,
-        hiddenFromUser: false,
+        hiddenFromUser: true,
         role: "user",
         message: `User decided running ${functionName} tool is irrelevant. Reconsider the list of available tools, and also the conversation so far to respond back.`,
       });
