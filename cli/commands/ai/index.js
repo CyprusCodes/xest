@@ -1,6 +1,7 @@
 const express = require("express");
 const get = require("lodash/get");
-const chalk = require("chalk")
+const chalk = require("chalk");
+const cors = require("cors");
 const has = require("lodash/has");
 const findProjectRoot = require("../../utils/findProjectRoot");
 const sleep = require("../../utils/sleep");
@@ -20,6 +21,7 @@ const ai = () => {
   }
 
   const app = express();
+  app.use(cors());
 
   app.use(express.json({ limit: "100mb" }));
 
@@ -54,10 +56,8 @@ const ai = () => {
       lastMessage.tool.confirmed &&
       !lastMessage.tool.runAt
     ) {
-      const functionName = lastMessage.tool.name
-      const cmdToRun = commandsList.find(
-        (fn) => fn.name === functionName
-      );
+      const functionName = lastMessage.tool.name;
+      const cmdToRun = commandsList.find((fn) => fn.name === functionName);
 
       const results = await cmdToRun.runCmd(lastMessage.tool.args);
       lastMessage.tool.runAt = new Date().toISOString();
