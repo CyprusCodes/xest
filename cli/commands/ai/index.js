@@ -25,6 +25,18 @@ const ai = () => {
 
   app.use(express.json({ limit: "100mb" }));
 
+  app.get("/tools", async (request, response) => {
+    const tools = commandsList.map((c) => {
+      return {
+        name: c.name,
+        description: c.description,
+        arguments: c.parameters,
+      };
+    });
+
+    response.send({ tools });
+  });
+
   app.post("/session", async (request, response) => {
     const model = request.body.model || "gpt-3.5-turbo-1106";
     const maxTokens = request.body.maxTokens || 200;
@@ -121,14 +133,14 @@ const ai = () => {
   });
 
   app.listen(1313, () => {
-    console.log(chalk.green`XestGPT is available on http://localhost:1313`);
+    console.log(chalk.green`XestGPT is available on http://localhost:3000`);
     var start =
       process.platform == "darwin"
         ? "open"
         : process.platform == "win32"
         ? "start"
         : "xdg-open";
-    // require("child_process").exec(start + " http://localhost:1313");
+     require("child_process").exec(start + " http://localhost:3000");
   });
 };
 
