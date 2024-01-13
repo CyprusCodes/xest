@@ -36,6 +36,10 @@ GET_LIST_OF_DATABASE_TABLES = {
   name: "get_list_of_database_tables",
   description:
     "returns the full list of all tables in the MySQL database for the project",
+  category: "Database",
+  subcategory: "General",
+  functionType: "backend",
+  dangerous: false,
   associatedCommands: [
     {
       command: GET_DATABASE_TABLE_SCHEMA,
@@ -74,6 +78,10 @@ const getDatabaseTableParametersSchema = yup.object({
 GET_DATABASE_TABLE_SCHEMA = {
   name: "get_table_schema",
   description: "returns the table schema",
+  category: "Database",
+  subcategory: "General",
+  functionType: "ui",
+  dangerous: true,
   associatedCommands: [],
   prerequisites: [
     {
@@ -109,6 +117,10 @@ const findFilesByGlobPatternParametersSchema = yup.object({
 FIND_FILES_BY_GLOB_PATTERN = {
   name: "find_files_by_glob_pattern",
   description: "Search files by glob pattern within the codebase",
+  category: "Code",
+  subcategory: "Source Files",
+  functionType: "backend",
+  dangerous: false,
   associatedCommands: [],
   prerequisites: [],
   parameterize: validateArguments(findFilesByGlobPatternParametersSchema),
@@ -160,6 +172,10 @@ const findFilesByKeywordParametersSchema = yup.object({
 FIND_FILES_BY_KEYWORD = {
   name: "find_files_by_keyword",
   description: "Search files by keyword in their name within the codebase",
+  category: "Code",
+  subcategory: "Source Files",
+  functionType: "backend",
+  dangerous: false,
   associatedCommands: [],
   prerequisites: [],
   parameterize: validateArguments(findFilesByKeywordParametersSchema),
@@ -218,6 +234,10 @@ SEARCH_FOR_STRING_IN_FILES = {
   name: "search_for_string_in_files",
   description:
     "Searches for a specified string within files and provides information on matching occurrences and their file paths.",
+  category: "Code",
+  subcategory: "Source Files",
+  functionType: "backend",
+  dangerous: false,
   associatedCommands: [],
   prerequisites: [],
   parameterize: validateArguments(searchForStringInFilesParametersSchema),
@@ -267,6 +287,10 @@ SEARCH_FOR_REGEX_PATTERN_IN_FILES = {
   name: "search_for_regex_pattern_in_files",
   description:
     "Searches for a regex pattern within files and provides information on matching occurrences and their file paths.",
+  category: "Code",
+  subcategory: "Source Files",
+  functionType: "backend",
+  dangerous: false,
   associatedCommands: [],
   prerequisites: [],
   parameterize: validateArguments(searchForRegexPatternInFilesParametersSchema),
@@ -315,6 +339,10 @@ LIST_DIRECTORY_CONTENTS = {
   name: "list_directory_contents",
   description:
     "Lists contents of a given directory. It displays project root by default.",
+  category: "Code",
+  subcategory: "Source Files",
+  functionType: "backend",
+  dangerous: false,
   associatedCommands: [],
   prerequisites: [],
   parameterize: validateArguments(listDirectoryContentsParametersSchema),
@@ -377,6 +405,10 @@ const readFileParametersSchema = yup.object({
 READ_FILE_AT_PATH = {
   name: "read_file_at_path",
   description: "Read file content at a given path",
+  category: "Code",
+  subcategory: "Source Files",
+  functionType: "backend",
+  dangerous: false,
   associatedCommands: [],
   prerequisites: [],
   parameterize: validateArguments(readFileParametersSchema),
@@ -417,6 +449,10 @@ READ_FILE_AT_PATH = {
 LIST_API_ENDPOINTS = {
   name: "list_api_endpoints",
   description: "Shows the list of API endpoints",
+  category: "Code",
+  subcategory: "REST API",
+  functionType: "backend",
+  dangerous: false,
   associatedCommands: [],
   prerequisites: [],
   parameterize: validateArguments(noParamsSchema),
@@ -469,6 +505,10 @@ LIST_DEPENDENT_MODULES = {
   name: "list_dependent_modules",
   description:
     "Show the list of modules that depend on a specified module, which other modules rely on the given one within the dependency structure",
+  category: "Code",
+  subcategory: "Dependency Management",
+  functionType: "backend",
+  dangerous: false,
   associatedCommands: [],
   prerequisites: [],
   parameterize: validateArguments(listDependentModuleSchema),
@@ -546,6 +586,10 @@ LIST_MODULES_IMPORTED_BY = {
   name: "list_modules_imported_by",
   description:
     "Show the list of modules that are imported by a specified module",
+  category: "Code",
+  subcategory: "Dependency Management",
+  functionType: "backend",
+  dangerous: false,
   associatedCommands: [],
   prerequisites: [],
   parameterize: validateArguments(listModuleDependenciesSchema),
@@ -615,6 +659,10 @@ SHOW_CONTROLLER_FOR_API_ENDPOINT = {
   name: "show_controller_for_api_endpoint",
   description:
     "show the controller file path and its contents for a given API endpoint",
+  category: "Code",
+  subcategory: "REST API",
+  functionType: "backend",
+  dangerous: false,
   associatedCommands: [],
   prerequisites: [],
   parameterize: validateArguments(showControllerForApiEndpointSchema),
@@ -698,6 +746,10 @@ SHOW_REQUEST_DATA_SCHEMA_FOR_API_ENDPOINT = {
   name: "show_request_data_schema_for_api_endpoint",
   description:
     "display the yup schema utilized for validating incoming request",
+  category: "Code",
+  subcategory: "REST API",
+  functionType: "backend",
+  dangerous: false,
   associatedCommands: [],
   prerequisites: [],
   parameterize: validateArguments(showControllerForApiEndpointSchema),
@@ -820,6 +872,10 @@ SHOW_QUERY_FILES_FOR_API_ENDPOINT = {
   name: "show_query_files_for_api_endpoint",
   description:
     "display the list of database query files for a given API endpoint",
+  category: "Code",
+  subcategory: "REST API",
+  functionType: "backend",
+  dangerous: false,
   associatedCommands: [],
   prerequisites: [],
   parameterize: validateArguments(showControllerForApiEndpointSchema),
@@ -1037,5 +1093,5 @@ module.exports = [
   LIST_MODULES_IMPORTED_BY,
   SHOW_CONTROLLER_FOR_API_ENDPOINT,
   SHOW_REQUEST_DATA_SCHEMA_FOR_API_ENDPOINT,
-  SHOW_QUERY_FILES_FOR_API_ENDPOINT
+  SHOW_QUERY_FILES_FOR_API_ENDPOINT,
 ];

@@ -30,6 +30,10 @@ const ai = () => {
       return {
         name: c.name,
         description: c.description,
+        category: c.category,
+        subcategory: c.subcategory,
+        functionType: c.functionType,
+        dangerous: c.dangerous,
         arguments: c.parameters,
       };
     });
