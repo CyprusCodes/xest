@@ -46,6 +46,7 @@ const ai = () => {
     const maxTokens = request.body.maxTokens || 200;
     const temperature = request.body.temperature || 0;
     const messages = request.body.messages || [];
+    const enabledTools = request.body.enabledTools || [];
 
     const callHistory = messages
       .filter((msg) => get(msg, "tool.name"))
@@ -53,9 +54,19 @@ const ai = () => {
         return { name: msg.tool.name, content: msg.tool.args };
       });
 
-    const availableFunctions = getListOfAvailableCommands({
+    const allFunctions = getListOfAvailableCommands({
       commandsList,
       callHistory,
+    });
+
+    const availableFunctions = allFunctions.filter((tool) => {
+      return enabledTools.some((enabledTool) => {
+        return (
+          enabledTool.metadata.name === tool.name &&
+          enabledTool.metadata.category === tool.category &&
+          enabledTool.metadata.subcategory === tool.subcategory
+        );
+      });
     });
 
     // todo: find a better mechanism?
@@ -144,7 +155,7 @@ const ai = () => {
         : process.platform == "win32"
         ? "start"
         : "xdg-open";
-     require("child_process").exec(start + " http://localhost:3000");
+    require("child_process").exec(start + " http://localhost:3000");
   });
 };
 

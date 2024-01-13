@@ -1,5 +1,6 @@
 const get = require("lodash/get");
 const has = require("lodash/has");
+const openai = require("./openai");
 
 const getFunctionToRun = async ({
   contextWindow,
