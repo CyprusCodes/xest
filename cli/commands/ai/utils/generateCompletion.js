@@ -1,5 +1,6 @@
 const openai = require("./openai");
 const get = require("lodash/get");
+const { v4: uuid } = require('uuid');
 const convertMessagesToContextWindow = require("./convertMessagesToContextWindow");
 const getFunctionToRun = require("./getFunctionToRun");
 
@@ -38,6 +39,7 @@ const generateCompletion = async ({
     return [
       ...messages,
       {
+        id: uuid(), // todo
         message: assistantReply,
         role: "assistant",
         unuseful: false,
@@ -60,6 +62,7 @@ const generateCompletion = async ({
       return [
         ...messages,
         {
+          id: uuid(), // todo
           message: null,
           role: "function",
           unuseful: false,
@@ -78,6 +81,7 @@ const generateCompletion = async ({
       return [
         ...messages,
         {
+          id: uuid(), // todo
           message: `Unable to run the tool. Please investigate Xest logs and report this issue.`,
           role: "assistant",
           unuseful: true,

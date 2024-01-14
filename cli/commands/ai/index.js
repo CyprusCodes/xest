@@ -3,6 +3,7 @@ const get = require("lodash/get");
 const chalk = require("chalk");
 const cors = require("cors");
 const has = require("lodash/has");
+const { v4: uuid } = require('uuid');
 const findProjectRoot = require("../../utils/findProjectRoot");
 const sleep = require("../../utils/sleep");
 const commandsList = require("./cmd/index");
@@ -92,6 +93,7 @@ const ai = () => {
 
       // todo: this message used to refer to original user intent
       messages.push({
+        id: uuid(), // todo
         unuseful: false,
         hiddenFromUser: true,
         role: "user",
@@ -112,6 +114,7 @@ const ai = () => {
 
     if (isLastMessageFunctionCall && !lastMessage.tool.confirmed) {
       messages.push({
+        id: uuid(), // todo
         unuseful: false,
         hiddenFromUser: true,
         role: "user",

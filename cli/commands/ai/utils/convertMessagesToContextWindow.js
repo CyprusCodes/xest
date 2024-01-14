@@ -4,7 +4,7 @@ const { getInitialPrompt } = require("./prompts/index");
 const convertMessagesToContextWindow = (messages) => {
   const filteredMessages = messages.filter((message) => !message.unuseful);
   const filteredMessagesWithInitialSystemPrompt = [
-    { role: "system", message: getInitialPrompt() },
+    { role: "system", message: getInitialPrompt() }, // message key is NOT a mistake here, intentional
     ...filteredMessages,
   ];
 

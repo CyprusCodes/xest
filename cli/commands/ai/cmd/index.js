@@ -988,6 +988,32 @@ SHOW_QUERY_FILES_FOR_API_ENDPOINT = {
   },
 };
 
+
+const showAlertModalSchema = yup.object({
+  message: yup
+    .string()
+    .required()
+    .description("message to display to user"),
+});
+
+SHOW_ALERT_MODAL = {
+  name: "show_alert_modal",
+  description: "displays an alert modal to show a message to the user",
+  category: "HUD Elements",
+  subcategory: "Feedback",
+  functionType: "ui",
+  dangerous: false,
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(showAlertModalSchema),
+  parameters: yupToJsonSchema(showAlertModalSchema),
+  rerun: false,
+  rerunWithDifferentParameters: false,
+  runCmd: async () => {
+    throw new Error("This is a UI method. It should not be called on the server.")
+  },
+};
+
 // callApiEndpoint
 // runDatabaseQuery (potentially dangerous)
 // getTestAuthToken
@@ -1094,4 +1120,5 @@ module.exports = [
   SHOW_CONTROLLER_FOR_API_ENDPOINT,
   SHOW_REQUEST_DATA_SCHEMA_FOR_API_ENDPOINT,
   SHOW_QUERY_FILES_FOR_API_ENDPOINT,
+  SHOW_ALERT_MODAL
 ];
