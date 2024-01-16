@@ -29,6 +29,8 @@ let LIST_MODULES_IMPORTED_BY;
 let SHOW_CONTROLLER_FOR_API_ENDPOINT;
 let SHOW_REQUEST_DATA_SCHEMA_FOR_API_ENDPOINT;
 let SHOW_QUERY_FILES_FOR_API_ENDPOINT;
+let SHOW_ALERT_MODAL;
+let SHOW_INPUT_FIELD;
 
 const noParamsSchema = yup.object({});
 
@@ -38,20 +40,14 @@ GET_LIST_OF_DATABASE_TABLES = {
     "returns the full list of all tables in the MySQL database for the project",
   category: "Database",
   subcategory: "General",
-  functionType: "backend",
-  dangerous: false,
-  associatedCommands: [
-    {
-      command: GET_DATABASE_TABLE_SCHEMA,
-      description:
-        "you can use the output of table names, and read the schema for each table",
-    },
-  ],
-  prerequisites: [],
+  functionType: "backend", // backend | ui
+  dangerous: false, // 
+  associatedCommands: [], // not functional
+  prerequisites: [], // it works, but you can ignore
   parameterize: validateArguments(noParamsSchema),
   parameters: yupToJsonSchema(noParamsSchema),
   rerun: false,
-  rerunWithDifferentParameters: false,
+  rerunWithDifferentParameters: false, // not functional
   runCmd: async function () {
     const schema = await getSchema();
     return Object.keys(schema).join("\n");
@@ -80,8 +76,8 @@ GET_DATABASE_TABLE_SCHEMA = {
   description: "returns the table schema",
   category: "Database",
   subcategory: "General",
-  functionType: "ui",
-  dangerous: true,
+  functionType: "backend",
+  dangerous: false,
   associatedCommands: [],
   prerequisites: [
     {
@@ -1001,13 +997,40 @@ SHOW_ALERT_MODAL = {
   description: "displays an alert modal to show a message to the user",
   category: "HUD Elements",
   subcategory: "Feedback",
-  functionType: "ui",
+  functionType: "ui", // ui | backend
+  capturesUserInput: false,
   dangerous: false,
   associatedCommands: [],
   prerequisites: [],
   parameterize: validateArguments(showAlertModalSchema),
   parameters: yupToJsonSchema(showAlertModalSchema),
-  rerun: false,
+  rerun: true,
+  rerunWithDifferentParameters: false,
+  runCmd: async () => {
+    throw new Error("This is a UI method. It should not be called on the server.")
+  },
+};
+
+const showInputFieldSchema = yup.object({
+  label: yup
+    .string()
+    .required()
+    .description("label for the input field"),
+});
+
+SHOW_INPUT_FIELD = {
+  name: "show_input_field",
+  description: "display an input element to capture input from user",
+  category: "HUD Elements",
+  subcategory: "Input",
+  functionType: "ui", // ui | backend
+  capturesUserInput: true,
+  dangerous: false,
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(showInputFieldSchema),
+  parameters: yupToJsonSchema(showInputFieldSchema),
+  rerun: true,
   rerunWithDifferentParameters: false,
   runCmd: async () => {
     throw new Error("This is a UI method. It should not be called on the server.")
@@ -1120,5 +1143,6 @@ module.exports = [
   SHOW_CONTROLLER_FOR_API_ENDPOINT,
   SHOW_REQUEST_DATA_SCHEMA_FOR_API_ENDPOINT,
   SHOW_QUERY_FILES_FOR_API_ENDPOINT,
-  SHOW_ALERT_MODAL
+  SHOW_ALERT_MODAL,
+  SHOW_INPUT_FIELD
 ];

@@ -9,6 +9,7 @@ const getFunctionToRun = async ({
   functionToCall,
   depth,
   maxDepth,
+  model
 }) => {
   const cmdToRun = commandsList.find(
     (fn) => fn.name === get(functionToCall, "name")
@@ -53,7 +54,7 @@ const getFunctionToRun = async ({
   }
 
   const completion = await openai.chat.completions.create({
-    model: OPENAI_MODEL,
+    model,
     messages,
     ...(availableFunctions.length
       ? {
@@ -83,6 +84,7 @@ const getFunctionToRun = async ({
     functionToCall: newFunctionToCall,
     depth: depth + 1,
     maxDepth,
+    model
   });
 };
 

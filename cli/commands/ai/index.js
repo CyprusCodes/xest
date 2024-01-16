@@ -146,8 +146,42 @@ const ai = () => {
       return response.send({ messages: newMessages });
     }
 
+    // this is a UI function call returning results
+    if (
+      isLastMessageFunctionCall &&
+      lastMessage.tool.confirmed &&
+      lastMessage.tool.runAt
+    ) {
+      // let's decide whether this UI tool captures input or not
+      const selectedTool = commandsList.find(c => c.name === lastMessage.tool.name);
+      const isUserInputExpected = selectedTool.capturesUserInput;
+
+      if (isUserInputExpected) {
+        messages.push({
+          id: uuid(),
+          unuseful: false,
+          hiddenFromUser: true,
+          role: "user",
+          message: `Consider the data you collected from the previous tool call. Does this give you enough information to answer my query? Think step by step. Run tools if necessary, using the previous information collected where applicable.`,
+        });
+  
+        const newMessages = await generateCompletion({
+          messages,
+          model,
+          maxTokens,
+          temperature,
+          availableFunctions,
+          commandsList,
+        });
+  
+        return response.send({ messages: newMessages });
+      }
+
+      return response.send({ messages });
+    }
+
     // assistant response, do nothing
-    return response.send({ messages: newMessages });
+    return response.send({ messages });
   });
 
   app.listen(1313, () => {

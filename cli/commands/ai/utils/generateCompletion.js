@@ -57,6 +57,7 @@ const generateCompletion = async ({
         functionToCall,
         depth: 1,
         maxDepth: 5,
+        model
     });
 
       return [
