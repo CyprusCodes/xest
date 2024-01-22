@@ -1,6 +1,6 @@
 const fetchUserInvitations = require("~root/actions/users/fetchUserInvitations");
 const handleAPIError = require("~root/utils/handleAPIError");
-const getUserInvitationSchema = require("./schemas/getUserInvitationSchema");
+const getUserInvitationSchema = require("./schemas/getUserInvitationsSchema");
 
 const getUserInvitations = async (req, res) => {
   const { email } = req.user;

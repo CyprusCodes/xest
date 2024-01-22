@@ -1,6 +1,6 @@
 const yup = require("yup");
-const selectUserByOrgId = require("~root/actions/organizations/schemaHelpers/queries/selectUserById/selectUserByOrgId");
-const selectUserById = require("~root/actions/organizations/schemaHelpers/queries/selectUserById/selectUserById");
+const selectUserByOrgId = require("~root/actions/schemaHelpers/queries/selectUserById/selectUserByOrgId");
+const selectUserById = require("~root/actions/schemaHelpers/queries/selectUserById/selectUserById");
 
 const getOrganizationInvitationsSchema = yup.object().shape({
   orgId: yup

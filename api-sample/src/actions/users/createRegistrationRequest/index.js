@@ -6,9 +6,8 @@ const insertRegistrationRequest = require("./queries/insertRegistrationRequest")
     email,
     password,
     companyName,
-    phoneNumber,
-    userTypeId,
-    registrationShortcode,
+    userRoleId,
+    registrationShortcode
   }) => {
   const createdRegistrationRequest = await insertRegistrationRequest({
     firstName,
@@ -16,9 +15,8 @@ const insertRegistrationRequest = require("./queries/insertRegistrationRequest")
     email,
     password,
     companyName,
-    phoneNumber,
-    userTypeId,
-    registrationShortcode,
+    userRoleId,
+    registrationShortcode
   });
 
   return { createdRegistrationRequest };

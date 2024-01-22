@@ -1,4 +1,4 @@
-const { nanoid } = require("nanoid");
+const { v4: uuidv4 } = require("uuid");
 const axios = require("axios");
 const handleAPIError = require("~root/utils/handleAPIError");
 const createRegistrationRequest = require("~root/actions/users/createRegistrationRequest");
@@ -6,14 +6,13 @@ const sendEmail = require("~root/services/sendEmail");
 const postRegistrationRequestSchema = require("./schema/postRegistrationRequestSchema");
 
 const postRegistrationRequest = async (req, res) => {
-  const registrationShortcode = nanoid(10);
+  const registrationShortcode = uuidv4(10);
 
   const {
     firstName,
     lastName,
     email,
     password,
-    phoneNumber,
     companyName,
     captcha
   } = req.body;
@@ -25,7 +24,6 @@ const postRegistrationRequest = async (req, res) => {
         lastName,
         email,
         password,
-        phoneNumber,
         companyName
       },
       {
@@ -58,9 +56,8 @@ const postRegistrationRequest = async (req, res) => {
       email,
       password,
       companyName,
-      phoneNumber,
       userRoleId: 2,
-      registrationShortcode,
+      registrationShortcode
     });
 
     const emailPayload = {
@@ -68,6 +65,7 @@ const postRegistrationRequest = async (req, res) => {
       template: "email-verification",
       version: "0.0.1",
       metadata: {
+        firstName,
         emailVerification: `${process.env.APP_BASE_URL}/complete-registration/${registrationShortcode}`
       }
     };

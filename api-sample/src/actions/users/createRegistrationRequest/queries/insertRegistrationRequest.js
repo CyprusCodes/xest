@@ -1,39 +1,26 @@
-const {
-  submitQuery,
-  getInsertId,
-  sqlValueOrNull
-} = require("~root/lib/database");
+const { submitQuery, getInsertId } = require("~root/lib/database");
 
-const insertRegistrationRequest = ({
+const insertUser = ({
   firstName,
   lastName,
   email,
   password,
-  companyName,
-  phoneNumber,
-  userTypeId,
-  registrationShortcode
+  userRoleId
 }) => submitQuery`
-    INSERT INTO registration_requests(
+    INSERT INTO users (
       first_name,
       last_name,
       email,
       password,
-      organization_name,
-      phone_number,
-      user_type_id,
-      registration_shortcode
+      user_role_id
     )
     VALUES
     (
       ${firstName},
       ${lastName},
       ${email},
-      SHA2(CONCAT(${password},${process.env.PASSWORD_SALT}), 224),
-      ${companyName},
-      ${sqlValueOrNull(phoneNumber)},
-      ${userTypeId},
-      ${registrationShortcode}
+      ${password},
+      ${userRoleId}
     );
-    `;
-module.exports = getInsertId(insertRegistrationRequest);
+`;
+module.exports = getInsertId(insertUser);

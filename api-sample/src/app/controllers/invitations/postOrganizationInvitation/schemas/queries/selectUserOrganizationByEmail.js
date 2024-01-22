@@ -5,7 +5,7 @@ const selectUserOrganizationByEmail = ({
   orgId,
   userRoleId
 }) => submitQuery`
-    SELECT 
+    SELECT
         user_organizations.user_organization_id
     FROM user_organizations
     LEFT JOIN users ON users.user_id = user_organizations.user_id

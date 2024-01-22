@@ -3,16 +3,13 @@ const { submitQuery, camelKeys, getFirst } = require("~root/lib/database");
 const selectRegistrationRequestByShortcode = ({
   registrationShortcode
 }) => submitQuery`
-    SELECT 
-        first_name,
-        last_name,
-        email,
-        password,
-        job_title,
-        user_type_id,
-        organization_id,
-        phone_number,
-        meta
+    SELECT
+      first_name,
+      last_name,
+      email,
+      password,
+      user_role_id,
+      organization_name
     FROM registration_requests
     WHERE registration_shortcode = ${registrationShortcode}
     ORDER BY created_at DESC

@@ -1,9 +1,6 @@
-const {
-  submitQuery,
-  getInsertId
-} = require("~root/lib/database");
+const { submitQuery, getInsertId } = require("~root/lib/database");
 
-const insertOrganization = ({ companyName }) => submitQuery`
+const insertOrganization = ({ organizationName }) => submitQuery`
   INSERT INTO
     organizations
       (
@@ -11,7 +8,7 @@ const insertOrganization = ({ companyName }) => submitQuery`
       )
       VALUES
       (
-        ${companyName}
+        ${organizationName}
       )
 `;
 

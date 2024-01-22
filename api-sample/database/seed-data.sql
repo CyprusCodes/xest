@@ -12,8 +12,14 @@ VALUES
 INSERT INTO
   user_roles (user_role_id, user_role)
 VALUES
-  (1, "admin"),
-  (2, "user");
+  (1, "Admin"),
+  (2, "User");
+
+INSERT INTO
+  user_organization_roles (user_organization_role_id, user_organization_role)
+VALUES
+  (1, "OrganizationAdmin"),
+  (2, "Member");
 
 INSERT INTO
   users (
@@ -75,14 +81,15 @@ VALUES
 INSERT INTO
   user_organizations (
     user_id,
-    user_role_id,
-    organization_id
+    user_organization_role_id,
+    organization_id,
+    added_by
   )
 VALUES
-  (1, 1, 1),
-  (2, 2, 2),
-  (3, 1, 1),
-  (4, 2, 2);
+  (1, 1, 1, 1),
+  (2, 2, 2, 2),
+  (3, 1, 1, 3),
+  (4, 2, 2, 4);
 
 INSERT INTO
   user_organization_invitations (
@@ -90,7 +97,7 @@ INSERT INTO
     organization_id,
     email,
     invited_by,
-    user_role_id,
+    user_organization_role_id,
     comment,
     sent_at,
     accepted_at
@@ -136,17 +143,31 @@ VALUES
     '2022-01-04 00:00:00',
     '2022-01-05 00:00:00'
   );
-INSERT INTO password_recovery_requests(shortcode,requested_email,expiry_date,created_at)
-VALUES ("321","ahmet@akinsql.com","2020-09-20 12:30:00","2022-01-03 12:30:00");
+
+-- INSERT INTO password_recovery_requests(shortcode,requested_email,expiry_date,created_at)
+-- VALUES ("321","ahmet@akinsql.com","2020-09-20 12:30:00","2022-01-03 12:30:00");
+
+INSERT INTO password_recovery_requests(
+  requested_email,
+  shortcode,
+  expiry_date
+) VALUES (
+  'ahmet@akinsql.com',
+  'shortcode1',
+  DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 1 DAY)
+), (
+  'joebloggs@gmail.com',
+  'shortcode2',
+  DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 1 DAY)
+);
 
 INSERT INTO registration_requests(
   first_name,
   last_name,
   email,
   password,
-  user_type_id,
+  user_role_id,
   organization_name,
-  phone_number,
   registration_shortcode
 ) VALUES (
   'John',
@@ -155,15 +176,13 @@ INSERT INTO registration_requests(
   SHA2 (CONCAT ("12345678", "SECRET_SALT"), 224),
   1,
   'Example Organization',
-  '1234567890',
   'shortcode1'
 ), (
   'Jane',
   'Doe',
-  'jane.doe@example.com',
+  'joebloggs@gmail.com',
   SHA2 (CONCAT ("12345678", "SECRET_SALT"), 224),
   2,
   'Example Organization 2',
-  '0987654321',
   'shortcode2'
 );

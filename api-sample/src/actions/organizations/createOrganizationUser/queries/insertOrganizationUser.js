@@ -9,7 +9,7 @@ const insertOrganizationUser = ({
   INSERT INTO user_organizations
   (
     user_id,
-    user_role_id,
+    user_organization_role_id,
     organization_id,
     added_by
   )

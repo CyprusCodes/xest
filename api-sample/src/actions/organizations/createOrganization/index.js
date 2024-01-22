@@ -1,7 +1,7 @@
 const insertOrganization = require("./queries/insertOrganization");
 
-const createOrganization = async ({ companyName }) => {
-  const organizationId = await insertOrganization({ companyName });
+const createOrganization = async ({ organizationName }) => {
+  const organizationId = await insertOrganization({ organizationName });
 
   return { organizationId };
 };

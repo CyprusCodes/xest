@@ -7,7 +7,7 @@ const createCompleteRegistration = async ({
   password,
   companyName,
   phoneNumber,
-  userTypeId
+  userRoleId
 }) => {
   const userId = await insertCompleteRegistration({
     firstName,
@@ -16,7 +16,7 @@ const createCompleteRegistration = async ({
     password,
     companyName,
     phoneNumber,
-    userTypeId
+    userRoleId
   });
 
   return { userId };

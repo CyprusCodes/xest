@@ -1,7 +1,7 @@
-const { nanoid } = require("nanoid");
+const { v4: uuidv4 } = require('uuid');
 const handleAPIError = require("~root/utils/handleAPIError");
 const createOrganizationInvitation = require("~root/actions/users/createOrganizationInvitation");
-const sendEmail = require("~root/services/emails/sendEmail");
+const sendEmail = require("~root/lib/services/emails/sendEmail");
 const postOrganizationInvitationSchema = require("./schemas/postOrganizationInvitationSchema");
 const selectUserFullNameById = require("./queries/selectUserFullNameById");
 const selectOrganizationNameById = require("./queries/selectOrganizationNameById");
@@ -10,8 +10,8 @@ const selectUserRoleNameById = require("./queries/selectUserRoleNameById");
 const postOrganizationInvitation = async (req, res) => {
   const { userId } = req.user;
   const { email, userOrganizationRoleId, comment, orgId } = req.body;
-  const invitationShortcode = nanoid(10);
-
+  const invitationShortcode = uuidv4();
+console.log("postOrganizationInvitation", invitationShortcode);
   try {
     await postOrganizationInvitationSchema.validate(
       {

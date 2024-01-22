@@ -7,9 +7,7 @@ const createOrganizationUser = require("~root/actions/organizations/createOrgani
 const createOrganization = require("~root/actions/organizations/createOrganization");
 
 const postCompleteRegistration = async (req, res) => {
-  const {
-    registrationShortcode
-  } = req.params;
+  const { registrationShortcode } = req.params;
 
   try {
     const { potentialNewUserData } = await fetchRegistrationRequestByShortcode({
@@ -21,8 +19,7 @@ const postCompleteRegistration = async (req, res) => {
       lastName,
       email,
       password,
-      companyName,
-      phoneNumber
+      organizationName,
     } = potentialNewUserData;
 
     const { userId } = await createCompleteRegistration({
@@ -30,18 +27,16 @@ const postCompleteRegistration = async (req, res) => {
       lastName,
       email,
       password,
-      phoneNumber,
-      userTypeId
+      userRoleId: 2
     });
 
     const { organizationId } = await createOrganization({
-      companyName
+      organizationName
     });
 
-    const userOrganizationRoleId = 1;
     await createOrganizationUser({
       userId,
-      userOrganizationRoleId,
+      userOrganizationRoleId: 1,
       organizationId,
       addedBy: userId
     });

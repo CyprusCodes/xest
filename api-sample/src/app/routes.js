@@ -1,12 +1,12 @@
 const express = require("express");
 
+const { ADMIN } = require("~root/constants/userTypes");
 const postLogin = require("./controllers/users/login");
 const postUser = require("./controllers/users/registerAdmin");
 const putUserDetails = require("./controllers/users/putUserDetails");
 const authentication = require("./middlewares/authentication");
 const authorise = require("./middlewares/authorisation");
 const getUserTypes = require("./controllers/users/userTypes");
-const { ADMIN } = require("~root/constants/userTypes");
 
 // const postOrganization = require("./controllers/organizations/postOrganization");
 const postOrganizationInvitation = require("./controllers/invitations/postOrganizationInvitation");
@@ -23,7 +23,7 @@ const getOrganizationInvitations = require("./controllers/organizations/getOrgan
 const getOrganizationUsers = require("./controllers/organizations/getOrganizationUsers");
 const getUserOrganizations = require("./controllers/users/getUserOrganizations");
 
-const getRequestByShortcode = require("./controllers/users/getRequestByShortcode");
+const getPasswordRecoveryRequestByShortcode = require("./controllers/users/getPasswordRecoveryRequestByShortcode");
 const putPassword = require("./controllers/password-recovery/putPassword");
 const postRecoveryRequest = require("./controllers/password-recovery/postRecoveryRequest");
 
@@ -43,13 +43,10 @@ router.post(
 );
 router.post("/register", postUser);
 
-router.post(
-  "/registration-request",
-  postRegistrationRequest
-);
+router.post("/registration-request", postRegistrationRequest);
 
 router.post(
-  "/complete-registration/:registrationShortcode/:invitedOrg/:shortcode/:invitationId",
+  "/complete-registration/:registrationShortcode",
   postCompleteRegistration
 );
 
@@ -59,11 +56,14 @@ router.get("/user-types", getUserTypes);
 router.get("/organizations/:orgId/users", authentication, getOrganizationUsers);
 router.get("/users/organizations", authentication, getUserOrganizations);
 router.post(
-  "/organizations/:orgId/invitation",
+  "/organizations/invitation",
   authentication,
   postOrganizationInvitation
 );
-router.get("/edit/user/request/shortcode/:shortcode", getRequestByShortcode);
+router.get(
+  "/edit/user/request/shortcode/:shortcode",
+  getPasswordRecoveryRequestByShortcode
+);
 router.patch("/user/invitation-details", authentication, patchUserInvitation);
 // router.post(
 //   "/organizations/:orgId/invitations",

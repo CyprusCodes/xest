@@ -1,7 +1,7 @@
 const fetchRequestByShortcode = require("~root/actions/users/fetchRequestByShortcode");
 const handleAPIError = require("~root/utils/handleAPIError");
 
-const getRequestByShortcode = async (req, res) => {
+const getPasswordRecoveryRequestByShortcode = async (req, res) => {
   const { shortcode } = req.params;
   try {
     await getRequestByShortcode.validate(
@@ -21,4 +21,4 @@ const getRequestByShortcode = async (req, res) => {
   }
 };
 
-module.exports = getRequestByShortcode;
+module.exports = getPasswordRecoveryRequestByShortcode;

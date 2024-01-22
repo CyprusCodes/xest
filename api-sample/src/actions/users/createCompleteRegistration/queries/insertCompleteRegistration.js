@@ -10,7 +10,7 @@ const insertUser = ({
   email,
   password,
   phoneNumber,
-  userTypeId
+  userRoleId
 }) => submitQuery`
     INSERT INTO users (
       first_name,
@@ -18,7 +18,7 @@ const insertUser = ({
       email,
       password,
       phone_number,
-      user_type_id
+      user_role_id
     )
     VALUES
     (
@@ -27,7 +27,7 @@ const insertUser = ({
       ${email},
       ${password},
       ${sqlValueOrNull(phoneNumber)},
-      ${userTypeId}
+      ${userRoleId}
     );
 `;
 module.exports = getInsertId(insertUser);
