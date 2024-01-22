@@ -1,11 +1,11 @@
 const handleAPIError = require("~root/utils/handleAPIError");
 const fetchUserOrganizations = require("~root/actions/users/fetchUserOrganizations");
-const getUserOrganizationschema = require("./schemas/getUserOrganizationschema");
+const getUserOrganizationsSchema = require("./schemas/getUserOrganizationsSchema");
 
 const getUserOrganizations = async (req, res) => {
   const { userId } = req.user;
   try {
-    await getUserOrganizationschema.validate(
+    await getUserOrganizationsSchema.validate(
       {
         userId
       },

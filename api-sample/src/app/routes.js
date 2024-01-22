@@ -6,53 +6,54 @@ const postUser = require("./controllers/users/registerAdmin");
 const putUserDetails = require("./controllers/users/putUserDetails");
 const authentication = require("./middlewares/authentication");
 const authorise = require("./middlewares/authorisation");
-const getUserTypes = require("./controllers/users/userTypes");
+const getUserRoles = require("./controllers/users/userRoles");
 
-// const postOrganization = require("./controllers/organizations/postOrganization");
-const postOrganizationInvitation = require("./controllers/invitations/postOrganizationInvitation");
-// const postOrganizationInvitations = require("./controllers/invitations/postOrganizationInvitations");
-const patchOrganizationInvitation = require("./controllers/invitations/patchOrganizationInvitation");
-const deleteInvitation = require("./controllers/invitations/deleteInvitation");
-const getUserInvitations = require("./controllers/invitations/getUserInvitations");
-const acceptInvitation = require("./controllers/invitations/acceptInvitation");
-const postOrganizationUser = require("./controllers/organizations/postOrganizationUser");
-const patchOrganizationUser = require("./controllers/organizations/patchOrganizationUser");
-const deleteOrganizationUser = require("./controllers/organizations/deleteOrganizationUser");
-const patchUserInvitation = require("./controllers/users/patchUserInvitation");
-const getOrganizationInvitations = require("./controllers/organizations/getOrganizationInvitations");
-const getOrganizationUsers = require("./controllers/organizations/getOrganizationUsers");
-const getUserOrganizations = require("./controllers/users/getUserOrganizations");
+const postRegistrationRequest = require("./controllers/users/postRegistrationRequest");
+const postCompleteRegistration = require("./controllers/users/postCompleteRegistration");
 
 const getPasswordRecoveryRequestByShortcode = require("./controllers/users/getPasswordRecoveryRequestByShortcode");
 const putPassword = require("./controllers/password-recovery/putPassword");
 const postRecoveryRequest = require("./controllers/password-recovery/postRecoveryRequest");
 
-const postRegistrationRequest = require("./controllers/users/postRegistrationRequest");
-const postCompleteRegistration = require("./controllers/users/postCompleteRegistration");
+const postOrganizationInvitation = require("./controllers/invitations/postOrganizationInvitation");
+const getUserInvitations = require("./controllers/invitations/getUserInvitations");
+const acceptInvitation = require("./controllers/invitations/acceptInvitation");
+const patchUserInvitation = require("./controllers/users/patchUserInvitation");
+const getOrganizationUsers = require("./controllers/organizations/getOrganizationUsers");
+const getUserOrganizations = require("./controllers/users/getUserOrganizations");
+
+const postOrganization = require("./controllers/organizations/postOrganization");
+// const postOrganizationInvitations = require("./controllers/invitations/postOrganizationInvitations");
+const patchOrganizationInvitation = require("./controllers/invitations/patchOrganizationInvitation");
+const deleteInvitation = require("./controllers/invitations/deleteInvitation");
+const postOrganizationUser = require("./controllers/organizations/postOrganizationUser");
+const patchOrganizationUser = require("./controllers/organizations/patchOrganizationUser");
+const deleteOrganizationUser = require("./controllers/organizations/deleteOrganizationUser");
+const getOrganizationInvitations = require("./controllers/organizations/getOrganizationInvitations");
 
 const router = express.Router();
 
-// USER MANAGEMENT
 router.post("/login", postLogin);
-
 router.post(
   "/register/admin",
   authentication,
   authorise({ roles: [ADMIN] }),
   postUser
 );
-router.post("/register", postUser);
-
 router.post("/registration-request", postRegistrationRequest);
-
 router.post(
   "/complete-registration/:registrationShortcode",
   postCompleteRegistration
 );
-
+router.post("/recovery-request", postRecoveryRequest);
+router.get(
+  "/edit/user/request/shortcode/:shortcode",
+  getPasswordRecoveryRequestByShortcode
+);
+router.put("/update-password/:shortcode", putPassword);
 router.put("/edit/user", authentication, putUserDetails);
-router.get("/user-types", getUserTypes);
-// router.post("/organizations/create", authentication, postOrganization);
+router.get("/user-roles", getUserRoles);
+router.post("/organizations/create", authentication, postOrganization);
 router.get("/organizations/:orgId/users", authentication, getOrganizationUsers);
 router.get("/users/organizations", authentication, getUserOrganizations);
 router.post(
@@ -60,17 +61,13 @@ router.post(
   authentication,
   postOrganizationInvitation
 );
-router.get(
-  "/edit/user/request/shortcode/:shortcode",
-  getPasswordRecoveryRequestByShortcode
-);
+
 router.patch("/user/invitation-details", authentication, patchUserInvitation);
 // router.post(
 //   "/organizations/:orgId/invitations",
 //   authentication,
 //   postOrganizationInvitations
 // );
-
 router.get(
   "/organizations/:orgId/invitations",
   authentication,
@@ -117,9 +114,5 @@ router.delete(
   authentication,
   deleteOrganizationUser
 );
-
-router.post("/recovery-request", postRecoveryRequest);
-
-router.put("/update-password/:shortcode", putPassword);
 
 module.exports = router;

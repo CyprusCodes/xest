@@ -1,8 +1,8 @@
 const { submitQuery, getInsertId } = require("~root/lib/database");
 
 const insertRecoveryRequest = ({ requestedEmail, URLshortcode }) => submitQuery`
-    INSERT INTO 
-      password_recovery_requests (        
+    INSERT INTO
+      password_recovery_requests (
       requested_email,
       shortcode,
       expiry_date

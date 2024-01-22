@@ -5,13 +5,10 @@ const selectUserById = ({ userId }) => submitQuery`
         first_name,
         last_name,
         email,
-        job_title,
-        organization_id,
-        phone_number,
-        user_types.user_type_id,
-        user_types.user_type
+        user_roles.user_role_id,
+        user_roles.user_role
     FROM users
-    LEFT JOIN user_types ON users.user_type_id = user_types.user_type_id
+    LEFT JOIN user_roles ON users.user_role_id = user_roles.user_role_id
     WHERE user_id = ${userId}
 `;
 

@@ -12,7 +12,7 @@ const insertUser = ({
     last_name,
     email,
     password,
-    user_type_id
+    user_role_id
   )
   VALUES
   (

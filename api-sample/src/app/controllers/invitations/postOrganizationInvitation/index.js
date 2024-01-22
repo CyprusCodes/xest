@@ -11,7 +11,7 @@ const postOrganizationInvitation = async (req, res) => {
   const { userId } = req.user;
   const { email, userOrganizationRoleId, comment, orgId } = req.body;
   const invitationShortcode = uuidv4();
-console.log("postOrganizationInvitation", invitationShortcode);
+
   try {
     await postOrganizationInvitationSchema.validate(
       {

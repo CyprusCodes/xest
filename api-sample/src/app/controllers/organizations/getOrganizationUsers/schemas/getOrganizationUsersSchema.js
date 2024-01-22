@@ -7,7 +7,7 @@ const getOrganizationUsersSchema = yup.object().shape({
     .number()
     .positive()
     .label("OrganizationId")
-    .typeError("Organzation Id must be valid."),
+    .typeError("Organization Id must be valid."),
 
   userId: yup
     .number()
@@ -15,23 +15,18 @@ const getOrganizationUsersSchema = yup.object().shape({
     .label("userId")
     .typeError("The userId must be a number")
     .test(
-      "UserMustExistandBelongToThatOrganization",
+      "UserMustExistAndBelongToThatOrganization",
       "The user does not exist or does not belong to that organization",
       async function test(userId) {
         const { orgId } = this.parent;
-
         const user = await selectUserById({ userId });
-
         if (!user) {
           return false;
         }
-
         const orgUser = await selectUserByOrgId({ userId, orgId });
-
         if (!orgUser) {
           return false;
         }
-
         return true;
       }
     )

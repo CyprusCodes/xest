@@ -3,8 +3,6 @@ const createOrganization = require("~root/actions/organizations/createOrganizati
 const createOrganizationUser = require("~root/actions/organizations/createOrganizationUser");
 const postOrganizationSchema = require("./schemas/postOrganizationSchema");
 
-const organizationAdmin = 1;
-
 const postOrganization = async (req, res) => {
   const { userId } = req.user;
   const { name } = req.body;
@@ -22,12 +20,11 @@ const postOrganization = async (req, res) => {
 
     const { organizationId } = await createOrganization({ name });
 
-    const userRoleId = organizationAdmin;
-
     await createOrganizationUser({
       userId,
-      userRoleId,
-      organizationId
+      userOrganizationRoleId: 1,
+      organizationId,
+      addedBy: userId
     });
 
     res.status(201).send({

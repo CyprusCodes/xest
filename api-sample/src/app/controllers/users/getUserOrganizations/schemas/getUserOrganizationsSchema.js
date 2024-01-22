@@ -1,7 +1,7 @@
 const yup = require("yup");
-const selectUserByEmail = require("./queries/selectUser");
+const selectUserById = require("./queries/selectUserById");
 
-const getUserOrganizationschema = yup.object().shape({
+const getUserOrganizationsSchema = yup.object().shape({
   userId: yup
     .number()
     .label("userId")
@@ -10,15 +10,13 @@ const getUserOrganizationschema = yup.object().shape({
       "doesUserExists",
       "User account does not exists.",
       async function test(userId) {
-        const user = await selectUserByEmail({ userId });
-
+        const user = await selectUserById({ userId });
         if (user) {
           return true;
         }
-
         return false;
       }
     )
 });
 
-module.exports = getUserOrganizationschema;
+module.exports = getUserOrganizationsSchema;
