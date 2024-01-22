@@ -1,0 +1,20 @@
+declare module "~root/actions/{{ entityName | toCamelCase }}/create{{ entityName | toPascalCase }}" {
+    export type {{ entityName | toPascalCase }} = {
+        {%- for column in argumentsColumns -%}
+        {{ column.column | toCamelCase }}: {{ column.dataType | toTypeScriptType }};
+        {%- endfor -%}
+    };
+
+    export type Create{{ entityName | toPascalCase }}Arguments = {
+        {{ entityName | toCamelCase }}s: {{ entityName | toPascalCase }}[];
+    };
+
+    export type Create{{ entityName | toPascalCase }}Result = 
+        { inserted{{ entityName | toPascalCase | singular }}Id : number};
+
+    const create{{ entityName | toPascalCase }}: (
+        args: Create{{ entityName | toPascalCase }}Arguments
+    ) => Promise<Create{{ entityName | toPascalCase }}Result>;
+
+    export = create{{ entityName | toPascalCase }};
+}
