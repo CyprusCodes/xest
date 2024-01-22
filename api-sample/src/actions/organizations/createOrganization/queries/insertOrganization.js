@@ -3,7 +3,7 @@ const {
   getInsertId
 } = require("~root/lib/database");
 
-const insertOrganization = ({ name }) => submitQuery`
+const insertOrganization = ({ companyName }) => submitQuery`
   INSERT INTO
     organizations
       (
@@ -11,7 +11,7 @@ const insertOrganization = ({ name }) => submitQuery`
       )
       VALUES
       (
-        ${name}
+        ${companyName}
       )
 `;
 

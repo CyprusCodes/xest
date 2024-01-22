@@ -38,7 +38,7 @@
           color="#252525"
           font-family="Helvetica"
         >
-          {{userRole}} Invite</mj-text
+          Company Invite</mj-text
         >
       </mj-column>
     </mj-section>
@@ -52,6 +52,7 @@
         >
           {{sender}} invited you to become a
           <strong> {{userRole}}</strong>
+          of company.
         </mj-text>
       </mj-column>
 
@@ -85,8 +86,8 @@
           font-size="15px"
           line-height="25px"
         >
-          Please click <a href="{{notificationsPageUrl}}">here</a> to view and
-          accept the invitation to view and accept the invitation
+          Please click <a href="{{notificationsPageUrl}}">here</a> to login and
+          view the invitation.
         </mj-text>
       </mj-column>
     </mj-section>

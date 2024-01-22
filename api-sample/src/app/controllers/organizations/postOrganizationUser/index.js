@@ -5,8 +5,7 @@ const postOrganizationUserSchema = require("./schemas/postOrganizationUserSchema
 
 const postOrganizationUser = async (req, res) => {
   const { userId } = req.user;
-  const { orgId } = req.params;
-  const { email, userRoleId } = req.body;
+  const { email, userRoleId, orgId } = req.body;
 
   try {
     const { newOrgUserUserId } = await fetchUserIdByEmail({ email });

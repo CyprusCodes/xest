@@ -9,8 +9,7 @@ const selectUserRoleNameById = require("./queries/selectUserRoleNameById");
 
 const postOrganizationInvitation = async (req, res) => {
   const { userId } = req.user;
-  const { orgId } = req.params;
-  const { email, userRoleId, comment } = req.body;
+  const { email, userOrganizationRoleId, comment, orgId } = req.body;
   const invitationShortcode = nanoid(10);
 
   try {
@@ -19,7 +18,7 @@ const postOrganizationInvitation = async (req, res) => {
         userId,
         orgId,
         email,
-        userRoleId,
+        userOrganizationRoleId,
         comment
       },
       {
@@ -29,7 +28,7 @@ const postOrganizationInvitation = async (req, res) => {
 
     const { firstName, lastName } = await selectUserFullNameById({ userId });
     const { organizationName } = await selectOrganizationNameById({ orgId });
-    const { userRole } = await selectUserRoleNameById({ userRoleId });
+    const { userRole } = await selectUserRoleNameById({ userOrganizationRoleId });
     const sender = `${firstName} ${lastName}`;
 
     let messageTitle = "";
@@ -38,15 +37,21 @@ const postOrganizationInvitation = async (req, res) => {
     if (comment) {
       messageTitle = `Below is a message from ${sender} :`;
     }
-    if (userRole === "representative") {
-      newRole = "Rep";
-    }
-    if (userRole === "organization admin") {
+    if (userRole === "Admin") {
       newRole = "Company Admin";
     }
-    if (userRole === "check-in staff") {
-      newRole = "Check-in Staff";
+    if (userRole === "Member") {
+      newRole = "Member";
     }
+
+    const { newInvitationId } = await createOrganizationInvitation({
+      userId,
+      orgId,
+      email,
+      userOrganizationRoleId,
+      comment,
+      invitationShortcode
+    });
 
     const emailPayload = {
       to: email,
@@ -58,18 +63,9 @@ const postOrganizationInvitation = async (req, res) => {
         organizationName,
         messageTitle,
         senderMessage: comment,
-        notificationsPageUrl: `${process.env.APP_BASE_URL}/auth/jwt/login?email=${email}`
+        notificationsPageUrl: `${process.env.APP_BASE_URL}`,
       }
     };
-    const { newInvitationId } = await createOrganizationInvitation({
-      userId,
-      orgId,
-      email,
-      userRoleId,
-      comment,
-      invitationShortcode
-    });
-
     await sendEmail(emailPayload);
 
     res.send({

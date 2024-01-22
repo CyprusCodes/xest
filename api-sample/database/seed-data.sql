@@ -31,7 +31,7 @@ VALUES
     "Ahmet",
     "Akinsql",
     "ahmet@akinsql.com",
-    SHA2 (CONCAT ("password", "SECRET_SALT"), 224),
+    SHA2 (CONCAT ("12345678", "SECRET_SALT"), 224),
     1,
     "2020-11-20 12:00:00"
   ),
@@ -40,7 +40,7 @@ VALUES
     "Joe",
     "Bloggs",
     "joebloggs@gmail.com",
-    SHA2 (CONCAT ("password", "SECRET_SALT"), 224),
+    SHA2 (CONCAT ("12345678", "SECRET_SALT"), 224),
     2,
     "2020-11-20 12:00:00"
   ),
@@ -49,7 +49,7 @@ VALUES
     "Jim",
     "Bloggs",
     "jimbloggs@yahoo.com",
-    SHA2 (CONCAT ("password", "SECRET_SALT"), 224),
+    SHA2 (CONCAT ("12345678", "SECRET_SALT"), 224),
     2,
     "2020-11-20 12:00:00"
   ),
@@ -58,7 +58,7 @@ VALUES
     "Jane",
     "Doe",
     "janedoe@example.com",
-    SHA2 (CONCAT ("password", "SECRET_SALT"), 224),
+    SHA2 (CONCAT ("12345678", "SECRET_SALT"), 224),
     1,
     "2020-11-20 12:00:00"
   );
@@ -138,3 +138,32 @@ VALUES
   );
 INSERT INTO password_recovery_requests(shortcode,requested_email,expiry_date,created_at)
 VALUES ("321","ahmet@akinsql.com","2020-09-20 12:30:00","2022-01-03 12:30:00");
+
+INSERT INTO registration_requests(
+  first_name,
+  last_name,
+  email,
+  password,
+  user_type_id,
+  organization_name,
+  phone_number,
+  registration_shortcode
+) VALUES (
+  'John',
+  'Doe',
+  'john.doe@example.com',
+  SHA2 (CONCAT ("12345678", "SECRET_SALT"), 224),
+  1,
+  'Example Organization',
+  '1234567890',
+  'shortcode1'
+), (
+  'Jane',
+  'Doe',
+  'jane.doe@example.com',
+  SHA2 (CONCAT ("12345678", "SECRET_SALT"), 224),
+  2,
+  'Example Organization 2',
+  '0987654321',
+  'shortcode2'
+);

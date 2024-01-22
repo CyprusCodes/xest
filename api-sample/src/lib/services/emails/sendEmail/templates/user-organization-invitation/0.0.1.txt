@@ -1,9 +1,8 @@
-{{userRole}} Invitation
+Company Invite
 
 {{sender}} invited you to become a {{userRole}} for {{organizationName}}
 
 Below is a message from {{sender}}
 {{senderMessage}}
 
-Follow the link to view invitation
-{{notificationsPageUrl}}
+Follow the link to login and view invitation {{notificationsPageUrl}}

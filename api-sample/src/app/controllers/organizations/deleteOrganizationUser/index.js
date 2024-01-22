@@ -4,7 +4,7 @@ const deleteOrganizationUserSchema = require("./schemas/deleteOrganizationUserSc
 
 const deleteOrganizationUser = async (req, res) => {
   const { userId } = req.user;
-  const { orgId, orgUserId } = req.params;
+  const { orgId, orgUserId } = req.body;
 
   try {
     await deleteOrganizationUserSchema.validate(

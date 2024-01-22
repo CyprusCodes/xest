@@ -1,16 +1,16 @@
 const insertOrganizationUser = require("./queries/insertOrganizationUser");
 
 const createOrganizationUser = async ({
-  newOrgUserUserId,
-  userRoleId,
-  orgId,
-  userId
+  userId,
+  userOrganizationRoleId,
+  organizationId,
+  addedBy
 }) => {
   const organizationUserId = await insertOrganizationUser({
-    newOrgUserUserId,
-    userRoleId,
-    orgId,
-    userId
+    userId,
+    userOrganizationRoleId,
+    organizationId,
+    addedBy
   });
 
   return { organizationUserId };

@@ -13,7 +13,6 @@ const postOrganizationInvitation = require("./controllers/invitations/postOrgani
 // const postOrganizationInvitations = require("./controllers/invitations/postOrganizationInvitations");
 const patchOrganizationInvitation = require("./controllers/invitations/patchOrganizationInvitation");
 const deleteInvitation = require("./controllers/invitations/deleteInvitation");
-const deleteInvitationByOrgUser = require("./controllers/invitations/deleteInvitationByOrgUser");
 const getUserInvitations = require("./controllers/invitations/getUserInvitations");
 const acceptInvitation = require("./controllers/invitations/acceptInvitation");
 const postOrganizationUser = require("./controllers/organizations/postOrganizationUser");
@@ -28,6 +27,9 @@ const getRequestByShortcode = require("./controllers/users/getRequestByShortcode
 const putPassword = require("./controllers/password-recovery/putPassword");
 const postRecoveryRequest = require("./controllers/password-recovery/postRecoveryRequest");
 
+const postRegistrationRequest = require("./controllers/users/postRegistrationRequest");
+const postCompleteRegistration = require("./controllers/users/postCompleteRegistration");
+
 const router = express.Router();
 
 // USER MANAGEMENT
@@ -40,6 +42,16 @@ router.post(
   postUser
 );
 router.post("/register", postUser);
+
+router.post(
+  "/registration-request",
+  postRegistrationRequest
+);
+
+router.post(
+  "/complete-registration/:registrationShortcode/:invitedOrg/:shortcode/:invitationId",
+  postCompleteRegistration
+);
 
 router.put("/edit/user", authentication, putUserDetails);
 router.get("/user-types", getUserTypes);

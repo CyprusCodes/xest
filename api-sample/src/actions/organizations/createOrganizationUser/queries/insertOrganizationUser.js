@@ -1,10 +1,10 @@
 const { submitQuery, getInsertId } = require("~root/lib/database");
 
 const insertOrganizationUser = ({
-  newOrgUserUserId,
-  userRoleId,
-  orgId,
-  userId
+  userId,
+  userOrganizationRoleId,
+  organizationId,
+  addedBy
 }) => submitQuery`
   INSERT INTO user_organizations
   (
@@ -15,10 +15,10 @@ const insertOrganizationUser = ({
   )
   VALUES
   (
-    ${newOrgUserUserId},
-    ${userRoleId},
-    ${orgId},
-    ${userId}
+    ${userId},
+    ${userOrganizationRoleId},
+    ${organizationId},
+    ${addedBy}
   )
 `;
 

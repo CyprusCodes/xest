@@ -4,8 +4,7 @@ const deleteInvitationSchema = require("./schemas/deleteInvitationSchema");
 
 const deleteInvitation = async (req, res) => {
   const { userId, email } = req.user;
-  const { invitationId } = req.params;
-  const { shortcode } = req.body;
+  const { shortcode, invitationId } = req.body;
 
   try {
     await deleteInvitationSchema.validate(

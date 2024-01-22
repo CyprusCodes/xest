@@ -34,7 +34,7 @@ const patchOrganizationInvitationSchema = yup.object().shape({
     .label("invitation shortcode")
     .typeError("the invitation shortcode is not a valid string")
     .test(
-      "doesInvitationShortcideExist",
+      "doesInvitationShortcodeExist",
       "Invitation shortcode does not exists.",
       async function test(invitationShortcode) {
         const invitation = await selectInvitation({ invitationShortcode });

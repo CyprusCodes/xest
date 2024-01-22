@@ -4,8 +4,7 @@ const patchOrganizationInvitationSchema = require("./schemas/patchOrganizationIn
 
 const patchOrganizationInvitation = async (req, res) => {
   const { userId } = req.user;
-  const { email, invitationShortcode } = req.body;
-  const { orgId } = req.params;
+  const { email, orgId, invitationShortcode } = req.body;
 
   try {
     await patchOrganizationInvitationSchema.validate(
@@ -25,6 +24,7 @@ const patchOrganizationInvitation = async (req, res) => {
       invitationShortcode,
       orgId
     });
+
     res.status(201).send({ orgInvitation });
   } catch (err) {
     handleAPIError(res, err);

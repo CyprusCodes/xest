@@ -103,3 +103,21 @@ CREATE TABLE password_recovery_requests(
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (requested_email) REFERENCES users(email)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+
+DROP TABLE IF EXISTS registration_requests;
+CREATE TABLE registration_requests(
+  registration_request_id int AUTO_INCREMENT PRIMARY KEY,
+  first_name VARCHAR(50) NOT NULL,
+  last_name VARCHAR(50) NOT NULL,
+  email VARCHAR(50) NOT NULL UNIQUE,
+  password VARCHAR(500) NOT NULL,
+  user_type_id int NOT NULL,
+  organization_name VARCHAR(50) NOT NULL,
+  phone_number VARCHAR(20),
+  status VARCHAR(20) DEFAULT 'pending',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  registration_shortcode VARCHAR(11) NOT NULL UNIQUE,
+  FOREIGN KEY (user_type_id) REFERENCES user_roles(user_type_id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;

@@ -42,7 +42,7 @@ const postOrganizationInvitationSchema = yup.object().shape({
       }
     ),
 
-  userRoleId: yup
+    userOrganizationRoleId: yup
     .number()
     .positive()
     .required()
@@ -51,8 +51,8 @@ const postOrganizationInvitationSchema = yup.object().shape({
     .test(
       "doesUserRoleIdExist",
       "User role Id does not exists.",
-      async function test(userRoleId) {
-        const userRole = await selectUserRole({ userRoleId });
+      async function test(userOrganizationRoleId) {
+        const userRole = await selectUserRole({ userOrganizationRoleId });
 
         if (userRole) {
           return true;

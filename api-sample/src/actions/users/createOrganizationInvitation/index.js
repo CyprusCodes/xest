@@ -4,7 +4,7 @@ const createOrganizationInvitation = async ({
   userId,
   orgId,
   email,
-  userRoleId,
+  userOrganizationRoleId,
   comment,
   invitationShortcode
 }) => {
@@ -12,7 +12,7 @@ const createOrganizationInvitation = async ({
     userId,
     orgId,
     email,
-    userRoleId,
+    userOrganizationRoleId,
     comment,
     invitationShortcode
   });

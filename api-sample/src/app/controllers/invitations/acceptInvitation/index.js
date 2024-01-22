@@ -6,8 +6,7 @@ const acceptInvitationSchema = require("./schemas/acceptInvitationSchema");
 
 const acceptInvitation = async (req, res) => {
   const { userId, email } = req.user;
-  const { invitationId } = req.params;
-  const { shortCode } = req.body;
+  const { shortCode, invitationId } = req.body;
 
   try {
     await acceptInvitationSchema.validate(
@@ -22,7 +21,7 @@ const acceptInvitation = async (req, res) => {
       shortCode
     });
 
-    const { organizationId: orgId, invitedBy, userRoleId } = invitation;
+    const { organizationId: orgId, invitedBy, userOrganizationRoleId } = invitation;
 
     await patchInvitationAsAccepted({
       invitationId,
@@ -33,7 +32,7 @@ const acceptInvitation = async (req, res) => {
       newOrgUserUserId: userId,
       orgId,
       userId: invitedBy,
-      userRoleId
+      userOrganizationRoleId
     });
 
     res.status(201).send({ organizationUserId });
