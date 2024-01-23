@@ -5,9 +5,7 @@ declare module "~root/actions/{{ entityName | toCamelCase }}/remove{{ entityName
         {%- endfor -%}
     };
 
-    export type Remove{{ entityName | toPascalCase }}Arguments = {
-        {{ entityName | toCamelCase }}s: {{ entityName | toPascalCase }}[];
-    };
+    export type Remove{{ entityName | toPascalCase }}Arguments = {{ entityName | toPascalCase }};
 
     const remove{{ entityName | toPascalCase }}: (
         args: Remove{{ entityName | toPascalCase }}Arguments

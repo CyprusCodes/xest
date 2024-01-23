@@ -1,13 +1,15 @@
 declare module "~root/actions/{{ entityName | toCamelCase }}/create{{ entityName | toPascalCase }}" {
     export type {{ entityName | toPascalCase }} = {
         {%- for column in argumentsColumns -%}
-        {{ column.column | toCamelCase }}: {{ column.dataType | toTypeScriptType }};
+            {%- if column.nullable -%}
+                {{ column.column | toCamelCase }}?: {{ column.dataType | toTypeScriptType }};
+            {%- else -%}
+                {{ column.column | toCamelCase }}: {{ column.dataType | toTypeScriptType }};
+            {%- endif -%}
         {%- endfor -%}
     };
 
-    export type Create{{ entityName | toPascalCase }}Arguments = {
-        {{ entityName | toCamelCase }}s: {{ entityName | toPascalCase }}[];
-    };
+    export type Create{{ entityName | toPascalCase }}Arguments = {{ entityName | toPascalCase }};
 
     export type Create{{ entityName | toPascalCase }}Result = 
         { inserted{{ entityName | toPascalCase | singular }}Id : number};

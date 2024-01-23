@@ -325,6 +325,7 @@ module.exports = {
                             selectableColumns
                         });
                     }
+                    console.log(filterColumnsWithType, selectableColumns)
                     if (endpoint === POST) {
                         const argumentsColumns = uniqBy([...filterColumnsWithType, ...selectableColumns]);
                         renderedTemplate = await render(templateFile, {

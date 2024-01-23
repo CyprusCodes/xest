@@ -6,7 +6,7 @@ declare module "~root/actions/{{ entityName | toCamelCase }}/fetch{{ entityName 
     };
 
     export type Fetch{{ entityName | toPascalCase }}Result = {
-        {{ entityName | toCamelCase }}s: {{ entityName | toPascalCase }}[];
+        {{ entityName | toCamelCase }}: {{ entityName | toPascalCase }}[];
     };
 
     export type Fetch{{ entityName | toPascalCase }}Arguments = {
