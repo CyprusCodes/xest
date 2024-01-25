@@ -3,7 +3,7 @@ const get = require("lodash/get");
 const chalk = require("chalk");
 const cors = require("cors");
 const has = require("lodash/has");
-const { v4: uuid } = require('uuid');
+const { v4: uuid } = require("uuid");
 const findProjectRoot = require("../../utils/findProjectRoot");
 const sleep = require("../../utils/sleep");
 const commandsList = require("./cmd/index");
@@ -44,7 +44,7 @@ const ai = () => {
 
   app.post("/session", async (request, response) => {
     const model = request.body.model || "gpt-3.5-turbo-1106";
-    const maxTokens = request.body.maxTokens || 200;
+    const maxTokens = 2000;
     const temperature = request.body.temperature || 0;
     const messages = request.body.messages || [];
     const enabledTools = request.body.enabledTools || [];
@@ -153,7 +153,9 @@ const ai = () => {
       lastMessage.tool.runAt
     ) {
       // let's decide whether this UI tool captures input or not
-      const selectedTool = commandsList.find(c => c.name === lastMessage.tool.name);
+      const selectedTool = commandsList.find(
+        (c) => c.name === lastMessage.tool.name
+      );
       const isUserInputExpected = selectedTool.capturesUserInput;
 
       if (isUserInputExpected) {
@@ -164,7 +166,7 @@ const ai = () => {
           role: "user",
           message: `Consider the data you collected from the previous tool call. Does this give you enough information to answer my query? Think step by step. Run tools if necessary, using the previous information collected where applicable.`,
         });
-  
+
         const newMessages = await generateCompletion({
           messages,
           model,
@@ -173,7 +175,7 @@ const ai = () => {
           availableFunctions,
           commandsList,
         });
-  
+
         return response.send({ messages: newMessages });
       }
 

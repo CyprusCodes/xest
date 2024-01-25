@@ -12,6 +12,7 @@ const findProjectRoot = require("../../../utils/findProjectRoot");
 const scanDependencies = require("./tools/scanDependencies");
 const extractEndpointsFromRouteFile = require("./tools/extractEndpointsFromRouteFile");
 const { readFileSync } = require("fs");
+const axios = require("axios");
 
 extendSchema({ addMethod: yup.addMethod, Schema: yup.Schema });
 
@@ -41,7 +42,7 @@ GET_LIST_OF_DATABASE_TABLES = {
   category: "Database",
   subcategory: "General",
   functionType: "backend", // backend | ui
-  dangerous: false, // 
+  dangerous: false, //
   associatedCommands: [], // not functional
   prerequisites: [], // it works, but you can ignore
   parameterize: validateArguments(noParamsSchema),
@@ -984,12 +985,8 @@ SHOW_QUERY_FILES_FOR_API_ENDPOINT = {
   },
 };
 
-
 const showAlertModalSchema = yup.object({
-  message: yup
-    .string()
-    .required()
-    .description("message to display to user"),
+  message: yup.string().required().description("message to display to user"),
 });
 
 SHOW_ALERT_MODAL = {
@@ -1007,15 +1004,14 @@ SHOW_ALERT_MODAL = {
   rerun: true,
   rerunWithDifferentParameters: false,
   runCmd: async () => {
-    throw new Error("This is a UI method. It should not be called on the server.")
+    throw new Error(
+      "This is a UI method. It should not be called on the server."
+    );
   },
 };
 
 const showInputFieldSchema = yup.object({
-  label: yup
-    .string()
-    .required()
-    .description("label for the input field"),
+  label: yup.string().required().description("label for the input field"),
 });
 
 SHOW_INPUT_FIELD = {
@@ -1033,10 +1029,143 @@ SHOW_INPUT_FIELD = {
   rerun: true,
   rerunWithDifferentParameters: false,
   runCmd: async () => {
-    throw new Error("This is a UI method. It should not be called on the server.")
+    throw new Error(
+      "This is a UI method. It should not be called on the server."
+    );
   },
 };
 
+GET_CANCELLED_ORDERS = {
+  name: "get_cancelled_orders",
+  description: "returns the list of cancelled orders",
+  category: "eCom",
+  subcategory: "Db",
+  functionType: "backend", // ui | backend
+  // capturesUserInput: true,
+  dangerous: false,
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(noParamsSchema),
+  parameters: yupToJsonSchema(noParamsSchema),
+  rerun: true,
+  rerunWithDifferentParameters: true,
+  runCmd: async () => {
+    const res = await axios.get(
+      "http://localhost:3001/orders/status/cancelled"
+    );
+
+    return JSON.stringify(res.data);
+  },
+};
+
+GET_DELAYED_DELIVERIES = {
+  name: "get_delayed_deliveries",
+  description: "returns the list of delayed deliveries",
+  category: "eCom",
+  subcategory: "Db",
+  functionType: "backend", // ui | backend
+  // capturesUserInput: true,
+  dangerous: false,
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(noParamsSchema),
+  parameters: yupToJsonSchema(noParamsSchema),
+  rerun: true,
+  rerunWithDifferentParameters: true,
+  runCmd: async () => {
+    const res = await axios.get(
+      "http://localhost:3001/deliveries/delayed-deliveries"
+    );
+
+    return JSON.stringify(res.data);
+  },
+};
+
+const createCouponSchema = yup.object().shape({
+  couponCode: yup
+    .string()
+    .max(50, "This field must be less than 50 characters")
+    .required()
+    .label("Coupon Code")
+    .typeError("Invalid coupon code"),
+  userId: yup
+    .number()
+    .nullable()
+    .label("User Id")
+    .typeError("The user id must be a number"),
+  discountType: yup
+    .string()
+    .required()
+    .label("Discount Type")
+    .typeError("Invalid discount type"),
+  discountValue: yup
+    .number()
+    .integer()
+    .required()
+    .label("Discount Value")
+    .typeError("The discount value must be a number"),
+  expiryDate: yup
+    .date()
+    .required()
+    .label("Expiry Date")
+    .typeError("Invalid expiry date"),
+  couponName: yup
+    .string()
+    .required()
+    .label("Coupon Name")
+    .typeError("Invalid coupon name"),
+});
+
+CREATE_COUPONS = {
+  name: "create_coupons",
+  description: "creats coupons",
+  category: "eCom",
+  subcategory: "Db",
+  functionType: "backend", // ui | backend
+  // capturesUserInput: true,
+  dangerous: false,
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(createCouponSchema),
+  parameters: yupToJsonSchema(createCouponSchema),
+  rerun: true,
+  rerunWithDifferentParameters: true,
+  runCmd: async ({
+    couponCode,
+    couponName,
+    userId,
+    discountType,
+    discountValue,
+    expiryDate,
+  }) => {
+    try {
+      await createCouponSchema.validate({
+        couponCode,
+        couponName,
+        userId,
+        discountType,
+        discountValue,
+        expiryDate,
+      });
+
+      const res = await axios.post(
+        "http://localhost:3001/coupons/create-coupon",
+        {
+          couponCode,
+          couponName,
+          userId,
+          discountType,
+          discountValue,
+          expiryDate,
+        }
+      );
+
+      return JSON.stringify(res.data);
+    } catch (error) {
+      return JSON.stringify({ error: error.message });
+    }
+  },
+};
 // callApiEndpoint
 // runDatabaseQuery (potentially dangerous)
 // getTestAuthToken
@@ -1144,5 +1273,8 @@ module.exports = [
   SHOW_REQUEST_DATA_SCHEMA_FOR_API_ENDPOINT,
   SHOW_QUERY_FILES_FOR_API_ENDPOINT,
   SHOW_ALERT_MODAL,
-  SHOW_INPUT_FIELD
+  SHOW_INPUT_FIELD,
+  GET_CANCELLED_ORDERS,
+  GET_DELAYED_DELIVERIES,
+  CREATE_COUPONS,
 ];
