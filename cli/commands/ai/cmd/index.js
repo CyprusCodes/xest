@@ -13,6 +13,7 @@ const scanDependencies = require("./tools/scanDependencies");
 const extractEndpointsFromRouteFile = require("./tools/extractEndpointsFromRouteFile");
 const { readFileSync } = require("fs");
 const axios = require("axios");
+const { v4: uuidv4 } = require("uuid");
 
 extendSchema({ addMethod: yup.addMethod, Schema: yup.Schema });
 
@@ -1050,6 +1051,7 @@ GET_CANCELLED_ORDERS = {
   rerun: true,
   rerunWithDifferentParameters: true,
   runCmd: async () => {
+    console.trace("running get cancelled orders");
     const res = await axios.get(
       "http://localhost:3001/orders/status/cancelled"
     );
@@ -1082,15 +1084,9 @@ GET_DELAYED_DELIVERIES = {
 };
 
 const createCouponSchema = yup.object().shape({
-  couponCode: yup
-    .string()
-    .max(50, "This field must be less than 50 characters")
-    .required()
-    .label("Coupon Code")
-    .typeError("Invalid coupon code"),
   userId: yup
     .number()
-    .nullable()
+    .required()
     .label("User Id")
     .typeError("The user id must be a number"),
   discountType: yup
@@ -1105,7 +1101,11 @@ const createCouponSchema = yup.object().shape({
     .label("Discount Value")
     .typeError("The discount value must be a number"),
   expiryDate: yup
-    .date()
+    .string()
+    .matches(
+      /^\d{4}-\d{2}-\d{2}$/,
+      "Invalid expiry date format. Use YYYY-MM-DD."
+    )
     .required()
     .label("Expiry Date")
     .typeError("Invalid expiry date"),
@@ -1118,7 +1118,7 @@ const createCouponSchema = yup.object().shape({
 
 CREATE_COUPONS = {
   name: "create_coupons",
-  description: "creats coupons",
+  description: "creates coupons",
   category: "eCom",
   subcategory: "Db",
   functionType: "backend", // ui | backend
@@ -1131,22 +1131,24 @@ CREATE_COUPONS = {
   rerun: true,
   rerunWithDifferentParameters: true,
   runCmd: async ({
-    couponCode,
-    couponName,
     userId,
     discountType,
     discountValue,
     expiryDate,
+    couponName,
   }) => {
     try {
+      console.trace("is this being run twice????");
       await createCouponSchema.validate({
-        couponCode,
-        couponName,
         userId,
         discountType,
         discountValue,
         expiryDate,
+        couponName,
       });
+
+      const uuid = uuidv4();
+      const couponCode = uuid.substring(0, 8);
 
       const res = await axios.post(
         "http://localhost:3001/coupons/create-coupon",
@@ -1166,6 +1168,7 @@ CREATE_COUPONS = {
     }
   },
 };
+
 // callApiEndpoint
 // runDatabaseQuery (potentially dangerous)
 // getTestAuthToken
