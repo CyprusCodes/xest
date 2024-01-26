@@ -1,13 +1,12 @@
 declare module "~root/actions/{{ entityName | toCamelCase }}/modify{{ entityName | toPascalCase }}" {
     export type {{ entityName | toPascalCase }} = {
-        {%- for column in argumentsColumns -%}
-            {%- if column.nullable -%}
-                {{ column.column | toCamelCase }}?: {{ column.dataType | toTypeScriptType }};
-            {%- else -%}
-                {{ column.column | toCamelCase }}: {{ column.dataType | toTypeScriptType }};
-            {%- endif -%}
+        {%- for column in filterColumnsWithType -%}
+            {{ column.column | toCamelCase }}: {{ column.dataType | toTypeScriptType }};
         {%- endfor -%}
-    };
+        {%- for column in argumentsColumns -%}
+            {{ column.column | toCamelCase }}?: {{ column.dataType | toTypeScriptType }};
+        {%- endfor -%}
+    };  
 
     export type Modify{{ entityName | toPascalCase }}Arguments = {{ entityName | toPascalCase }}
 

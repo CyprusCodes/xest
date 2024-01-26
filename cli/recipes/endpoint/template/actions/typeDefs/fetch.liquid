@@ -1,7 +1,11 @@
 declare module "~root/actions/{{ entityName | toCamelCase }}/fetch{{ entityName | toPascalCase }}" {
     export type {{ entityName | toPascalCase }} = {
         {%- for column in selectableColumns -%}
-            {{ column.column | toCamelCase }}: {{ column.dataType | toTypeScriptType }};
+            {%- if column.nullable -%}
+                {{ column.column | toCamelCase }}: {{ column.dataType | toTypeScriptType }} | null;
+            {%- else -%}
+                {{ column.column | toCamelCase }}: {{ column.dataType | toTypeScriptType }};
+            {%- endif -%}
         {%- endfor -%}
     };
 

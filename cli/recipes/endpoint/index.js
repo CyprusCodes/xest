@@ -351,10 +351,11 @@ module.exports = {
                                 column: column.column
                             }
                         });
-                        const argumentsColumns = uniqBy([...filterColumnsWithType, ...includeColumnsWithType]);
+                        const argumentsColumns = uniqBy([...includeColumnsWithType]);
                         renderedTypeDefsTemplate = await render(templateTypeDefsFile, {
                             entityName,
-                            argumentsColumns
+                            argumentsColumns,
+                            filterColumnsWithType
                         });
                     }
 
