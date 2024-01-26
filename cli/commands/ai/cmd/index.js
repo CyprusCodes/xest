@@ -1051,7 +1051,6 @@ GET_CANCELLED_ORDERS = {
   rerun: true,
   rerunWithDifferentParameters: true,
   runCmd: async () => {
-    console.trace("running get cancelled orders");
     const res = await axios.get(
       "http://localhost:3001/orders/status/cancelled"
     );
@@ -1084,11 +1083,17 @@ GET_DELAYED_DELIVERIES = {
 };
 
 const createCouponSchema = yup.object().shape({
-  userId: yup
+  orderId: yup
     .number()
+    .integer()
+    .nullable()
+    .label("Order ID")
+    .typeError("Invalid order ID"),
+  couponName: yup
+    .string()
     .required()
-    .label("User Id")
-    .typeError("The user id must be a number"),
+    .label("Coupon Name")
+    .typeError("Invalid coupon name"),
   discountType: yup
     .string()
     .required()
@@ -1109,11 +1114,12 @@ const createCouponSchema = yup.object().shape({
     .required()
     .label("Expiry Date")
     .typeError("Invalid expiry date"),
-  couponName: yup
-    .string()
-    .required()
-    .label("Coupon Name")
-    .typeError("Invalid coupon name"),
+  status: yup.string().label("Status").typeError("Invalid status"),
+  createdAt: yup
+    .date()
+    .nullable()
+    .label("Created At")
+    .typeError("Invalid creation date"),
 });
 
 CREATE_COUPONS = {
@@ -1131,34 +1137,38 @@ CREATE_COUPONS = {
   rerun: true,
   rerunWithDifferentParameters: true,
   runCmd: async ({
-    userId,
+    orderId,
+    couponCode,
+    couponName,
     discountType,
     discountValue,
     expiryDate,
-    couponName,
+    status,
+    createdAt,
   }) => {
     try {
-      console.trace("is this being run twice????");
       await createCouponSchema.validate({
-        userId,
+        orderId,
+        couponCode,
+        couponName,
         discountType,
         discountValue,
         expiryDate,
-        couponName,
+        status,
+        createdAt,
       });
-
-      const uuid = uuidv4();
-      const couponCode = uuid.substring(0, 8);
 
       const res = await axios.post(
         "http://localhost:3001/coupons/create-coupon",
         {
+          orderId,
           couponCode,
           couponName,
-          userId,
           discountType,
           discountValue,
           expiryDate,
+          status,
+          createdAt,
         }
       );
 
