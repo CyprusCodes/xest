@@ -1036,9 +1036,10 @@ SHOW_INPUT_FIELD = {
   },
 };
 
-GET_CANCELLED_ORDERS = {
-  name: "get_cancelled_orders",
-  description: "returns the list of cancelled orders",
+GET_ORDERS = {
+  name: "get_orders",
+  description:
+    "returns the list of orders, you can pass in a status param s query",
   category: "eCom",
   subcategory: "Db",
   functionType: "backend", // ui | backend
@@ -1051,17 +1052,14 @@ GET_CANCELLED_ORDERS = {
   rerun: true,
   rerunWithDifferentParameters: true,
   runCmd: async () => {
-    const res = await axios.get(
-      "http://localhost:3001/orders/status/cancelled"
-    );
+    const res = await axios.get("http://localhost:3001/orders");
 
     return JSON.stringify(res.data);
   },
 };
-
-GET_DELAYED_DELIVERIES = {
-  name: "get_delayed_deliveries",
-  description: "returns the list of delayed deliveries",
+GET_CARTS = {
+  name: "get_carts",
+  description: "returns the list of carts with their items respective items",
   category: "eCom",
   subcategory: "Db",
   functionType: "backend", // ui | backend
@@ -1074,9 +1072,7 @@ GET_DELAYED_DELIVERIES = {
   rerun: true,
   rerunWithDifferentParameters: true,
   runCmd: async () => {
-    const res = await axios.get(
-      "http://localhost:3001/deliveries/delayed-deliveries"
-    );
+    const res = await axios.get("http://localhost:3001/carts");
 
     return JSON.stringify(res.data);
   },
@@ -1114,12 +1110,6 @@ const createCouponSchema = yup.object().shape({
     .required()
     .label("Expiry Date")
     .typeError("Invalid expiry date"),
-  status: yup.string().label("Status").typeError("Invalid status"),
-  createdAt: yup
-    .date()
-    .nullable()
-    .label("Created At")
-    .typeError("Invalid creation date"),
 });
 
 CREATE_COUPONS = {
@@ -1138,25 +1128,22 @@ CREATE_COUPONS = {
   rerunWithDifferentParameters: true,
   runCmd: async ({
     orderId,
-    couponCode,
     couponName,
     discountType,
     discountValue,
     expiryDate,
-    status,
-    createdAt,
   }) => {
     try {
       await createCouponSchema.validate({
         orderId,
-        couponCode,
         couponName,
         discountType,
         discountValue,
         expiryDate,
-        status,
-        createdAt,
       });
+
+      const uuid = uuidv4();
+      const couponCode = uuid.substring(0, 8);
 
       const res = await axios.post(
         "http://localhost:3001/coupons/create-coupon",
@@ -1167,8 +1154,6 @@ CREATE_COUPONS = {
           discountType,
           discountValue,
           expiryDate,
-          status,
-          createdAt,
         }
       );
 
@@ -1176,6 +1161,72 @@ CREATE_COUPONS = {
     } catch (error) {
       return JSON.stringify({ error: error.message });
     }
+  },
+};
+
+const sendMailSchema = yup.object().shape({
+  email: yup.string().email().required(),
+  firstName: yup.string().required(),
+  textBody: yup.string().required(),
+  subjectLine: yup.string().required(),
+});
+
+SEND_EMAIL = {
+  name: "send_email",
+  description: "sends email",
+  category: "eCom",
+  subcategory: "Db",
+  functionType: "backend", // ui | backend
+  // capturesUserInput: true,
+  dangerous: false,
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(sendMailSchema),
+  parameters: yupToJsonSchema(sendMailSchema),
+  rerun: true,
+  rerunWithDifferentParameters: true,
+  runCmd: async ({ email, firstName, textBody, subjectLine }) => {
+    try {
+      await sendMailSchema.validate({
+        email,
+        firstName,
+        textBody,
+        subjectLine,
+      });
+
+      const res = await axios.post("http://localhost:3001/send-email", {
+        email,
+        firstName,
+        textBody,
+        subjectLine,
+      });
+
+      return JSON.stringify(res.data);
+    } catch (error) {
+      return JSON.stringify({ error: error.message });
+    }
+  },
+};
+
+GET_STOCK_FIGURES = {
+  name: "get_stock_figures",
+  description:
+    "returns the list of low in stock products, can have a query param to check stockQuantity to sho products that the quantity is less or equal to th query",
+  category: "eCom",
+  subcategory: "Db",
+  functionType: "backend", // ui | backend
+  // capturesUserInput: true,
+  dangerous: false,
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(noParamsSchema),
+  parameters: yupToJsonSchema(noParamsSchema),
+  rerun: true,
+  rerunWithDifferentParameters: true,
+  runCmd: async () => {
+    const res = await axios.get("http://localhost:3001/products/stock");
+
+    return JSON.stringify(res.data);
   },
 };
 
@@ -1287,7 +1338,9 @@ module.exports = [
   SHOW_QUERY_FILES_FOR_API_ENDPOINT,
   SHOW_ALERT_MODAL,
   SHOW_INPUT_FIELD,
-  GET_CANCELLED_ORDERS,
-  GET_DELAYED_DELIVERIES,
+  GET_ORDERS,
+  GET_CARTS,
+  GET_STOCK_FIGURES,
+  SEND_EMAIL,
   CREATE_COUPONS,
 ];
