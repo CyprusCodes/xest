@@ -1,0 +1,27 @@
+declare module "~root/actions/{{ entityName | toCamelCase }}/fetch{{ entityName | toPascalCase }}" {
+    export type {{ entityName | toPascalCase }} = {
+        {%- for column in selectableColumns -%}
+            {%- if column.nullable -%}
+                {{ column.column | toCamelCase }}: {{ column.dataType | toTypeScriptType }} | null;
+            {%- else -%}
+                {{ column.column | toCamelCase }}: {{ column.dataType | toTypeScriptType }};
+            {%- endif -%}
+        {%- endfor -%}
+    };
+
+    export type Fetch{{ entityName | toPascalCase }}Result = {
+        {{ entityName | toCamelCase }}: {{ entityName | toPascalCase }}[];
+    };
+
+    export type Fetch{{ entityName | toPascalCase }}Arguments = {
+        {%- for column in filterColumnsWithType -%}
+            {{ column.column | toCamelCase }}: {{ column.dataType | toTypeScriptType }};
+        {%- endfor -%}
+    };
+
+    const fetch{{ entityName | toPascalCase }}: (
+        args: Fetch{{ entityName | toPascalCase }}Arguments
+    ) => Promise<Fetch{{ entityName | toPascalCase }}Result>;
+
+    export = fetch{{ entityName | toPascalCase }};
+}

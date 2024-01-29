@@ -21,6 +21,20 @@ const enrichEngine = (engine) => {
   engine.registerFilter("toConstantCase", (v) =>
     upperCase(v).replace(/ /g, "_")
   );
+  engine.registerFilter("toTypeScriptType", (v) => {
+    switch (v) {
+      case "int":
+        return "number";
+      case "varchar":
+        return "string";
+      case "datetime":
+        return "Date";
+      case "tinyint":
+        return "boolean";
+      default:
+        return "any";
+    }
+  });
   engine.registerFilter("toDotCase", (v) => lowerCase(v).replace(/ /g, "."));
   engine.registerFilter("toKebabCase", (v) => kebabCase(v));
   engine.registerFilter("toLowerCase", (v) => lowerCase(v).replace(/ /g, ""));
