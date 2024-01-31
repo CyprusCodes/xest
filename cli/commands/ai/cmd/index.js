@@ -1165,10 +1165,14 @@ CREATE_COUPONS = {
 };
 
 const sendMailSchema = yup.object().shape({
-  email: yup.string().email().required(),
-  firstName: yup.string().required(),
-  textBody: yup.string().required(),
-  subjectLine: yup.string().required(),
+  email: yup
+    .string()
+    .email()
+    .required()
+    .description("Email address of the recipient"),
+  firstName: yup.string().required().description("First name of the recipient"),
+  textBody: yup.string().required().description("Body text of the email"),
+  subjectLine: yup.string().required().description("Subject line of the email"),
 });
 
 SEND_EMAIL = {
@@ -1229,7 +1233,31 @@ GET_STOCK_FIGURES = {
     return JSON.stringify(res.data);
   },
 };
-
+const showGoogleMapsSchema = yup.object({
+  lat: yup.string().required().description("latitude for the google maps"),
+  lng: yup.string().required().description("longitude for the google maps"),
+});
+SHOW_GOOGLE_MAPS = {
+  name: "show_google_maps",
+  description:
+    "shows the google maps based on latitude and longitude of a place",
+  category: "HUD Elements",
+  subcategory: "eCom",
+  functionType: "ui", // ui | backend
+  capturesUserInput: true,
+  dangerous: false,
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(showGoogleMapsSchema),
+  parameters: yupToJsonSchema(showGoogleMapsSchema),
+  rerun: true,
+  rerunWithDifferentParameters: false,
+  runCmd: async () => {
+    throw new Error(
+      "This is a UI method. It should not be called on the server."
+    );
+  },
+};
 // callApiEndpoint
 // runDatabaseQuery (potentially dangerous)
 // getTestAuthToken
@@ -1343,4 +1371,5 @@ module.exports = [
   GET_STOCK_FIGURES,
   SEND_EMAIL,
   CREATE_COUPONS,
+  SHOW_GOOGLE_MAPS,
 ];
