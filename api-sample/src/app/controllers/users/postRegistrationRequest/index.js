@@ -2,11 +2,12 @@ const { v4: uuidv4 } = require("uuid");
 const axios = require("axios");
 const handleAPIError = require("~root/utils/handleAPIError");
 const createRegistrationRequest = require("~root/actions/users/createRegistrationRequest");
-const sendEmail = require("~root/services/sendEmail");
+const sendEmail = require("~root/lib/services/emails/sendEmail");
 const postRegistrationRequestSchema = require("./schema/postRegistrationRequestSchema");
 
+// eslint-disable-next-line consistent-return
 const postRegistrationRequest = async (req, res) => {
-  const registrationShortcode = uuidv4(10);
+  const registrationShortcode = uuidv4();
 
   const {
     firstName,

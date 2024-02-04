@@ -2,7 +2,7 @@ const removeInvitation = require("~root/actions/invitations/removeInvitation");
 const handleAPIError = require("~root/utils/handleAPIError");
 const deleteInvitationSchema = require("./schemas/deleteInvitationSchema");
 
-const deleteInvitatioByOrgUser = async (req, res) => {
+const deleteInvitationByOrgUser = async (req, res) => {
   const { userId } = req.user;
   const { invitationId, orgId } = req.params;
 
@@ -28,4 +28,4 @@ const deleteInvitatioByOrgUser = async (req, res) => {
   }
 };
 
-module.exports = deleteInvitatioByOrgUser;
+module.exports = deleteInvitationByOrgUser;
