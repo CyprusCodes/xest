@@ -31,6 +31,13 @@ const patchOrganizationUser = require("./controllers/organizations/patchOrganiza
 const deleteOrganizationUser = require("./controllers/organizations/deleteOrganizationUser");
 const getOrganizationInvitations = require("./controllers/organizations/getOrganizationInvitations");
 
+const postNewOrganization = require("./controllers/organizations/postNewOrganization");
+const getOrganizationsByEmail = require("./controllers/organizations/getOrganizationsByEmail");
+const getOrganizationsByUserId = require("./controllers/organizations/getOrganizationsByUserId");
+const getAllUsersByOrgId = require("./controllers/userOrganizations/getAllUsersByOrgId");
+const getUserOrganizationInvitations = require("./controllers/userOrganizationInvitations/getUserOrganizationInvitations");
+const deleteInvitationByOrgUser = require("./controllers/invitations/deleteInvitationByOrgUser");
+
 const router = express.Router();
 
 router.post("/login", postLogin);
@@ -113,6 +120,15 @@ router.delete(
   "/organizations/:orgId/users/:orgUserId",
   authentication,
   deleteOrganizationUser
+);
+router.post("/organization", authentication, postNewOrganization);
+router.get("/organizations/:email", getOrganizationsByEmail);
+router.get("/organizations", authentication, getOrganizationsByUserId);
+router.get("/organizations/:orgId/users", authentication, getAllUsersByOrgId);
+router.get(
+  "/organizations/:orgId/invitations",
+  authentication,
+  getUserOrganizationInvitations
 );
 
 module.exports = router;
