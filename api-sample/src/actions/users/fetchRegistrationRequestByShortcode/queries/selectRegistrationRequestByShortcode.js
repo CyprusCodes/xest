@@ -8,7 +8,6 @@ const selectRegistrationRequestByShortcode = ({
       last_name,
       email,
       password,
-      user_role_id,
       organization_name
     FROM registration_requests
     WHERE registration_shortcode = ${registrationShortcode}

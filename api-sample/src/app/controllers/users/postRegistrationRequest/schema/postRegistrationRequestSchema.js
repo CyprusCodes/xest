@@ -22,6 +22,7 @@ const postRegistrationRequestSchema = yup.object().shape({
     .string()
     .min(1, "This field can not be empty!")
     .max(50, "This field has to be less than 50 characters")
+    .email()
     .required()
     .label("Email")
     .typeError("Not a valid Email")
@@ -44,8 +45,12 @@ const postRegistrationRequestSchema = yup.object().shape({
 
   password: yup
     .string()
-    .min(1, "This field can not be empty!")
+    .min(8, "Password must be at least 8 characters long!")
     .max(500, "This field has to be less than 500 characters")
+    .matches(
+      /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$/,
+      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+    )
     .required()
     .label("Password")
     .typeError("Not a valid Password"),

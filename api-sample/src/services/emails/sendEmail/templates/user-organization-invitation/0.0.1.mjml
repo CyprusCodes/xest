@@ -50,7 +50,7 @@
           font-size="15px"
           line-height="25px"
         >
-          {{sender}} invited you to become a
+          {{firstName}} {{lastName}} invited you to become a
           <strong> {{userRole}}</strong>
           of company.
         </mj-text>
@@ -66,7 +66,7 @@
           font-size="15px"
           line-height="25px"
         >
-          {{messageTitle}}
+          Below is a message from {{firstName}} {{lastName}}
         </mj-text>
       </mj-column>
       <mj-column vertical-align="top" width="100%">

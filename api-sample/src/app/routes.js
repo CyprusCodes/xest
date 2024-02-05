@@ -59,7 +59,7 @@ router.get(
 );
 router.put("/update-password/:shortcode", putPassword);
 router.put("/edit/user", authentication, putUserDetails);
-router.get("/user-roles", getUserRoles);
+router.get("/user-roles", getUserRoles); // we don't need this one any more
 
 router.post("/organizations/create", authentication, postOrganization);
 router.get("/organizations/:orgId/users", authentication, getOrganizationUsers);

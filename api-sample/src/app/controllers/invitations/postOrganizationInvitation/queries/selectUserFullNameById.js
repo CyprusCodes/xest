@@ -1,7 +1,7 @@
 const { submitQuery, getFirst, camelKeys } = require("~root/lib/database");
 
 const selectUserFullNameById = ({ userId }) => submitQuery`
-    SELECT 
+    SELECT
         first_name,
         last_name
     FROM users

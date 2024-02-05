@@ -33,6 +33,11 @@ const postUserSchema = yup.object().shape({
         }
         return true;
       });
-    })
+    }),
+  isSuperAdmin: yup
+    .boolean()
+    .required()
+    .label("isSuperAdmin")
+    .typeError("isSuperAdmin must be a boolean.")
 });
 module.exports = postUserSchema;

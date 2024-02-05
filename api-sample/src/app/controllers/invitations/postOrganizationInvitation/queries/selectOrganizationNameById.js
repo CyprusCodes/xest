@@ -1,7 +1,7 @@
 const { submitQuery, getFirst, camelKeys } = require("~root/lib/database");
 
 const selectUserOrganizationByEmail = ({ orgId }) => submitQuery`
-    SELECT 
+    SELECT
         organization_name
     FROM organizations
     WHERE organization_id = ${orgId}

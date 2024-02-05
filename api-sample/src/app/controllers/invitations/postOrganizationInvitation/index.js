@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const handleAPIError = require("~root/utils/handleAPIError");
 const createOrganizationInvitation = require("~root/actions/users/createOrganizationInvitation");
-const sendEmail = require("~root/lib/services/emails/sendEmail");
+const sendEmail = require("~root/services/emails/sendEmail");
 const postOrganizationInvitationSchema = require("./schemas/postOrganizationInvitationSchema");
 const selectUserFullNameById = require("./queries/selectUserFullNameById");
 const selectOrganizationNameById = require("./queries/selectOrganizationNameById");
@@ -31,14 +31,8 @@ const postOrganizationInvitation = async (req, res) => {
     const { userOrganizationRole } = await selectUserOrganizationRoleNameById({
       userOrganizationRoleId
     });
-    const sender = `${firstName} ${lastName}`;
 
-    let messageTitle = "";
     let newRole;
-
-    if (comment) {
-      messageTitle = `Below is a message from ${sender} :`;
-    }
     if (userOrganizationRole === "OrganizationAdmin") {
       newRole = "Organization Admin";
     }
@@ -60,12 +54,12 @@ const postOrganizationInvitation = async (req, res) => {
       template: "user-organization-invitation",
       version: "0.0.1",
       metadata: {
-        sender,
+        firstName,
+        lastName,
         userOrganizationRole: newRole,
         organizationName,
-        messageTitle,
         senderMessage: comment,
-        notificationsPageUrl: `${process.env.APP_BASE_URL}`
+        notificationsPageUrl: `${process.env.APP_BASE_URL}/login`
       }
     };
     await sendEmail(emailPayload);

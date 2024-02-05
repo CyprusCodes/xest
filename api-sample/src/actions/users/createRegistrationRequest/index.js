@@ -6,7 +6,6 @@ const createRegistrationRequest = async ({
   email,
   password,
   organizationName,
-  userRoleId,
   registrationShortcode
 }) => {
   const createdRegistrationRequest = await insertRegistrationRequest({
@@ -15,7 +14,6 @@ const createRegistrationRequest = async ({
     email,
     password,
     organizationName,
-    userRoleId,
     registrationShortcode
   });
 

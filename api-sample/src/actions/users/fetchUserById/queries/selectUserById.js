@@ -5,10 +5,8 @@ const selectUserById = ({ userId }) => submitQuery`
         first_name,
         last_name,
         email,
-        user_roles.user_role_id,
-        user_roles.user_role
+        is_super_admin,
     FROM users
-    LEFT JOIN user_roles ON users.user_role_id = user_roles.user_role_id
     WHERE user_id = ${userId}
 `;
 

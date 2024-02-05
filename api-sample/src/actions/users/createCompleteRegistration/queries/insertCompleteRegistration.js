@@ -1,18 +1,12 @@
 const { submitQuery, getInsertId } = require("~root/lib/database");
 
-const insertUser = ({
-  firstName,
-  lastName,
-  email,
-  password,
-  userRoleId
-}) => submitQuery`
+const insertUser = ({ firstName, lastName, email, password }) => submitQuery`
     INSERT INTO users (
       first_name,
       last_name,
       email,
       password,
-      user_role_id
+      is_super_admin
     )
     VALUES
     (
@@ -20,7 +14,7 @@ const insertUser = ({
       ${lastName},
       ${email},
       ${password},
-      ${userRoleId}
+      0
     );
 `;
 

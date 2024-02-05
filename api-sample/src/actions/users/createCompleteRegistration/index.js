@@ -5,16 +5,14 @@ const createCompleteRegistration = async ({
   lastName,
   email,
   password,
-  companyName,
-  userRoleId
+  companyName
 }) => {
   const userId = await insertCompleteRegistration({
     firstName,
     lastName,
     email,
     password,
-    companyName,
-    userRoleId
+    companyName
   });
 
   return { userId };

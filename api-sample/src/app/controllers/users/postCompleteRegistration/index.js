@@ -26,8 +26,7 @@ const postCompleteRegistration = async (req, res) => {
       firstName,
       lastName,
       email,
-      password,
-      userRoleId: 2
+      password
     });
 
     const { organizationId } = await createOrganization({
