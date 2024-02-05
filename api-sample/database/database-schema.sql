@@ -48,7 +48,7 @@ CREATE TABLE
     email VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(500) NOT NULL,
     user_role_id int NOT NULL,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_role_id) REFERENCES user_roles (user_role_id)
   ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -60,7 +60,7 @@ CREATE TABLE
   organizations (
     organization_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     organization_name VARCHAR(100) NOT NULL,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
 -- ORGANIZATIONS TABLE END
@@ -73,7 +73,7 @@ CREATE TABLE user_organizations(
   user_organization_role_id INT NOT NULL,
   organization_id INT NOT NULL,
   added_by INT NOT NULL,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(user_id),
   FOREIGN KEY (user_organization_role_id) REFERENCES user_organization_roles(user_organization_role_id),
@@ -94,7 +94,7 @@ CREATE TABLE user_organization_invitations(
   sent_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   accepted_at DATETIME,
   declined_at DATETIME,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (user_organization_role_id) REFERENCES user_organization_roles(user_organization_role_id),
   FOREIGN KEY (organization_id) REFERENCES organizations(organization_id),
   FOREIGN KEY (invited_by) REFERENCES user_organizations(user_id)
@@ -127,7 +127,7 @@ CREATE TABLE registration_requests(
   registration_shortcode VARCHAR(36) NOT NULL UNIQUE,
   status VARCHAR(20) DEFAULT 'pending',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (user_role_id) REFERENCES user_roles(user_role_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
 -- USER_ORGANIZATION_REQUESTS TABLE END

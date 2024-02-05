@@ -1,12 +1,12 @@
 const { submitQuery, getFirst } = require("~root/lib/database");
 
 const selectUser = ({ userId, email }) => submitQuery`
-    SELECT 
-	    user_id, 
-        first_name, 
+    SELECT
+        user_id,
+        first_name,
         last_name,
         email
-    FROM users 
+    FROM users
     WHERE user_id = ${userId} && email = ${email}
 `;
 

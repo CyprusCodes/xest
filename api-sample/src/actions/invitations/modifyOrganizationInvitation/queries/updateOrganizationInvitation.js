@@ -16,7 +16,6 @@ const updateOrganizationInvitation = ({
   }
 
   if (updates.length !== 0) {
-    updates.push(sql`updated_at = CURRENT_TIMESTAMP`);
     return submitQuery`UPDATE user_organization_invitations SET ${updates.reduce(
       sqlReduce
     )} WHERE invitation_shortcode = ${invitationShortcode} && organization_id = ${orgId};`;

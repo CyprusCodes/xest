@@ -13,4 +13,3 @@ const selectInvitationById = ({ invitationId, shortCode }) => submitQuery`
 `;
 
 module.exports = getFirst(camelKeys(selectInvitationById));
-// ORDER BY created_at DESC
