@@ -1242,7 +1242,7 @@ SHOW_GOOGLE_MAPS = {
   description:
     "shows the google maps based on latitude and longitude of a place",
   category: "HUD Elements",
-  subcategory: "eCom",
+  subcategory: "Maps",
   functionType: "ui", // ui | backend
   capturesUserInput: true,
   dangerous: false,
@@ -1250,6 +1250,131 @@ SHOW_GOOGLE_MAPS = {
   prerequisites: [],
   parameterize: validateArguments(showGoogleMapsSchema),
   parameters: yupToJsonSchema(showGoogleMapsSchema),
+  rerun: true,
+  rerunWithDifferentParameters: false,
+  runCmd: async () => {
+    throw new Error(
+      "This is a UI method. It should not be called on the server."
+    );
+  },
+};
+const showPieChartSchema = yup.object({
+  labels: yup
+    .array()
+    .of(yup.string())
+    .required()
+    .description("Labels for the pie chart"),
+  data: yup
+    .array()
+    .of(yup.number())
+    .required()
+    .description("Data for the pie chart"),
+});
+SHOW_PIE_CHART = {
+  name: "show_pie_chart",
+  description:
+    "shows a pie chart based on the given data numbers using react-chartjs-2 package",
+  category: "HUD Elements",
+  subcategory: "Charts",
+  functionType: "ui", // ui | backend
+  capturesUserInput: true,
+  dangerous: false,
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(showPieChartSchema),
+  parameters: yupToJsonSchema(showPieChartSchema),
+  rerun: true,
+  rerunWithDifferentParameters: false,
+  runCmd: async () => {
+    throw new Error(
+      "This is a UI method. It should not be called on the server."
+    );
+  },
+};
+const showLineChartSchema = yup.object({
+  labels: yup
+    .array()
+    .of(yup.string())
+    .required()
+    .description("Labels for the line chart"),
+  data: yup
+    .array()
+    .of(yup.number())
+    .required()
+    .description("Data for the line chart"),
+  dataset1: yup
+    .array()
+    .of(yup.number())
+    .description("Data for Dataset 1 of the line chart"),
+  dataset2: yup
+    .array()
+    .of(yup.number())
+    .description("Data for Dataset 2nd of the line chart"),
+  dataset3: yup
+    .array()
+    .of(yup.number())
+    .description("Data for Dataset 3rd of the line chart"),
+});
+SHOW_LINE_CHART = {
+  name: "show_line_chart",
+  description:
+    "shows a line chart based on the given data numbers, can compare up to 3 datasets to the main data",
+  category: "HUD Elements",
+  subcategory: "Charts",
+  functionType: "ui", // ui | backend
+  capturesUserInput: true,
+  dangerous: false,
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(showLineChartSchema),
+  parameters: yupToJsonSchema(showLineChartSchema),
+  rerun: true,
+  rerunWithDifferentParameters: false,
+  runCmd: async () => {
+    throw new Error(
+      "This is a UI method. It should not be called on the server."
+    );
+  },
+};
+
+const showBarChartSchema = yup.object({
+  labels: yup
+    .array()
+    .of(yup.string())
+    .required()
+    .description("Labels for the bar chart"),
+  datasets: yup
+    .array()
+    .of(
+      yup.object({
+        label: yup.string().required().description("Label for the dataset"),
+        data: yup
+          .array()
+          .of(yup.number())
+          .required()
+          .description("Data for the dataset"),
+        backgroundColor: yup
+          .array()
+          .of(yup.string())
+          .description("Background colors for the dataset"),
+        stack: yup.string().description("Stack for the dataset"),
+      })
+    )
+    .description("Datasets for the bar chart"),
+});
+SHOW_BAR_CHART = {
+  name: "show_bar_chart",
+  description:
+    "shows a Bar chart based on the given data numbers, can compare up to 3 datasets to the main data",
+  category: "HUD Elements",
+  subcategory: "Charts",
+  functionType: "ui", // ui | backend
+  capturesUserInput: true,
+  dangerous: false,
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(showBarChartSchema),
+  parameters: yupToJsonSchema(showBarChartSchema),
   rerun: true,
   rerunWithDifferentParameters: false,
   runCmd: async () => {
@@ -1372,4 +1497,7 @@ module.exports = [
   SEND_EMAIL,
   CREATE_COUPONS,
   SHOW_GOOGLE_MAPS,
+  SHOW_PIE_CHART,
+  SHOW_LINE_CHART,
+  SHOW_BAR_CHART,
 ];
