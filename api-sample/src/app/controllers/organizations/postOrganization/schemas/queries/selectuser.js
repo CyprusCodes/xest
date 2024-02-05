@@ -1,7 +1,7 @@
 const { submitQuery, getFirst } = require("~root/lib/database");
 
-const selectInvitation = ({ userId }) => submitQuery`
-    SELECT 
+const selectUser = ({ userId }) => submitQuery`
+    SELECT
         user_id,
         first_name,
         last_name,
@@ -10,4 +10,4 @@ const selectInvitation = ({ userId }) => submitQuery`
     WHERE user_id = ${userId}
 `;
 
-module.exports = getFirst(selectInvitation, "email");
+module.exports = getFirst(selectUser, "email");

@@ -19,7 +19,7 @@ const postCompleteRegistration = async (req, res) => {
       lastName,
       email,
       password,
-      organizationName,
+      organizationName
     } = potentialNewUserData;
 
     const { userId } = await createCompleteRegistration({

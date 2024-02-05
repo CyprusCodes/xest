@@ -8,7 +8,7 @@ const insertOrganizationInvitation = ({
   userId,
   orgId,
   email,
-  userRoleId,
+  userOrganizationRoleId,
   comment,
   invitationShortcode
 }) => submitQuery`
@@ -19,16 +19,16 @@ const insertOrganizationInvitation = ({
     invitation_shortcode,
     invited_by,
     organization_id,
-    user_role_id
+    user_organization_role_id
   )
 VALUES
   (
     ${email},
-    ${sqlValueOrNull(comment)}, 
+    ${sqlValueOrNull(comment)},
     ${invitationShortcode},
     ${userId},
     ${orgId},
-    ${userRoleId}
+    ${userOrganizationRoleId}
   );
 `;
 

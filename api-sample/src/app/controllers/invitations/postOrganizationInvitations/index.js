@@ -1,4 +1,4 @@
-// const { nanoid } = require("nanoid");
+const { v4: uuidv4 } = require("uuid");
 const handleAPIError = require("~root/utils/handleAPIError");
 const createOrganizationInvitation = require("~root/actions/invitations/createOrganizationInvitation");
 const asyncParallel = require("~root/utils/asyncParallel");
@@ -8,20 +8,19 @@ const postOrganizationInvitations = async (req, res) => {
   const { userId } = req.user;
   const { orgId } = req.params;
   const { allInvitedUsers } = req.body;
-  const invitationShortcode = 567890123;
-  // nanoid(10);
+  const invitationShortcode = uuidv4();
 
   try {
     const invitedUsers = [];
     await asyncParallel(allInvitedUsers, async newUser => {
-      const { email, userRoleId } = newUser;
+      const { email, userOrganizationRoleId } = newUser;
 
       await postOrganizationInvitationsSchema.validate(
         {
           userId,
           orgId,
           email,
-          userRoleId
+          userOrganizationRoleId
         },
         {
           abortEarly: false
@@ -32,7 +31,7 @@ const postOrganizationInvitations = async (req, res) => {
         userId,
         orgId,
         email,
-        userRoleId,
+        userOrganizationRoleId,
         invitationShortcode
       });
       invitedUsers.push(newInvitationId);

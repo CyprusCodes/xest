@@ -1,7 +1,7 @@
 const { submitQuery, getFirst } = require("~root/lib/database");
 
 const selectOrgUserByUserIdAndOrgId = ({ orgUserId, orgId }) => submitQuery`
-    SELECT 
+    SELECT
         user_organization_id
     FROM user_organizations
     WHERE user_id = ${orgUserId} && organization_id = ${orgId}

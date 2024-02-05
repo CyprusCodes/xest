@@ -7,7 +7,7 @@ const selectOrganizationInvitations = ({ orgId }) => submitQuery`
         user_organization_invitations.organization_id,
         user_organization_invitations.email,
         user_organization_invitations.invited_by,
-        user_organization_invitations.user_role_id,
+        user_organization_invitations.user_organization_role_id,
         user_organization_invitations.comment,
         user_organization_invitations.sent_at,
         user_organization_invitations.accepted_at,

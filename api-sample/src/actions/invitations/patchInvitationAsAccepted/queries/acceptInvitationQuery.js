@@ -9,7 +9,7 @@ const acceptInvitationQuery = ({ invitationId, shortCode }) => {
 
   if (updates.length !== 0) {
     return submitQuery`
-    UPDATE 
+    UPDATE
     user_organization_invitations SET ${updates.reduce(
       sqlReduce
     )} WHERE invitation_shortcode = ${shortCode} && user_organization_invitation_id = ${invitationId}`;

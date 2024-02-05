@@ -21,7 +21,11 @@ const acceptInvitation = async (req, res) => {
       shortCode
     });
 
-    const { organizationId: orgId, invitedBy, userOrganizationRoleId } = invitation;
+    const {
+      organizationId: orgId,
+      invitedBy,
+      userOrganizationRoleId
+    } = invitation;
 
     await patchInvitationAsAccepted({
       invitationId,

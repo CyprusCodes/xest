@@ -1,15 +1,10 @@
-const {
-  submitQuery,
-  sqlValueOrNull,
-  getInsertId
-} = require("~root/lib/database");
+const { submitQuery, getInsertId } = require("~root/lib/database");
 
 const insertUser = ({
   firstName,
   lastName,
   email,
   password,
-  phoneNumber,
   userRoleId
 }) => submitQuery`
     INSERT INTO users (
@@ -17,7 +12,6 @@ const insertUser = ({
       last_name,
       email,
       password,
-      phone_number,
       user_role_id
     )
     VALUES
@@ -26,8 +20,8 @@ const insertUser = ({
       ${lastName},
       ${email},
       ${password},
-      ${sqlValueOrNull(phoneNumber)},
       ${userRoleId}
     );
 `;
+
 module.exports = getInsertId(insertUser);

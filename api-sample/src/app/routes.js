@@ -23,7 +23,7 @@ const getOrganizationUsers = require("./controllers/organizations/getOrganizatio
 const getUserOrganizations = require("./controllers/users/getUserOrganizations");
 
 const postOrganization = require("./controllers/organizations/postOrganization");
-// const postOrganizationInvitations = require("./controllers/invitations/postOrganizationInvitations");
+const postOrganizationInvitations = require("./controllers/invitations/postOrganizationInvitations");
 const patchOrganizationInvitation = require("./controllers/invitations/patchOrganizationInvitation");
 const deleteInvitation = require("./controllers/invitations/deleteInvitation");
 const postOrganizationUser = require("./controllers/organizations/postOrganizationUser");
@@ -60,6 +60,7 @@ router.get(
 router.put("/update-password/:shortcode", putPassword);
 router.put("/edit/user", authentication, putUserDetails);
 router.get("/user-roles", getUserRoles);
+
 router.post("/organizations/create", authentication, postOrganization);
 router.get("/organizations/:orgId/users", authentication, getOrganizationUsers);
 router.get("/users/organizations", authentication, getUserOrganizations);
@@ -70,11 +71,11 @@ router.post(
 );
 
 router.patch("/user/invitation-details", authentication, patchUserInvitation);
-// router.post(
-//   "/organizations/:orgId/invitations",
-//   authentication,
-//   postOrganizationInvitations
-// );
+router.post(
+  "/organizations/:orgId/invitations",
+  authentication,
+  postOrganizationInvitations
+);
 router.get(
   "/organizations/:orgId/invitations",
   authentication,
@@ -90,37 +91,20 @@ router.patch(
   authentication,
   acceptInvitation
 );
-router.delete(
-  "/user/invitations/:invitationId",
-  authentication,
-  deleteInvitation
-);
+router.delete("/user/invitations", authentication, deleteInvitation);
 router.delete(
   "/organizations/invitations/:invitationId/:orgId",
   authentication,
   deleteInvitationByOrgUser
 );
 router.get("/user/invitations", authentication, getUserInvitations);
-router.patch(
-  "/user/invitations/:invitationId",
-  authentication,
-  acceptInvitation
-);
-router.post(
-  "/organizations/:orgId/users",
-  authentication,
-  postOrganizationUser
-);
+router.post("/organizations/users", authentication, postOrganizationUser);
 router.patch(
   "/organizations/:orgId/users/:userId",
   authentication,
   patchOrganizationUser
 );
-router.delete(
-  "/organizations/:orgId/users/:orgUserId",
-  authentication,
-  deleteOrganizationUser
-);
+router.delete("/organizations/users", authentication, deleteOrganizationUser);
 router.post("/organization", authentication, postNewOrganization);
 router.get("/organizations/:email", getOrganizationsByEmail);
 router.get("/organizations", authentication, getOrganizationsByUserId);

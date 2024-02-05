@@ -23,10 +23,10 @@ const postOrganizationUser = async (req, res) => {
     );
 
     const { organizationUserId } = await createOrganizationUser({
-      newOrgUserUserId,
-      userRoleId,
-      orgId,
-      userId
+      userId: newOrgUserUserId,
+      userOrganizationRoleId: userRoleId,
+      organizationId: orgId,
+      addedBy: userId
     });
 
     res.send({

@@ -52,7 +52,6 @@ const deleteOrganizationUserSchema = yup.object().shape({
       "check if the organization user exist and belong to the organization",
       async function test(orgUserId) {
         const { orgId } = this.parent;
-
         const orgUser = await selectOrgUserById({ orgId, orgUserId });
 
         if (orgUser) {

@@ -1,11 +1,11 @@
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 const handleAPIError = require("~root/utils/handleAPIError");
 const createOrganizationInvitation = require("~root/actions/users/createOrganizationInvitation");
 const sendEmail = require("~root/lib/services/emails/sendEmail");
 const postOrganizationInvitationSchema = require("./schemas/postOrganizationInvitationSchema");
 const selectUserFullNameById = require("./queries/selectUserFullNameById");
 const selectOrganizationNameById = require("./queries/selectOrganizationNameById");
-const selectUserRoleNameById = require("./queries/selectUserRoleNameById");
+const selectUserOrganizationRoleNameById = require("./queries/selectUserOrganizationRoleNameById");
 
 const postOrganizationInvitation = async (req, res) => {
   const { userId } = req.user;
@@ -28,7 +28,9 @@ const postOrganizationInvitation = async (req, res) => {
 
     const { firstName, lastName } = await selectUserFullNameById({ userId });
     const { organizationName } = await selectOrganizationNameById({ orgId });
-    const { userRole } = await selectUserRoleNameById({ userOrganizationRoleId });
+    const { userOrganizationRole } = await selectUserOrganizationRoleNameById({
+      userOrganizationRoleId
+    });
     const sender = `${firstName} ${lastName}`;
 
     let messageTitle = "";
@@ -37,10 +39,10 @@ const postOrganizationInvitation = async (req, res) => {
     if (comment) {
       messageTitle = `Below is a message from ${sender} :`;
     }
-    if (userRole === "Admin") {
-      newRole = "Company Admin";
+    if (userOrganizationRole === "OrganizationAdmin") {
+      newRole = "Organization Admin";
     }
-    if (userRole === "Member") {
+    if (userOrganizationRole === "Member") {
       newRole = "Member";
     }
 
@@ -59,11 +61,11 @@ const postOrganizationInvitation = async (req, res) => {
       version: "0.0.1",
       metadata: {
         sender,
-        userRole: newRole,
+        userOrganizationRole: newRole,
         organizationName,
         messageTitle,
         senderMessage: comment,
-        notificationsPageUrl: `${process.env.APP_BASE_URL}`,
+        notificationsPageUrl: `${process.env.APP_BASE_URL}`
       }
     };
     await sendEmail(emailPayload);

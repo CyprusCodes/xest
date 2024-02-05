@@ -3,10 +3,11 @@ const handleAPIError = require("~root/utils/handleAPIError");
 const getUserInvitationSchema = require("./schemas/getUserInvitationsSchema");
 
 const getUserInvitations = async (req, res) => {
-  const { email } = req.user;
+  const { userId, email } = req.user;
   try {
     await getUserInvitationSchema.validate(
       {
+        userId,
         email
       },
       {

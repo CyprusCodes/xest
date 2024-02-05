@@ -1,11 +1,6 @@
 const { submitQuery, getInsertId } = require("~root/lib/database");
 
-const insertUser = ({
-  firstName,
-  lastName,
-  email,
-  password
-}) => submitQuery`
+const insertUser = ({ firstName, lastName, email, password }) => submitQuery`
   INSERT INTO users
   (
     first_name,

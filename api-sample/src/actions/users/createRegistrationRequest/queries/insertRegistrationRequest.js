@@ -5,22 +5,30 @@ const insertUser = ({
   lastName,
   email,
   password,
-  userRoleId
+  organizationName,
+  userRoleId,
+  registrationShortcode
 }) => submitQuery`
-    INSERT INTO users (
+    INSERT INTO registration_requests (
       first_name,
       last_name,
       email,
       password,
-      user_role_id
+      user_role_id,
+      organization_name,
+      registration_shortcode,
+      status
     )
     VALUES
     (
       ${firstName},
       ${lastName},
       ${email},
-      ${password},
-      ${userRoleId}
+      SHA2(CONCAT(${password},${process.env.PASSWORD_SALT}), 224),
+      ${userRoleId},
+      ${organizationName},
+      ${registrationShortcode},
+      "pending"
     );
 `;
 module.exports = getInsertId(insertUser);

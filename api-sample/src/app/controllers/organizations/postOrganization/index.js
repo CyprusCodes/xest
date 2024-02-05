@@ -5,20 +5,20 @@ const postOrganizationSchema = require("./schemas/postOrganizationSchema");
 
 const postOrganization = async (req, res) => {
   const { userId } = req.user;
-  const { name } = req.body;
+  const { organizationName } = req.body;
 
   try {
     await postOrganizationSchema.validate(
       {
         userId,
-        name
+        organizationName
       },
       {
         abortEarly: false
       }
     );
 
-    const { organizationId } = await createOrganization({ name });
+    const { organizationId } = await createOrganization({ organizationName });
 
     await createOrganizationUser({
       userId,

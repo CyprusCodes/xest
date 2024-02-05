@@ -1,5 +1,5 @@
 {
-  "name": "test-3",
+  "name": "{{PROJECT_NAME_KEBAPCASE}}",
   "version": "1.0.0",
   "description": "API",
   "main": "index.js",
@@ -126,7 +126,7 @@
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^1.5.0",
     "lodash": "^4.17.19",
-    "mailgun.js": "^10.0.0",
+    "mailgun.js": "^10.1.0",
     "minio": "^7.0.19",
     "mjml": "^4.5.1",
     "module-alias": "^2.2.0",

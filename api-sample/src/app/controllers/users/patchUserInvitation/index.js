@@ -25,15 +25,17 @@ const patchUserInvitation = async (req, res) => {
       invitationId,
       shortcode
     });
-    const { userRoleId, organizationId } = invitation;
+    const { userOrganizationRoleId, organizationId, invitedBy } = invitation;
+
     const { patchedInvitationId } = await modifyUserInvitation({
       invitationId,
       shortcode
     });
     const { organizationUserId } = await createOrganizationUser({
       userId,
-      userRoleId,
-      organizationId
+      userOrganizationRoleId,
+      organizationId,
+      addedBy: invitedBy
     });
 
     res.status(201).send({

@@ -1,7 +1,7 @@
-const updateUserDetails = require("./queries/updateUserInvitation");
+const updateUserInvitation = require("./queries/updateUserInvitation");
 
 const modifyUserInvitation = async ({ invitationId, shortcode }) => {
-  const patchedInvitationId = await updateUserDetails({
+  const patchedInvitationId = await updateUserInvitation({
     invitationId,
     shortcode
   });

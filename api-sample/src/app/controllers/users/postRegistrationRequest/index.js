@@ -14,7 +14,7 @@ const postRegistrationRequest = async (req, res) => {
     lastName,
     email,
     password,
-    companyName,
+    organizationName,
     captcha
   } = req.body;
 
@@ -25,7 +25,7 @@ const postRegistrationRequest = async (req, res) => {
         lastName,
         email,
         password,
-        companyName
+        organizationName
       },
       {
         abortEarly: false
@@ -56,7 +56,7 @@ const postRegistrationRequest = async (req, res) => {
       lastName,
       email,
       password,
-      companyName,
+      organizationName,
       userRoleId: 2,
       registrationShortcode
     });

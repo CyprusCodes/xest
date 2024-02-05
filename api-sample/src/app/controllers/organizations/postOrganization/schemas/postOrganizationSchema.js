@@ -1,5 +1,5 @@
 const yup = require("yup");
-const selectuser = require("./queries/selectuser");
+const selectUser = require("./queries/selectuser");
 
 const postOrganizationSchema = yup.object().shape({
   userId: yup
@@ -10,7 +10,7 @@ const postOrganizationSchema = yup.object().shape({
     .test("DoesUserExist", "The User does not exist", async function test(
       userId
     ) {
-      const isUser = await selectuser({
+      const isUser = await selectUser({
         userId
       });
       if (isUser) {
@@ -19,7 +19,7 @@ const postOrganizationSchema = yup.object().shape({
 
       return false;
     }),
-  name: yup
+  organizationName: yup
     .string()
     .required("The Organization Name is a required field")
     .label("Name")

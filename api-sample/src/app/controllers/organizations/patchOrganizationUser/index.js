@@ -17,7 +17,7 @@ const patchOrganizationUser = async (req, res) => {
         enabled
       },
       {
-        abordEarly: false
+        abortEarly: false
       }
     );
     const { updatedorgUserId } = await modifyOrganizationUser({

@@ -50,13 +50,13 @@ const postRegistrationRequestSchema = yup.object().shape({
     .label("Password")
     .typeError("Not a valid Password"),
 
-    companyName: yup
+  organizationName: yup
     .string()
     .min(1, "This field can not be empty!")
     .max(50, "This field has to be less than 50 characters")
     .required()
     .label("Company Name")
-    .typeError("Not a valid Company Name"),
+    .typeError("Not a valid Company Name")
 });
 
 module.exports = postRegistrationRequestSchema;

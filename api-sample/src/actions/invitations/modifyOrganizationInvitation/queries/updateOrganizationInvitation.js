@@ -23,4 +23,5 @@ const updateOrganizationInvitation = ({
   }
   return Promise.resolve();
 };
+
 module.exports = getInsertId(updateOrganizationInvitation);
