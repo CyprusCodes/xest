@@ -248,24 +248,32 @@ module.exports = {
                         filePaths.push({
                             path: path.join(projectRootPath, "src", "actions", camelCase(entityName), `fetch${toPascalCase(entityName)}`, `index.js`),
                             templatePath: path.join(__dirname, "template", "actions", "fetch.liquid"),
+                            typeDefsPath: path.join(projectRootPath, "src", "actions", camelCase(entityName), `fetch${toPascalCase(entityName)}`, "index.d.ts"),
+                            templateTypeDefsPath: path.join(__dirname, "template", "actions", "typeDefs", "fetch.liquid"),
                         })
                     }
                     if (endpoint === POST) {
                         filePaths.push({
                             path: path.join(projectRootPath, "src", "actions", camelCase(entityName), `create${toPascalCase(entityName)}`, `index.js`),
                             templatePath: path.join(__dirname, "template", "actions", "create.liquid"),
+                            typeDefsPath: path.join(projectRootPath, "src", "actions", camelCase(entityName), `create${toPascalCase(entityName)}`, "index.d.ts"),
+                            templateTypeDefsPath: path.join(__dirname, "template", "actions", "typeDefs", "create.liquid"),
                         })
                     }
                     if (endpoint === PUT) {
                         filePaths.push({
                             path: path.join(projectRootPath, "src", "actions", camelCase(entityName), `modify${toPascalCase(entityName)}`, `index.js`),
                             templatePath: path.join(__dirname, "template", "actions", "modify.liquid"),
+                            typeDefsPath: path.join(projectRootPath, "src", "actions", camelCase(entityName), `modify${toPascalCase(entityName)}`, "index.d.ts"),
+                            templateTypeDefsPath: path.join(__dirname, "template", "actions", "typeDefs", "modify.liquid"),
                         })
                     }
                     if (endpoint === DELETE) {
                         filePaths.push({
                             path: path.join(projectRootPath, "src", "actions", camelCase(entityName), `remove${toPascalCase(entityName)}`, `index.js`),
                             templatePath: path.join(__dirname, "template", "actions", "remove.liquid"),
+                            typeDefsPath: path.join(projectRootPath, "src", "actions", camelCase(entityName), `remove${toPascalCase(entityName)}`, "index.d.ts"),
+                            templateTypeDefsPath: path.join(__dirname, "template", "actions", "typeDefs", "remove.liquid"),
                         })
                     }
                     return filePaths;
@@ -278,29 +286,57 @@ module.exports = {
                 return Promise.all(endpointTypes.map(async (endpoint, index) => {
                     const filePath = targetFilePath[index];
                     const templateFile = fs.readFileSync(filePath.templatePath, "utf-8");
+                    const templateTypeDefsFile = fs.readFileSync(filePath.templateTypeDefsPath, "utf-8");
                     let renderedTemplate = "";
+                    let renderedTypeDefsTemplate = "";
 
+                    const columns = flatten(schema[entityName]);
                     let filteredColumns = [...filterColumns]
                     if (filterColumns.length === 0) {
-                        const columns = flatten(schema[entityName]);
                         filteredColumns = columns
                             .filter((c) => c.columnKey === "PRI")
                             .map((c) => `${c.table}.${c.column}`);
                     }
+                    const selectableColumns = includeColumns
+                            .filter((c) => !filteredColumns.includes(c))
+                            .map((c) => {
+                                const column = columns.find((col) => `${col.table}.${col.column}` === c);
+                                return {
+                                    ...column,
+                                    column: column.column
+                                }
+                            });
 
+                    const filterColumnsWithType = filteredColumns.map((c) => {
+                        const column = columns.find((col) => `${col.table}.${col.column}` === c);
+                        return {
+                            ...column,
+                            column: column.column
+                        }
+                    });
                     if (endpoint === GET && isPaginated == 'No') {
                         renderedTemplate = await render(templateFile, {
                             entityName,
                             filteredColumns
                         });
+                        renderedTypeDefsTemplate = await render(templateTypeDefsFile, {
+                            entityName,
+                            filterColumnsWithType,
+                            selectableColumns
+                        });
                     }
                     if (endpoint === POST) {
+                        const argumentsColumns = uniqBy([...filterColumnsWithType, ...selectableColumns]);
                         renderedTemplate = await render(templateFile, {
                             entityName,
                             tableFields: includeColumns,
                         });
+                        renderedTypeDefsTemplate = await render(templateTypeDefsFile, {
+                            entityName,
+                            argumentsColumns
+                        });
                     }
-                    if (endpoint === PUT || endpoint === DELETE) {
+                    if (endpoint === PUT) {
                         const argsColumns = uniqBy([...filteredColumns, ...includeColumns]);
                         renderedTemplate = await render(templateFile, {
                             entityName,
@@ -308,11 +344,42 @@ module.exports = {
                             includeColumns,
                             argsColumns
                         });
+                        const includeColumnsWithType = includeColumns.map((c) => {
+                            const column = columns.find((col) => `${col.table}.${col.column}` === c);
+                            return {
+                                ...column,
+                                column: column.column
+                            }
+                        });
+                        const argumentsColumns = uniqBy([...includeColumnsWithType]);
+                        renderedTypeDefsTemplate = await render(templateTypeDefsFile, {
+                            entityName,
+                            argumentsColumns,
+                            filterColumnsWithType
+                        });
+                    }
+
+                    if (endpoint === DELETE) {
+                        const argsColumns = uniqBy([...filteredColumns, ...includeColumns]);
+                        renderedTemplate = await render(templateFile, {
+                            entityName,
+                            filteredColumns,
+                            includeColumns,
+                            argsColumns
+                        });
+                        renderedTypeDefsTemplate = await render(templateTypeDefsFile, {
+                            entityName,
+                            filterColumnsWithType
+                        });
                     }
 
                     if (renderedTemplate) {
                         await writeFile(filePath.path, renderedTemplate);
                         await prettifyFile(filePath.path);
+                    }
+                    if (renderedTypeDefsTemplate) {
+                        await writeFile(filePath.typeDefsPath, renderedTypeDefsTemplate);
+                        await prettifyFile(filePath.typeDefsPath);
                     }
                 }))
             },

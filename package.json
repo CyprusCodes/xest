@@ -1,7 +1,7 @@
 {
   "name": "{{PROJECT_NAME_KEBAPCASE}}",
-  "version": "1.0.0",
-  "description": "API",
+  "version": "0.0.0-alpha.18",
+  "description": "Xest CLI for managing projects",
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test jest --bail --coverage=true --coverageDirectory=coverage-unit",

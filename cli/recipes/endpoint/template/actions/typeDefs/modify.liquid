@@ -1,0 +1,18 @@
+declare module "~root/actions/{{ entityName | toCamelCase }}/modify{{ entityName | toPascalCase }}" {
+    export type {{ entityName | toPascalCase }} = {
+        {%- for column in filterColumnsWithType -%}
+            {{ column.column | toCamelCase }}: {{ column.dataType | toTypeScriptType }};
+        {%- endfor -%}
+        {%- for column in argumentsColumns -%}
+            {{ column.column | toCamelCase }}?: {{ column.dataType | toTypeScriptType }};
+        {%- endfor -%}
+    };  
+
+    export type Modify{{ entityName | toPascalCase }}Arguments = {{ entityName | toPascalCase }}
+
+    const modify{{ entityName | toPascalCase }}: (
+        args: Modify{{ entityName | toPascalCase }}Arguments
+    ) => Promise<>;
+
+    export = modify{{ entityName | toPascalCase }};
+}
