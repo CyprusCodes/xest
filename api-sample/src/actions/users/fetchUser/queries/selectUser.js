@@ -12,7 +12,7 @@ const selectUser = ({ email, password }) => submitQuery`
     FROM users
     LEFT JOIN user_types ON users.user_type_id = user_types.user_type_id
     WHERE email = ${email}
-    AND password = SHA2(CONCAT(${password}, ${process.env.PASSWORD_SALT}), 224);
+    AND password = SHA2(CONCAT(${password}, ${process.env.JWT_SECRET}), 224);
 `;
 
 module.exports = getFirst(camelKeys(selectUser));
