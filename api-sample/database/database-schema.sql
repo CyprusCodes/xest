@@ -22,14 +22,6 @@ VALUES
 
 -- YOU CAN MODIFY BELOW THIS LINE
 
--- USER_ROLES TABLE START
-DROP TABLE IF EXISTS user_roles;
-CREATE TABLE user_roles(
-  user_role_id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-  user_role VARCHAR(100) NOT NULL
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
--- USER_ROLES TABLE END
-
 -- USER_ORGANIZATION_ROLES TABLE START
 DROP TABLE IF EXISTS user_organization_roles;
 CREATE TABLE user_organization_roles(
@@ -47,10 +39,9 @@ CREATE TABLE
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(500) NOT NULL,
-    user_role_id int NOT NULL,
+    is_super_admin tinyint NOT NULL,
     updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_role_id) REFERENCES user_roles (user_role_id)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
 -- USERS TABLE END
 
@@ -122,12 +113,11 @@ CREATE TABLE registration_requests(
   last_name VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL UNIQUE,
   password VARCHAR(500) NOT NULL,
-  user_role_id int NOT NULL,
+  is_super_admin int NOT NULL,
   organization_name VARCHAR(50) NOT NULL,
   registration_shortcode VARCHAR(36) NOT NULL UNIQUE,
   status VARCHAR(20) DEFAULT 'pending',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_role_id) REFERENCES user_roles(user_role_id)
+  updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_ci;
 -- USER_ORGANIZATION_REQUESTS TABLE END

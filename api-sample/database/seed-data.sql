@@ -10,12 +10,6 @@ VALUES
 
 -- YOU CAN MODIFY BELOW THIS LINE
 INSERT INTO
-  user_roles (user_role_id, user_role)
-VALUES
-  (1, "Admin"),
-  (2, "User");
-
-INSERT INTO
   user_organization_roles (user_organization_role_id, user_organization_role)
 VALUES
   (1, "OrganizationAdmin"),
@@ -28,7 +22,7 @@ INSERT INTO
     last_name,
     email,
     password,
-    user_role_id,
+    is_super_admin,
     created_at
   )
 VALUES
@@ -47,7 +41,7 @@ VALUES
     "Bloggs",
     "joebloggs@gmail.com",
     SHA2 (CONCAT ("12345678", "SECRET_SALT"), 224),
-    2,
+    0,
     "2020-11-20 12:00:00"
   ),
   (
@@ -56,7 +50,7 @@ VALUES
     "Bloggs",
     "jimbloggs@yahoo.com",
     SHA2 (CONCAT ("12345678", "SECRET_SALT"), 224),
-    2,
+    1,
     "2020-11-20 12:00:00"
   ),
   (
@@ -65,7 +59,7 @@ VALUES
     "Doe",
     "janedoe@example.com",
     SHA2 (CONCAT ("12345678", "SECRET_SALT"), 224),
-    1,
+    0,
     "2020-11-20 12:00:00"
   );
 
@@ -166,7 +160,7 @@ INSERT INTO registration_requests(
   last_name,
   email,
   password,
-  user_role_id,
+  is_super_admin,
   organization_name,
   registration_shortcode
 ) VALUES (
@@ -182,7 +176,7 @@ INSERT INTO registration_requests(
   'Doe',
   'joebloggs@gmail.com',
   SHA2 (CONCAT ("12345678", "SECRET_SALT"), 224),
-  2,
+  0,
   'Example Organization 2',
   'shortcode2'
 );
