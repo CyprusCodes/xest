@@ -3,8 +3,8 @@ const { submitQuery, getFirst } = require("~root/lib/database");
 const selectUserByEmail = ({ email }) => submitQuery`
     SELECT
       email
-    FROM registration_requests
-    WHERE email IN (${email});
+    FROM users
+    WHERE email = ${email};
 `;
 
 module.exports = getFirst(selectUserByEmail, "email");

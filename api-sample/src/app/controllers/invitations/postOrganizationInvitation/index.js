@@ -6,6 +6,7 @@ const postOrganizationInvitationSchema = require("./schemas/postOrganizationInvi
 const selectUserFullNameById = require("./queries/selectUserFullNameById");
 const selectOrganizationNameById = require("./queries/selectOrganizationNameById");
 const selectUserOrganizationRoleNameById = require("./queries/selectUserOrganizationRoleNameById");
+const selectUserByEmail = require("./queries/selectUserByEmail");
 
 const postOrganizationInvitation = async (req, res) => {
   const { userId } = req.user;
@@ -31,6 +32,7 @@ const postOrganizationInvitation = async (req, res) => {
     const { userOrganizationRole } = await selectUserOrganizationRoleNameById({
       userOrganizationRoleId
     });
+    const { user } = await selectUserByEmail({ email });
 
     let newRole;
     if (userOrganizationRole === "OrganizationAdmin") {
@@ -49,20 +51,37 @@ const postOrganizationInvitation = async (req, res) => {
       invitationShortcode
     });
 
-    const emailPayload = {
-      to: email,
-      template: "user-organization-invitation",
-      version: "0.0.1",
-      metadata: {
-        firstName,
-        lastName,
-        userOrganizationRole: newRole,
-        organizationName,
-        senderMessage: comment,
-        notificationsPageUrl: `${process.env.APP_BASE_URL}/login`
-      }
-    };
-    await sendEmail(emailPayload);
+    if (user) {
+      const emailPayload = {
+        to: email,
+        template: "user-organization-invitation",
+        version: "0.0.1",
+        metadata: {
+          firstName,
+          lastName,
+          userOrganizationRole: newRole,
+          organizationName,
+          senderMessage: comment,
+          notificationsPageUrl: `${process.env.APP_BASE_URL}/login`
+        }
+      };
+      await sendEmail(emailPayload);
+    } else {
+      const emailPayload = {
+        to: email,
+        template: "new-user-organization-invitation",
+        version: "0.0.1",
+        metadata: {
+          firstName,
+          lastName,
+          userOrganizationRole: newRole,
+          organizationName,
+          senderMessage: comment,
+          notificationsPageUrl: `${process.env.APP_BASE_URL}/register/${invitationShortcode}`
+        }
+      };
+      await sendEmail(emailPayload);
+    }
 
     res.send({
       newInvitationId

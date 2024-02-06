@@ -4,7 +4,7 @@ const selectSuperAdmin = ({ userId }) => submitQuery`
     SELECT
         user_id
     FROM users
-    WHERE user_id = ${userId} && user_role_id = 1;
+    WHERE user_id = ${userId} && is_super_admin = 1;
 `;
 
 module.exports = getFirst(selectSuperAdmin, "user_id");

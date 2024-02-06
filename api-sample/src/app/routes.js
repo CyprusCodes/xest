@@ -6,7 +6,6 @@ const postUser = require("./controllers/users/registerAdmin");
 const putUserDetails = require("./controllers/users/putUserDetails");
 const authentication = require("./middlewares/authentication");
 const authorise = require("./middlewares/authorisation");
-const getUserRoles = require("./controllers/users/userRoles");
 
 const postRegistrationRequest = require("./controllers/users/postRegistrationRequest");
 const postCompleteRegistration = require("./controllers/users/postCompleteRegistration");
@@ -37,6 +36,8 @@ const getOrganizationsByUserId = require("./controllers/organizations/getOrganiz
 const getAllUsersByOrgId = require("./controllers/userOrganizations/getAllUsersByOrgId");
 const getUserOrganizationInvitations = require("./controllers/userOrganizationInvitations/getUserOrganizationInvitations");
 const deleteInvitationByOrgUser = require("./controllers/invitations/deleteInvitationByOrgUser");
+const postRegisterWithInvitation = require("./controllers/users/postRegisterWithInvitation");
+const getRegisterWithInvitation = require("./controllers/users/getRegisterWithInvitation");
 
 const router = express.Router();
 
@@ -59,7 +60,6 @@ router.get(
 );
 router.put("/update-password/:shortcode", putPassword);
 router.put("/edit/user", authentication, putUserDetails);
-router.get("/user-roles", getUserRoles); // we don't need this one any more
 
 router.post("/organizations/create", authentication, postOrganization);
 router.get("/organizations/:orgId/users", authentication, getOrganizationUsers);
@@ -113,6 +113,16 @@ router.get(
   "/organizations/:orgId/invitations",
   authentication,
   getUserOrganizationInvitations
+);
+
+router.post(
+  "/register-with-invitation/:invitationShortcode",
+  postRegisterWithInvitation
+);
+
+router.get(
+  "/register-with-invitation/:invitationShortcode",
+  getRegisterWithInvitation
 );
 
 module.exports = router;
