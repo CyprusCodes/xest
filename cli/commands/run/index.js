@@ -92,20 +92,18 @@ const run = async () => {
       console.log(
         chalk.red`Failed to populate database with seed data. This might happen if you have recently updated your migrations, please modify your seed data to match new schema changes.`
       );
-      
-      console.log(
-        chalk.red`Error: ${error.split("ERROR")[1]}`
-      );
+
+      console.log(chalk.red`Error: ${error.split("ERROR")[1]}`);
     }
   }
 
   process.stdin.resume();
   let isExiting = false;
 
-  let dockerComposeCommand = `docker-compose down`;
+  let dockerComposeCommand = `docker-compose --project-name ${projectName} down`;
   const usingAppleSiliconChipset = isAppleSilicon();
-  if(usingAppleSiliconChipset) {
-    dockerComposeCommand = `docker-compose -f docker-compose.apple-silicon.yml down`
+  if (usingAppleSiliconChipset) {
+    dockerComposeCommand = `docker-compose --project-name ${projectName} -f docker-compose.apple-silicon.yml down`;
   }
 
   // shutdown procedure
@@ -135,7 +133,17 @@ const run = async () => {
 
   updateDatabaseMetadata({ mySQLContainerId, rootPath, projectName });
 
-  await resolvePortConflict(3001, `${projectName} API`);
+  const dotEnvFilePath = path.join(rootPath, ".env");
+  const dotEnvFile = fs.readFileSync(dotEnvFilePath, "utf8");
+  const pattern = /^PORT=(.*)$/gm;
+  const match = pattern.exec(dotEnvFile);
+  let apiPort = 3001;
+
+  if (match && match[1]) {
+    apiPort = Number(match[1]);
+  }
+
+  await resolvePortConflict(apiPort, `${projectName} API`, true, projectName);
   console.log(chalk.yellow`Starting ${projectName} API project`);
   execSync("npm run dev", {
     cwd: rootPath,

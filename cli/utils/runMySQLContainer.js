@@ -1,3 +1,4 @@
+const fs = require("fs");
 const chalk = require("chalk");
 const { execSync } = require("child_process");
 const path = require("path");
@@ -33,15 +34,42 @@ const runMySQLContainer = async (rootPath, projectName) => {
   let error;
   let output;
 
+  // read from docker-compose file the PORT number
+  const usingAppleSiliconChipset = isAppleSilicon();
+  const dockerComposeFilePath = path.join(
+    rootPath,
+    "database",
+    usingAppleSiliconChipset
+      ? "docker-compose.apple-silicon.yml"
+      : "docker-compose.yml"
+  );
+
+  const dockerComposeFile = fs.readFileSync(dockerComposeFilePath, "utf8");
+
+  // Define the service name
+  const serviceName = `${projectName}-db`;
+
+  // Regex pattern to extract the host port
+  const pattern = new RegExp(
+    `${serviceName}:\\s*\\n(?:\\s*\\w+:.*\\n)*\\s*ports:\\s*\\n(?:\\s*-\\s*"?(\\d+):\\d+"?\\n)*`,
+    "gm"
+  );
+  const match = pattern.exec(dockerComposeFile);
+  let mysqlHostPort = 3306;
+
+  if (match && match[1]) {
+    mysqlHostPort = Number(match[1]);
+  }
+
   let mySQLContainerId = isDockerMySQLContainerRunning.trim();
   if (!Boolean(isDockerMySQLContainerRunning)) {
     // check if mysql port is available for use
-    await resolvePortConflict(3306, "MySQL Docker Container");
+    await resolvePortConflict(mysqlHostPort, "MySQL Docker Container", false, );
 
-    let dockerComposeCommand = `docker-compose up -d`;
-    const usingAppleSiliconChipset = isAppleSilicon();
-    if(usingAppleSiliconChipset) {
-      dockerComposeCommand = `docker-compose -f docker-compose.apple-silicon.yml up -d`
+    let dockerComposeCommand = `docker-compose --project-name ${projectName} up -d`;
+
+    if (usingAppleSiliconChipset) {
+      dockerComposeCommand = `docker-compose --project-name ${projectName} -f docker-compose.apple-silicon.yml up -d`;
     }
 
     const runMySQLContainer = execSync(dockerComposeCommand, {
