@@ -1,0 +1,12 @@
+Confirmation of Account Recovery
+
+ Hi {{name}}, Your password has been successfully changed for the following account;
+Just click the link below to get started:
+
+If you didn't change your password, follow this link to reset your password to a new one.
+In case you have any questions, feel free to get in touch at {{replyToEmail}}.
+
+Recover Password
+
+Best regards,
+Guestlist Team

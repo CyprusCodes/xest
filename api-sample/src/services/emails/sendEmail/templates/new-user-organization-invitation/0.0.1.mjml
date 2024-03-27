@@ -1,0 +1,95 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="Inter" />
+
+      <mj-text align="left" color="#000000" />
+      <mj-class
+        name="sign-up-btn"
+        align="left"
+        font-size="15px"
+        font-weight="bold"
+        border-radius="4px"
+        padding-top="25px"
+        padding-bottom="25px"
+      />
+      <mj-class name="jf-logo" align="center" padding="0px" />
+    </mj-attributes>
+    <mj-style inline="inline">
+      @import
+      url('https://fonts.googleapis.com/css2?family=Inter&family=Lato&family=Rubik:wght@400;500&display=swap');
+      .no-link-decoration { color: #ffffff; text-decoration: none }
+    </mj-style>
+  </mj-head>
+  <mj-body background-color="#ffffff" padding-top="60px">
+    <mj-section
+      background-color="#ffffff"
+      padding-bottom="0px"
+      padding-top="60px"
+    >
+      <mj-column vertical-align="top" width="100%">
+        <mj-text
+          font-size="26px"
+          font-weight="600"
+          padding-left="25px"
+          padding-right="25px"
+          padding-bottom="0px"
+          padding-top="20px"
+          color="#252525"
+          font-family="Helvetica"
+        >
+          Company Invite</mj-text
+        >
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column vertical-align="top" width="100%">
+        <mj-text
+          font-family="Helvetica"
+          color="#252525"
+          font-size="15px"
+          line-height="25px"
+        >
+          {{firstName}} {{lastName}} invited you to become a
+          <strong> {{userRole}}</strong>
+          of company.
+        </mj-text>
+      </mj-column>
+
+      this is only included is a message has been input when the invite was
+      sent.
+
+      <mj-column vertical-align="top" width="100%">
+        <mj-text
+          font-family="Helvetica"
+          color="#252525"
+          font-size="15px"
+          line-height="25px"
+        >
+          Below is a message from {{firstName}} {{lastName}}
+        </mj-text>
+      </mj-column>
+      <mj-column vertical-align="top" width="100%">
+        <mj-text
+          font-family="Helvetica"
+          color="#252525"
+          font-size="15px"
+          line-height="25px"
+        >
+          {{senderMessage}}
+        </mj-text>
+      </mj-column>
+      <mj-column vertical-align="top" width="100%">
+        <mj-text
+          font-family="Helvetica"
+          color="#252525"
+          font-size="15px"
+          line-height="25px"
+        >
+          Please click <a href="{{notificationsPageUrl}}">here</a> to register and
+          accept the invitation.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

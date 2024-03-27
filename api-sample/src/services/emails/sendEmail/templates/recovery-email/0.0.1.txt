@@ -1,0 +1,7 @@
+This email is in response to your recent request to recover a forgotten password.
+
+To reset your password, please click the link below and follow the instructions provided.
+{{recoveryUrl}}
+
+Best Regards,
+Xest.js

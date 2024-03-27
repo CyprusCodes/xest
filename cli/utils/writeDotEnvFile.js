@@ -18,10 +18,9 @@ PASSWORD_SALT=SECRET_SALT
 // MINIO_SECRET_KEY=
 
 // mailgun credentials
-// MAILGUN_API_KEY=
-// MAILGUN_API_BASE_URL=
-// MAILGUN_DOMAIN=
-
+MAILGUN_API_KEY=change_me
+MAILGUN_API_BASE_URL=change_me
+MAILGUN_DOMAIN=change_me
 `;
   const filePath = path.join(projectRoot, "./.env");
   const doesItExist = fs.ensureFileSync(filePath);

@@ -1,0 +1,8 @@
+Company Invite
+
+{{sender}} invited you to become a {{userRole}} for {{organizationName}}
+
+Below is a message from {{sender}}
+{{senderMessage}}
+
+Follow the link to register and accept invitation {{notificationsPageUrl}}

@@ -1,0 +1,1 @@
+Hi {{name}}, please click link below to complete your registration.
