@@ -22,6 +22,14 @@ const getComparisonSign = (paginationDirection, columnSortDirection) => {
   return comparisonSign;
 };
 
+const generateCondition = (column, value, comparisonSign) => {
+  // https://github.com/rmosolgo/graphql-ruby/issues/2284
+  if (value === null || value === undefined) {
+    return sql`${sqlId(column)} IS NOT NULL`;
+  }
+  return sql`${sqlId(column)} ${comparisonSign} ${value}`;
+};
+
 const generateMultiColumnPaginationCursor = ({
   direction,
   cursorValues,
@@ -41,9 +49,11 @@ const generateMultiColumnPaginationCursor = ({
 
   cursorValuesSortedBySortOrder.forEach((cursor, index) => {
     if (index === 0) {
-      query = sql`${query} (${sqlId(cursor.column)} ${cursor.comparisonSign} ${
-        cursor.value
-      }) `;
+      query = sql`${query} (${generateCondition(
+        cursor.column,
+        cursor.value,
+        cursor.comparisonSign
+      )}) `;
     } else {
       query = sql`${query}OR (`;
       for (let i = 0; i <= index; i += 1) {
@@ -52,9 +62,13 @@ const generateMultiColumnPaginationCursor = ({
         const comparisonSign = cursorValuesSortedBySortOrder[i].comparisonSign;
 
         if (i === index) {
-          query = sql`${query}${sqlId(column)} ${comparisonSign} ${value}`;
+          query = sql`${query}${generateCondition(
+            column,
+            value,
+            comparisonSign
+          )}`;
         } else {
-          query = sql`${query}${sqlId(column)} = ${value} AND `;
+          query = sql`${query}${generateCondition(column, value, sql`=`)} AND `;
         }
       }
       query = sql`${query}) `;
