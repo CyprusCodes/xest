@@ -28,7 +28,9 @@
     "prompts": "^2.4.2",
     "quick-score": "0.0.13",
     "replace-in-file": "^6.3.2",
-    "sql-formatter": "^4.0.2"
+    "sql-formatter": "^4.0.2",
+    "mailgun.js": "^10.2.1",
+
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
