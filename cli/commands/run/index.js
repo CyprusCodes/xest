@@ -43,6 +43,9 @@ const run = async () => {
     console.log(chalk.yellow`Setting up your database schema.`);
     const runDbSchemaQuery = `cat ${rootPath}/database/database-schema.sql | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
     ({ error, output } = await runSqlQueryWithinContainer(runDbSchemaQuery));
+    if (error) {
+      console.log(chalk.red`${error}`);
+    }
   }
 
   // run migrations
