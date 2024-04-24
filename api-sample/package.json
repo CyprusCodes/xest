@@ -147,6 +147,7 @@
     "winston-transport": "^4.3.0",
     "yamlify-object": "^0.5.1",
     "yamlify-object-colors": "^1.0.3",
-    "yup": "^0.27.0"
+    "yup": "^0.27.0",
+    "mailgun.js": "^10.2.1"
   }
 }
