@@ -27,6 +27,7 @@
     "inquirer-file-tree-selection-prompt": "^1.0.13",
     "inquirer-search-list": "^1.2.6",
     "liquidjs": "^9.28.5",
+    "localtunnel": "^2.0.2",
     "lodash": "^4.17.21",
     "mkdirp": "^1.0.4",
     "openai": "^4.20.0",

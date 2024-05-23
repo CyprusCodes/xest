@@ -1,6 +1,7 @@
 const express = require("express");
 const chalk = require("chalk");
 const cors = require("cors");
+const localtunnel = require("localtunnel");
 const findProjectRoot = require("../../utils/findProjectRoot");
 const commandsList = require("./cmd/index");
 
@@ -37,21 +38,30 @@ const ai = () => {
       });
       return { tools: toolsMapped };
     };
-  
+
     const toolsResponse = getTools();
     res.json(toolsResponse);
   });
-  
+
   app.post("/run-cmnd-tool", async (req, res) => {
     const args = req.body;
-    console.log({ commandsList, args })
     const toolToRun = commandsList.find((t) => t.name === args.toolName);
     const results = await toolToRun.runCmd(args.props);
     res.send(results);
   });
 
   app.listen(XESTGPT_PORT, () => {
-    console.log(chalk.green`XestGPT is available on http://localhost:${XESTGPT_PORT}`);
+    localtunnel({ port: XESTGPT_PORT }).then((tunnel) => {
+      console.log(
+        chalk.green`XestGPT CMND Extension is available on ${tunnel.url}`
+      );
+
+      tunnel.on("close", () => {
+        console.log(
+          chalk.red`XestGPT CMND Extension link has expired. Restart xx ai`
+        );
+      });
+    });
   });
 };
 
