@@ -1,0 +1,33 @@
+{{ defaultImport }}
+
+const insert{{entityName | toPascalCase}} = (
+    {{ tableFields | functionParameters }}
+) => submitQuery`
+{% sql %}
+INSERT INTO {{entityName}} (
+{% for column in schemaColumns %}
+    {{ column.column }}
+    {% if forloop.last %}{% else %},{% endif %}
+{% endfor %}
+) VALUES (
+{% for column in schemaColumns %}
+    {% if column.nullable %}
+        {% if column.dataType == 'json'%}
+            ${sqlValueOrNull(JSON.stringify({{ column.column | toCamelCase}}))}
+        {% else %}
+            ${sqlValueOrNull({{ column.column | toCamelCase}})}
+        {% endif %}
+    {% else %}
+        {% if column.dataType == 'json'%}
+            ${JSON.stringify({{ column.column | toCamelCase}})}
+        {% else %}
+            ${ {{ column.column | toCamelCase}} }
+        {% endif %}
+    {% endif %}
+    {% if forloop.last %}{% else %},{% endif %}
+{% endfor %}
+);
+{% endsql %}
+`;
+
+module.exports = getInsertId(insert{{ entityName | toPascalCase }});

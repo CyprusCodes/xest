@@ -1,0 +1,21 @@
+const handleAPIError = require("~root/utils/handleAPIError");
+const remove{{entityName | toPascalCase}} = require("~root/actions/{{entityName | toCamelCase}}/remove{{entityName | toPascalCase}}");
+const newDelete{{entityName | toPascalCase}}Schema = require("./schema/newDelete{{entityName | toPascalCase}}Schema");
+
+const delete{{entityName | toPascalCase}} = async (req, res) => {
+  {% if filteredColumns.length > 0 %}
+  const {{ filteredColumns | functionParameters }} = req.params;
+  {% endif %}
+
+  try {
+    await newDelete{{entityName | toPascalCase}}Schema.validate({{ filteredColumns | functionParameters }}, { abortEarly: false });
+
+    await remove{{entityName | toPascalCase}}({{ filteredColumns | functionParameters }});
+
+    res.status(204).send({ success: true });
+  } catch (err) {
+    handleAPIError(res, err);
+  }
+};
+
+module.exports = delete{{entityName | toPascalCase}};

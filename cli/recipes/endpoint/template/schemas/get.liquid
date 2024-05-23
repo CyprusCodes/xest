@@ -1,0 +1,32 @@
+const yup = require('yup');
+{{filteredFinalColumns | schemaImports}}
+
+const newGet{{entityName | toPascalCase}}Schema = yup.object().shape({
+{% for column in filteredFinalColumns %}
+    {% if column.foreignKeyTo%}
+        {{column.column | toCamelCase}}: yup.
+            number().integer().required().label('{{column.column | toCamelCase}}').typeError('The {{column.column | toCamelCase}} field must be a number').test(
+            'doesExist',
+            'The {{column.column | toCamelCase}} field must be a valid {{column.column | toCamelCase}}',
+            async function test({{column.column | toCamelCase}}) {
+                if (!{{column.column | toCamelCase}}) {
+                    return false;
+                }
+
+                const {{column.column | toCamelCase}}Count = await select{{column.foreignKeyTo.targetTable | toPascalCase}}ById({ 
+                    {% if column.column != column.foreignKeyTo.targetColumn %}
+                        {{column.foreignKeyTo.targetColumn | toCamelCase}}: {{column.column | toCamelCase}},
+                    {% else %}
+                        {{column.column | toCamelCase}},
+                    {% endif %}
+                 });
+                if ({{column.column | toCamelCase}}Count === 0) {
+                    return false;
+                }
+                return true;
+            }),
+    {% endif %}
+{% endfor %}
+});
+
+module.exports = newGet{{entityName | toPascalCase}}Schema;

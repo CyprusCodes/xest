@@ -1,0 +1,21 @@
+const handleAPIError = require("~root/utils/handleAPIError");
+const fetch{{entityName | toPascalCase}} = require("~root/actions/{{entityName | toCamelCase}}/fetch{{entityName | toPascalCase}}");
+const newGet{{entityName | toPascalCase}}Schema = require("./schema/newGet{{entityName | toPascalCase}}Schema");
+
+const get{{entityName | toPascalCase}} = async (req, res) => {
+  {% if filteredColumns.length > 0 %}
+  const {{ filteredColumns | functionParameters }} = req.params;
+  {% endif %}
+
+  try {
+    await newGet{{entityName | toPascalCase}}Schema.validate({{ filteredColumns | functionParameters }}, { abortEarly: false });
+
+    const { {{entityName | toCamelCase}} } = await fetch{{entityName | toPascalCase}}({{ filteredColumns | functionParameters }});
+
+    res.status(200).send({ {{entityName | toCamelCase}} });
+  } catch (err) {
+    handleAPIError(res, err);
+  }
+};
+
+module.exports = get{{entityName | toPascalCase}};

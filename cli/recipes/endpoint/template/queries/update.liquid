@@ -1,0 +1,42 @@
+{{ defaultImport }}
+
+const NO_UPDATE = Symbol("NO_UPDATE");
+
+const update{{entityName | toPascalCase}} = ({
+    {%- for column in defaultFilterColumns -%}
+    {{ column | toCamelCase }},
+    {%- endfor -%}
+    {%- for column in uniqueSchemaColumns -%}
+    {{ column.column | toCamelCase }} = NO_UPDATE,
+    {%- endfor -%}
+}) => {
+    const updates = [];
+    {%- for column in uniqueSchemaColumns -%}
+
+    if ({{ column.column | toCamelCase }} !== NO_UPDATE) {
+        updates.push(
+            sql`{{column.column}} = {%- if column.nullable -%} {% if column.dataType == 'json'%} ${sqlValueOrNull(JSON.stringify({{ column.column | toCamelCase }}))} {% else %} ${sqlValueOrNull({{ column.column | toCamelCase }})} {% endif %}
+            {%- else -%} {% if column.dataType == 'json'%} ${JSON.stringify({{ column.column | toCamelCase }})} {% else %} ${ {{ column.column | toCamelCase }} } {% endif %} {%- endif -%}
+            `
+        );
+    }
+
+    {% endfor %}
+
+   if (updates.length !== 0) {
+    return submitQuery`
+        UPDATE 
+          {{ entityName | toSnakeCase }} 
+        SET 
+          ${updates.reduce(sqlReduce)} 
+        WHERE 
+          {% for column in defaultFilterColumns -%}
+        {{ column | toSnakeCase }} = ${ {{ column | toCamelCase }} } {% if forloop.last %}{% else %} AND {% endif %}
+        {%- endfor -%}`
+    }
+
+
+    return Promise.resolve();
+};
+
+module.exports = update{{ entityName | toPascalCase }};

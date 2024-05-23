@@ -1,0 +1,17 @@
+const { submitQuery } = require("~root/lib/database");
+
+const delete{{entityName | toPascalCase}} = ({
+    {%- for column in defaultFilterColumns -%}
+    {{ column | toCamelCase }},
+    {%- endfor -%} }) => submitQuery`
+{% sql %}
+DELETE 
+FROM {{ entityName | toSnakeCase }}
+WHERE 
+{% for column in defaultFilterColumns -%}
+{{ column | toSnakeCase }} = ${ {{ column | toCamelCase }} } {% if forloop.last %}{% else %} AND {% endif %}
+{%- endfor -%}`
+{% endsql %}
+;
+
+module.exports = delete{{ entityName | toPascalCase }};

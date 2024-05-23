@@ -1,0 +1,19 @@
+const handleAPIError = require("~root/utils/handleAPIError");
+const create{{entityName | toPascalCase}} = require("~root/actions/{{entityName | toCamelCase}}/create{{entityName | toPascalCase}}");
+const newPost{{entityName | toPascalCase}}Schema = require("./schema/newPost{{entityName | toPascalCase}}Schema");
+
+const post{{entityName | toPascalCase}} = async (req, res) => {
+  const {{ includeColumns | functionParameters }} = req.body;
+
+  try {
+    await newPost{{entityName | toPascalCase}}Schema.validate({{ includeColumns | functionParameters }}, { abortEarly: false });
+
+    const { inserted{{ entityName | toPascalCase | singular }}Id } = await create{{entityName | toPascalCase}}({{ includeColumns | functionParameters }});
+
+    res.status(201).send({ inserted{{ entityName | toPascalCase | singular }}Id });
+  } catch (err) {
+    handleAPIError(res, err);
+  }
+};
+
+module.exports = post{{entityName | toPascalCase}};

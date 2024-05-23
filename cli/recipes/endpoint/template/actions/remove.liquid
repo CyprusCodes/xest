@@ -1,0 +1,7 @@
+const delete{{ entityName | toPascalCase }} = require('./queries/delete{{ entityName | toPascalCase }}');
+
+const remove{{entityName | toPascalCase}} = async ({{ filteredColumns | functionParameters }}) => {
+    await delete{{ entityName | toPascalCase }}({{ filteredColumns | functionParameters }});
+}
+
+module.exports = remove{{entityName | toPascalCase}};

@@ -43,6 +43,10 @@ const executeRecipe = async ({
       });
     }
   });
+
+  if (recipeToApply.postGeneration) {
+    await recipeToApply.postGeneration();
+  }
 };
 
 const applyRecipe = async () => {

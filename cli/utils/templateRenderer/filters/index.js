@@ -10,6 +10,7 @@ const {
   get,
 } = require("lodash");
 const { singular, plural } = require("pluralize");
+const toPascalCase = require("../../toPascalCase");
 
 const enrichEngine = (engine) => {
   engine.registerFilter("toCamelCase", (v) => camelCase(v));
@@ -20,6 +21,20 @@ const enrichEngine = (engine) => {
   engine.registerFilter("toConstantCase", (v) =>
     upperCase(v).replace(/ /g, "_")
   );
+  engine.registerFilter("toTypeScriptType", (v) => {
+    switch (v) {
+      case "int":
+        return "number";
+      case "varchar":
+        return "string";
+      case "datetime":
+        return "Date";
+      case "tinyint":
+        return "boolean";
+      default:
+        return "any";
+    }
+  });
   engine.registerFilter("toDotCase", (v) => lowerCase(v).replace(/ /g, "."));
   engine.registerFilter("toKebabCase", (v) => kebabCase(v));
   engine.registerFilter("toLowerCase", (v) => lowerCase(v).replace(/ /g, ""));
@@ -28,6 +43,20 @@ const enrichEngine = (engine) => {
   engine.registerFilter("toSentenceCase", (v) => upperFirst(lowerCase(str)));
   engine.registerFilter("singular", (v) => singular(v));
   engine.registerFilter("plural", (v) => plural(v));
+  engine.registerFilter("varcharSize", (v) => {
+    const size = v.split("(")[1].split(")")[0];
+    return size;
+  });
+  engine.registerFilter("schemaImports", (v) => {
+    let imports = [];
+    const filteredSchema = v.filter((c) => (c.columnKey === 'MUL' || c.columnKey === 'PRI') && c.dataType === 'int');
+    const uniqueTargetTables = [...new Set(filteredSchema.map((c) => c.foreignKeyTo.targetTable))];
+    Promise.all(uniqueTargetTables.map(async (table) => {
+      imports.push(`const select${toPascalCase(table)}ById = require('./queries/select${toPascalCase(table)}ById');`);
+    }));
+
+    return imports.join("\n");
+  });
   engine.registerFilter("functionParameters", (args) => {
     // assume we are passing an object parameter {}
     if (!args.length) {
@@ -112,10 +141,9 @@ const enrichEngine = (engine) => {
       return "";
     }
     let fieldList = uniq(fields);
-
     return `WHERE ${fieldList
-      .map((v) => `${v} = \${${camelCase(v.split(".")[1])}\}`)
-      .join(",")}`;
+      .map((v) => `${v.split(".")[1]} = \${${camelCase(v.split(".")[1])}}`)
+      .join(" AND ")}`;
   });
 
   engine.registerFilter("sqlVariables", (fields) => {
@@ -137,12 +165,13 @@ const enrichEngine = (engine) => {
     if (!fields.length) {
       return "";
     }
+
     let fieldList = uniq(fields);
-    const isUsingDotNotation = fields[0].includes(".");
+    const isUsingDotNotation = fields.find((field) => field.includes("."))
 
     if (isUsingDotNotation) {
       return `${fieldList
-        .map((v) => `${v} = \${${camelCase(v.split(".")[1])}\}`)
+        .map((v) => `${v.split(".")[1]} = \${${camelCase(v.split(".")[1])}}`)
         .join(",")}`;
     }
     return `${fieldList.map((v) => `${v} = \${${camelCase(v)}\}`).join(",")}`;
@@ -177,6 +206,35 @@ const enrichEngine = (engine) => {
     });
     return joins;
   });
+  engine.registerFilter("paginatedJoinGenerator", (tables, schema) => {
+    if (tables.length <= 1) {
+      return ``;
+    }
+    const joinedSoFar = [tables[0]]; // first table is used by the FROM
+    const joinSQL = (sourceTable, targetTable, sourceColumn, targetColumn) =>
+      `LEFT JOIN ${targetTable} ON ${sourceTable}.${sourceColumn} = ${targetTable}.${targetColumn}`;
+    let joins = [];
+    const tablesToJoin = tables.slice(1);
+    tablesToJoin.forEach((targetTable) => {
+      joinedSoFar.forEach((joinedTable) => {
+        const targetColumn = schema[joinedTable].find(
+          (column) => get(column, "foreignKeyTo.targetTable") === targetTable
+        );
+        if (targetColumn) {
+          const joinStatement = joinSQL(
+            joinedTable,
+            targetColumn.foreignKeyTo.targetTable,
+            targetColumn.column,
+            targetColumn.foreignKeyTo.targetColumn
+          );
+          joins.push(`sql\`${joinStatement}\``);
+          joinedSoFar.push(targetColumn.foreignKeyTo.targetTable);
+        }
+      });
+    });
+    return joins.join(", ");
+  });
+  
 };
 
 module.exports = enrichEngine;

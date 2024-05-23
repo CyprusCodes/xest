@@ -1,0 +1,7 @@
+const update{{ entityName | toPascalCase }} = require('./queries/update{{ entityName | toPascalCase }}');
+
+const modify{{entityName | toPascalCase}} = async ({{ argsColumns | functionParameters }}) => {
+    await update{{ entityName | toPascalCase }}({{ argsColumns | functionParameters }});
+}
+
+module.exports = modify{{entityName | toPascalCase}};

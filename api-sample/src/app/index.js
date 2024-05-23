@@ -6,6 +6,7 @@ const rateLimit = require("express-rate-limit");
 const compression = require("compression");
 const morgan = require("morgan");
 const monitoring = require("~root/utils/monitoring");
+const qs = require("qs");
 // prevent running against production database by mistake
 require("~root/utils/exitIfProductionDatabase")();
 
@@ -13,6 +14,17 @@ const port = process.env.PORT || 3001;
 const app = express();
 // see https://expressjs.com/en/guide/behind-proxies.html
 app.set("trust proxy", 1);
+// this is required for xest pagination to work
+// https://github.com/expressjs/express/issues/3453#issuecomment-337984406
+app.set("query parser", function parseQueryString(str) {
+  return qs.parse(str, {
+    arrayLimit: 50,
+    depth: 20,
+    decoder: function decoder(queryString) {
+      return decodeURIComponent(queryString);
+    }
+  });
+});
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

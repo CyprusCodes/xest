@@ -1,0 +1,41 @@
+const { sql } = require("~root/lib/database");
+const { paginate, FILTERS } = require("~root/lib/paginate");
+
+const get{{entityName | toPascalCase}} = async (req, res) => {
+    const resultset = await paginate({
+        basePath: req.path,  
+        baseTable: "{{entityName | toSnakeCase}}",
+        selectFields : [
+            {%- for col in selectableColumns -%}
+            "{{col}}"
+            {%- if forloop.last -%}{%- else -%},{%- endif -%}
+            {%- endfor -%}
+        ],
+        joinStatements : [{{ tablesToJoin | paginatedJoinGenerator: schema }}],
+        sortableAttributes : [
+            {%- for col in sortColumns -%}
+            "{{col}}"
+            {%- if forloop.last -%}{%- else -%},{%- endif -%}
+            {%- endfor -%}
+        ],
+        filterableAttributes : [
+            {%- for col in filtersToAssign -%}
+            {{col}}
+            {%- if forloop.last -%}{%- else -%},{%- endif -%}
+            {%- endfor -%}
+        ],
+
+    sortBy: req.query.sort_by,
+    limit: req.query.page_size,
+    page: req.query.page, // "first" | "last" | null
+    direction: req.query.direction, // next | previous
+    filters: req.query.filters,
+    cursorValues: req.query.cursor
+
+    });
+
+
+    return res.send(resultset);
+}
+
+module.exports = get{{entityName | toPascalCase}};

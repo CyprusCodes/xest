@@ -1,0 +1,24 @@
+const handleAPIError = require("~root/utils/handleAPIError");
+const modify{{entityName | toPascalCase}} = require("~root/actions/{{entityName | toCamelCase}}/modify{{entityName | toPascalCase}}");
+const newPut{{entityName | toPascalCase}}Schema = require("./schema/newPut{{entityName | toPascalCase}}Schema");
+
+const put{{entityName | toPascalCase}} = async (req, res) => {
+  {% if filteredColumns.length > 0 %}
+  const {{ filteredColumns | functionParameters }} = req.params;
+  {% endif %}
+  {% if uniqueIncludeColumns.length > 0 %}
+  const {{ uniqueIncludeColumns | functionParameters }} = req.body;
+  {% endif %}
+
+  try {
+    await newPut{{entityName | toPascalCase}}Schema.validate({{ argsColumns | functionParameters }}, { abortEarly: false });
+
+    await modify{{entityName | toPascalCase}}({{ argsColumns | functionParameters }});
+
+    res.status(200).send({ success: true });
+  } catch (err) {
+    handleAPIError(res, err);
+  }
+};
+
+module.exports = put{{entityName | toPascalCase}};

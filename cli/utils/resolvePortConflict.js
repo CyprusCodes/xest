@@ -4,7 +4,12 @@ const detect = require("detect-port");
 const { kill, killer } = require("cross-port-killer");
 const { execSync } = require("child_process");
 
-const resolvePortConflict = async (portToCheck, serviceName) => {
+const resolvePortConflict = async (
+  portToCheck,
+  serviceName,
+  isNodemon = false,
+  projectName
+) => {
   const port = await detect(portToCheck);
   if (Number(port) !== portToCheck) {
     const results = await inquirer.prompt([
@@ -38,10 +43,12 @@ const resolvePortConflict = async (portToCheck, serviceName) => {
         const containerId = out.split("\t")[0];
         execSync(`docker stop ${containerId}`);
       } else {
-        if (portToCheck === 3001) {
+        if (isNodemon) {
           // nuclear option for nodemon tasks
           // because they spawn child processes
-          const out = execSync(`ps -x | grep "nodemon app.js"`).toString();
+          const out = execSync(
+            `ps -x | grep "[n]odemon app.js" | grep ${projectName}`
+          ).toString();
           const processIds = out
             .split("\n")
             .map((row) => row.replace(/\s/g, " "))
