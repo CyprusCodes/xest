@@ -7,10 +7,10 @@ const selectUser = ({ email, password }) => submitQuery`
         last_name,
         password,
         email,
-        user_types.user_type_id,
-        user_types.user_type
+        user_roles.user_role_id,
+        user_roles.user_role
     FROM users
-    LEFT JOIN user_types ON users.user_type_id = user_types.user_type_id
+    LEFT JOIN user_roles ON users.user_role_id = user_roles.user_role_id
     WHERE email = ${email}
     AND password = SHA2(CONCAT(${password}, ${process.env.PASSWORD_SALT}), 224);
 `;

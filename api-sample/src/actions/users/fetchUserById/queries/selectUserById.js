@@ -1,14 +1,12 @@
 const { submitQuery, camelKeys, getFirst } = require("~root/lib/database");
 
 const selectUserById = ({ userId }) => submitQuery`
-    SELECT 
-        user_id,
+    SELECT
         first_name,
         last_name,
-        user_types.user_type_id,
-        user_types.user_type
+        email,
+        is_super_admin,
     FROM users
-    LEFT JOIN user_types ON users.user_type_id = user_types.user_type_id
     WHERE user_id = ${userId}
 `;
 
