@@ -510,7 +510,7 @@ LIST_DEPENDENT_MODULES = {
   parameterize: validateArguments(listDependentModuleSchema),
   parameters: yupToJsonSchema(listDependentModuleSchema),
   rerun: false,
-  rerunWithDifferentParameters: false,
+  rerunWithDifferentParameters: true,
   runCmd: async ({ path }) => {
     const projectRootPackageJSON = await findProjectRoot();
     const { filename } = projectRootPackageJSON;
@@ -591,7 +591,7 @@ LIST_MODULES_IMPORTED_BY = {
   parameterize: validateArguments(listModuleDependenciesSchema),
   parameters: yupToJsonSchema(listModuleDependenciesSchema),
   rerun: false,
-  rerunWithDifferentParameters: false,
+  rerunWithDifferentParameters: true,
   runCmd: async ({ path, dependencyDepth = 1 }) => {
     const projectRootPackageJSON = await findProjectRoot();
     const { filename } = projectRootPackageJSON;
@@ -664,7 +664,7 @@ SHOW_CONTROLLER_FOR_API_ENDPOINT = {
   parameterize: validateArguments(showControllerForApiEndpointSchema),
   parameters: yupToJsonSchema(showControllerForApiEndpointSchema),
   rerun: false,
-  rerunWithDifferentParameters: false,
+  rerunWithDifferentParameters: true,
   runCmd: async ({ httpMethod, resourcePath }) => {
     const projectRootPackageJSON = await findProjectRoot();
     const { filename } = projectRootPackageJSON;
@@ -750,8 +750,8 @@ SHOW_REQUEST_DATA_SCHEMA_FOR_API_ENDPOINT = {
   prerequisites: [],
   parameterize: validateArguments(showControllerForApiEndpointSchema),
   parameters: yupToJsonSchema(showControllerForApiEndpointSchema),
-  rerun: false,
-  rerunWithDifferentParameters: false,
+  rerun: true,
+  rerunWithDifferentParameters: true,
   runCmd: async ({ httpMethod, resourcePath }) => {
     const projectRootPackageJSON = await findProjectRoot();
     const { filename } = projectRootPackageJSON;
@@ -877,7 +877,7 @@ SHOW_QUERY_FILES_FOR_API_ENDPOINT = {
   parameterize: validateArguments(showControllerForApiEndpointSchema),
   parameters: yupToJsonSchema(showControllerForApiEndpointSchema),
   rerun: false,
-  rerunWithDifferentParameters: false,
+  rerunWithDifferentParameters: true,
   runCmd: async ({ httpMethod, resourcePath }) => {
     const projectRootPackageJSON = await findProjectRoot();
     const { filename } = projectRootPackageJSON;
@@ -985,58 +985,6 @@ SHOW_QUERY_FILES_FOR_API_ENDPOINT = {
 };
 
 
-const showAlertModalSchema = yup.object({
-  message: yup
-    .string()
-    .required()
-    .description("message to display to user"),
-});
-
-SHOW_ALERT_MODAL = {
-  name: "show_alert_modal",
-  description: "displays an alert modal to show a message to the user",
-  category: "HUD Elements",
-  subcategory: "Feedback",
-  functionType: "ui", // ui | backend
-  capturesUserInput: false,
-  dangerous: false,
-  associatedCommands: [],
-  prerequisites: [],
-  parameterize: validateArguments(showAlertModalSchema),
-  parameters: yupToJsonSchema(showAlertModalSchema),
-  rerun: true,
-  rerunWithDifferentParameters: false,
-  runCmd: async () => {
-    throw new Error("This is a UI method. It should not be called on the server.")
-  },
-};
-
-const showInputFieldSchema = yup.object({
-  label: yup
-    .string()
-    .required()
-    .description("label for the input field"),
-});
-
-SHOW_INPUT_FIELD = {
-  name: "show_input_field",
-  description: "display an input element to capture input from user",
-  category: "HUD Elements",
-  subcategory: "Input",
-  functionType: "ui", // ui | backend
-  capturesUserInput: true,
-  dangerous: false,
-  associatedCommands: [],
-  prerequisites: [],
-  parameterize: validateArguments(showInputFieldSchema),
-  parameters: yupToJsonSchema(showInputFieldSchema),
-  rerun: true,
-  rerunWithDifferentParameters: false,
-  runCmd: async () => {
-    throw new Error("This is a UI method. It should not be called on the server.")
-  },
-};
-
 // callApiEndpoint
 // runDatabaseQuery (potentially dangerous)
 // getTestAuthToken
@@ -1142,7 +1090,5 @@ module.exports = [
   LIST_MODULES_IMPORTED_BY,
   SHOW_CONTROLLER_FOR_API_ENDPOINT,
   SHOW_REQUEST_DATA_SCHEMA_FOR_API_ENDPOINT,
-  SHOW_QUERY_FILES_FOR_API_ENDPOINT,
-  SHOW_ALERT_MODAL,
-  SHOW_INPUT_FIELD
+  SHOW_QUERY_FILES_FOR_API_ENDPOINT
 ];
