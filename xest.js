@@ -3,7 +3,7 @@ const program = require("commander");
 const chalk = require("chalk");
 const { description, version } = require("./package.json");
 
-const { generate, run, fresh, applyRecipe, diagram } = require("./cli/commands/index");
+const { generate, run, fresh, applyRecipe, diagram, ai } = require("./cli/commands/index");
 
 program
   .command("start [appname]", { isDefault: true })
@@ -34,8 +34,14 @@ program
 
 program
   .command("diagram")
+  .alias("dia")
   .description("View your database diagram in your web browser")
   .action(diagram);
+
+  program
+  .command("ai")
+  .description("Use XestGPT to assist with general development tasks")
+  .action(ai);
 
 program
   .description(description)
