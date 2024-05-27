@@ -97,7 +97,7 @@ In your `routes.js` file a new route will be created, you can proceed to modify 
 // routes.js
 
 // highlight-next-line
-router.get("/admins", /*- TODO: auth middleware -*/ getAdmins);
+router.get("/users", /*- TODO: auth middleware -*/ getUsers);
 ```
 
 :white_check_mark: **And DONE! Your endpoint has been successfully created.** A new route, controller and action will be created.
