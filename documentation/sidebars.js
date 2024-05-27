@@ -36,6 +36,7 @@ module.exports = {
         "refresh",
         "query-generator",
         "seed-generator",
+        "endpoint-generator",
       ],
     },
     {
