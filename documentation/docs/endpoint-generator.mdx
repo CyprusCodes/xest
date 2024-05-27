@@ -4,7 +4,28 @@ title: Endpoint Generator
 sidebar_label: Endpoint Generator
 ---
 
-# Generating a _Endpoint_
+# Generating an _Endpoint_
+
+### Tutorial Video
+
+Below is a video showing you to use the `xx new` command to create an endpoint and more
+
+<div>
+
+  <iframe
+    style={{
+    width:"70%",
+    height:"400px",    
+    }}
+    src={"https://www.youtube.com/embed/KSjx4ktEb54?si=5K5ADz8gvZ2iaoG_"}
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowFullScreen
+    title="Embedded youtube"
+  />
+</div>
+
+### Steps
 
 One of the advantages of using **XEST** framework is that you can generate your endpoints from your command line with the following command
 
@@ -99,21 +120,5 @@ In your `routes.js` file a new route will be created, you can proceed to modify 
 // highlight-next-line
 router.get("/users", /*- TODO: auth middleware -*/ getUsers);
 ```
-
-### Tutorial Video
-
-Below is a video showing you to use the `xx new` command to create an endpoint and more
-
-<div>
-  <iframe
-    width="560"
-    height="315"
-    src={"https://www.youtube.com/embed/KSjx4ktEb54?si=5K5ADz8gvZ2iaoG_"}
-    frameBorder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowFullScreen
-    title="Embedded youtube"
-  />
-</div>
 
 :white_check_mark: **And DONE! Your endpoint has been successfully created.** A new route, controller and action will be created.
