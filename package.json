@@ -11,6 +11,7 @@
     "@faker-js/faker": "^5.5.3",
     "@sodaru/yup-to-json-schema": "^2.0.1",
     "acorn": "^8.11.2",
+    "chalk": "^4.1.2",
     "chipper": "^1.8.0",
     "commander": "^8.3.0",
     "cors": "^2.8.5",
