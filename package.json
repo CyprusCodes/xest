@@ -1,6 +1,6 @@
 {
   "name": "xest",
-  "version": "0.0.0-alpha.19",
+  "version": "0.0.0-alpha.20",
   "description": "Xest CLI for managing projects",
   "main": "index.js",
   "bin": {
@@ -31,7 +31,6 @@
     "localtunnel": "^2.0.2",
     "lodash": "^4.17.21",
     "mkdirp": "^1.0.4",
-    "openai": "^4.20.0",
     "picomatch": "^2.3.0",
     "pluralize": "^8.0.0",
     "prompts": "^2.4.2",
