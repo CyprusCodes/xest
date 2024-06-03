@@ -63,6 +63,14 @@ module.exports = {
         // "account-system",
         // "rate-limiting",
       ],
+    },  
+    {
+      type: "category",
+      label: "Deployment",
+      collapsed: true,
+      items: [
+        "digital-ocean",
+      ],
     },
     /* todo
     {
