@@ -1,0 +1,8 @@
+spec:
+  name: project_name
+  services:
+  - environment_slug: node-js
+    git:
+      branch: your_deployment_branch
+      repo_clone_url: https://github.com/github_profile/project.git
+    name: project_name
