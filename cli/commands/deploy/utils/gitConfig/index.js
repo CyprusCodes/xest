@@ -1,10 +1,14 @@
+const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
 
 const getGitInfo = () => {
     let projectName, branchName, repoUrl;
     try {
-        projectName = path.basename(process.cwd());
+        const packageJsonPath = path.join(process.cwd(), "package.json");
+        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
+        projectName = packageJson.name;
+
         branchName = execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
         repoUrl = execSync("git config --get remote.origin.url").toString().trim();
     } catch (error) {
