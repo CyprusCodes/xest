@@ -7,8 +7,8 @@ const { getGitInfo } = require("./utils/gitConfig");
 const findProjectRoot = require("../../utils/findProjectRoot");
 const chalk = require("chalk");
 
-
 const deploy = async () => {
+
     const projectDetails = findProjectRoot();
     if (!projectDetails) {
         console.log(
@@ -16,6 +16,11 @@ const deploy = async () => {
         );
         return;
     }
+
+    const {
+        value: { name: projectName },
+    } = projectDetails;
+
     console.log(
         chalk.green`Starting deployment...`
     );
@@ -28,7 +33,7 @@ const deploy = async () => {
     });
 
     if (platform === "Digital Ocean") {
-        const { projectName, branchName, repoUrl } = getGitInfo();
+        const { branchName, repoUrl } = getGitInfo();
 
         const projectRootPath = process.cwd();
         const deployFolderPath = path.join(projectRootPath, '.do');
