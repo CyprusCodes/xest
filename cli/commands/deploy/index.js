@@ -37,6 +37,12 @@ const deploy = async () => {
 
         const projectRootPath = process.cwd();
         const deployFolderPath = path.join(projectRootPath, '.do');
+
+        if (fs.existsSync(deployFolderPath)) {
+            console.log("Deployment .do directory already exists. Nothing to do.");
+            return;
+        }
+        
         const appYamlPath = path.join(deployFolderPath, 'app.yaml');
         const deployTemplateYamlPath = path.join(deployFolderPath, 'deploy.template.yaml');
 
