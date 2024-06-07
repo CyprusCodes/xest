@@ -1,23 +1,23 @@
 const appYamlContent = `
-name: project_name
+name: {{projectName}}
 services:
 - environment_slug: node-js
   github:
-    branch: your_deployment_branch
+    branch: {{branchName}}
     deploy_on_push: true
-    repo: github_profile/project
-  name: project_name
+    repo: {{repoUrl}}
+  name: {{projectName}}
 `;
 
 const deployTemplateYamlContent = `
 spec:
-  name: project_name
+  name: {{projectName}}
   services:
   - environment_slug: node-js
     git:
-      branch: your_deployment_branch
-      repo_clone_url: https://github.com/github_profile/project.git
-    name: project_name
+      branch: {{branchName}}
+      repo_clone_url: {{repoUrl}}
+    name: {{projectName}}
 `;
 
 module.exports = {

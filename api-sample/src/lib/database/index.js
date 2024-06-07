@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const { promisify } = require("es6-promisify");
 const path = require("path");
 const get = require("lodash/get");

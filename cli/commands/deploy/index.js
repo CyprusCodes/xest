@@ -3,6 +3,8 @@ const path = require("path");
 const inquirer = require("inquirer");
 const { appYamlContent, deployTemplateYamlContent } = require("./utils/ymlPath");
 const { successMessage, detailsMessage } = require("./utils/logMessage");
+const { getGitInfo } = require("./utils/gitConfig");
+
 
 const deploy = async () => {
     console.log("Starting deployment...");
@@ -15,6 +17,8 @@ const deploy = async () => {
     });
 
     if (platform === "Digital Ocean") {
+        const { projectName, branchName, repoUrl } = getGitInfo();
+
         const projectRootPath = process.cwd();
         const deployFolderPath = path.join(projectRootPath, '.do');
         const appYamlPath = path.join(deployFolderPath, 'app.yaml');
@@ -24,8 +28,18 @@ const deploy = async () => {
             fs.mkdirSync(deployFolderPath);
         }
 
-        fs.writeFileSync(appYamlPath, appYamlContent);
-        fs.writeFileSync(deployTemplateYamlPath, deployTemplateYamlContent);
+        const appYamlContentFilled = appYamlContent
+            .replace(/{{projectName}}/g, projectName)
+            .replace(/{{branchName}}/g, branchName)
+            .replace(/{{repoUrl}}/g, repoUrl);
+
+        const deployTemplateYamlContentFilled = deployTemplateYamlContent
+            .replace(/{{projectName}}/g, projectName)
+            .replace(/{{branchName}}/g, branchName)
+            .replace(/{{repoUrl}}/g, repoUrl);
+
+        fs.writeFileSync(appYamlPath, appYamlContentFilled);
+        fs.writeFileSync(deployTemplateYamlPath, deployTemplateYamlContentFilled);
 
         console.log(successMessage);
         console.log(detailsMessage);
