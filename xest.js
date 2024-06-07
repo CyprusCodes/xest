@@ -3,7 +3,7 @@ const program = require("commander");
 const chalk = require("chalk");
 const { description, version } = require("./package.json");
 
-const { generate, run, fresh, applyRecipe, diagram, ai } = require("./cli/commands/index");
+const { generate, run, fresh, applyRecipe, diagram, ai, deploy } = require("./cli/commands/index");
 
 program
   .command("start [appname]", { isDefault: true })
@@ -42,6 +42,11 @@ program
   .command("ai")
   .description("Use XestGPT to assist with general development tasks")
   .action(ai);
+
+program
+  .command("deploy")
+  .description("Deploy your xest project")
+  .action(deploy);
 
 program
   .description(description)

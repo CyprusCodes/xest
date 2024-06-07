@@ -11,6 +11,7 @@ function switchEnvVars() {
     "DB_USER",
     "DB_PASSWORD",
     "DB_HOST",
+    "DB_PORT",
     "APP_ENVIRONMENT",
     "APP_BASE_URL"
   ];

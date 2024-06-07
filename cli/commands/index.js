@@ -4,5 +4,6 @@ module.exports = {
   ...require("./fresh"),
   ...require("./new"), 
   ...require("./diagram"),
-  ...require("./ai")
+  ...require("./ai"),
+  ...require("./deploy")
 };
