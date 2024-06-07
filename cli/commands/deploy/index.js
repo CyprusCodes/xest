@@ -4,9 +4,18 @@ const inquirer = require("inquirer");
 const { appYamlContent, deployTemplateYamlContent } = require("./utils/ymlPath");
 const { successMessage, detailsMessage } = require("./utils/logMessage");
 const { getGitInfo } = require("./utils/gitConfig");
+const findProjectRoot = require("../../utils/findProjectRoot");
+const chalk = require("chalk");
 
 
 const deploy = async () => {
+    const projectDetails = findProjectRoot();
+    if (!projectDetails) {
+        console.log(
+            chalk.red`You are not within a Xest project directory. Please check your current path directory.`
+        );
+        return;
+    }
     console.log("Starting deployment...");
 
     const { platform } = await inquirer.prompt({
