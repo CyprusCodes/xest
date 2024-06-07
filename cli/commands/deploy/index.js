@@ -16,7 +16,9 @@ const deploy = async () => {
         );
         return;
     }
-    console.log("Starting deployment...");
+    console.log(
+        chalk.green`Starting deployment...`
+    );
 
     const { platform } = await inquirer.prompt({
         type: "list",
