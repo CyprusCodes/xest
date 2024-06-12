@@ -70,8 +70,10 @@ module.exports = {
       collapsed: true,
       items: [
         "digital-ocean",
+        "run-schema-and-seed",
       ],
     },
+    
     /* todo
     {
       type: "category",

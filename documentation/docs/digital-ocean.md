@@ -44,7 +44,7 @@ spec:
       repo_clone_url: https://github.com/github_profile/project.git
     name: project_name
 ```
-**Make sure to replace the name and the Github repository of your project.**
+**The file will automatically autocomplete the necessary information for deployment, including your repository and app name.**
 
 **Step 2:** Create a Digital Ocean account, here: [digital ocean](https://cloud.digitalocean.com/login).
 
