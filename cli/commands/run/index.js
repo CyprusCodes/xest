@@ -41,7 +41,14 @@ const run = async () => {
   ({ error, output } = await runSqlQueryWithinContainer(checkDatabaseSchema));
   if (error && error.includes("ERROR 1146")) {
     console.log(chalk.yellow`Setting up your database schema.`);
-    const runDbSchemaQuery = `cat ${rootPath}/database/database-schema.sql | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
+    const runDbSchemaQuery = `cat ${
+      /\s/.test(rootPath)
+        ? rootPath
+            .split("/")
+            .map((dir) => (dir.includes(" ") ? `'${dir}'` : dir))
+            .join("/")
+        : rootPath
+    }/database/database-schema.sql | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
     ({ error, output } = await runSqlQueryWithinContainer(runDbSchemaQuery));
     if (error) {
       console.log(chalk.red`${error}`);
