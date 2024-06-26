@@ -24,7 +24,7 @@
     "check-mysql-status": "node src/tools/checkMySQLInstance/index.js",
     "switch-env-vars": "node src/tools/switchEnvVars/index.js",
     "dev": "nodemon app.js",
-    "start": "node index.js"
+    "start": "node ./index.js"
   },
   "author": "CyprusCodes",
   "license": "MIT",
