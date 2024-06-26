@@ -43,6 +43,9 @@ const run = async () => {
     console.log(chalk.yellow`Setting up your database schema.`);
     const runDbSchemaQuery = `cat ${rootPath}/database/database-schema.sql | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
     ({ error, output } = await runSqlQueryWithinContainer(runDbSchemaQuery));
+    if (error) {
+      console.log(chalk.red`${error}`);
+    }
   }
 
   // run migrations
@@ -118,6 +121,7 @@ const run = async () => {
   ].forEach((eventType) => {
     process.on(eventType, (event) => {
       if (!isExiting) {
+        if (event) console.log(event);
         console.log(chalk.yellow`Stopping API and MySQL container.`);
         isExiting = true;
         exec(
