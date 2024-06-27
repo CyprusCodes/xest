@@ -10,6 +10,7 @@ const resolvePortConflict = require("../../utils/resolvePortConflict");
 const runMySQLContainer = require("../../utils/runMySQLContainer");
 const updateDatabaseMetadata = require("./utils/updateDatabaseMetadata");
 const isAppleSilicon = require("../../utils/isAppleSilicon");
+const refinePath = require("../../utils/refinePath");
 
 const run = async () => {
   const projectDetails = findProjectRoot();
@@ -41,14 +42,9 @@ const run = async () => {
   ({ error, output } = await runSqlQueryWithinContainer(checkDatabaseSchema));
   if (error && error.includes("ERROR 1146")) {
     console.log(chalk.yellow`Setting up your database schema.`);
-    const runDbSchemaQuery = `cat ${
-      /\s/.test(rootPath)
-        ? rootPath
-            .split("/")
-            .map((dir) => (dir.includes(" ") ? `'${dir}'` : dir))
-            .join("/")
-        : rootPath
-    }/database/database-schema.sql | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
+    const runDbSchemaQuery = `cat ${refinePath(
+      rootPath
+    )}/database/database-schema.sql | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
     ({ error, output } = await runSqlQueryWithinContainer(runDbSchemaQuery));
     if (error) {
       console.log(chalk.red`${error}`);
@@ -96,7 +92,9 @@ const run = async () => {
   ({ error, output } = await runSqlQueryWithinContainer(checkSeedData));
   if (!error && output.includes("count\n0\n")) {
     console.log(chalk.yellow`Populating database with seed data.`);
-    const populateSeedData = `cat ${rootPath}/database/seed-data.sql | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
+    const populateSeedData = `cat ${refinePath(
+      rootPath
+    )}/database/seed-data.sql | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
     ({ error, output } = await runSqlQueryWithinContainer(populateSeedData));
     if (error && error.includes("ERROR")) {
       console.log(
