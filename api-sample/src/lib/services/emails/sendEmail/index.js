@@ -63,11 +63,11 @@ const sendMail = async ({
     replyTo: replyToEmail,
     attachment: attachment
       ? [
-        {
-          data: attachment.data,
-          filename: attachment.name
-        }
-      ]
+          {
+            data: attachment.data,
+            filename: attachment.name
+          }
+        ]
       : null
   };
 

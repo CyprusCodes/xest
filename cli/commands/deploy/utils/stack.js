@@ -18,7 +18,7 @@ const indexFile = loadFileContent('./stack/index.ts');
 const rdsFile = loadFileContent('./stack/rds.ts');
 const vpcFile = loadFileContent('./stack/vpc.ts');
 const elasticFile = loadFileContent('./stack/elastic-beanstalk.ts');
-const variableFile = loadFileContent('./stack/variables.js');
+const variableFile = loadFileContent('./stack/variables.ts');
 
 module.exports = {
     indexFile,
