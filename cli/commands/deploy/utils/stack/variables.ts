@@ -58,11 +58,14 @@ const envVars: [string, string, string][] = [
   ["aws:elasticbeanstalk:application:environment", "PORT", "8080"],
 ];
 
+// solution stack https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platform-history-nodejs.html
 const solutionStackNameFile: string =
-  "64bit Amazon Linux 2023 v6.1.5 running Node.js 18";
+  "64bit Amazon Linux 2023 v6.1.6 running Node.js 18"
 
+// this should be a wildcard certificate arn using AWS ACM in the destination region
+// *.mydomain.com
 const sslArn: string =
-  "arn:aws:acm:eu-west-2:626535391715:certificate/xxxxx-xxxxx-xxxx-xxxxx";
+  "arn:aws:acm:eu-west-2:XXXXXX:certificate/xxxxx-xxxxx-xxxx-xxxxx";
 
 const officeIpCode: string = "xxx.xxx.xxxx.xx/32";
 

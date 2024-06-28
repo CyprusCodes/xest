@@ -31,7 +31,7 @@ export class RdsStack extends Stack {
       this,
       `${id}`,
       {
-        secretName: "mysecret-db-credentials",
+        secretName: `${id}-mysecret-db-credentials`,
         generateSecretString: {
           secretStringTemplate: JSON.stringify({
             username: databaseUsername
