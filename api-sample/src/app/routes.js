@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { ADMIN } = require("~root/constants/userTypes")
+const { ADMIN } = require("~root/constants/userTypes");
 const postLogin = require("./controllers/users/login");
 const postUser = require("./controllers/users/register");
 const putUserDetails = require("./controllers/users/putUserDetails");
