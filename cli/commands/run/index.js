@@ -10,7 +10,6 @@ const resolvePortConflict = require("../../utils/resolvePortConflict");
 const runMySQLContainer = require("../../utils/runMySQLContainer");
 const updateDatabaseMetadata = require("./utils/updateDatabaseMetadata");
 const isAppleSilicon = require("../../utils/isAppleSilicon");
-const refinePath = require("../../utils/refinePath");
 
 const run = async () => {
   const projectDetails = findProjectRoot();
@@ -42,12 +41,13 @@ const run = async () => {
   ({ error, output } = await runSqlQueryWithinContainer(checkDatabaseSchema));
   if (error && error.includes("ERROR 1146")) {
     console.log(chalk.yellow`Setting up your database schema.`);
-    const runDbSchemaQuery = `cat ${refinePath(
-      rootPath
-    )}/database/database-schema.sql | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
-    ({ error, output } = await runSqlQueryWithinContainer(runDbSchemaQuery));
-    if (error) {
-      console.log(chalk.red`${error}`);
+    const runDbSchemaQuery = `cat database/database-schema.sql | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
+    try {
+      execSync(runDbSchemaQuery, { cwd: rootPath });
+    } catch (error) {
+      if (error) {
+        console.log(chalk.red`${error}`);
+      }
     }
   }
 
@@ -92,16 +92,17 @@ const run = async () => {
   ({ error, output } = await runSqlQueryWithinContainer(checkSeedData));
   if (!error && output.includes("count\n0\n")) {
     console.log(chalk.yellow`Populating database with seed data.`);
-    const populateSeedData = `cat ${refinePath(
-      rootPath
-    )}/database/seed-data.sql | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
-    ({ error, output } = await runSqlQueryWithinContainer(populateSeedData));
-    if (error && error.includes("ERROR")) {
-      console.log(
-        chalk.red`Failed to populate database with seed data. This might happen if you have recently updated your migrations, please modify your seed data to match new schema changes.`
-      );
+    const populateSeedData = `cat database/seed-data.sql | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
+    try {
+      execSync(populateSeedData, { cwd: rootPath });
+    } catch (error) {
+      if (error && error.includes("ERROR")) {
+        console.log(
+          chalk.red`Failed to populate database with seed data. This might happen if you have recently updated your migrations, please modify your seed data to match new schema changes.`
+        );
 
-      console.log(chalk.red`Error: ${error.split("ERROR")[1]}`);
+        console.log(chalk.red`Error: ${error.split("ERROR")[1]}`);
+      }
     }
   }
 
