@@ -84,7 +84,7 @@ const deploy = async () => {
       fs.existsSync(path.join(stackFolderPath, 'rds.ts')) &&
       fs.existsSync(path.join(stackFolderPath, 'vpc.ts')) &&
       fs.existsSync(path.join(stackFolderPath, 'elastic-beanstalk.ts')) &&
-      fs.existsSync(path.join(stackFolderPath, 'variables.js'))
+      fs.existsSync(path.join(stackFolderPath, 'variables.ts'))
     ) {
       console.log(chalk.yellow`AWS deployment setup already exists. ${chalk.cyan("Nothing to do.")} `);
       return;
@@ -117,10 +117,10 @@ const deploy = async () => {
     fs.writeFileSync(path.join(stackFolderPath, 'rds.ts'), rdsFile.replace(/{{projectName}}_db/g, `${snakeCaseProjectName}_db`));
     fs.writeFileSync(path.join(stackFolderPath, 'vpc.ts'), vpcFile);
     fs.writeFileSync(path.join(stackFolderPath, 'elastic-beanstalk.ts'), elasticFile.replace(/{{projectName}}_db/g, `${snakeCaseProjectName}_db`));
-    fs.writeFileSync(path.join(stackFolderPath, 'variables.js'), variableFile.replace(/{{projectName}}_db/g, `${snakeCaseProjectName}_db`));
+    fs.writeFileSync(path.join(stackFolderPath, 'variables.ts'), variableFile.replace(/{{projectName}}_db/g, `${snakeCaseProjectName}_db`));
 
     console.log("AWS CDK setup complete. Files created successfully.");
-    console.log(chalk.yellow`Please go to the ${chalk.cyan('variables.js')} file inside the ${chalk.cyan('stack')} directory to make the necessary changes.`);
+    console.log(chalk.yellow`Please go to the ${chalk.cyan('variables.ts')} file inside the ${chalk.cyan('stack')} directory to make the necessary changes.`);
   }
 };
 
