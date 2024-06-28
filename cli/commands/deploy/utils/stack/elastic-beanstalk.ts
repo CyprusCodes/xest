@@ -165,8 +165,6 @@ export class ElbStack extends Stack {
       }
     );
 
-    // env Var was here
-
     // Get the public and private subnets to deploy Elastic Beanstalk ALB and web servers in.
     const publicSubnets = props?.vpc.selectSubnets({
       subnetType: ec2.SubnetType.PUBLIC
@@ -189,6 +187,11 @@ export class ElbStack extends Stack {
     // // https://github.com/aws-samples/aws-elastic-beanstalk-hardened-security-cdk-sample/blob/main/lib/elastic_beanstalk_cdk_project-stack.ts
     const optionSettingProperties: aws_elasticbeanstalk.CfnEnvironment.OptionSettingProperty[] =
       [
+        {
+          namespace: "aws:elasticbeanstalk:application:environment",
+          optionName: "DATABASE_URL",
+          value: `mysql://${props?.dbUsername}:${props?.dbPassword}@${props?.myRds.dbInstanceEndpointAddress}:${props?.myRds.dbInstanceEndpointPort}/{{projectName}}_db`,
+        },
         {
           namespace: "aws:autoscaling:launchconfiguration",
           optionName: "SecurityGroups",

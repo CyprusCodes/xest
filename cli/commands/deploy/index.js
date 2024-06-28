@@ -116,7 +116,7 @@ const deploy = async () => {
     fs.writeFileSync(path.join(stackFolderPath, 'index.ts'), indexFile.replace(/{{projectName}}/g, projectName));
     fs.writeFileSync(path.join(stackFolderPath, 'rds.ts'), rdsFile.replace(/{{projectName}}_db/g, `${snakeCaseProjectName}_db`));
     fs.writeFileSync(path.join(stackFolderPath, 'vpc.ts'), vpcFile);
-    fs.writeFileSync(path.join(stackFolderPath, 'elastic-beanstalk.ts'), elasticFile);
+    fs.writeFileSync(path.join(stackFolderPath, 'elastic-beanstalk.ts'), elasticFile..replace(/{{projectName}}_db/g, `${snakeCaseProjectName}_db`));
     fs.writeFileSync(path.join(stackFolderPath, 'variables.js'), variableFile.replace(/{{projectName}}_db/g, `${snakeCaseProjectName}_db`));
 
     console.log("AWS CDK setup complete. Files created successfully.");
