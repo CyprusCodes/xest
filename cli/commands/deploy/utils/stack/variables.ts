@@ -62,8 +62,8 @@ const solutionStackNameFile: string =
   "64bit Amazon Linux 2023 v6.1.5 running Node.js 18";
 
 const sslArn: string =
-  "arn:aws:acm:eu-west-2:626535391715:certificate/d5572ca7-612b-4181-b7a3-804a649889bb";
+  "arn:aws:acm:eu-west-2:626535391715:certificate/xxxxx-xxxxx-xxxx-xxxxx";
 
-const officeIpCode: string = "212.175.253.84/32";
+const officeIpCode: string = "xxx.xxx.xxxx.xx/32";
 
 export { envVars, solutionStackNameFile, sslArn, officeIpCode };
