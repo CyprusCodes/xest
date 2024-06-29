@@ -52,6 +52,7 @@ const deploy = async () => {
 
     if (fs.existsSync(deployFolderPath)) {
       console.log("Deployment .do directory already exists. Nothing to do.");
+      console.log(digitalOcean.detailsMessage);
       return;
     }
 
@@ -101,6 +102,7 @@ const deploy = async () => {
           "Nothing to do."
         )} `
       );
+      console.log(aws.detailsMessage);
       return;
     }
 
