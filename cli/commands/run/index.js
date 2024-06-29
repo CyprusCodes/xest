@@ -127,7 +127,7 @@ const run = async () => {
   ].forEach((eventType) => {
     process.on(eventType, (event) => {
       if (!isExiting) {
-        if (event) console.log(event);
+        if (event && event.signal !== "SIGINT" && event.status !== 130) console.log(event);
         console.log(chalk.yellow`Stopping API and MySQL container.`);
         isExiting = true;
         exec(
