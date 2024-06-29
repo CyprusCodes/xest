@@ -2,12 +2,22 @@ const fs = require("fs");
 const path = require("path");
 const inquirer = require("inquirer");
 const { execSync } = require("child_process");
-const { appYamlContent, deployTemplateYamlContent, configYmlContentAws } = require("./utils/ymlPath");
+const {
+  appYamlContent,
+  deployTemplateYamlContent,
+  configYmlContentAws,
+} = require("./utils/ymlPath");
 const { cdkJsonContentFiles } = require("./utils/cdkJson");
-const { successMessage, detailsMessage } = require("./utils/logMessage");
+const { digitalOcean, aws } = require("./utils/logMessage");
 const { getGitInfo } = require("./utils/gitConfig");
 const { toSnakeCase } = require("./utils/stringUtils");
-const { indexFile, rdsFile, vpcFile, elasticFile, variableFile } = require("./utils/stack");
+const {
+  indexFile,
+  rdsFile,
+  vpcFile,
+  elasticFile,
+  variableFile,
+} = require("./utils/stack");
 const findProjectRoot = require("../../utils/findProjectRoot");
 const chalk = require("chalk");
 
@@ -24,15 +34,13 @@ const deploy = async () => {
     value: { name: projectName },
   } = projectDetails;
 
-  console.log(
-    chalk.green`Starting deployment...`
-  );
+  console.log(chalk.green`Starting deployment...`);
 
   const { platform } = await inquirer.prompt({
     type: "list",
     name: "platform",
     message: "Select the deployment platform",
-    choices: ["Digital Ocean", "AWS"]
+    choices: ["Digital Ocean", "AWS"],
   });
 
   const projectRootPath = process.cwd();
@@ -40,15 +48,18 @@ const deploy = async () => {
   if (platform === "Digital Ocean") {
     const { branchName, repoUrl } = getGitInfo();
 
-    const deployFolderPath = path.join(projectRootPath, '.do');
+    const deployFolderPath = path.join(projectRootPath, ".do");
 
     if (fs.existsSync(deployFolderPath)) {
       console.log("Deployment .do directory already exists. Nothing to do.");
       return;
     }
 
-    const appYamlPath = path.join(deployFolderPath, 'app.yaml');
-    const deployTemplateYamlPath = path.join(deployFolderPath, 'deploy.template.yaml');
+    const appYamlPath = path.join(deployFolderPath, "app.yaml");
+    const deployTemplateYamlPath = path.join(
+      deployFolderPath,
+      "deploy.template.yaml"
+    );
 
     if (!fs.existsSync(deployFolderPath)) {
       fs.mkdirSync(deployFolderPath);
@@ -67,31 +78,37 @@ const deploy = async () => {
     fs.writeFileSync(appYamlPath, appYamlContentFilled);
     fs.writeFileSync(deployTemplateYamlPath, deployTemplateYamlContentFilled);
 
-    console.log(successMessage);
-    console.log(detailsMessage);
-
+    console.log(digitalOcean.successMessage);
+    console.log(digitalOcean.detailsMessage);
   } else if (platform === "AWS") {
-    const cdkJsonPath = path.join(projectRootPath, 'cdk.json');
-    const circleciFolderPath = path.join(projectRootPath, '.circleci');
-    const configYmlPath = path.join(circleciFolderPath, 'config.yml');
-    const stackFolderPath = path.join(projectRootPath, 'stack');
+    const cdkJsonPath = path.join(projectRootPath, "cdk.json");
+    const circleciFolderPath = path.join(projectRootPath, ".circleci");
+    const configYmlPath = path.join(circleciFolderPath, "config.yml");
+    const stackFolderPath = path.join(projectRootPath, "stack");
 
     if (
       fs.existsSync(cdkJsonPath) &&
       fs.existsSync(configYmlPath) &&
       fs.existsSync(stackFolderPath) &&
-      fs.existsSync(path.join(stackFolderPath, 'index.ts')) &&
-      fs.existsSync(path.join(stackFolderPath, 'rds.ts')) &&
-      fs.existsSync(path.join(stackFolderPath, 'vpc.ts')) &&
-      fs.existsSync(path.join(stackFolderPath, 'elastic-beanstalk.ts')) &&
-      fs.existsSync(path.join(stackFolderPath, 'variables.ts'))
+      fs.existsSync(path.join(stackFolderPath, "index.ts")) &&
+      fs.existsSync(path.join(stackFolderPath, "rds.ts")) &&
+      fs.existsSync(path.join(stackFolderPath, "vpc.ts")) &&
+      fs.existsSync(path.join(stackFolderPath, "elastic-beanstalk.ts")) &&
+      fs.existsSync(path.join(stackFolderPath, "variables.ts"))
     ) {
-      console.log(chalk.yellow`AWS deployment setup already exists. ${chalk.cyan("Nothing to do.")} `);
+      console.log(
+        chalk.yellow`AWS deployment setup already exists. ${chalk.cyan(
+          "Nothing to do."
+        )} `
+      );
       return;
     }
 
     console.log("Installing AWS CDK packages...");
-    execSync("npm install aws-cdk-lib constructs @types/node -D", { stdio: "inherit" });
+    execSync("npm install aws-cdk-lib constructs @types/node -D", {
+      stdio: "inherit",
+      cwd: projectRootPath,
+    });
 
     const cdkJsonContent = cdkJsonContentFiles;
 
@@ -102,7 +119,10 @@ const deploy = async () => {
     }
 
     const snakeCaseProjectName = toSnakeCase(projectName);
-    const configYmlContent = configYmlContentAws.replace(/{{projectName}}_db/g, `${snakeCaseProjectName}_db`);
+    const configYmlContent = configYmlContentAws.replace(
+      /{{projectName}}_db/g,
+      `${snakeCaseProjectName}_db`
+    );
 
     fs.writeFileSync(configYmlPath, configYmlContent);
 
@@ -113,17 +133,37 @@ const deploy = async () => {
     }
 
     // Write content to each file from the imported variables
-    fs.writeFileSync(path.join(stackFolderPath, 'index.ts'), indexFile.replace(/{{projectName}}/g, projectName));
-    fs.writeFileSync(path.join(stackFolderPath, 'rds.ts'), rdsFile.replace(/{{projectName}}_db/g, `${snakeCaseProjectName}_db`));
-    fs.writeFileSync(path.join(stackFolderPath, 'vpc.ts'), vpcFile);
-    fs.writeFileSync(path.join(stackFolderPath, 'elastic-beanstalk.ts'), elasticFile.replace(/{{projectName}}_db/g, `${snakeCaseProjectName}_db`));
-    fs.writeFileSync(path.join(stackFolderPath, 'variables.ts'), variableFile.replace(/{{projectName}}_db/g, `${snakeCaseProjectName}_db`));
+    fs.writeFileSync(
+      path.join(stackFolderPath, "index.ts"),
+      indexFile.replace(/{{projectName}}/g, projectName)
+    );
+    fs.writeFileSync(
+      path.join(stackFolderPath, "rds.ts"),
+      rdsFile.replace(/{{projectName}}_db/g, `${snakeCaseProjectName}_db`)
+    );
+    fs.writeFileSync(path.join(stackFolderPath, "vpc.ts"), vpcFile);
+    fs.writeFileSync(
+      path.join(stackFolderPath, "elastic-beanstalk.ts"),
+      elasticFile.replace(/{{projectName}}_db/g, `${snakeCaseProjectName}_db`)
+    );
+    fs.writeFileSync(
+      path.join(stackFolderPath, "variables.ts"),
+      variableFile.replace(/{{projectName}}_db/g, `${snakeCaseProjectName}_db`)
+    );
 
     console.log("AWS CDK setup complete. Files created successfully.");
-    console.log(chalk.yellow`Please go to the ${chalk.cyan('variables.ts')} file inside the ${chalk.cyan('stack')} directory to make the necessary changes.`);
+    console.log(
+      chalk.yellow`Please go to the ${chalk.cyan(
+        "variables.ts"
+      )} file inside the ${chalk.cyan(
+        "stack"
+      )} directory to make the necessary changes.`
+    );
+    console.log(aws.successMessage);
+    console.log(aws.detailsMessage);
   }
 };
 
 module.exports = {
-  deploy
+  deploy,
 };
