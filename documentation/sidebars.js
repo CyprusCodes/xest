@@ -70,6 +70,7 @@ module.exports = {
       collapsed: true,
       items: [
         "digital-ocean",
+        "aws-deployment",
         "run-schema-and-seed",
       ],
     },

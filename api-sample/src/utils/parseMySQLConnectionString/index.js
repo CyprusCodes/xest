@@ -5,7 +5,7 @@ const parseMySQLConnString = connString => {
   return {
     host: parsedURL.hostname,
     user: parsedURL.username,
-    password: parsedURL.password,
+    password: decodeURIComponent(parsedURL.password),
     database: parsedURL.pathname.slice(1)
   };
 };

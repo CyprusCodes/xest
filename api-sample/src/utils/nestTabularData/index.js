@@ -14,7 +14,7 @@ const nest = (results, transformationsToApply, fieldsToOmit = []) => {
         return acc;
       }, {}),
       [childrenLabel]: transClone.length
-      ? nest(value, transClone, fieldsToOmit)
+        ? nest(value, transClone, fieldsToOmit)
         : Object.values(value).map(v => omit(v, fieldsToOmit))
     };
   });
