@@ -130,8 +130,10 @@ const run = async () => {
   ].forEach((eventType) => {
     process.on(eventType, (event) => {
       if (!isExiting) {
-        if (event && event.signal !== "SIGINT" && event.status !== 130)
+        if (event && event.signal !== "SIGINT" && event.status !== 130) {
+          // this is an error with the xx process itself, not a developer hitting Ctrl+C
           console.log(event);
+        }
         console.log(chalk.yellow`Stopping API and MySQL container.`);
         isExiting = true;
         exec(
