@@ -45,6 +45,7 @@ const run = async () => {
     try {
       execSync(runDbSchemaQuery, { cwd: rootPath });
     } catch (error) {
+      error = error.toString();
       if (error) {
         console.log(chalk.red`${error}`);
       }
@@ -96,6 +97,8 @@ const run = async () => {
     try {
       execSync(populateSeedData, { cwd: rootPath });
     } catch (error) {
+      error = error.toString();
+
       if (error && error.includes("ERROR")) {
         console.log(
           chalk.red`Failed to populate database with seed data. This might happen if you have recently updated your migrations, please modify your seed data to match new schema changes.`
@@ -127,7 +130,10 @@ const run = async () => {
   ].forEach((eventType) => {
     process.on(eventType, (event) => {
       if (!isExiting) {
-        if (event && event.signal !== "SIGINT" && event.status !== 130) console.log(event);
+        if (event && event.signal !== "SIGINT" && event.status !== 130) {
+          // this is an error with the xx process itself, not a developer hitting Ctrl+C
+          console.log(event);
+        }
         console.log(chalk.yellow`Stopping API and MySQL container.`);
         isExiting = true;
         exec(
