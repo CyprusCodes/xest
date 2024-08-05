@@ -37,11 +37,12 @@ module.exports = {
         "query-generator",
         "seed-generator",
         "endpoint-generator",
+        "xest-diagram",
       ],
     },
     {
       type: "category",
-      label: "Database Model",
+      label: "Database",
       collapsed: true,
       items: [
         "use-mysql",
