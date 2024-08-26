@@ -75,6 +75,15 @@ module.exports = {
         "run-schema-and-seed",
       ],
     },
+
+    {
+      type: "category",
+      label: "XestGPT CMND Extension",
+      collapsed: true,
+      items: [
+        "xest-ai",
+      ],
+    },
     
     /* todo
     {
