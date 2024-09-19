@@ -39,7 +39,7 @@ GET_LIST_OF_DATABASE_TABLES = {
   category: "Database",
   subcategory: "General",
   functionType: "backend", // backend | ui
-  dangerous: false, // 
+  dangerous: false, //
   associatedCommands: [], // not functional
   prerequisites: [], // it works, but you can ignore
   parameterize: validateArguments(noParamsSchema),
@@ -77,12 +77,7 @@ GET_DATABASE_TABLE_SCHEMA = {
   functionType: "backend",
   dangerous: false,
   associatedCommands: [],
-  prerequisites: [
-    {
-      command: GET_LIST_OF_DATABASE_TABLES,
-      description: `each table can be investigate further with getTableSchema command`,
-    },
-  ],
+  prerequisites: [GET_LIST_OF_DATABASE_TABLES.name],
   parameterize: validateArguments(getDatabaseTableParametersSchema),
   parameters: yupToJsonSchema(getDatabaseTableParametersSchema),
   rerun: false,
@@ -982,7 +977,6 @@ SHOW_QUERY_FILES_FOR_API_ENDPOINT = {
   },
 };
 
-
 // callApiEndpoint
 // runDatabaseQuery (potentially dangerous)
 // getTestAuthToken
@@ -1088,5 +1082,5 @@ module.exports = [
   LIST_MODULES_IMPORTED_BY,
   SHOW_CONTROLLER_FOR_API_ENDPOINT,
   SHOW_REQUEST_DATA_SCHEMA_FOR_API_ENDPOINT,
-  SHOW_QUERY_FILES_FOR_API_ENDPOINT
+  SHOW_QUERY_FILES_FOR_API_ENDPOINT,
 ];
