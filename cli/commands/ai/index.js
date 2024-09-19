@@ -34,6 +34,7 @@ const ai = () => {
           isLongRunningTool: false,
           rerun: t.rerun,
           rerunWithDifferentParameters: t.rerunWithDifferentParameters,
+          prerequisites: t.prerequisites
         };
       });
       return { tools: toolsMapped };
