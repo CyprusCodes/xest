@@ -170,7 +170,7 @@ function Home() {
             </Link>
             <Link
               className={styles.indexTryMeButton}
-              to={useBaseUrl("docs/installation")}
+              to={useBaseUrl("docs/installation-mac")}
             >
               <Translate>Get Started</Translate>
             </Link>
