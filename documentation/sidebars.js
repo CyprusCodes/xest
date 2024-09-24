@@ -37,11 +37,12 @@ module.exports = {
         "query-generator",
         "seed-generator",
         "endpoint-generator",
+        "xest-diagram",
       ],
     },
     {
       type: "category",
-      label: "Database Model",
+      label: "Database",
       collapsed: true,
       items: [
         "use-mysql",
@@ -72,6 +73,15 @@ module.exports = {
         "digital-ocean",
         "aws-deployment",
         "run-schema-and-seed",
+      ],
+    },
+
+    {
+      type: "category",
+      label: "XestGPT CMND Extension",
+      collapsed: true,
+      items: [
+        "xest-ai",
       ],
     },
     

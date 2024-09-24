@@ -1,4 +1,7 @@
 const yup = require("yup");
+const snakeCase = require("lodash/snakeCase");
+const path = require("path");
+const { execSync } = require("child_process");
 const { extendSchema } = require("@sodaru/yup-to-json-schema");
 const { fileSearch } = require("search-in-file");
 const { globSync } = require("glob");
@@ -9,6 +12,7 @@ const { getSchema } = require("../../../utils/getSchema");
 const validateArguments = require("../utils/validateArguments");
 const yupToJsonSchema = require("../utils/yupToJsonSchema");
 const findProjectRoot = require("../../../utils/findProjectRoot");
+const runSqlQueryWithinContainer = require("../../../utils/runSqlQueryWithinContainer");
 const scanDependencies = require("./tools/scanDependencies");
 const extractEndpointsFromRouteFile = require("./tools/extractEndpointsFromRouteFile");
 const { readFileSync } = require("fs");
@@ -29,6 +33,7 @@ let LIST_MODULES_IMPORTED_BY;
 let SHOW_CONTROLLER_FOR_API_ENDPOINT;
 let SHOW_REQUEST_DATA_SCHEMA_FOR_API_ENDPOINT;
 let SHOW_QUERY_FILES_FOR_API_ENDPOINT;
+let RUN_DATABASE_QUERY;
 
 const noParamsSchema = yup.object({});
 
@@ -39,7 +44,7 @@ GET_LIST_OF_DATABASE_TABLES = {
   category: "Database",
   subcategory: "General",
   functionType: "backend", // backend | ui
-  dangerous: false, // 
+  dangerous: false, //
   associatedCommands: [], // not functional
   prerequisites: [], // it works, but you can ignore
   parameterize: validateArguments(noParamsSchema),
@@ -77,12 +82,7 @@ GET_DATABASE_TABLE_SCHEMA = {
   functionType: "backend",
   dangerous: false,
   associatedCommands: [],
-  prerequisites: [
-    {
-      command: GET_LIST_OF_DATABASE_TABLES,
-      description: `each table can be investigate further with getTableSchema command`,
-    },
-  ],
+  prerequisites: [GET_LIST_OF_DATABASE_TABLES.name],
   parameterize: validateArguments(getDatabaseTableParametersSchema),
   parameters: yupToJsonSchema(getDatabaseTableParametersSchema),
   rerun: false,
@@ -982,9 +982,67 @@ SHOW_QUERY_FILES_FOR_API_ENDPOINT = {
   },
 };
 
+const runDatabaseQuerySchema = yup.object({
+  query: yup
+    .string()
+    .required("query string is required")
+    .description("The query to execute against mysql database"),
+});
+
+RUN_DATABASE_QUERY = {
+  name: "run_database_query",
+  description: "runs a database query",
+  category: "Database",
+  subcategory: "General",
+  functionType: "backend",
+  dangerous: true,
+  associatedCommands: [],
+  prerequisites: [],
+  parameterize: validateArguments(runDatabaseQuerySchema),
+  parameters: yupToJsonSchema(runDatabaseQuerySchema),
+  rerun: true,
+  rerunWithDifferentParameters: true,
+  runCmd: async ({ query }) => {
+    try {
+      const projectDetails = findProjectRoot();
+      const { filename } = projectDetails;
+      const rootPath = dirname(filename);
+      if (!projectDetails) {
+        console.log(
+          chalk.red`You are not within a Xest project directory. Please check your current path directory.`
+        );
+        return;
+      }
+
+      const {
+        value: { name: projectName },
+      } = projectDetails;
+
+      const isDockerMySQLContainerRunningAgain = execSync(
+        `docker ps --format "table {{.ID}}\t{{.Names}}" | grep ${projectName}-mysql-db | cut -d ' ' -f 1`,
+        {
+          cwd: path.join(rootPath, "database"),
+        }
+      ).toString();
+      const mySQLContainerId = isDockerMySQLContainerRunningAgain.trim();
+      const mySQLConnectionString = `mysql -h localhost -u root -ppassword ${snakeCase(
+        projectName
+      )}_db`;
+      const dropDatabaseCmd = `printf "${query}" | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
+      ({ error, output } = await runSqlQueryWithinContainer(dropDatabaseCmd));
+      if (error) {
+        return `Error happened while running your query ${error}`;
+      }
+
+      return output;
+    } catch (err) {
+      console.log(err);
+      return `Error happened whilst running database query. Report this please.`;
+    }
+  },
+};
 
 // callApiEndpoint
-// runDatabaseQuery (potentially dangerous)
 // getTestAuthToken
 // showDependenciesFromPackageJSONFile
 // showDevelopmentDependenciesFromPackageJSONFile
@@ -1088,5 +1146,6 @@ module.exports = [
   LIST_MODULES_IMPORTED_BY,
   SHOW_CONTROLLER_FOR_API_ENDPOINT,
   SHOW_REQUEST_DATA_SCHEMA_FOR_API_ENDPOINT,
-  SHOW_QUERY_FILES_FOR_API_ENDPOINT
+  SHOW_QUERY_FILES_FOR_API_ENDPOINT,
+  RUN_DATABASE_QUERY,
 ];
