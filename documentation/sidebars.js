@@ -14,7 +14,8 @@ module.exports = {
       items: [
         "intro",
         "what-is-xest-why",
-        "installation",
+        "installation-mac",
+        "installation-ubuntu",
         "routing",
         "CRUD",
         "Pagination",
@@ -64,27 +65,21 @@ module.exports = {
         // "account-system",
         // "rate-limiting",
       ],
-    },  
+    },
     {
       type: "category",
       label: "Deployment",
       collapsed: true,
-      items: [
-        "digital-ocean",
-        "aws-deployment",
-        "run-schema-and-seed",
-      ],
+      items: ["digital-ocean", "aws-deployment", "run-schema-and-seed"],
     },
 
     {
       type: "category",
       label: "XestGPT CMND Extension",
       collapsed: true,
-      items: [
-        "xest-ai",
-      ],
+      items: ["xest-ai"],
     },
-    
+
     /* todo
     {
       type: "category",

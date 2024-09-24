@@ -1,7 +1,7 @@
 ---
-id: installation
-title: Installation
-sidebar_label: Installation
+id: installation-mac
+title: Installation on MacOs
+sidebar_label: Installation - Mac
 ---
 
 You should install the XEST CLI first then start working on your project.
