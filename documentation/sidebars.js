@@ -80,6 +80,13 @@ module.exports = {
       items: ["xest-ai"],
     },
 
+    {
+      type: "category",
+      label: "Data Table",
+      collapsed: true,
+      items: ["data-table-react"],
+    },
+
     /* todo
     {
       type: "category",
