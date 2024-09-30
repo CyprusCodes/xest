@@ -33,7 +33,14 @@ Here's a simple example of how to use the `xest-ui/data-table` package:
 
 ```javascript
 import React from "react";
-import { Col, DataTable, TableProvider } from "@xest-ui/data-table";
+
+import { NextRouter } from "next/router";
+import {
+  Col,
+  DataTable,
+  TableProvider,
+  PaginateProps,
+} from "@xest-ui/data-table";
 import { User } from "src/types/user";
 import { Card } from "@mui/material";
 import getUnitsByContactId from "src/services/projects/getUnitsByContactId";
@@ -42,7 +49,6 @@ import MyPaginator from "src/components/PaginatedTable/MyPaginator";
 import { DefaultTableComponents } from "src/components/PaginatedTable/DefaultTableComponents";
 import router from "next/router";
 import { formatAreaMeasurement } from "src/utils/formatAreaMeasurement";
-import updateQueryParams from "src/components/PaginatedTable/updateQueryParams";
 
 interface ContactFlatsTableProps {
   organizationId: string;
@@ -123,6 +129,25 @@ function ContactFlatsTable({
     </Card>
   );
 }
+
+const updateQueryParams = ({
+  router,
+  newParams,
+}: {
+  router: NextRouter,
+  newParams: Parameters<
+    NonNullable<NonNullable<PaginateProps["config"]>["updateSearchQueryParams"]>
+  >[0],
+}) => {
+  return router.replace(
+    {
+      pathname: window.location.pathname, //pathname from usePathname returning null why???
+      query: { ...newParams },
+    },
+    undefined,
+    { shallow: true }
+  );
+};
 ```
 
 ### This example demonstrates:
@@ -549,7 +574,7 @@ export const DefaultTableComponents: Partial<DTComponent<any>> = {
 
 The actions prop on each component determines where that component render is coming from. It is strongly typed so suggestions can always pop up from your IDE.
 
-## ReUsable Hooks
+## Reusable Hooks
 
 ### usePaginate Hook
 
@@ -747,3 +772,12 @@ For these props, once false is passed, it means it should not be shown.
 #### Export data
 
 To create your own custom table with same usability, you can utilize the useTable hook with the TableProvider.
+
+## Issues
+
+<ul>
+  <li>
+  <strong>Export Data in pdf not applying styles: </strong>
+  Before printing, click on more settings and enable background graphics
+  </li>
+</ul>
