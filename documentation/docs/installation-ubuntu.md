@@ -42,47 +42,47 @@ nvm install node
 
 <br/>
 
-Here’s the guide formatted in Markdown for better readability:
-
----
+ 
 
 ## **2. Install Docker**
 
-### **Using Repository and GPG Key**
-
-1. **Add Docker’s official GPG key and repository:**
+1. **Update System Packages:**
 
    ```bash
    sudo apt-get update
-   sudo apt-get install -y ca-certificates curl
-   sudo install -m 0755 -d /etc/apt/keyrings
-   sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-   sudo chmod a+r /etc/apt/keyrings/docker.asc
+   sudo apt-get install -y ca-certificates curl gnupg
    ```
 
-2. **Add Docker repository to Apt sources:**
+2. **Add Docker's Official GPG Key:**
+
+   ```bash
+   sudo install -m 0755 -d /etc/apt/keyrings
+   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+   sudo chmod a+r /etc/apt/keyrings/docker.gpg
+   ```
+
+3. **Set Up Docker Repository:**
 
    ```bash
    echo \
-   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-   $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
    ```
 
-3. **Update your package list:**
+4. **Install Docker:**
 
    ```bash
    sudo apt-get update
-   ```
-
-4. **Install Docker packages:**
-
-   ```bash
    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
    ```
 
----
+5. **Verify Docker Installation:**
 
+   ```bash
+   docker --version
+   ```
+
+---
 ### **Using Snap**
 
 1. **Install Docker using Snap:**
@@ -105,24 +105,23 @@ Here’s the guide formatted in Markdown for better readability:
 
 ## **3. Install Docker Compose**
 
-### **Using Repository**
-
-1. **Download and install Docker Compose:**
+1. **Download the Latest Version of Docker Compose:**
 
    ```bash
-   sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+   mkdir -p ~/.docker/cli-plugins/
+   curl -SL https://github.com/docker/compose/releases/download/v2.29.7/docker-compose-linux-$(uname -m) -o ~/.docker/cli-plugins/docker-compose
    ```
 
-2. **Set correct permissions:**
+2. **Set Executable Permissions:**
 
    ```bash
-   sudo chmod +x /usr/local/bin/docker-compose
+   chmod +x ~/.docker/cli-plugins/docker-compose
    ```
 
-3. **Verify the installation:**
+3. **Verify Docker Compose Installation:**
 
    ```bash
-   docker-compose --version
+   docker compose version
    ```
 
 ---
