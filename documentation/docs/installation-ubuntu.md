@@ -42,65 +42,107 @@ nvm install node
 
 <br/>
 
-### 2. **Install Docker**
+ 
 
-- **Add Docker's official GPG key and repository:**
+## **2. Install Docker**
 
-```
-sudo apt-get update sudo apt-get install -y ca-certificates curl sudo install -m 0755 -d /etc/apt/keyrings sudo curl -fsSL [https://download.docker.com/linux/ubuntu/gpg](https://download.docker.com/linux/ubuntu/gpg) -o /etc/apt/keyrings/docker.asc sudo chmod a+r /etc/apt/keyrings/docker.asc
-```
+1. **Update System Packages:**
+
+   ```bash
+   sudo apt-get update
+   sudo apt-get install -y ca-certificates curl gnupg
+   ```
+
+2. **Add Docker's Official GPG Key:**
+
+   ```bash
+   sudo install -m 0755 -d /etc/apt/keyrings
+   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+   sudo chmod a+r /etc/apt/keyrings/docker.gpg
+   ```
+
+3. **Set Up Docker Repository:**
+
+   ```bash
+   echo \
+   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+   ```
+
+4. **Install Docker:**
+
+   ```bash
+   sudo apt-get update
+   sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+   ```
+
+5. **Verify Docker Installation:**
+
+   ```bash
+   docker --version
+   ```
+
+---
+### **Using Snap**
+
+1. **Install Docker using Snap:**
+
+   ```bash
+   sudo snap install docker
+   ```
+
+   This installs the Snap version of Docker, typically updated to version `27.2.0` or later.
+
+## **Verify Installations**
+
+**Check Docker version:**
+
+   ```bash
+   docker --version
+   ```
 
 <br/>
 
-- **Add the Docker repository to Apt sources:**
+## **3. Install Docker Compose**
 
-```
-echo \ "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] [https://download.docker.com/linux/ubuntu](https://download.docker.com/linux/ubuntu) \ $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \ sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-```
+1. **Download the Latest Version of Docker Compose:**
 
-<br/>
+   ```bash
+   mkdir -p ~/.docker/cli-plugins/
+   curl -SL https://github.com/docker/compose/releases/download/v2.29.7/docker-compose-linux-$(uname -m) -o ~/.docker/cli-plugins/docker-compose
+   ```
 
-- **Update your package list:**
+2. **Set Executable Permissions:**
 
-```
-sudo apt-get update
-```
+   ```bash
+   chmod +x ~/.docker/cli-plugins/docker-compose
+   ```
 
-<br/>
+3. **Verify Docker Compose Installation:**
 
-- **Install Docker packages:**
+   ```bash
+   docker compose version
+   ```
 
-```
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-```
+---
 
-<br/>
+### **Using Snap**
 
-### 3. **Install Docker Compose**
+To install Docker Compose directly using Apt, you can use the following command:
 
-<br/>
-
-- **Download and install Docker Compose:**
-
-```
-sudo curl -L "[https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname](https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname) -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+```bash
+sudo apt install docker-compose
 ```
 
-<br/>
+---
 
-- **Set the correct permissions:**
+## **Verify Installations**
 
-```
-sudo chmod +x /usr/local/bin/docker-compose
-```
+**Check Docker Compose version:**
 
-<br/>
-
-- **Verify the installation:**
-
-```
-docker-compose --version
-```
+   ```bash
+   docker-compose --version
+   ```
 
 <br/>
 
@@ -141,19 +183,19 @@ After installing the XEST CLI globally, you can now bootstrap your API.
 In order to create your API, you need to run the following commmand:
 
 ```bash
-$ xx [project-name]
+xx [project-name]
 ```
 
 With one simple command, you will be installing all the necessary packages, utils, middlewares and required modules will be created for you. Have a look at the created directory.
 
 ```bash
-$ cd project-name
+cd project-name
 ```
 
 to start your Xest API, run
 
 ```bash
-$ xx run
+xx run
 ```
 
 Et voila! You're ready to Xest :)
