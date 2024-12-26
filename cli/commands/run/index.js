@@ -12,7 +12,6 @@ const updateDatabaseMetadata = require("./utils/updateDatabaseMetadata");
 const isAppleSilicon = require("../../utils/isAppleSilicon");
 
 const run = async () => {
-  console.log("--Run--");
   const projectDetails = findProjectRoot();
   if (!projectDetails) {
     console.log(
