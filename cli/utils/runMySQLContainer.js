@@ -76,7 +76,6 @@ const runMySQLContainer = async (rootPath, projectName) => {
       dockerComposePrefixByVersion = "docker-compose";
     }
     let dockerComposeCommand = `${dockerComposePrefixByVersion} --project-name ${projectName} -f ${composeFileName} up -d`;
-    console.log(dockerComposeCommand);
 
     const runMySQLContainer = execSync(dockerComposeCommand, {
       cwd: path.join(rootPath, "database"),
