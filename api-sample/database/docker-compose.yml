@@ -1,8 +1,7 @@
-version: "3.3"
 services:
   {{PROJECT_NAME_KEBAPCASE}}-db:
     container_name: {{PROJECT_NAME_KEBAPCASE}}-mysql-db
-    image: mysql:5.7
+    image: mysql:latest
     restart: always
     command: --sql_mode="NO_ENGINE_SUBSTITUTION"
     environment:

@@ -36,12 +36,13 @@ const runMySQLContainer = async (rootPath, projectName) => {
 
   // read from docker-compose file the PORT number
   const usingAppleSiliconChipset = isAppleSilicon();
+  const composeFileName = usingAppleSiliconChipset
+    ? "docker-compose.apple-silicon.yml"
+    : "docker-compose.yml";
   const dockerComposeFilePath = path.join(
     rootPath,
     "database",
-    usingAppleSiliconChipset
-      ? "docker-compose.apple-silicon.yml"
-      : "docker-compose.yml",
+    composeFileName,
   );
 
   const dockerComposeFile = fs.readFileSync(dockerComposeFilePath, "utf8");
@@ -67,13 +68,15 @@ const runMySQLContainer = async (rootPath, projectName) => {
     await resolvePortConflict(mysqlHostPort, "MySQL Docker Container", false);
 
     // Since Docker Compose V2, docker compose is preferred over docker-compose
-    let dockerComposeCommand = `docker compose --project-name ${projectName}${usingAppleSiliconChipset ? " -f docker-compose.apple-silicon.yml" : ""} up -d`;
-    // Fallback to legacy docker-compose command if docker compose fails
+    let dockerComposePrefixByVersion = "docker compose";
     try {
       execSync("docker compose version");
     } catch (err) {
-      dockerComposeCommand = `docker-compose --project-name ${projectName}${usingAppleSiliconChipset ? " -f docker-compose.apple-silicon.yml" : ""} up -d`;
+      // Fallback to legacy docker-compose command if docker compose fails
+      dockerComposePrefixByVersion = "docker-compose";
     }
+    let dockerComposeCommand = `${dockerComposePrefixByVersion} --project-name ${projectName} -f ${composeFileName} up -d`;
+    console.log(dockerComposeCommand);
 
     const runMySQLContainer = execSync(dockerComposeCommand, {
       cwd: path.join(rootPath, "database"),
