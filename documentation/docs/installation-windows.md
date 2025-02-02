@@ -4,7 +4,7 @@ title: Installation on Windows
 sidebar_label: Installation - Windows
 ---
 
-<br>
+<br/>
 
 ## **Prerequisites**
 
@@ -27,7 +27,7 @@ git --version
 
 If Git is installed correctly, it will return the version number.
 
-<br>
+<br/>
 
 ## **1. Install NVM (Node Version Manager)**
 
@@ -107,7 +107,7 @@ npm -v
    powershell -ExecutionPolicy RemoteSigned
    ```
 
-<br>
+<br/>
 
 ## **2. Install Docker**
 
@@ -126,7 +126,7 @@ Run the following command in **PowerShell**:
 docker --version
 ```
 
-<br>
+<br/>
 
 ## **3. Install Docker Compose**
 
@@ -136,7 +136,7 @@ By default, **Docker Compose** is included with Docker Desktop. To verify:
 docker compose version
 ```
 
-<br>
+<br/>
 
 ## **4. Allow Managing Docker as a Non-Admin User**
 
@@ -168,7 +168,7 @@ Sometimes you might receive an error stating that your user is already a member.
 
 For the changes to take effect, restart your system.
 
-<br>
+<br/>
 
 ## **5. Install Xest**
 
