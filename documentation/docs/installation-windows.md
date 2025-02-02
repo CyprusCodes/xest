@@ -1,4 +1,8 @@
-# **Installation on Windows**
+---
+id: installation-windows
+title: Installation on Windows
+sidebar_label: Installation - Windows
+---
 
 <br>
 
@@ -197,5 +201,3 @@ Run:
 ```sh
 xx run
 ```
-
-**Note:** Docker Desktop must be running to start your Xest API.
