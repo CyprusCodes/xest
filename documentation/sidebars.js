@@ -16,6 +16,7 @@ module.exports = {
         "what-is-xest-why",
         "installation-mac",
         "installation-ubuntu",
+        "installation-windows",
         "routing",
         "CRUD",
         "Pagination",
