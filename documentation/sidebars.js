@@ -85,7 +85,7 @@ module.exports = {
       type: "category",
       label: "Data Table",
       collapsed: true,
-      items: ["data-table-react"],
+      items: ["data-table-react", "data-table-custom-actions"],
     },
 
     /* todo
