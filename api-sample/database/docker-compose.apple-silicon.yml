@@ -1,4 +1,3 @@
-version: "3.3"
 services:
   {{PROJECT_NAME_KEBAPCASE}}-db:
     container_name: {{PROJECT_NAME_KEBAPCASE}}-mysql-db
