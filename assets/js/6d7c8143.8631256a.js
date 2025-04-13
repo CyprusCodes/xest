@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocumentation=self.webpackChunkdocumentation||[]).push([[5913],{61:t=>{t.exports=JSON.parse('{"allTagsPath":"/blog/tags","slug":"/blog/tags/xest-at-uni","name":"xest-at-uni","count":1,"permalink":"/blog/tags/xest-at-uni"}')}}]);

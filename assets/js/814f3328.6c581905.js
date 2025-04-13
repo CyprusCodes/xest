@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocumentation=self.webpackChunkdocumentation||[]).push([[2535],{5641:e=>{e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"University of Kolwezi Students Embrace XestJS for API Development","permalink":"/blog/xest-at-uni"},{"title":"Hello world","permalink":"/blog/2022/05/09/hello-world"}]}')}}]);
