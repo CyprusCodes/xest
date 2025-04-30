@@ -15,7 +15,7 @@ const run = async () => {
   const projectDetails = findProjectRoot();
   if (!projectDetails) {
     console.log(
-      chalk.red`You are not within a Xest project directory. Please check your current path directory.`
+      chalk.red`You are not within a Xest project directory. Please check your current path directory.`,
     );
     return;
   }
@@ -34,7 +34,7 @@ const run = async () => {
 
   const checkDatabaseSchemaAppliedQuery = `select count(*) as count from migrations where name = '/20211107064304-database-schema';`;
   const mySQLConnectionString = `mysql -h localhost -u root -ppassword ${snakeCase(
-    projectName
+    projectName,
   )}_db`;
   const checkDatabaseSchema = `printf "${checkDatabaseSchemaAppliedQuery}" | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
   // insert database schema
@@ -73,7 +73,7 @@ const run = async () => {
     });
   const checkMigrationsQuery = `select count(*) as count from migrations where name='/${latestMigrationFile.replace(
     ".js",
-    ""
+    "",
   )}';`;
   const checkMigrations = `printf "${checkMigrationsQuery}" | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
   ({ error, output } = await runSqlQueryWithinContainer(checkMigrations));
@@ -101,7 +101,7 @@ const run = async () => {
 
       if (error && error.includes("ERROR")) {
         console.log(
-          chalk.red`Failed to populate database with seed data. This might happen if you have recently updated your migrations, please modify your seed data to match new schema changes.`
+          chalk.red`Failed to populate database with seed data. This might happen if you have recently updated your migrations, please modify your seed data to match new schema changes.`,
         );
 
         console.log(chalk.red`Error: ${error.split("ERROR")[1]}`);
@@ -112,11 +112,21 @@ const run = async () => {
   process.stdin.resume();
   let isExiting = false;
 
-  let dockerComposeCommand = `docker-compose --project-name ${projectName} down`;
   const usingAppleSiliconChipset = isAppleSilicon();
-  if (usingAppleSiliconChipset) {
-    dockerComposeCommand = `docker-compose --project-name ${projectName} -f docker-compose.apple-silicon.yml down`;
+  const composeFileName = usingAppleSiliconChipset
+    ? "docker-compose.apple-silicon.yml"
+    : "docker-compose.yml";
+
+  let dockerComposePrefixByVersion = "docker compose";
+
+  try {
+    execSync("docker compose version");
+  } catch (err) {
+    // Fallback to legacy docker-compose command if docker compose fails
+    dockerComposePrefixByVersion = "docker-compose";
   }
+
+  let dockerComposeCommand = `${dockerComposePrefixByVersion} --project-name ${projectName} -f ${composeFileName} down`;
 
   // shutdown procedure
   [
@@ -141,7 +151,7 @@ const run = async () => {
           { cwd: path.join(rootPath, "database") },
           () => {
             process.exit(0);
-          }
+          },
         );
       }
     });

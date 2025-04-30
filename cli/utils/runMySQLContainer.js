@@ -16,7 +16,7 @@ const runMySQLContainer = async (rootPath, projectName) => {
   } catch (err) {
     if (err.toString().includes("Error")) {
       console.log(
-        chalk.red`Docker is currently not running. Please start Docker and repeat ${chalk.green`xx run`} again.`
+        chalk.red`Docker is currently not running. Please start Docker and repeat ${chalk.green`xx run`} again.`,
       );
       return false;
     }
@@ -26,7 +26,7 @@ const runMySQLContainer = async (rootPath, projectName) => {
     `docker ps --format "table {{.ID}}\t{{.Names}}" | grep ${projectName}-mysql-db | cut -d ' ' -f 1`,
     {
       cwd: path.join(rootPath, "database"),
-    }
+    },
   ).toString();
 
   let ready = false;
@@ -36,12 +36,13 @@ const runMySQLContainer = async (rootPath, projectName) => {
 
   // read from docker-compose file the PORT number
   const usingAppleSiliconChipset = isAppleSilicon();
+  const composeFileName = usingAppleSiliconChipset
+    ? "docker-compose.apple-silicon.yml"
+    : "docker-compose.yml";
   const dockerComposeFilePath = path.join(
     rootPath,
     "database",
-    usingAppleSiliconChipset
-      ? "docker-compose.apple-silicon.yml"
-      : "docker-compose.yml"
+    composeFileName,
   );
 
   const dockerComposeFile = fs.readFileSync(dockerComposeFilePath, "utf8");
@@ -52,7 +53,7 @@ const runMySQLContainer = async (rootPath, projectName) => {
   // Regex pattern to extract the host port
   const pattern = new RegExp(
     `${serviceName}:\\s*\\n(?:\\s*\\w+:.*\\n)*\\s*ports:\\s*\\n(?:\\s*-\\s*"?(\\d+):\\d+"?\\n)*`,
-    "gm"
+    "gm",
   );
   const match = pattern.exec(dockerComposeFile);
   let mysqlHostPort = 3306;
@@ -64,13 +65,17 @@ const runMySQLContainer = async (rootPath, projectName) => {
   let mySQLContainerId = isDockerMySQLContainerRunning.trim();
   if (!Boolean(isDockerMySQLContainerRunning)) {
     // check if mysql port is available for use
-    await resolvePortConflict(mysqlHostPort, "MySQL Docker Container", false, );
+    await resolvePortConflict(mysqlHostPort, "MySQL Docker Container", false);
 
-    let dockerComposeCommand = `docker-compose --project-name ${projectName} up -d`;
-
-    if (usingAppleSiliconChipset) {
-      dockerComposeCommand = `docker-compose --project-name ${projectName} -f docker-compose.apple-silicon.yml up -d`;
+    // Since Docker Compose V2, docker compose is preferred over docker-compose
+    let dockerComposePrefixByVersion = "docker compose";
+    try {
+      execSync("docker compose version");
+    } catch (err) {
+      // Fallback to legacy docker-compose command if docker compose fails
+      dockerComposePrefixByVersion = "docker-compose";
     }
+    let dockerComposeCommand = `${dockerComposePrefixByVersion} --project-name ${projectName} -f ${composeFileName} up -d`;
 
     const runMySQLContainer = execSync(dockerComposeCommand, {
       cwd: path.join(rootPath, "database"),
@@ -81,21 +86,21 @@ const runMySQLContainer = async (rootPath, projectName) => {
     `docker ps --format "table {{.ID}}\t{{.Names}}" | grep ${projectName}-mysql-db | cut -d ' ' -f 1`,
     {
       cwd: path.join(rootPath, "database"),
-    }
+    },
   ).toString();
   mySQLContainerId = isDockerMySQLContainerRunningAgain.trim();
 
   // check whether mysql is ready
   console.log(
-    chalk.yellow`Waiting for MySQL Container to become ready. This should only take a few seconds.`
+    chalk.yellow`Waiting for MySQL Container to become ready. This should only take a few seconds.`,
   );
 
   while (!ready && retryCount < 60) {
     const query = `SELECT COUNT(*) as tbl_count FROM information_schema.tables WHERE table_schema = '${snakeCase(
-      projectName
+      projectName,
     )}_db';`;
     const mySQLConnectionString = `mysql -h localhost -u root -ppassword ${snakeCase(
-      projectName
+      projectName,
     )}_db`;
     const checkDatabaseSchema = `printf "${query}" | docker exec -i ${mySQLContainerId} ${mySQLConnectionString}`;
     ({ error, output } = await runSqlQueryWithinContainer(checkDatabaseSchema));
@@ -113,7 +118,7 @@ const runMySQLContainer = async (rootPath, projectName) => {
   }
   if (!ready) {
     console.log(
-      chalk.red`MySQL instance is not ready yet. Try running ${chalk.green`xx run`} again.`
+      chalk.red`MySQL instance is not ready yet. Try running ${chalk.green`xx run`} again.`,
     );
     return false;
   }
