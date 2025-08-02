@@ -108,6 +108,8 @@ const newPut{{entityName | toPascalCase}}Schema = yup.object().shape({
             mixed().nullable().test('is-blob', 'Binary data', value => {return value instanceof Buffer || value instanceof Uint8Array || false;}),
         {% elsif column.dataType == 'tinyblob'%}
             mixed().nullable().test('is-blob', 'Binary data', value => {return value instanceof Buffer || value instanceof Uint8Array || false;}),
+        {% elsif column.dataType == 'enum' %}
+            string().oneOf([{{ column.columnnType | extractEnumValues }}], "The {{column.column | toCamelCase}} field must be one of: {{ column.columnnType | extractEnumValues }}").nullable().label('{{column.column | toCamelCase}}').typeError("The {{column.column | toCamelCase}} field must be one of: {{ column.columnnType | extractEnumValues }}"),
         {% endif %}
     {% else %}
         {% if column.columnKey == 'MUL' %}
@@ -188,6 +190,8 @@ const newPut{{entityName | toPascalCase}}Schema = yup.object().shape({
                 mixed().test('is-blob', 'Binary data required', value => {return value instanceof Buffer || value instanceof Uint8Array || false;}),
             {% elsif column.dataType == 'tinyblob'%}
                 mixed().test('is-blob', 'Binary data required', value => {return value instanceof Buffer || value instanceof Uint8Array || false;}),
+            {% elsif column.dataType == 'enum' %}
+                string().oneOf([{{ column.columnnType | extractEnumValues }}], "The {{column.column | toCamelCase}} field must be one of: {{ column.columnnType | extractEnumValues }}").required('The {{column.column | toCamelCase}} field is required').label('{{column.column | toCamelCase}}').typeError("The {{column.column | toCamelCase}} field must be one of: {{ column.columnnType | extractEnumValues }}"),
             {% endif %}
         {% endif %}
     {% endif %}
