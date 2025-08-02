@@ -21,6 +21,10 @@ const enrichEngine = (engine) => {
   engine.registerFilter("toConstantCase", (v) =>
     upperCase(v).replace(/ /g, "_")
   );
+  engine.registerFilter("extractEnumValues", (input) => {
+    const match = input.match(/enum\((.+)\)/);
+    return match ? match[1] : "";
+  });
   engine.registerFilter("toTypeScriptType", (v) => {
     switch (v) {
       case "int":
@@ -49,11 +53,22 @@ const enrichEngine = (engine) => {
   });
   engine.registerFilter("schemaImports", (v) => {
     let imports = [];
-    const filteredSchema = v.filter((c) => (c.columnKey === 'MUL' || c.columnKey === 'PRI') && c.dataType === 'int');
-    const uniqueTargetTables = [...new Set(filteredSchema.map((c) => c.foreignKeyTo.targetTable))];
-    Promise.all(uniqueTargetTables.map(async (table) => {
-      imports.push(`const select${toPascalCase(table)}ById = require('./queries/select${toPascalCase(table)}ById');`);
-    }));
+    const filteredSchema = v.filter(
+      (c) =>
+        (c.columnKey === "MUL" || c.columnKey === "PRI") && c.dataType === "int"
+    );
+    const uniqueTargetTables = [
+      ...new Set(filteredSchema.map((c) => c.foreignKeyTo.targetTable)),
+    ];
+    Promise.all(
+      uniqueTargetTables.map(async (table) => {
+        imports.push(
+          `const select${toPascalCase(
+            table
+          )}ById = require('./queries/select${toPascalCase(table)}ById');`
+        );
+      })
+    );
 
     return imports.join("\n");
   });
@@ -167,7 +182,7 @@ const enrichEngine = (engine) => {
     }
 
     let fieldList = uniq(fields);
-    const isUsingDotNotation = fields.find((field) => field.includes("."))
+    const isUsingDotNotation = fields.find((field) => field.includes("."));
 
     if (isUsingDotNotation) {
       return `${fieldList
@@ -234,7 +249,6 @@ const enrichEngine = (engine) => {
     });
     return joins.join(", ");
   });
-  
 };
 
 module.exports = enrichEngine;
