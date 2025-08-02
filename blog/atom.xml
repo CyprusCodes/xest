@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://xestjs.com/blog</id>
     <title>Xest Blog</title>
-    <updated>2025-04-13T18:54:59.756Z</updated>
+    <updated>2025-08-02T09:11:51.394Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://xestjs.com/blog"/>
     <subtitle>Xest Blog</subtitle>
@@ -11,7 +11,7 @@
         <title type="html"><![CDATA[University of Kolwezi Students Embrace XestJS for API Development]]></title>
         <id>University of Kolwezi Students Embrace XestJS for API Development</id>
         <link href="https://xestjs.com/blog/xest-at-uni"/>
-        <updated>2025-04-13T18:54:59.756Z</updated>
+        <updated>2025-08-02T09:11:51.394Z</updated>
         <summary type="html"><![CDATA[<img style={{ width "10% 25%", padding: "50" }}]]></summary>
         <author>
             <name>Benjamin Franck</name>
