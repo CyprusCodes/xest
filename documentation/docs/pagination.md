@@ -403,3 +403,65 @@ const {
   "personal_information.personal_information_id, personal_information.created_at"
 );
 ```
+
+#### Using the `formatParams` Hook
+
+Another way of managing pagination on the frontend, you can utilize the `formatParams` hook, which facilitates various pagination functionalities and data retrieval. This method returns a string that can be passed directly to your URL.
+
+```javascript
+import { DIRECTION, Filter, formatParams } from '@xest-ui/data-table';
+
+const filters: Filter[] = [];
+
+let search = "john"; // Users name to be searched
+let pageSize: 5 | 10 | 25 = 5; // Recommended 3 options
+let cursor = "__base64_string__"; // Found in metadata after a request
+let direction: DIRECTION.NEXT | DIRECTION.PREVIOUS = DIRECTION.NEXT;
+let sortBy = "myTable.id";
+
+filters.push({
+  column: "myTable.firstName",
+  operation: "contains",
+  values: [search]
+});
+
+const reqParams = formatParams({
+  page_size: pageSize,
+  filters: filters,
+  cursor: cursor,
+  direction: direction,
+  sort_by: sortBy
+});
+
+const res = await getUsers(organizationId, reqParams);
+
+```
+
+#### Using hardcoded string
+
+You can also make a hardcoded string to set the page size, filter, set the cursor and direction and sort the order. Not recommended.
+
+```javascript
+
+const bookId = 1;
+
+const params = [
+  `page_size=5`,
+  `sort_by=-bookTable.created_at`,
+
+  // Filters
+  `filters[0][column]=bookTable.returned_date`,
+  `filters[0][operation]=isNotNull`, // Check if the date is not null
+
+  `filters[1][column]=bookTable.id`,
+  `filters[1][operation]=equals`,
+  `filters[1][values][0]=${notedId}` // Get the book with that ID
+
+  // Pagination
+  `direction=next`, // 2 options (next & previous)
+  `cursor=__base64_string__`
+];
+
+const res = getBooks(organizationId, params.join("&"))
+
+```
