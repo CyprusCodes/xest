@@ -403,3 +403,37 @@ const {
   "personal_information.personal_information_id, personal_information.created_at"
 );
 ```
+
+#### Using the `formatParams` Hook
+
+Another way of managing pagination on the frontend, you can utilize the `formatParams` hook, which facilitates various pagination functionalities and data retrieval. This method returns a string that can be passed directly to your URL.
+
+```javascript
+import { DIRECTION, Filter, formatParams } from '@xest-ui/data-table';
+
+const filters: Filter[] = [];
+
+let search = "john"; // Users name to be searched
+let pageSize = 50;
+
+// How to use single column to sort (- prefix desc / no prefix asc)
+let sortBy = "-myTable.id";
+
+// How to use multiple columns to sort (using comma to separate)
+let sortBy = "-myTable.id,-myTable.created_at";
+
+filters.push({
+  column: "myTable.firstName",
+  operation: "contains",
+  values: [search]
+});
+
+const reqParams = formatParams({
+  page_size: pageSize,
+  filters: filters,
+  sort_by: sortBy
+});
+
+const res = await getUsers(organizationId, reqParams);
+
+```
