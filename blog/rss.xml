@@ -4,14 +4,14 @@
         <title>Xest Blog</title>
         <link>https://xestjs.com/blog</link>
         <description>Xest Blog</description>
-        <lastBuildDate>Sat, 02 Aug 2025 09:11:51 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 22 Oct 2025 09:27:01 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <item>
             <title><![CDATA[University of Kolwezi Students Embrace XestJS for API Development]]></title>
             <link>https://xestjs.com/blog/xest-at-uni</link>
             <guid>University of Kolwezi Students Embrace XestJS for API Development</guid>
-            <pubDate>Sat, 02 Aug 2025 09:11:51 GMT</pubDate>
+            <pubDate>Wed, 22 Oct 2025 09:27:01 GMT</pubDate>
             <description><![CDATA[<img style={{ width "10% 25%", padding: "50" }}]]></description>
         </item>
         <item>
