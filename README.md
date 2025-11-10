@@ -9,7 +9,7 @@
 # Quick Start
 ### After installing xest framework globally; you can create your api with one simple command
 
-`xx <app-name-goes-here>`
+>     `xx <app-name-goes-here>`
 
 The above command will create your new api project then install requied packages and start your database. 
 Please note in the project directory you will find many usefull utils, packages and middlewares. 

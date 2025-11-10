@@ -22,6 +22,12 @@ MAILGUN_API_KEY=anythinggoeshere
 MAILGUN_API_BASE_URL=anythinggoeshere
 MAILGUN_DOMAIN=anythinggoeshere
 
+// S3 credentials 
+AWS_REGION=anythinggoeshere
+S3_ACCESS_KEY=anythinggoeshere
+S3_SECRET=anythinggoeshere
+S3_BUCKET_NAME=anythinggoeshere
+
 `;
   const filePath = path.join(projectRoot, "./.env");
   const doesItExist = fs.ensureFileSync(filePath);
